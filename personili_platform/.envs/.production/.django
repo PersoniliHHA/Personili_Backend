@@ -1,0 +1,43 @@
+# General
+# ------------------------------------------------------------------------------
+DJANGO_READ_DOT_ENV_FILE=True
+DJANGO_SETTINGS_MODULE=config.settings.production
+DJANGO_SECRET_KEY=gXZL764qNWa3fanRHFEtjhMR3qDKof98hZCfMhBAQrQlok3ckYQ9hW8Akh6p0nzr
+DJANGO_ADMIN_URL=rVFZIWAuDcvl2WXrVzr7BujgcJBvTk0y/
+DJANGO_ALLOWED_HOSTS=.PumpKingPrints.com
+
+# Security
+# ------------------------------------------------------------------------------
+# TIP: better off using DNS, however, redirect is OK too
+DJANGO_SECURE_SSL_REDIRECT=False
+
+# Email
+# ------------------------------------------------------------------------------
+DJANGO_SERVER_EMAIL=
+
+SENDINBLUE_API_KEY=
+
+
+# django-allauth
+# ------------------------------------------------------------------------------
+DJANGO_ACCOUNT_ALLOW_REGISTRATION=True
+
+# Gunicorn
+# ------------------------------------------------------------------------------
+WEB_CONCURRENCY=4
+
+# Sentry
+# ------------------------------------------------------------------------------
+SENTRY_DSN=
+
+
+# Redis
+# ------------------------------------------------------------------------------
+REDIS_URL=redis://redis:6379/0
+
+# AWS
+# ------------------------------------------------------------------------------
+AWS_ACCESS_KEY_ID=AKIARESII4QQSMJTNJPL
+AWS_SECRET_ACCESS_KEY=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
+AWS_S3_SIGNATURE_VERSION=s3v4
+AWS_S3_REGION_NAME=eu-west-3

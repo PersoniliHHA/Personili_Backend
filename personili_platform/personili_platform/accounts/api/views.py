@@ -1,0 +1,479 @@
+# rest framework imports
+from django.shortcuts import get_object_or_404
+from rest_framework import viewsets, permissions, status
+from rest_framework.decorators import action
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework.response import Response
+
+# django imports
+from django.contrib.auth import get_user_model, authenticate
+from django.db import transaction, IntegrityError, DatabaseError, Error
+
+# local imports
+from accounts.api.serializers import UserSignUpSerializer, UserSignInSerializer, UserProfileSerializer,  PaymentMethodSerializer, WalletSerializer, TransactionSerializer, FeedbackCreateSerializer
+from personili_platform.utils.utilities import create_token_pairs
+from accounts.models import UserProfile, DeliveryAddress, PaymentMethod, Wallet, Transaction, Feedback
+from accounts.api.permissions import ProfileApiPermission, PrivateDeliveryAddressApiPermission
+from utils.storages import MediaStorage
+from designs.models import Store, StoreProfile, Collection
+from accounts.api.serializers import DeliveryAddressCreateSerializer, DeliveryAddressUpdateSerializer, DeliveryAddressDeleteSerializer, DeliveryAddressGetSerializer, BaseDeliveryAddressSerializer
+
+# Standard imports
+import logging as logger
+from typing import Optional
+
+
+logger.basicConfig(level=logger.DEBUG)
+
+User = get_user_model()
+
+
+#################################
+#                               #
+#     User Sign-Up ViewSet      #
+#                               #
+#################################
+
+class PublicUserSignUpViewSet(viewsets.ModelViewSet):
+    """Viewset for the User Sign Up API"""
+
+    queryset = User.objects.all()
+
+    permission_classes = [
+        permissions.AllowAny
+    ]
+    serializer_class = UserSignUpSerializer
+
+    def create(self, request, *args, **kwargs):
+        """This method is used to register a new user"""
+
+        serializer = UserSignUpSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.validated_data.get('email')
+
+        # Check if user with this email already exists
+        if User.objects.filter(email=email).exists():
+            return Response(
+                {"email": "Email already exists"}, status=status.HTTP_400_BAD_REQUEST
+            )
+        try:
+            with transaction.atomic():
+                # Create the user and save it to the database
+                user = serializer.save()
+
+                # Create an empty user profile for the user
+                profile = UserProfile()
+                profile.user = user
+                profile.save()
+
+                # Create an empty wallet
+                wallet = Wallet()
+                wallet.user_profile = profile
+                wallet.save()
+
+                # Create an empty store for the user
+                store = Store()
+                store.user_profile = profile
+                store.save()
+
+                # Create an empty store profile for the user
+                store_profile = StoreProfile()
+                store_profile.store = store
+                store_profile.save()
+
+                # Create an empty collection for the user's store
+                collection = Collection()
+                collection.store = store
+                collection.save()
+
+        except IntegrityError as e:
+            logger.error("Integrity Error: {}".format(e))
+            return Response(
+                {"error": "Internal server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        except DatabaseError as e:
+            logger.error("Database Error: {}".format(e))
+            return Response(
+                {"error": "Internal server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        except Error as e:
+            logger.error("Error: {}".format(e))
+            return Response(
+                {"error": "Internal server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+        # Create token pairs for the user
+        token_pairs: dict = create_token_pairs(user)
+
+        # Prepare the response
+        response: Response = Response()
+        # Put the refresh token in the response cookie
+        response.set_cookie(key="refresh_token", value=token_pairs["refresh"], httponly=True, samesite="Strict")
+        response.data = {"access_token": str(token_pairs["access"])}
+        response.status_code = status.HTTP_201_CREATED
+
+        return response
+
+
+#################################
+#                               #
+#     User Sign-In ViewSet      #
+#                               #
+#################################
+
+class PublicUserSignInViewSet(viewsets.ModelViewSet):
+    """Viewset for the User Sign In API"""
+
+    serializer_class = UserSignInSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def list(self, request, *args, **kwargs):
+        """This method is used to sign in a user"""
+
+        # Validate the request data
+        serializer = UserSignInSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        # Get the email and password from the serializer
+        email = serializer.validated_data.get('email')
+        password = serializer.validated_data.get('password')
+
+        # Authenticate the user
+        user = authenticate(email=email, password=password)
+        if user is None:
+            return Response({"error": "Invalid Email or password"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        # Create token pairs for the user
+        token_pairs: dict = create_token_pairs(user)
+
+        # Prepare the response
+        response = Response()
+        # Put the refresh token in the response cookie
+        response.set_cookie(key="refresh_token", value=token_pairs["refresh"], httponly=True, samesite="Strict")
+        response.data = {"access_token": str(token_pairs["access"])}
+        response.status_code = status.HTTP_200_OK
+
+        return response
+
+
+#################################
+#                               #
+#     User Sign-Out ViewSet     #
+#                               #
+#################################
+
+class PrivateUserSignOutViewSet(viewsets.ModelViewSet):
+    """Viewset for the User Sign Out API"""
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def list(self, request, *args, **kwargs):
+        try:
+            # refresh_token = request.data.get("refresh_token")
+            refresh_token = request.COOKIES.get("refresh_token")
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response(status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            print(e)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+#################################
+#                               #
+#     Refresh Token ViewSet     #
+#                               #
+#################################
+
+
+
+#################################
+#                               #
+#        Profile ViewSet        #
+#                               #
+#################################
+
+
+class PrivateProfileViewSet(viewsets.ModelViewSet):
+    """
+    Viewset for the Profile API,
+    only authenticated users can access this api and only their profile
+    """
+
+    serializer_class = UserProfileSerializer
+    # Set the permission, only authenticated users can access this api and only their profile
+    permission_classes = [ProfileApiPermission]
+
+    def get_queryset(self):
+        return UserProfile.objects.filter(user=self.request.user)
+
+    def retrieve(self, request, *args, **kwargs):
+        profile = get_object_or_404(self.get_queryset())
+        serializer = UserProfileSerializer(profile)
+        return Response({"profile": serializer.data})
+
+    def update(self, request, *args, **kwargs):
+        """
+        This method is used to update the user profile, delivery address and payment method.
+        A user profile can be updated partially, not all fields are required, but if a field is present it will be updated.
+        The delivery address and payment method will only be updated if all fields are present.
+        """
+
+        # Get the user profile
+        profile: UserProfile = self.get_queryset().first()
+        # Instantiate a storage
+        media_storage = MediaStorage()
+        profile_picture_url: Optional[str] = None
+        file_path: Optional[str] = None
+
+        # Update the profile picture
+        if request.FILES.get("profile_picture"):
+            file_path = "USER_UPLOADED_PROFILE_PICTURE_PATH_PREFIX" + f"/{profile.id}-{profile.user.email}/" + "main_profile_picture"
+            # Check if this profile has an image
+            media_storage.save(file_path, request.FILES.get("profile_picture"))
+            profile_picture_url = media_storage.url(file_path)
+
+            profile.profile_picture_path = file_path
+
+        profile_serializer = UserProfileSerializer(profile, data=request.data, partial=True)
+        profile_serializer.is_valid(raise_exception=True)
+        profile_serializer.save()
+
+        # Create the response
+        response = Response()
+        response.data = {
+            "profile": UserProfileSerializer(self.get_queryset().first()).data,
+            "profile_picture_url": profile_picture_url if profile_picture_url else "",
+        }
+        response.status_code = status.HTTP_200_OK
+
+        return response
+
+
+#################################
+#                               #
+#   Delivery Address ViewSet    #
+#                               #
+#################################
+class DeliveryAddressViewSet(viewsets.ModelViewSet):
+    """
+    Model viewset for the Delivery Address API, only authenticated users can access this api.
+    The viewset implements the CRUD methods for the Delivery Address model
+    """
+    serializer_class = BaseDeliveryAddressSerializer
+
+    # Set the permission, only authenticated users can access this api
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return DeliveryAddress.objects.filter(user_profile=UserProfile.objects.filter(user=self.request.user).first())
+
+    def get_user_profile(self):
+        return UserProfile.objects.filter(user=self.request.user).first()
+
+    def get_serializer_class(self):
+        if self.action == "create-delivery-address":
+            return DeliveryAddressCreateSerializer
+        elif self.action == "update-delivery-address":
+            return DeliveryAddressUpdateSerializer
+        elif self.action == "get-all-delivery-addresses":
+            return DeliveryAddressGetSerializer
+        elif self.action == "delete-delivery-address":
+            return DeliveryAddressDeleteSerializer
+
+        return BaseDeliveryAddressSerializer
+
+    @action(detail=False, methods=["GET"], url_path="get-all-delivery-addresses",)
+    def get_all_delivery_addresses(self, request, *args, **kwargs):
+        """
+        get all delivery addresses of the user
+        """
+        # Get the delivery addresses associated with the user profile
+        delivery_addresses = self.get_queryset()
+
+        # Create the response
+        response = Response()
+        response.data = {
+            "delivery_addresses": DeliveryAddressGetSerializer(delivery_addresses, many=True).data,
+        }
+        response.status_code = status.HTTP_200_OK
+
+        return response
+
+    @action(detail=True, methods=["PUT"], url_path="update-delivery-address",)
+    def update_delivery_address(self, request, *args, **kwargs):
+        """
+        Update a single delivery address
+        """
+        # Prepare the response
+        response = Response()
+
+        # Verify that the id of the delivery address is present in the request data
+        if "id" not in request.data:
+            response.status_code = status.HTTP_302_FOUND
+            return response
+
+        # Get the delivery address using the id
+        delivery_address = get_object_or_404(DeliveryAddress, id=request.data.get("id"))
+
+        # Create the serializer
+        serializer = DeliveryAddressUpdateSerializer(delivery_address, data=request.data, partial=True)
+
+        # Check if the serializer is valid
+        serializer.is_valid(raise_exception=True)
+
+        # Save the delivery address
+        serializer.save()
+
+        response.data = serializer.data
+        response.status_code = status.HTTP_200_OK
+
+        return response
+
+    @action(detail=False, methods=["POST"], url_path="create-delivery-address",)
+    def create_delivery_address(self, request, *args, **kwargs):
+        """
+        Create a new delivery address
+        """
+        # Check that the user doesn't have already 3 delivery addresses
+        if self.get_queryset().count() >= 3:
+            response = Response()
+            response.status_code = status.HTTP_400_BAD_REQUEST
+            response.data = {"error": "You can't have more than 3 delivery addresses"}
+            return response
+
+        # Create the serializer
+        serializer = DeliveryAddressCreateSerializer(data=request.data)
+
+        # Check if the serializer is valid
+        serializer.is_valid(raise_exception=True)
+
+        # Save the delivery address
+        serializer.save(user_profile=self.get_user_profile())
+
+        # Create the response
+        response = Response()
+        response.data = serializer.data
+        response.status = status.HTTP_201_CREATED
+
+        return response
+
+    @action(detail=True, methods=["DELETE"], url_path="delete-delivery-address",)
+    def delete_delivery_address(self, request, *args, **kwargs):
+        """
+        Delete a delivery address
+        """
+        # Prepare the response
+        response = Response()
+
+        # Verify that the id of the delivery address is present in the request data
+        if "id" not in request.data:
+            response.status_code = status.HTTP_400_BAD_REQUEST
+            return response
+
+        # Get the delivery address
+        delivery_address = get_object_or_404(DeliveryAddress, id=request.data.get("id"))
+        delivery_address.delete()
+
+        # Create the response
+        response = Response()
+        response.status_code = status.HTTP_204_NO_CONTENT
+
+        return response
+
+
+#################################
+#                               #
+#        Feedback ViewSet       #
+#                               #
+#################################
+class PublicFeedbackViewSet(viewsets.ModelViewSet):
+    """
+    Viewset for the Feedback API, all users can access this api to submit feedbacks
+    """
+
+    serializer_class = FeedbackCreateSerializer
+    # Set the permission, all users can access this api
+    permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        return Feedback.objects.all()
+
+    @action(detail=True, methods=["POST"], url_path="create-new-feedback",)
+    def create_new_feedback(self, request, *args, **kwargs):
+        """
+        Create a new feedback
+        """
+
+        # Create the serializer
+        serializer = FeedbackCreateSerializer(data=request.data)
+
+        # Check if the serializer is valid
+        serializer.is_valid(raise_exception=True)
+
+        # Save the feedback
+        serializer.save()
+
+        # Create the response
+        response = Response()
+        response.data = serializer.data
+        response.status = status.HTTP_201_CREATED
+
+        return response
+
+
+
+#################################
+#                               #
+#        Wallet ViewSet         #
+#                               #
+#################################
+class PrivateWalletViewSet(viewsets.ModelViewSet):
+    """
+    Viewset for the Wallet API, only authenticated users can access this api.
+    Users can get wallet details and edit them.
+    """
+
+    serializer_class = WalletSerializer
+    # Set the permission, only authenticated users can access this api
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Wallet.objects.filter(user_profile=UserProfile.objects.filter(user=self.request.user).first())
+
+    def list(self, request, *args, **kwargs):
+        """
+        Return all the wallet details of the user
+        """
+        # Get the wallet details associated with the user profile
+        wallet = self.get_queryset().first()
+
+        # Create the response
+        response = Response()
+        response.data = {
+            "wallet": WalletSerializer(wallet).data,
+        }
+        response.status_code = status.HTTP_200_OK
+
+        return response
+
+    def update(self, request, *args, **kwargs):
+        # Get the wallet details
+        wallet = self.get_queryset().first()
+
+        # Create the serializer
+        serializer = WalletSerializer(wallet, data=request.data, partial=True)
+
+        # Check if the serializer is valid
+        serializer.is_valid(raise_exception=True)
+
+        # Save the wallet details
+        serializer.save()
+
+        # Create the response
+        response = Response()
+        response.data = serializer.data
+        response.status_code = status.HTTP_200_OK
+
+        return response

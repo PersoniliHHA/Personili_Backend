@@ -1,0 +1,7 @@
+# PostgreSQL
+# ------------------------------------------------------------------------------
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
+POSTGRES_DB=hih_pod_platform
+POSTGRES_USER=rQkgHsQNXmsqrMBQflJjZFJMmrADmZnF
+POSTGRES_PASSWORD=U498XKcfBNORHk3Vjgk0UcFJaSdSyYN2BzYDGFsZg3BZP0Fg38g7Gacsn3SpEx8L
