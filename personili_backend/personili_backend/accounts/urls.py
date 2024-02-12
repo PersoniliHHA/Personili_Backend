@@ -9,7 +9,7 @@ from personili_platform.accounts.api.views import PrivateWalletViewSet, PublicUs
 ############################## Router for User Management API ##############################
 
 router = DefaultRouter()
-# User management APIs
+# Account management APIs
 ## Public user management APIs
 router.register('signup', PublicUserSignUpViewSet, basename='signup')
 router.register('signin', PublicUserSignInViewSet, basename='signin')

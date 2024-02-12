@@ -1,14 +1,19 @@
 
 # Constants for image path prefixes and suffixes in the S3 bucket
+ADMIN_UPLOADED_IMAGES_PATH_PREFIX = {
+    'designs_images': 'images/admin/designs/',
+    'stores_images': 'images/admin/stores/',
+    'events_images': 'images/admin/events/',
+    'promotions_images': 'images/admin/promotions/',
+}
 # Designer uploaded images for designs and stores
 DESIGNER_UPLOADED_IMAGES_PATH_TEMPLATES = {
     'uploaded_designs': 'images/designer_uploaded_images/designs/{designer_id}-{designer_email}/{collection_id}-{collection_title}/{design_id}-{design_title}',
     'store': 'images/designer_uploaded_images/stores/{designer_id-designer_email}/store/',
 }
 
-
 # User uploaded images
-USER_UPLOADED_IMAGES_PATH_PREFIX = {
+USER_UPLOADED_PROFILE_IMAGES_PATH_PREFIX = {
     'profile_pictures': 'images/user/profile_pictures/{user_profile}-{user_email}',
 }
 
