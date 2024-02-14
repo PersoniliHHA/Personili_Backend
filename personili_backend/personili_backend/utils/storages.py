@@ -7,6 +7,9 @@ import boto3
 # Django imports
 from django.urls import path, include
 
+# Local imports
+from personili_backend.config.settings.base import settings
+
 ###################################
 ####         S3 File storage  #####
 ###################################

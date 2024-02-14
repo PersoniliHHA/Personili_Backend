@@ -61,7 +61,7 @@ class TimeStampedModel(models.Model):
 #########################################
 #               User model              #
 #########################################
-class User(AbstractBaseUser, TimeStampedModel):
+class Account(AbstractBaseUser, TimeStampedModel):
     """Custom user model that implements:
       id primary key, email, username, active, staff, admin, created_at, updated_at"""
 
@@ -84,46 +84,13 @@ class User(AbstractBaseUser, TimeStampedModel):
 
     def __str__(self) -> str:
         return str(self.id) + " - " + self.email + " - " + self.username
-
-    def get_id(self) -> str:
-        return str(self.id)
-
-    def get_email(self) -> str:
-        return self.email
-
-    def get_username(self) -> str:
-        return self.username
-
-    def is_active(self) -> bool:
-        return self.active
-
-    def is_admin(self) -> bool:
-        return self.admin and self.active
-
-    def is_staff(self) -> bool:
-        return self.staff and self.active
-
-    def is_superuser(self) -> bool:
-        return self.superuser and self.active
-
-    def has_perm(self, perm, obj=None) -> bool:
-        return self.is_admin()
-
-    def has_module_perms(self, app_label) -> bool:
-        return self.is_admin()
     
-    def get_full_user_profile(self):
-        """
-        This method returns
-        """
-
-
 
 #########################################
 #           User Profile model          #
 #########################################
 
-class UserProfile(TimeStampedModel):
+class AccountProfile(TimeStampedModel):
     """User profile model, each user has one and only one profile.
        A blank profile is created when the user is created.
        The User profile has :
@@ -134,9 +101,12 @@ class UserProfile(TimeStampedModel):
 
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    account = models.OneToOneField(Account, on_delete=models.CASCADE, related_name='profile')
     profile_picture_path = models.CharField(max_length=255, null=True, blank=True)
     phone_number = models.CharField(max_length=255, null=True, blank=True)
+    age = models.IntegerField(null=True, blank=True)
+    gender = models.CharField(max_length=255, null=True, blank=True)
+    dateç_of_birth = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return str(self.id) + " - " + self.user.email + " - " + self.user.username
@@ -146,11 +116,6 @@ class UserProfile(TimeStampedModel):
 
     def get_profile_picture(self) -> str:
         return self.profile_picture_path
-
-
-    def get_store_and_collections(self):
-        return None
-
 
 #########################################
 #          Delivery address model       #
@@ -168,7 +133,7 @@ class DeliveryAddress(TimeStampedModel):
     - Country
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='deliveryaddress')
+    account_profile = models.ForeignKey(AccountProfile, on_delete=models.CASCADE, related_name='deliveryaddress')
     street = models.CharField(max_length=255, null=True)
     city = models.CharField(max_length=255, null=True)
     zip_code = models.CharField(max_length=255, null=True)
@@ -196,7 +161,7 @@ class PaymentMethod(TimeStampedModel):
     - Security code
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='payment_details', default=None)
+    account_profile = models.ForeignKey(AccountProfile, on_delete=models.CASCADE, related_name='payment_details', default=None)
     payment_method_name = models.CharField(max_length=255, null=True)
     cardholder_name = models.CharField(max_length=255, null=True)
     card_number = models.CharField(max_length=255, null=True)

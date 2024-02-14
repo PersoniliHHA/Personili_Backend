@@ -7,7 +7,7 @@ import environ
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # hih_pod_platform/
-APPS_DIR = BASE_DIR / "hih_pod_platform"
+APPS_DIR = BASE_DIR / "personili_backend"
 
 env = environ.Env()
 
@@ -115,7 +115,7 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
-AUTH_USER_MODEL = "usermanagement.User"
+AUTH_USER_MODEL = "accounts.Account"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-redirect-url
 LOGIN_REDIRECT_URL = "http://localhost:8000"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-url
@@ -283,13 +283,13 @@ ACCOUNT_EMAIL_REQUIRED = True
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-ACCOUNT_ADAPTER = "hih_pod_platform.usermanagement.adapters.AccountAdapter"
+ACCOUNT_ADAPTER = "personili_backend.accounts.adapters.AccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/forms.html
-ACCOUNT_FORMS = {"signup": "hih_pod_platform.usermanagement.forms.UserSignupForm"}
+ACCOUNT_FORMS = {"signup": "personili_backend.accounts.forms.UserSignupForm"}
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-SOCIALACCOUNT_ADAPTER = "hih_pod_platform.usermanagement.adapters.SocialAccountAdapter"
+SOCIALACCOUNT_ADAPTER = "personili_backend.accounts.adapters.SocialAccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/forms.html
-SOCIALACCOUNT_FORMS = {"signup": "hih_pod_platform.usermanagement.forms.UserSocialSignupForm"}
+SOCIALACCOUNT_FORMS = {"signup": "personili_backend.accounts.forms.UserSocialSignupForm"}
 
 # django-rest-framework
 # -------------------------------------------------------------------------------
@@ -297,18 +297,12 @@ SOCIALACCOUNT_FORMS = {"signup": "hih_pod_platform.usermanagement.forms.UserSoci
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.SessionAuthentication",
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
-SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=90),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
-    "AUTH_HEADER_TYPES": ("Bearer",),
-    "ALGORITHM": "HS512",
-}
+
 
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
 CORS_URLS_REGEX = r"^/api/.*$"
@@ -316,7 +310,7 @@ CORS_URLS_REGEX = r"^/api/.*$"
 # By Default swagger ui is available only to admin user(s). You can change permission classes to change that
 # See more configuration options at https://drf-spectacular.readthedocs.io/en/latest/settings.html#settings
 SPECTACULAR_SETTINGS = {
-    "TITLE": "Hih Pod Platform API",
+    "TITLE": "Personili API",
     "DESCRIPTION": "Documentation of API endpoints of Hih Pod Platform",
     "VERSION": "1.0.0",
     "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],

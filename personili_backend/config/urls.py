@@ -25,7 +25,7 @@ if settings.DEBUG:
 
 # API URLS
 urlpatterns += [
-    path("api/", include("usermanagement.urls")),
+    path("api/", include("accounts.urls")),
     path("api/", include("designs.urls")),
     path("api/", include("personalizables.urls")),
     path("api/", include("products.urls")),

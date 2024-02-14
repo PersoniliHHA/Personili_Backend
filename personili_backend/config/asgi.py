@@ -16,7 +16,7 @@ from django.core.asgi import get_asgi_application
 # This allows easy placement of apps within the interior
 # hih_pod_platform directory.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
-sys.path.append(str(BASE_DIR / "hih_pod_platform"))
+sys.path.append(str(BASE_DIR / "personili_backend"))
 
 # If DJANGO_SETTINGS_MODULE is unset, default to the local settings
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.local")

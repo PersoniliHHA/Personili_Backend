@@ -1,9 +1,9 @@
 from django.contrib import admin
-from accounts.models import User, UserProfile, DeliveryAddress, PaymentMethod, Feedback, Blacklist, Wallet, Transaction
+from accounts.models import Account, AccountProfile, DeliveryAddress, PaymentMethod, Feedback, Blacklist, Wallet, Transaction
 
 # Add all usermanagement app models to admin site
-admin.site.register(User)
-admin.site.register(UserProfile)
+admin.site.register(Account)
+admin.site.register(AccountProfile)
 admin.site.register(DeliveryAddress)
 admin.site.register(PaymentMethod)
 admin.site.register(Feedback)
