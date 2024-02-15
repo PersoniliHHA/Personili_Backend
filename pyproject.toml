@@ -42,6 +42,7 @@ Werkzeug={version="2.2.3",extras=["watchdog"]} # https://github.com/pallets/werk
 ipdb="0.13.13"  # https://github.com/gotcha/ipdb
 psycopg2="2.9.9"  # https://github.com/psycopg/psycopg2
 watchfiles="0.18.1"  # https://github.com/samuelcolvin/watchfiles
+django-debug-toolbar = ">=4.3.0"
 
 # Testing
 # ------------------------------------------------------------------------------
@@ -69,7 +70,6 @@ pre-commit="3.2.1"  # https://github.com/pre-commit/pre-commit
 # ------------------------------------------------------------------------------
 factory-boy="3.2.1"  # https://github.com/FactoryBoy/factory_boy
 
-django-debug-toolbar="3.8.1"  # https://github.com/jazzband/django-debug-toolbar
 django-extensions="3.2.1"  # https://github.com/django-extensions/django-extensions
 django-coverage-plugin="3.0.0"  # https://github.com/nedbat/django_coverage_plugin
 pytest-django="4.5.2"  # https://github.com/pytest-dev/pytest-django

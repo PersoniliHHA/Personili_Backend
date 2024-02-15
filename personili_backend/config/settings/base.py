@@ -6,8 +6,10 @@ from pathlib import Path
 import environ
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
-# hih_pod_platform/
+# personili_backend/
 APPS_DIR = BASE_DIR / "personili_backend"
+print("µµµµµµµµµµµµµµµµµµµµµµµµµµµµ")
+print(APPS_DIR)
 
 env = environ.Env()
 
@@ -92,11 +94,11 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    "accounts.apps.AccountsConfig",
-    "designs.apps.DesignsConfig",
-    "personalizables.apps.PersonalizablesConfig",
-    "products.apps.ProductsConfig",
-    "orders.apps.OrdersConfig",
+    "personili_backend.accounts.apps.AccountsConfig",
+    "personili_backend.designs.apps.DesignsConfig",
+    "personili_backend.personalizables.apps.PersonalizablesConfig",
+    "personili_backend.products.apps.ProductsConfig",
+    "personili_backend.orders.apps.OrdersConfig",
 
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -105,7 +107,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 # MIGRATIONS
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#migration-modules
-MIGRATION_MODULES = {"sites": "hih_pod_platform.contrib.sites.migrations"}
+MIGRATION_MODULES = {"sites": "personili_backend.contrib.sites.migrations"}
 
 # AUTHENTICATION
 # ------------------------------------------------------------------------------
