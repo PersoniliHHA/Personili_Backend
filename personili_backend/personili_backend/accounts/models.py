@@ -87,7 +87,7 @@ class Account(AbstractBaseUser, TimeStampedModel):
     
 
 #########################################
-#           User Profile model          #
+#           Account Profile model          #
 #########################################
 
 class AccountProfile(TimeStampedModel):
@@ -106,7 +106,7 @@ class AccountProfile(TimeStampedModel):
     phone_number = models.CharField(max_length=255, null=True, blank=True)
     age = models.IntegerField(null=True, blank=True)
     gender = models.CharField(max_length=255, null=True, blank=True)
-    dateç_of_birth = models.DateField(null=True, blank=True)
+    date_of_birth = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return str(self.id) + " - " + self.user.email + " - " + self.user.username
@@ -197,7 +197,7 @@ class Wallet(TimeStampedModel):
         (REJECTED, 'Rejected'),
     ]
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    user_profile = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='wallet')
+    user_profile = models.OneToOneField(AccountProfile, on_delete=models.CASCADE, related_name='wallet')
     wallet_balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     wallet_currency = models.CharField(max_length=255, null=True)
     wallet_status = models.CharField(choices=STATUS, default=INACTIVE, max_length=255)
