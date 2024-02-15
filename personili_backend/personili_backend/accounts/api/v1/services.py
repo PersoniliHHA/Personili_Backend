@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import status
 
 # Serializers
-from accounts.api.serializers import UserSignUpSerializer
+from personili_backend.personili_backend.accounts.api.v1.serializers import UserSignUpSerializer
 
 # Models
 from accounts.models import UserProfile, DeliveryAddress, PaymentMethod

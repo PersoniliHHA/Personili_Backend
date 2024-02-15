@@ -11,13 +11,13 @@ from django.contrib.auth import get_user_model, authenticate
 from django.db import transaction, IntegrityError, DatabaseError, Error
 
 # local imports
-from accounts.api.serializers import UserSignUpSerializer, UserSignInSerializer, UserProfileSerializer,  PaymentMethodSerializer, WalletSerializer, TransactionSerializer, FeedbackCreateSerializer
+from personili_backend.personili_backend.accounts.api.v1.serializers import UserSignUpSerializer, UserSignInSerializer, UserProfileSerializer,  PaymentMethodSerializer, WalletSerializer, TransactionSerializer, FeedbackCreateSerializer
 from personili_platform.utils.utilities import create_token_pairs
 from accounts.models import UserProfile, DeliveryAddress, PaymentMethod, Wallet, Transaction, Feedback
-from accounts.api.permissions import ProfileApiPermission, PrivateDeliveryAddressApiPermission
+from personili_backend.personili_backend.accounts.api.v1.permissions import ProfileApiPermission, PrivateDeliveryAddressApiPermission
 from utils.storages import MediaStorage
 from designs.models import Store, StoreProfile, Collection
-from accounts.api.serializers import DeliveryAddressCreateSerializer, DeliveryAddressUpdateSerializer, DeliveryAddressDeleteSerializer, DeliveryAddressGetSerializer, BaseDeliveryAddressSerializer
+from personili_backend.personili_backend.accounts.api.v1.serializers import DeliveryAddressCreateSerializer, DeliveryAddressUpdateSerializer, DeliveryAddressDeleteSerializer, DeliveryAddressGetSerializer, BaseDeliveryAddressSerializer
 
 # Standard imports
 import logging as logger
