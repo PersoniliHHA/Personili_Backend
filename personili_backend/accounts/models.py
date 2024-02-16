@@ -12,35 +12,35 @@ class CustomUserManager(BaseUserManager):
         if not email:
             raise ValueError('Email must be set for user')
 
-        user = self.model(email=self.normalize_email(email), **extra_fields)
-        user.set_password(password)
-        user.save(using=self._db)  # using=self._db is required for supporting multiple databases with Django
+        account = self.model(email=self.normalize_email(email), **extra_fields)
+        account.set_password(password)
+        account.save(using=self._db)  # using=self._db is required for supporting multiple databases with Django
 
-        return user
+        return account
 
     def create_superuser(self, email, password, **extra_fields):
         # creates, saves and returns a `User` with email, and password
         if not email:
             raise ValueError('Email must be set for superuser')
 
-        user = self.model(email=self.normalize_email(email), **extra_fields)
-        user.set_password(password)
-        user.admin = True
-        user.staff = True
-        user.superuser = True
-        user.save(using=self._db)
-        return user
+        account = self.model(email=self.normalize_email(email), **extra_fields)
+        account.set_password(password)
+        account.is_admin = True
+        account.is_staff = True
+        account.is_superuser = True
+        account.save(using=self._db)
+        return account
 
     def create_staff_user(self, email, password, **extra_fields):
         # creates, saves and returns a `User` with email, and password
         if not email:
             raise ValueError('Email must be set for staff user')
 
-        user = self.model(email=self.normalize_email(email), **extra_fields)
-        user.set_password(password)
-        user.staff = True
-        user.save(using=self._db)
-        return user
+        account = self.model(email=self.normalize_email(email), **extra_fields)
+        account.set_password(password)
+        account.is_staff = True
+        account.save(using=self._db)
+        return account
 
 
 ###################################
@@ -71,11 +71,10 @@ class Account(AbstractBaseUser, TimeStampedModel):
                               max_length=255,
                               error_messages={"unique": "A user with that email already exists."})
     email_verified = models.BooleanField(default=False)
-    username = models.CharField(max_length=255)
-    active = models.BooleanField(default=True)
-    staff = models.BooleanField(default=False)
-    admin = models.BooleanField(default=False)
-    superuser = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
 
     objects = CustomUserManager()
 
@@ -102,6 +101,7 @@ class AccountProfile(TimeStampedModel):
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     account = models.OneToOneField(Account, on_delete=models.CASCADE, related_name='profile')
+    username = models.CharField(max_length=255, null=True, blank=True)
     profile_picture_path = models.CharField(max_length=255, null=True, blank=True)
     phone_number = models.CharField(max_length=255, null=True, blank=True)
     age = models.IntegerField(null=True, blank=True)
