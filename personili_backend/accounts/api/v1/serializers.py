@@ -53,7 +53,7 @@ class UserSignInSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('email', 'password')
-        read_only_fields = ('id', 'username', 'is_active', 'is_staff', 'is_superuser')
+        read_only_fields = ('id', 'username', 'active', 'staff', 'superuser')
 
 
 #################################
