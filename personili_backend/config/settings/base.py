@@ -116,7 +116,7 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
-AUTH_USER_MODEL = "Account"
+AUTH_USER_MODEL = "accounts.Account"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-redirect-url
 LOGIN_REDIRECT_URL = "http://localhost:8000"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-url
