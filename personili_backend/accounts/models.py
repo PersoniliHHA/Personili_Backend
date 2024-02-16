@@ -81,6 +81,12 @@ class Account(AbstractBaseUser, TimeStampedModel):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []  # Email and password are required by default
 
+    def has_perm(self, perm, obj=None):
+        return self.is_admin and self.is_active
+    
+    def has_module_perms(self, app_label):
+        return self.is_admin and self.is_active
+    
     def __str__(self) -> str:
         return str(self.id) + " - " + self.email + " - " + self.username
     
