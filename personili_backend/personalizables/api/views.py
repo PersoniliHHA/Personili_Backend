@@ -7,7 +7,7 @@ from rest_framework.generics import get_object_or_404
 # Local imports
 from personalizables.models import Category, PersonalizationType, PersonalizationMethod, Personalizable, PersonalizableVariant, PersonalizableZone
 from personalizables.api.serializers import CategorySerializer, PersonalizationTypeGetSerializer, PersonalizationMethodGetSerializer
-from accounts.models import UserProfile, User
+from accounts.models import AccountProfile
 
 # Standard imports
 from typing import List
@@ -54,7 +54,7 @@ class PersonalizableViewSet(viewsets.ModelViewSet):
         """
         This method returns the user profile of the user who made the request
         """
-        user_profile = get_object_or_404(UserProfile, user=self.request.user)
+        user_profile = get_object_or_404(AccountProfile, user=self.request.user)
         return user_profile
 
    
@@ -75,7 +75,7 @@ class PersonalizationTypeViewSet(viewsets.ModelViewSet):
 
     def get_user_profile(self):
         """This method returns the user profile of the user who made the request"""
-        user_profile = get_object_or_404(UserProfile, user=self.request.user)
+        user_profile = get_object_or_404(AccountProfile, user=self.request.user)
         return user_profile
     
 
