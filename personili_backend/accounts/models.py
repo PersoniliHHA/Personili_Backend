@@ -59,7 +59,7 @@ class TimeStampedModel(models.Model):
 
 
 #########################################
-#               User model              #
+#             Account model             #
 #########################################
 class Account(AbstractBaseUser, TimeStampedModel):
     """Custom user model that implements:
@@ -91,12 +91,12 @@ class Account(AbstractBaseUser, TimeStampedModel):
 #########################################
 
 class AccountProfile(TimeStampedModel):
-    """User profile model, each user has one and only one profile.
-       A blank profile is created when the user is created.
-       The User profile has :
-       - User Profile id as a primary key
-       - User id as a foreign key
-       - User profile picture
+    """Account profile model, each account has one and only one profile.
+       A blank profile is created when the account is created.
+       The account profile has :
+       - Account Profile id as a primary key
+       - Account id as a foreign key
+       - Account profile picture
        - Delivery address id as a foreign key
 
     """
@@ -197,7 +197,7 @@ class Wallet(TimeStampedModel):
         (REJECTED, 'Rejected'),
     ]
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    user_profile = models.OneToOneField(AccountProfile, on_delete=models.CASCADE, related_name='wallet')
+    account_profile = models.OneToOneField(AccountProfile, on_delete=models.CASCADE, related_name='wallet')
     wallet_balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     wallet_currency = models.CharField(max_length=255, null=True)
     wallet_status = models.CharField(choices=STATUS, default=INACTIVE, max_length=255)
@@ -259,5 +259,13 @@ class Feedback(TimeStampedModel):
 #            Blacklist model            #
 #########################################
 class Blacklist(TimeStampedModel):
-    # define custom fields here
-    pass
+    """
+    Blacklist contains an email, a reason and a date of blacklisting.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    email = models.EmailField(null=True)
+    reason = models.TextField(null=True)
+    date_blacklisted = models.DateTimeField(null=True)
+
+    def __str__(self) -> str:
+        return self.email + ' - ' + self.reason

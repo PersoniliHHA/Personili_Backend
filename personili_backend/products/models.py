@@ -5,7 +5,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
 # local imports
-from accounts.models import TimeStampedModel, UserProfile, DeliveryAddress, PaymentMethod
+from accounts.models import TimeStampedModel, AccountProfile, DeliveryAddress, PaymentMethod
 from designs.models import Store
 from personalizables.models import Category, DesignedPersonalizableVariant
 

@@ -9,7 +9,7 @@ from accounts.models import TimeStampedModel
 from treebeard.mp_tree import MP_Node
 
 # Utilities
-from utils.utilities import store_image_in_s3, get_presigned_url_for_image
+from utils.utilities import get_presigned_url_for_image
 
 
 #########################################

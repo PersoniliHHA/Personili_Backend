@@ -7,9 +7,10 @@ import environ
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # personili_backend/
-APPS_DIR = BASE_DIR / "personili_backend"
-print("µµµµµµµµµµµµµµµµµµµµµµµµµµµµ")
+APPS_DIR = BASE_DIR 
+print("*******************************")
 print(APPS_DIR)
+print("*******************************")
 
 env = environ.Env()
 
@@ -23,8 +24,6 @@ BOTO3_DEBUG = True
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
 DEBUG = env.bool("DJANGO_DEBUG", False) # type: ignore
 # use S3 bucket for storage
-#STORAGES = {"default": {"BACKEND": "storages.backends.s3boto3.S3Boto3Storage"}}
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 AWS_ACCESS_KEY_ID = env.str("AWS_ACCESS_KEY_ID", None)
 AWS_SECRET_ACCESS_KEY = env.str("AWS_SECRET_ACCESS_KEY", None)
 AWS_S3_SIGNATURE_VERSION = env.str("AWS_S3_SIGNATURE_VERSION", None)
@@ -94,11 +93,11 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    "personili_backend.accounts.apps.AccountsConfig",
-    "personili_backend.designs.apps.DesignsConfig",
-    "personili_backend.personalizables.apps.PersonalizablesConfig",
-    "personili_backend.products.apps.ProductsConfig",
-    "personili_backend.orders.apps.OrdersConfig",
+    "accounts.apps.AccountsConfig",
+    "designs.apps.DesignsConfig",
+    "personalizables.apps.PersonalizablesConfig",
+    "products.apps.ProductsConfig",
+    "orders.apps.OrdersConfig",
 
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

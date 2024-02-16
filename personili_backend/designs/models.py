@@ -6,7 +6,7 @@ from enum import Enum
 from django.db import models
 
 # Models
-from accounts.models import UserProfile
+from accounts.models import AccountProfile
 from accounts.models import TimeStampedModel
 from personalizables.models import PersonalizableVariant
 
@@ -27,7 +27,7 @@ class Store(TimeStampedModel):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     name = models.CharField(max_length=255)
     # user can can have many stores linked to its profile
-    user_profile = models.ForeignKey(UserProfile, on_delete=models.DO_NOTHING, related_name='store')
+    account_profile = models.ForeignKey(AccountProfile, on_delete=models.DO_NOTHING, related_name='store')
 
     def __str__(self):
         return self.user_profile.user.email + " - " + self.name

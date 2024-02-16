@@ -6,7 +6,7 @@ from rest_framework.response import Response
 
 # Local imports
 from designs.models import Store, Design, Collection, Theme
-from accounts.models import UserProfile
+from accounts.models import AccountProfile
 from designs.api.serializers import DesignSerializerBase, DesignPostSerializer, DesignGetSerializerHeavy, DesignGetSerializerLight
 from utils.constants import DESIGNER_UPLOADED_IMAGES_PATH_TEMPLATES
 from utils.utilities import store_image_in_s3

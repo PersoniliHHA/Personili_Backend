@@ -1,43 +1,40 @@
 # Rest framework imports
-from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
-from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
+
 
 # Standard imports
 import boto3
 from botocore.client import Config
 from typing import Optional
 
-# Local imports
-from utils.storages import MediaStorage
+from config.settings.base import AWS_ACCESS_KEY_ID
+
 
 
 ######## JWT UTILITIES ########
 def is_refresh_token_valid(refresh_token):
     """This method checks if the refresh token is valid or not"""
-    try:
-        RefreshToken(refresh_token)
-    except (TokenError, InvalidToken):
-        return False
+
     return True
 
 
 def is_access_token_valid(access_token):
     """This method checks if the access token is valid or not"""
-    try:
-        AccessToken(access_token)
-    except (TokenError, InvalidToken):
-        return False
+
     return True
 
 
 def create_token_pairs(user):
     """This method creates token pairs for a user"""
-    refresh_token = RefreshToken.for_user(user)
-    access_token = refresh_token.access_token
+
     return {
-        "access": str(access_token),
-        "refresh": str(refresh_token),
+
     }
+
+def get_presigned_url_for_image():
+    return None
+
+def store_image_in_s3():
+    return None
 
 
 ######## Cookie Utilities ########

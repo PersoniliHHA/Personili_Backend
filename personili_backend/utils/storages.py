@@ -7,19 +7,19 @@ import boto3
 # Django imports
 from django.urls import path, include
 
-# Local imports
-from personili_backend.config.settings.base import settings
+
+
 
 ###################################
 ####         S3 File storage  #####
 ###################################
-def store_images_in_bucket(files_and_paths: List[dict[str, Union[str, File]]]) -> List[str]:
+def store_images_in_bucket(files_and_paths: List[dict[str, Union[str, str]]]) -> List[str]:
     """
     Store a list of images in aws s3 bucket
     """
 
     # Create the s3 client
-    s3_client = boto3.client("s3", region_name=settings.AWS_REGION_NAME)
+    s3_client = boto3.client("s3", region_name="AWS_REGION_NAME")
 
     # Iterate over the list of files and paths
     for file_and_path in files_and_paths:
@@ -30,7 +30,7 @@ def store_images_in_bucket(files_and_paths: List[dict[str, Union[str, File]]]) -
         # Store the file in s3
         s3_client.upload_fileobj(
             file,
-            settings.AWS_S3_BUCKET_NAME,
+            "AWS_S3_BUCKET_NAME",
             file_path,
         )
 

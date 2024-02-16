@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class OrdersConfig(AppConfig):
+class DesignsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'personili_backend.orders'
+    name = 'designs'

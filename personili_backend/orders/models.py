@@ -5,7 +5,7 @@ from uuid import uuid4
 from datetime import datetime
 
 # Model imports
-from accounts.models import UserProfile, DeliveryAddress, PaymentMethod
+from accounts.models import AccountProfile, DeliveryAddress, PaymentMethod
 from accounts.models import TimeStampedModel
 from personalizables.models import PersonalizableVariant
 from products.models import Product 
@@ -26,7 +26,7 @@ class Cart(TimeStampedModel):
     """
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    account_profile = models.ForeignKey(AccountProfile, on_delete=models.CASCADE)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     open = models.BooleanField(default=True)
 
@@ -36,7 +36,7 @@ class Cart(TimeStampedModel):
     
 
     @classmethod
-    def is_there_an_open_cart(cls, user_profile: UserProfile) -> bool:
+    def is_there_an_open_cart(cls, user_profile: AccountProfile) -> bool:
         """
         This method will check if there is a cart which is open, if yes then it will return True, otherwise
         it will return False
@@ -48,7 +48,7 @@ class Cart(TimeStampedModel):
             return False
     
     @classmethod
-    def create_or_get_the_cart(cls, user_profile: UserProfile):
+    def create_or_get_the_cart(cls, user_profile: AccountProfile):
         """
         This method will check if there is a cart which is open, if yes then it will return it, otherwise
         it will create a new one and return it as well
@@ -89,7 +89,7 @@ class Cart(TimeStampedModel):
             cart_item.sub_total = cart_item.product.price * quantity
             cart_item.save()      
         
-    def validate_the_cart(self, user_profile: UserProfile, delivery_address_id: str, payment_method_id: str):
+    def validate_the_cart(self, user_profile: AccountProfile, delivery_address_id: str, payment_method_id: str):
         """
         This method will transform the cart and its items into an order with its order items
         - First it will create the order, then it will create the order items and finally it will create the bill
@@ -180,7 +180,7 @@ class Order(TimeStampedModel):
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    user_profile = models.ForeignKey(AccountProfile, on_delete=models.CASCADE)
     order_date = models.DateTimeField(auto_now_add=True)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     order_status = models.CharField(max_length=20, default=PENDING, choices=ORDER_STATUS_CHOICES)

@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 # Django imports
 from django.urls import path, include
 
-from api.v1.views import PrivateWalletViewSet, PublicUserSignUpViewSet, PublicUserSignInViewSet, PrivateUserSignOutViewSet, PrivateProfileViewSet, DeliveryAddressViewSet, PublicFeedbackViewSet
+from .api.v1.views import PrivateWalletViewSet, PublicUserSignUpViewSet, PublicUserSignInViewSet, PrivateUserSignOutViewSet, PrivateProfileViewSet, DeliveryAddressViewSet, PublicFeedbackViewSet
 
 ############################## Router for User Management API ##############################
 

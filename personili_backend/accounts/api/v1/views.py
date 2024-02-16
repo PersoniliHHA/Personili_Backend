@@ -2,8 +2,6 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework.response import Response
 
 # django imports
@@ -11,13 +9,12 @@ from django.contrib.auth import get_user_model, authenticate
 from django.db import transaction, IntegrityError, DatabaseError, Error
 
 # local imports
-from personili_backend.personili_backend.accounts.api.v1.serializers import UserSignUpSerializer, UserSignInSerializer, UserProfileSerializer,  PaymentMethodSerializer, WalletSerializer, TransactionSerializer, FeedbackCreateSerializer
-from personili_platform.utils.utilities import create_token_pairs
-from accounts.models import UserProfile, DeliveryAddress, PaymentMethod, Wallet, Transaction, Feedback
-from personili_backend.personili_backend.accounts.api.v1.permissions import ProfileApiPermission, PrivateDeliveryAddressApiPermission
-from utils.storages import MediaStorage
+from accounts.api.v1.serializers import UserSignUpSerializer, UserSignInSerializer, UserProfileSerializer,  PaymentMethodSerializer, WalletSerializer, TransactionSerializer, FeedbackCreateSerializer
+from utils.utilities import create_token_pairs
+from accounts.models import AccountProfile, DeliveryAddress, PaymentMethod, Wallet, Transaction, Feedback
+from accounts.api.v1.permissions import ProfileApiPermission, PrivateDeliveryAddressApiPermission
 from designs.models import Store, StoreProfile, Collection
-from personili_backend.personili_backend.accounts.api.v1.serializers import DeliveryAddressCreateSerializer, DeliveryAddressUpdateSerializer, DeliveryAddressDeleteSerializer, DeliveryAddressGetSerializer, BaseDeliveryAddressSerializer
+from accounts.api.v1.serializers import DeliveryAddressCreateSerializer, DeliveryAddressUpdateSerializer, DeliveryAddressDeleteSerializer, DeliveryAddressGetSerializer, BaseDeliveryAddressSerializer
 
 # Standard imports
 import logging as logger
@@ -63,7 +60,7 @@ class PublicUserSignUpViewSet(viewsets.ModelViewSet):
                 user = serializer.save()
 
                 # Create an empty user profile for the user
-                profile = UserProfile()
+                profile = AccountProfile()
                 profile.user = user
                 profile.save()
 
@@ -172,8 +169,7 @@ class PrivateUserSignOutViewSet(viewsets.ModelViewSet):
         try:
             # refresh_token = request.data.get("refresh_token")
             refresh_token = request.COOKIES.get("refresh_token")
-            token = RefreshToken(refresh_token)
-            token.blacklist()
+
             return Response(status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
             print(e)
@@ -270,7 +266,7 @@ class DeliveryAddressViewSet(viewsets.ModelViewSet):
         return DeliveryAddress.objects.filter(user_profile=UserProfile.objects.filter(user=self.request.user).first())
 
     def get_user_profile(self):
-        return UserProfile.objects.filter(user=self.request.user).first()
+        return AccountProfile.objects.filter(user=self.request.user).first()
 
     def get_serializer_class(self):
         if self.action == "create-delivery-address":

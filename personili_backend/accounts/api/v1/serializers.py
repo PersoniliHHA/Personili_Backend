@@ -5,7 +5,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 
 # Local imports
-from accounts.models import UserProfile, DeliveryAddress, PaymentMethod, Feedback, Wallet, Transaction
+from accounts.models import AccountProfile, DeliveryAddress, PaymentMethod, Feedback, Wallet, Transaction
 
 # get the user model
 User = get_user_model()
@@ -195,7 +195,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     """
 
     class Meta:
-        model = UserProfile
+        model = AccountProfile
         exclude = ('user', 'created_at', 'updated_at')
         read_only_fields = ('id',)
 
