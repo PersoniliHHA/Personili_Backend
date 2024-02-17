@@ -91,7 +91,7 @@ class Account(AbstractBaseUser, TimeStampedModel):
         return self.is_admin and self.is_active
     
     def __str__(self) -> str:
-        return str(self.id) + " - " + self.email + " - " + self.username
+        return str(self.id) + " - " + self.email 
     
 
 #########################################
