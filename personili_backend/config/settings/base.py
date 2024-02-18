@@ -8,9 +8,6 @@ import environ
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # personili_backend/
 APPS_DIR = BASE_DIR 
-print("*******************************")
-print(APPS_DIR)
-print("*******************************")
 
 env = environ.Env()
 
