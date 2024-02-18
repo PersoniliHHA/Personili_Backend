@@ -284,13 +284,13 @@ ACCOUNT_EMAIL_REQUIRED = True
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-ACCOUNT_ADAPTER = "accounts.adapters.AccountAdapter"
+#ACCOUNT_ADAPTER = "accounts.adapters.AccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/forms.html
-ACCOUNT_FORMS = {"signup": "accounts.forms.UserSignupForm"}
+#ACCOUNT_FORMS = {"signup": "accounts.forms.UserSignupForm"}
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-SOCIALACCOUNT_ADAPTER = "accounts.adapters.SocialAccountAdapter"
+#SOCIALACCOUNT_ADAPTER = "accounts.adapters.SocialAccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/forms.html
-SOCIALACCOUNT_FORMS = {"signup": "accounts.forms.UserSocialSignupForm"}
+#SOCIALACCOUNT_FORMS = {"signup": "accounts.forms.UserSocialSignupForm"}
 
 # django-rest-framework
 # -------------------------------------------------------------------------------
