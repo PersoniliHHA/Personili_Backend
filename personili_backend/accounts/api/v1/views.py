@@ -3,18 +3,21 @@ from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
-# django imports
+# Django imports
 from django.contrib.auth import get_user_model, authenticate
 from django.db import transaction, IntegrityError, DatabaseError, Error
 
-# local imports
-from accounts.api.v1.serializers import AccountSignUpserializer, UserSignInSerializer, UserProfileSerializer,  PaymentMethodSerializer, WalletSerializer, TransactionSerializer, FeedbackCreateSerializer
-from utils.utilities import create_token_pairs
-from accounts.models import AccountProfile, DeliveryAddress, PaymentMethod, Wallet, Transaction, Feedback
-from accounts.api.v1.permissions import ProfileApiPermission, PrivateDeliveryAddressApiPermission
-from designs.models import Store, StoreProfile, Collection
+# Serializer imports
+from accounts.api.v1.serializers import MainAccountSignUpserializer, UserSignInSerializer, UserProfileSerializer,  PaymentMethodSerializer, WalletSerializer, TransactionSerializer, FeedbackCreateSerializer
 from accounts.api.v1.serializers import DeliveryAddressCreateSerializer, DeliveryAddressUpdateSerializer, DeliveryAddressDeleteSerializer, DeliveryAddressGetSerializer, BaseDeliveryAddressSerializer
+from accounts.api.v1.permissions import ProfileApiPermission, PrivateDeliveryAddressApiPermission
+
+# Models
+from accounts.models import AccountProfile, DeliveryAddress, PaymentMethod, Wallet, Transaction, Feedback, AccountBlacklist
+from designs.models import Store, StoreProfile, Collection
+
 
 # Standard imports
 import logging as logger
@@ -40,13 +43,13 @@ class AccountAuthViewSet(viewsets.ModelViewSet):
     permission_classes = [
         permissions.AllowAny
     ]
-    serializer_class = AccountSignUpserializer
+    serializer_class = MainAccountSignUpserializer
 
     def create(self, request, *args, **kwargs):
 
         """This method is used to register a new user"""
 
-        serializer = AccountSignUpserializer(data=request.data)
+        serializer = MainAccountSignUpserializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         email = serializer.validated_data.get('email')
 
@@ -113,41 +116,39 @@ class AccountAuthViewSet(viewsets.ModelViewSet):
 
         return response
 
-@action(detail=False, methods=["POST"], url_path="main-account-sign-up")
-def sign_up(self, request, *args, **kwargs):
+@action(detail=False, methods=["POST"], url_path="main-account-sign-up", permission_classes=[permissions.AllowAny])
+def main_account_sign_up(self, request, *args, **kwargs):
     """This method is used to register a new user
     Checks to make before creating a new user:
     - Check if the user with this email already exists
     - Check if the email is blacklisted or not
-    
-
     - the account will be created with a its profile empty
     """
-    serializer = AccountSignUpserializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
+
+    # 1- Validate the request data
+    serializer = MainAccountSignUpserializer(data=request.data)
+    if not serializer.is_valid():
+        return Response({
+                            "ERROR": "INIVALID_REQUEST_DATA",
+                        }, 
+                        status=status.HTTP_400_BAD_REQUEST)
+    print("************** received data after validation ****************")
+    print(serializer.validated_data)
+    print("************** received data after validation ****************")
+
     email = serializer.validated_data.get('email')
-    
-    # Check if an account with this email already exists
+
+    # 2 - Check if the email is blacklisted
+    if AccountBlacklist.objects.filter(email=email).exists():
+        return Response({"error": "EMAIL_BLACKLISTED"}, status=status.HTTP_400_BAD_REQUEST)
+
+    # 3 - Check if an account with this email already exists
     if Account.objects.filter(email=email).exists():
-        return Response({"error": "User with this email already exists"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "EMAIL_ALREADY_EXISTS"}, status=status.HTTP_400_BAD_REQUEST)
+    
     try:
         with transaction.atomic():
-            # 1 - Create the account
-            user = Account.objects.create_user(
-                email=email,
-                password=serializer.validated_data.get('password'),
-                first_name=serializer.validated_data.get('first_name'),
-                last_name=serializer.validated_data.get('last_name')
-            )
-            # Create token pairs for the user
-            token_pairs: dict = create_token_pairs(user)
-            # Prepare the response
-            response: Response = Response()
-            # Put the refresh token in the response cookie
-            response.set_cookie(key="refresh_token", value=token_pairs["refresh"], httponly=True, samesite="Strict")
-            response.data = {"access_token": str(token_pairs["access"])}
-            response.status_code = status.HTTP_201_CREATED
-            return response
+            print("creating the new account")
     except (IntegrityError, DatabaseError, Error) as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
@@ -240,7 +241,7 @@ class PrivateProfileViewSet(viewsets.ModelViewSet):
     permission_classes = [ProfileApiPermission]
 
     def get_queryset(self):
-        return UserProfile.objects.filter(user=self.request.user)
+        return AccountProfile.objects.filter(user=self.request.user)
 
     def retrieve(self, request, *args, **kwargs):
         profile = get_object_or_404(self.get_queryset())
@@ -255,34 +256,10 @@ class PrivateProfileViewSet(viewsets.ModelViewSet):
         """
 
         # Get the user profile
-        profile: UserProfile = self.get_queryset().first()
+        profile: AccountProfile = self.get_queryset().first()
         # Instantiate a storage
-        media_storage = MediaStorage()
-        profile_picture_url: Optional[str] = None
-        file_path: Optional[str] = None
-
-        # Update the profile picture
-        if request.FILES.get("profile_picture"):
-            file_path = "USER_UPLOADED_PROFILE_PICTURE_PATH_PREFIX" + f"/{profile.id}-{profile.user.email}/" + "main_profile_picture"
-            # Check if this profile has an image
-            media_storage.save(file_path, request.FILES.get("profile_picture"))
-            profile_picture_url = media_storage.url(file_path)
-
-            profile.profile_picture_path = file_path
-
-        profile_serializer = UserProfileSerializer(profile, data=request.data, partial=True)
-        profile_serializer.is_valid(raise_exception=True)
-        profile_serializer.save()
-
-        # Create the response
-        response = Response()
-        response.data = {
-            "profile": UserProfileSerializer(self.get_queryset().first()).data,
-            "profile_picture_url": profile_picture_url if profile_picture_url else "",
-        }
-        response.status_code = status.HTTP_200_OK
-
-        return response
+       
+        return None
 
 
 #################################

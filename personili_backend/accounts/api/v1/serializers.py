@@ -1,3 +1,7 @@
+# validators
+from django.contrib.auth.password_validation import validate_password
+from personili_backend.utils.validators import validate_email, custom_validate_password, validate_username, validate_phone_number, validate_date_of_birth, validate_gender
+
 # Rest Framework imports
 from rest_framework import serializers
 
@@ -8,34 +12,54 @@ from django.contrib.auth import get_user_model
 from accounts.models import AccountProfile, DeliveryAddress, PaymentMethod, Feedback, Wallet, Transaction
 
 # get the user model
-User = get_user_model()
+Account = get_user_model()
 
 
-#################################
-#                               #
-#   User sign up serializer     #
-#                               #
-#################################
+######################################
+#                                    #
+#   Main Account sign up serializer  #
+#                                    #
+######################################
 
-class AccountSignUpserializer(serializers.ModelSerializer):
+class MainAccountSignUpserializer(serializers.Serializer):
     """
-    Serializer for User Sign Up
+    Serializer for main account sign Up
     """
-    password = serializers.CharField(write_only=True)
-    username = serializers.CharField(required=True)
-    email = serializers.EmailField(required=True)
 
-    class Meta:
-        model = User
-        fields = ('username', 'email', 'password')
+    # Fields to create the account
+    password = serializers.CharField(write_only=True, 
+                                     style={'input_type': 'password'},
+                                     required=True,
+                                     validators=[custom_validate_password, validate_password])
+    password_confirm = serializers.CharField(write_only=True, style={'input_type': 'password'})
+    email = serializers.EmailField(required=True, validators=[validate_email])
+
+    # Fields to create the account profile
+    username = serializers.CharField(required=False, validators=[validate_username])
+    phone_number = serializers.CharField(required=False, validators=[validate_phone_number])
+    age = serializers.IntegerField(required=False, validators=[validate_date_of_birth])
+    gender = serializers.CharField(required=False, validators=[validate_gender])
+
+    def validate(self, data):
+        # Check that the two password entries match
+        if data.get('password') != data.get('password_confirm'):
+            raise serializers.ValidationError("PASSWORDS_DO_NOT_MATCH")
+        return data
 
     def create(self, validated_data):
+        # Remove the password_confirm field. we don't need it anymore
+        validated_data.pop('password_confirm')
         password = validated_data.pop('password')
-        user = User(**validated_data)
-        user.set_password(password)
-        user.save()
-        return user
+        account = Account(**validated_data)
+        account.set_password(password)
+        account.save()
+        return account
 
+#############################################
+#                                           #
+#   Main Account Social sign up serializer  #
+#                                           #
+#############################################
 
 #################################
 #                               #

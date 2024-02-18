@@ -96,7 +96,7 @@ class Account(AbstractBaseUser, TimeStampedModel):
     
 
 #########################################
-#           Account Profile model          #
+#           Account Profile model       #
 #########################################
 
 class AccountProfile(TimeStampedModel):
@@ -304,7 +304,7 @@ class Feedback(TimeStampedModel):
 #########################################
 #            Blacklist model            #
 #########################################
-class Blacklist(TimeStampedModel):
+class AccountBlacklist(TimeStampedModel):
     """
     Blacklist contains an email, a reason and a date of blacklisting.
     """

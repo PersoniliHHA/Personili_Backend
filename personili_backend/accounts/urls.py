@@ -12,7 +12,7 @@ router = DefaultRouter()
 # Account management APIs
 ## Public user management APIs
 router.register('signup', AccountAuthViewSet, basename='signup')
-router.register('signin', PublicUserSignInViewSet, basename='signin')
+#router.register('signin', PublicUserSignInViewSet, basename='signin')
 #router.register('feedback', PublicFeedbackViewSet, basename='feedback')
 
 ## Private user management APIs
