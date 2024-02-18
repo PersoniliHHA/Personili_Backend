@@ -65,7 +65,7 @@ class Account(AbstractBaseUser, TimeStampedModel):
     """Custom user model that implements:
       id primary key, email, username, active, staff, admin, created_at, updated_at"""
 
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=str(uuid4()), editable=False)
     email = models.EmailField(unique=True,
                               verbose_name='email',
                               max_length=255,
@@ -111,7 +111,8 @@ class AccountProfile(TimeStampedModel):
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     account = models.OneToOneField(Account, on_delete=models.CASCADE, related_name='profile', db_index=True)
-    username = models.CharField(max_length=255, null=True, blank=True)
+    first_name = models.CharField(max_length=255, null=True, blank=True)
+    last_name = models.CharField(max_length=255, null=True, blank=True)
     profile_picture_path = models.CharField(max_length=255, null=True, blank=True)
     phone_number = models.CharField(max_length=255, null=True, blank=True)
     age = models.IntegerField(null=True, blank=True)
@@ -122,7 +123,7 @@ class AccountProfile(TimeStampedModel):
         db_table = 'account_profile'
 
     def __str__(self):
-        return str(self.id) + " - " + self.user.email + " - " + self.user.username
+        return str(self.id) + " - " + self.user.email + " - "
 
     def get_phone_number(self) -> str:
         return self.phone_number
@@ -312,7 +313,11 @@ class AccountBlacklist(TimeStampedModel):
     email = models.EmailField(null=True)
     ip_address = models.GenericIPAddressField(null=True)
     reason = models.TextField(null=True)
-    date_blacklisted = models.DateTimeField(null=True)
+    suspended = models.BooleanField(default=True)
+    banned = models.BooleanField(default=False)
+    start_date_blacklisted = models.DateTimeField(null=True)
+    end_date_blacklisted = models.DateTimeField(null=True)
+
 
     class Meta:
         db_table = 'blacklist'

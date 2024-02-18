@@ -18,6 +18,9 @@ from accounts.api.v1.permissions import ProfileApiPermission, PrivateDeliveryAdd
 from accounts.models import AccountProfile, DeliveryAddress, PaymentMethod, Wallet, Transaction, Feedback, AccountBlacklist
 from designs.models import Store, StoreProfile, Collection
 
+# Utilities
+from emails.email_utils import send_email_activation_link
+
 
 # Standard imports
 import logging as logger
@@ -145,11 +148,26 @@ class AccountAuthViewSet(viewsets.ModelViewSet):
 
         # 3 - Check if an account with this email already exists
         if Account.objects.filter(email=email).exists():
-            return Response({"ERROR": "EMAIL_ALREADY_EXISTS"}, status=status.HTTP_400_BAD_REQUEST)
-        
+            return Response({"ERROR": "EMAIL_ALREADY_EXISTS"}, 
+                            status=status.HTTP_400_BAD_REQUEST)
         try:
             with transaction.atomic():
-                print("creating the new account")
+                account, account_profile = serializer.create(serializer.validated_data)
+
+                # Send activation email
+                send_email_activation_link()
+                
+                return Response({"message": "ACCOUNT_CREATED",
+                                 "details": {
+                                        "email": account.email,
+                                        "first_name": account_profile.first_name,
+                                        "last_name": account_profile.last_name,
+                                        "phone_number": account_profile.phone_number,
+                                        "age": account_profile.age,
+                                        "gender": account_profile.gender,
+                                        "date_of_birth": account_profile.date_of_birth,
+                                 }}, status=status.HTTP_201_CREATED)
+
         except (IntegrityError, DatabaseError, Error) as e:
             return Response({"ERROR": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         

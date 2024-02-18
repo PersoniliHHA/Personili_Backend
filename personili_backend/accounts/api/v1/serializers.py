@@ -35,7 +35,8 @@ class MainAccountSignUpserializer(serializers.Serializer):
     email = serializers.EmailField(required=True, validators=[validate_email])
 
     # Fields to create the account profile
-    username = serializers.CharField(required=False, validators=[validate_username])
+    first_name = serializers.CharField(required=False, validators=[validate_username])
+    last_name = serializers.CharField(required=False, validators=[validate_username])
     phone_number = serializers.CharField(required=False, validators=[validate_phone_number])
     age = serializers.IntegerField(required=False, validators=[validate_date_of_birth])
     gender = serializers.CharField(required=False, validators=[validate_gender])
@@ -47,13 +48,28 @@ class MainAccountSignUpserializer(serializers.Serializer):
         return data
 
     def create(self, validated_data):
+        # First create the account
         # Remove the password_confirm field. we don't need it anymore
         validated_data.pop('password_confirm')
         password = validated_data.pop('password')
-        account = Account(**validated_data)
+        account = Account(
+            email=validated_data.get('email'),
+            username=validated_data.get('username'),
+        )
         account.set_password(password)
         account.save()
-        return account
+
+        # Second create the account the profile
+        account_profile = AccountProfile(
+            user=account,
+            phone_number=validated_data.get('phone_number'),
+            age=validated_data.get('age'),
+            date_of_birth=validated_data.get('date_of_birth'),
+            gender=validated_data.get("gender")
+        )
+        account_profile.save()
+
+        return account, account_profile
 
 #############################################
 #                                           #
