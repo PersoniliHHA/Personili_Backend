@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
                 ("end_date_blacklisted", models.DateTimeField(null=True)),
             ],
             options={
-                "db_table": "blacklist",
+                "db_table": "account_blacklist",
             },
         ),
         migrations.CreateModel(
