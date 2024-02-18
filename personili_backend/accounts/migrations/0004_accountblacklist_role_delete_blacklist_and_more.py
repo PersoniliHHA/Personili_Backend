@@ -11,32 +11,6 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="AccountBlacklist",
-            fields=[
-                ("created_at", models.DateTimeField(auto_now_add=True)),
-                ("updated_at", models.DateTimeField(auto_now=True)),
-                (
-                    "id",
-                    models.UUIDField(
-                        default=uuid.uuid4,
-                        editable=False,
-                        primary_key=True,
-                        serialize=False,
-                    ),
-                ),
-                ("email", models.EmailField(max_length=254, null=True)),
-                ("ip_address", models.GenericIPAddressField(null=True)),
-                ("reason", models.TextField(null=True)),
-                ("suspended", models.BooleanField(default=True)),
-                ("banned", models.BooleanField(default=False)),
-                ("start_date_blacklisted", models.DateTimeField(null=True)),
-                ("end_date_blacklisted", models.DateTimeField(null=True)),
-            ],
-            options={
-                "db_table": "account_blacklist",
-            },
-        ),
-        migrations.CreateModel(
             name="Role",
             fields=[
                 ("created_at", models.DateTimeField(auto_now_add=True)),
@@ -56,9 +30,6 @@ class Migration(migrations.Migration):
             options={
                 "db_table": "role",
             },
-        ),
-        migrations.DeleteModel(
-            name="Blacklist",
         ),
         migrations.RenameField(
             model_name="accountprofile",
