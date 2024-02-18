@@ -56,28 +56,6 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name="Blacklist",
-            fields=[
-                ("created_at", models.DateTimeField(auto_now_add=True)),
-                ("updated_at", models.DateTimeField(auto_now=True)),
-                (
-                    "id",
-                    models.UUIDField(
-                        default=uuid.uuid4,
-                        editable=False,
-                        primary_key=True,
-                        serialize=False,
-                    ),
-                ),
-                ("email", models.EmailField(max_length=254, null=True)),
-                ("reason", models.TextField(null=True)),
-                ("date_blacklisted", models.DateTimeField(null=True)),
-            ],
-            options={
-                "abstract": False,
-            },
-        ),
-        migrations.CreateModel(
             name="Feedback",
             fields=[
                 ("created_at", models.DateTimeField(auto_now_add=True)),
