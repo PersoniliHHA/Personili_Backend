@@ -1,6 +1,6 @@
 # validators
 from django.contrib.auth.password_validation import validate_password
-from personili_backend.utils.validators import validate_email, custom_validate_password, validate_username, validate_phone_number, validate_date_of_birth, validate_gender
+from utils.validators import validate_email, custom_validate_password, validate_username, validate_phone_number, validate_date_of_birth, validate_gender
 
 # Rest Framework imports
 from rest_framework import serializers
