@@ -245,7 +245,7 @@ EMAIL_TIMEOUT = 5
 # Django Admin URL.
 ADMIN_URL = "admin/"
 # https://docs.djangoproject.com/en/dev/ref/settings/#admins
-ADMINS = [("""houssem-idriss-heytem""", "Heytem.Boumaza@gmail.com")]
+ADMINS = [("""heytem""", "Heytem.Boumaza@gmail.com")]
 # https://docs.djangoproject.com/en/dev/ref/settings/#managers
 MANAGERS = ADMINS
 
@@ -284,13 +284,13 @@ ACCOUNT_EMAIL_REQUIRED = True
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-ACCOUNT_ADAPTER = "personili_backend.accounts.adapters.AccountAdapter"
+ACCOUNT_ADAPTER = "accounts.adapters.AccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/forms.html
-ACCOUNT_FORMS = {"signup": "personili_backend.accounts.forms.UserSignupForm"}
+ACCOUNT_FORMS = {"signup": "accounts.forms.UserSignupForm"}
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-SOCIALACCOUNT_ADAPTER = "personili_backend.accounts.adapters.SocialAccountAdapter"
+SOCIALACCOUNT_ADAPTER = "accounts.adapters.SocialAccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/forms.html
-SOCIALACCOUNT_FORMS = {"signup": "personili_backend.accounts.forms.UserSocialSignupForm"}
+SOCIALACCOUNT_FORMS = {"signup": "accounts.forms.UserSocialSignupForm"}
 
 # django-rest-framework
 # -------------------------------------------------------------------------------

@@ -70,6 +70,7 @@ class Account(AbstractBaseUser, TimeStampedModel):
                               verbose_name='email',
                               max_length=255,
                               error_messages={"unique": "A user with that email already exists."})
+    
     email_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -109,7 +110,7 @@ class AccountProfile(TimeStampedModel):
 
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
-    account = models.OneToOneField(Account, on_delete=models.CASCADE, related_name='profile')
+    account = models.OneToOneField(Account, on_delete=models.CASCADE, related_name='profile', db_index=True)
     username = models.CharField(max_length=255, null=True, blank=True)
     profile_picture_path = models.CharField(max_length=255, null=True, blank=True)
     phone_number = models.CharField(max_length=255, null=True, blank=True)
@@ -128,6 +129,24 @@ class AccountProfile(TimeStampedModel):
 
     def get_profile_picture(self) -> str:
         return self.profile_picture_path
+
+#########################################
+#             Role model                #
+#########################################
+class Role(TimeStampedModel):
+    """
+    Every role has a name and a description
+    """
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    name = models.CharField(max_length=255, null=True)
+    description = models.TextField(null=True)
+
+    class Meta:
+        db_table = 'role'
+
+    def __str__(self) -> str:
+        return self.name
+    
 
 #########################################
 #          Delivery address model       #

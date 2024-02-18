@@ -9,7 +9,7 @@ from django.contrib.auth import get_user_model, authenticate
 from django.db import transaction, IntegrityError, DatabaseError, Error
 
 # local imports
-from accounts.api.v1.serializers import UserSignUpSerializer, UserSignInSerializer, UserProfileSerializer,  PaymentMethodSerializer, WalletSerializer, TransactionSerializer, FeedbackCreateSerializer
+from accounts.api.v1.serializers import AccountSignUpserializer, UserSignInSerializer, UserProfileSerializer,  PaymentMethodSerializer, WalletSerializer, TransactionSerializer, FeedbackCreateSerializer
 from utils.utilities import create_token_pairs
 from accounts.models import AccountProfile, DeliveryAddress, PaymentMethod, Wallet, Transaction, Feedback
 from accounts.api.v1.permissions import ProfileApiPermission, PrivateDeliveryAddressApiPermission
@@ -23,7 +23,7 @@ from typing import Optional
 
 logger.basicConfig(level=logger.DEBUG)
 
-User = get_user_model()
+Account = get_user_model()
 
 
 #################################
@@ -32,25 +32,26 @@ User = get_user_model()
 #                               #
 #################################
 
-class PublicUserSignUpViewSet(viewsets.ModelViewSet):
+class AccountAuthViewSet(viewsets.ModelViewSet):
     """Viewset for the User Sign Up API"""
 
-    queryset = User.objects.all()
+    queryset = Account.objects.all()
 
     permission_classes = [
         permissions.AllowAny
     ]
-    serializer_class = UserSignUpSerializer
+    serializer_class = AccountSignUpserializer
 
     def create(self, request, *args, **kwargs):
+
         """This method is used to register a new user"""
 
-        serializer = UserSignUpSerializer(data=request.data)
+        serializer = AccountSignUpserializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         email = serializer.validated_data.get('email')
 
         # Check if user with this email already exists
-        if User.objects.filter(email=email).exists():
+        if Account.objects.filter(email=email).exists():
             return Response(
                 {"email": "Email already exists"}, status=status.HTTP_400_BAD_REQUEST
             )
@@ -112,7 +113,44 @@ class PublicUserSignUpViewSet(viewsets.ModelViewSet):
 
         return response
 
+@action(detail=False, methods=["POST"], url_path="main-account-sign-up")
+def sign_up(self, request, *args, **kwargs):
+    """This method is used to register a new user
+    Checks to make before creating a new user:
+    - Check if the user with this email already exists
+    - Check if the email is blacklisted or not
+    
 
+    - the account will be created with a its profile empty
+    """
+    serializer = AccountSignUpserializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    email = serializer.validated_data.get('email')
+    
+    # Check if an account with this email already exists
+    if Account.objects.filter(email=email).exists():
+        return Response({"error": "User with this email already exists"}, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        with transaction.atomic():
+            # 1 - Create the account
+            user = Account.objects.create_user(
+                email=email,
+                password=serializer.validated_data.get('password'),
+                first_name=serializer.validated_data.get('first_name'),
+                last_name=serializer.validated_data.get('last_name')
+            )
+            # Create token pairs for the user
+            token_pairs: dict = create_token_pairs(user)
+            # Prepare the response
+            response: Response = Response()
+            # Put the refresh token in the response cookie
+            response.set_cookie(key="refresh_token", value=token_pairs["refresh"], httponly=True, samesite="Strict")
+            response.data = {"access_token": str(token_pairs["access"])}
+            response.status_code = status.HTTP_201_CREATED
+            return response
+    except (IntegrityError, DatabaseError, Error) as e:
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
 #################################
 #                               #
 #     User Sign-In ViewSet      #

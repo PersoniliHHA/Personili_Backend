@@ -17,7 +17,7 @@ User = get_user_model()
 #                               #
 #################################
 
-class UserSignUpSerializer(serializers.ModelSerializer):
+class AccountSignUpserializer(serializers.ModelSerializer):
     """
     Serializer for User Sign Up
     """
