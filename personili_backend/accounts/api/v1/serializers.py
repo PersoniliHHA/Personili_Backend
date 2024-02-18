@@ -54,7 +54,6 @@ class MainAccountSignUpserializer(serializers.Serializer):
         password = validated_data.pop('password')
         account = Account(
             email=validated_data.get('email'),
-            username=validated_data.get('username'),
         )
         account.set_password(password)
         account.save()

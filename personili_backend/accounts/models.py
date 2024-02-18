@@ -320,7 +320,7 @@ class AccountBlacklist(TimeStampedModel):
 
 
     class Meta:
-        db_table = 'blacklist'
+        db_table = 'blacklist_account'
 
     def __str__(self) -> str:
         return self.email + ' - ' + self.reason
