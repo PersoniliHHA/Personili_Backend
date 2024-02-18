@@ -140,17 +140,19 @@ class AccountAuthViewSet(viewsets.ModelViewSet):
 
         # 2 - Check if the email is blacklisted
         if AccountBlacklist.objects.filter(email=email).exists():
-            return Response({"error": "EMAIL_BLACKLISTED"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"ERROR": "EMAIL_BLACKLISTED"}, status=status.HTTP_400_BAD_REQUEST)
 
         # 3 - Check if an account with this email already exists
         if Account.objects.filter(email=email).exists():
-            return Response({"error": "EMAIL_ALREADY_EXISTS"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"ERROR": "EMAIL_ALREADY_EXISTS"}, status=status.HTTP_400_BAD_REQUEST)
         
         try:
             with transaction.atomic():
                 print("creating the new account")
         except (IntegrityError, DatabaseError, Error) as e:
-            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"ERROR": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        return Response({"message": "ACCOUNT_CREATED"}, status=status.HTTP_201_CREATED)
     
 #################################
 #                               #
