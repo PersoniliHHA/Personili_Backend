@@ -11,7 +11,7 @@ from .api.v1.views import PrivateWalletViewSet, AccountAuthViewSet, PublicUserSi
 router = DefaultRouter()
 # Account management APIs
 ## Public user management APIs
-router.register('signup', AccountAuthViewSet, basename='signup')
+router.register('accounts/', AccountAuthViewSet, basename='')
 #router.register('signin', PublicUserSignInViewSet, basename='signin')
 #router.register('feedback', PublicFeedbackViewSet, basename='feedback')
 

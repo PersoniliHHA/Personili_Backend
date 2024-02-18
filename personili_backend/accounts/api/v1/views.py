@@ -116,7 +116,7 @@ class AccountAuthViewSet(viewsets.ModelViewSet):
 
         return response
 
-@action(detail=False, methods=["POST"], url_path="main-account-sign-up", permission_classes=[permissions.AllowAny])
+@action(detail=False, methods=["POST"], url_path="v1/main-account-sign-up", permission_classes=[permissions.AllowAny])
 def main_account_sign_up(self, request, *args, **kwargs):
     """This method is used to register a new user
     Checks to make before creating a new user:
