@@ -130,6 +130,7 @@ class AccountAuthViewSet(viewsets.ModelViewSet):
         if not serializer.is_valid():
             return Response({
                                 "ERROR": "INIVALID_REQUEST_DATA",
+                                "DETAILS": serializer.errors,
                             }, 
                             status=status.HTTP_400_BAD_REQUEST)
         print("************** received data after validation ****************")
