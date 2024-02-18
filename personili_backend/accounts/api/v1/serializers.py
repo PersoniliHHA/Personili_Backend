@@ -75,7 +75,7 @@ class UserSignInSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
     class Meta:
-        model = User
+        model = Account
         fields = ('email', 'password')
         read_only_fields = ('id', 'username', 'active', 'staff', 'superuser')
 
