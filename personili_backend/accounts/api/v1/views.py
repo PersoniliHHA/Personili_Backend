@@ -143,8 +143,8 @@ class AccountAuthViewSet(viewsets.ModelViewSet):
         email = serializer.validated_data.get('email')
 
         # 2 - Check if the email is blacklisted
-        if AccountBlacklist.objects.filter(email=email).exists():
-            return Response({"ERROR": "EMAIL_BLACKLISTED"}, status=status.HTTP_400_BAD_REQUEST)
+        #if AccountBlacklist.objects.filter(email=email).exists():
+        #    return Response({"ERROR": "EMAIL_BLACKLISTED"}, status=status.HTTP_400_BAD_REQUEST)
 
         # 3 - Check if an account with this email already exists
         if Account.objects.filter(email=email).exists():
