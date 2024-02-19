@@ -49,7 +49,7 @@ def validate_gender(value):
     Age should be either male or female or not specified
     """
     if value:
-        if value not in ["MALE","FEMALE","NOT_SPECIFIED"]:
+        if value not in ["Male","Female","Not sepcified"]:
             raise ValidationError("INVALID_GENDER")
     return value
 

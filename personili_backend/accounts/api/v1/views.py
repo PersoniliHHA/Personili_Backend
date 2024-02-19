@@ -10,12 +10,12 @@ from django.contrib.auth import get_user_model, authenticate
 from django.db import transaction, IntegrityError, DatabaseError, Error
 
 # Serializer imports
-from accounts.api.v1.serializers import MainAccountSignUpserializer, UserSignInSerializer, UserProfileSerializer,  PaymentMethodSerializer, WalletSerializer, TransactionSerializer, FeedbackCreateSerializer
+from accounts.api.v1.serializers import MainAccountSignUpserializer, MainAccountSignInserializer, UserProfileSerializer, WalletSerializer, TransactionSerializer, FeedbackCreateSerializer
 from accounts.api.v1.serializers import DeliveryAddressCreateSerializer, DeliveryAddressUpdateSerializer, DeliveryAddressDeleteSerializer, DeliveryAddressGetSerializer, BaseDeliveryAddressSerializer
 from accounts.api.v1.permissions import ProfileApiPermission, PrivateDeliveryAddressApiPermission
 
 # Models
-from accounts.models import AccountProfile, DeliveryAddress, PaymentMethod, Wallet, Transaction, Feedback, AccountBlacklist
+from accounts.models import AccountProfile, DeliveryAddress, Wallet, Transaction, Feedback, AccountBlacklist
 from designs.models import Store, StoreProfile, Collection
 
 # Utilities
@@ -136,9 +136,6 @@ class AccountAuthViewSet(viewsets.ModelViewSet):
                                 "DETAILS": serializer.errors,
                             }, 
                             status=status.HTTP_400_BAD_REQUEST)
-        print("************** received data after validation ****************")
-        print(serializer.validated_data)
-        print("************** received data after validation ****************")
 
         email = serializer.validated_data.get('email')
 
@@ -172,6 +169,30 @@ class AccountAuthViewSet(viewsets.ModelViewSet):
         except (IntegrityError, DatabaseError, Error) as e:
             return Response({"ERROR": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
+
+    @action(detail=False, methods=["POST"], url_path="v1/main-account-sign-in", permission_classes=[permissions.AllowAny])
+    def main_account_sign_in(self, request, *args, **kwargs):
+        """This method is used to sign in a user"""
+
+        # Validate the request data
+        serializer = MainAccountSignInserializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({
+                                "ERROR": "INIVALID_REQUEST_DATA",
+                                "DETAILS": serializer.errors,
+                            }, 
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        # Get the email and password from the serializer
+        email = serializer.validated_data.get('email')
+        password = serializer.validated_data.get('password')
+
+        # Authenticate the user
+        account = authenticate(email=email, password=password)
+        if account is None:
+            return Response({"error": "INVALID_EMAIL_OR_PASSWORD"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        return Response({"message": "ACCOUNT_AUTHENTICATED"}, status=status.HTTP_200_OK)
 #################################
 #                               #
 #     User Sign-In ViewSet      #
