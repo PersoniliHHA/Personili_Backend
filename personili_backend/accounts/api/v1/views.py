@@ -202,14 +202,14 @@ class AccountAuthViewSet(viewsets.ModelViewSet):
 class PublicUserSignInViewSet(viewsets.ModelViewSet):
     """Viewset for the User Sign In API"""
 
-    serializer_class = UserSignInSerializer
+    serializer_class = MainAccountSignInserializer
     permission_classes = [permissions.AllowAny]
 
     def list(self, request, *args, **kwargs):
         """This method is used to sign in a user"""
 
         # Validate the request data
-        serializer = UserSignInSerializer(data=request.data)
+        serializer = MainAccountSignInserializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         # Get the email and password from the serializer
