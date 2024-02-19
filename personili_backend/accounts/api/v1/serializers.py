@@ -38,7 +38,7 @@ class MainAccountSignUpserializer(serializers.Serializer):
     first_name = serializers.CharField(required=False, allow_blank=True, allow_null=True, validators=[validate_username])
     last_name = serializers.CharField(required=False, allow_blank=True, allow_null=True, validators=[validate_username])
     phone_number = serializers.CharField(required=False, allow_blank=True, allow_null=True,validators=[validate_phone_number])
-    date_of_birth = serializers.DateField(required=False, allow_null=True, allow_blank=True, format='%Y-%m-%d', validators=[validate_date_of_birth])
+    date_of_birth = serializers.DateField(required=False, allow_null=True, format='%Y-%m-%d', validators=[validate_date_of_birth])
     age = serializers.CharField(required=False, allow_null=True, allow_blank=True, validators=[validate_age])
     gender = serializers.CharField(required=False, allow_blank=True, allow_null=True, validators=[validate_gender])
 
