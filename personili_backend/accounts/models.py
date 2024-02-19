@@ -109,7 +109,7 @@ class AccountProfile(TimeStampedModel):
        - Delivery address id as a foreign key
 
     """
-    STATUS_CHOICES = [
+    GENDER_CHOICES = [
         ('male', 'Male'),
         ('female', 'Published'),
         ('not specified', 'Not Specified'),
@@ -123,7 +123,7 @@ class AccountProfile(TimeStampedModel):
     profile_picture_path = models.CharField(max_length=255, null=True, blank=True)
     phone_number = models.CharField(max_length=255, null=True, blank=True)
     age = models.IntegerField(null=True, blank=True)
-    gender = models.CharField(max_length=255, null=True, blank=True)
+    gender = models.CharField(max_length=15, choices=GENDER_CHOICES, default='not specified')
     date_of_birth = models.DateField(null=True, blank=True)
 
     class Meta:
