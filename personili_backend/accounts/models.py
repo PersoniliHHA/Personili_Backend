@@ -130,13 +130,7 @@ class AccountProfile(TimeStampedModel):
         db_table = 'account_profile'
 
     def __str__(self):
-        return str(self.id) + " - " + self.first_name + " " + self.last_name
-
-    def get_phone_number(self) -> str:
-        return self.phone_number
-
-    def get_profile_picture(self) -> str:
-        return self.profile_picture_path
+        return str(self.id) + " - " + self.account.email
 
 #########################################
 #             Role model                #
