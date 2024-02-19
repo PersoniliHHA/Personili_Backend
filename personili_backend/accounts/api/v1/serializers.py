@@ -1,6 +1,6 @@
 # validators
 from django.contrib.auth.password_validation import validate_password
-from utils.validators import validate_email, custom_validate_password, validate_username, validate_phone_number, validate_date_of_birth, validate_gender
+from utils.validators import validate_age, validate_email, custom_validate_password, validate_username, validate_phone_number, validate_date_of_birth, validate_gender
 
 # Rest Framework imports
 from rest_framework import serializers
@@ -38,7 +38,8 @@ class MainAccountSignUpserializer(serializers.Serializer):
     first_name = serializers.CharField(required=False, allow_blank=True, allow_null=True, validators=[validate_username])
     last_name = serializers.CharField(required=False, allow_blank=True, allow_null=True, validators=[validate_username])
     phone_number = serializers.CharField(required=False, allow_blank=True, allow_null=True,validators=[validate_phone_number])
-    age = serializers.IntegerField(required=False, allow_null=True, validators=[validate_date_of_birth])
+    date_of_birth = serializers.CharField(required=False, allow_null=True, allow_blank=True, validators=[validate_date_of_birth])
+    age = serializers.CharField(required=False, allow_null=True, allow_blank=True, validators=[validate_age])
     gender = serializers.CharField(required=False, allow_blank=True, allow_null=True, validators=[validate_gender])
 
     def validate(self, data):
