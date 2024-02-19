@@ -109,7 +109,7 @@ class AccountProfile(TimeStampedModel):
        - Delivery address id as a foreign key
 
     """
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
+    id = models.UUIDField(primary_key=True, default=str(uuid4()), editable=False, db_index=True)
     account = models.OneToOneField(Account, on_delete=models.CASCADE, related_name='profile', db_index=True)
     first_name = models.CharField(max_length=255, null=True, blank=True)
     last_name = models.CharField(max_length=255, null=True, blank=True)

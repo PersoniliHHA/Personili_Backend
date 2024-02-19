@@ -60,7 +60,9 @@ class MainAccountSignUpserializer(serializers.Serializer):
 
         # Second create the account the profile
         account_profile = AccountProfile(
-            user=account,
+            account=account,
+            first_name=validated_data.get('first_name'),
+            last_name=validated_data.get('last_name'),
             phone_number=validated_data.get('phone_number'),
             age=validated_data.get('age'),
             date_of_birth=validated_data.get('date_of_birth'),
