@@ -75,9 +75,9 @@ def validate_age(value):
 
 def validate_date_of_birth(value):
     """
-    Validate the date of birth, it should be in the format DD-MM-YYYY, between 1900 and 2021
+    Validate the date of birth, it should be in the format YYYY-MM-DD, between 1900 and 2021
     """
     if value:
-        if not re.match(r"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/(19[0-9][0-9]|20[01][0-9])$", value):
+        if not re.match(r"^(19|20)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$", value):
             raise ValidationError("INVALID_DATE_OF_BIRTH")
     return value
