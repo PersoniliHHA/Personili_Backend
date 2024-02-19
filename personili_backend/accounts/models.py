@@ -124,7 +124,7 @@ class AccountProfile(TimeStampedModel):
     phone_number = models.CharField(max_length=255, null=True, blank=True)
     age = models.CharField(null=True, blank=True)
     gender = models.CharField(max_length=15, choices=GENDER_CHOICES, default='not specified')
-    date_of_birth = models.DateField(null=True, blank=True)
+    date_of_birth = models.DateField(null=True, blank=True, format='%Y-%m-%d')
 
     class Meta:
         db_table = 'account_profile'
