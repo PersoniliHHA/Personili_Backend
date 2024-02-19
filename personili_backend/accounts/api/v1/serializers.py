@@ -35,11 +35,11 @@ class MainAccountSignUpserializer(serializers.Serializer):
     email = serializers.EmailField(required=True, validators=[validate_email])
 
     # Fields to create the account profile
-    first_name = serializers.CharField(required=False, validators=[validate_username])
-    last_name = serializers.CharField(required=False, validators=[validate_username])
-    phone_number = serializers.CharField(required=False, validators=[validate_phone_number])
-    age = serializers.IntegerField(required=False, validators=[validate_date_of_birth])
-    gender = serializers.CharField(required=False, validators=[validate_gender])
+    first_name = serializers.CharField(required=False, allow_null=True, validators=[validate_username])
+    last_name = serializers.CharField(required=False, allow_null=True, validators=[validate_username])
+    phone_number = serializers.CharField(required=False, allow_null=True,validators=[validate_phone_number])
+    age = serializers.IntegerField(required=False, allow_null=True, validators=[validate_date_of_birth])
+    gender = serializers.CharField(required=False, allow_null=True, validators=[validate_gender])
 
     def validate(self, data):
         # Check that the two password entries match
