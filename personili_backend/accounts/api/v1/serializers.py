@@ -99,6 +99,23 @@ class MainAccountSignInserializer(serializers.Serializer):
 #   Main Account Social sign up serializer  #
 #                                           #
 #############################################
+    
+
+
+
+#############################################
+#                                           #
+#   Main Account Profile serializer         #
+#                                           #
+#############################################
+class MainAccountProfileSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Main Account Profile
+    """
+    class Meta:
+        model = AccountProfile
+        exclude = ('account', 'created_at', 'updated_at')
+        read_only_fields = ('id',)
 
 
 #################################

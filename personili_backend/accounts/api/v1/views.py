@@ -42,82 +42,7 @@ class AccountAuthViewSet(viewsets.ModelViewSet):
     """Viewset for the User Sign Up API"""
 
     queryset = Account.objects.all()
-
-    permission_classes = [
-        permissions.AllowAny
-    ]
     serializer_class = MainAccountSignUpserializer
-
-    def create(self, request, *args, **kwargs):
-
-        """This method is used to register a new user"""
-
-        serializer = MainAccountSignUpserializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        email = serializer.validated_data.get('email')
-
-        # Check if user with this email already exists
-        if Account.objects.filter(email=email).exists():
-            return Response(
-                {"email": "Email already exists"}, status=status.HTTP_400_BAD_REQUEST
-            )
-        try:
-            with transaction.atomic():
-                # Create the user and save it to the database
-                user = serializer.save()
-
-                # Create an empty user profile for the user
-                profile = AccountProfile()
-                profile.user = user
-                profile.save()
-
-                # Create an empty wallet
-                wallet = Wallet()
-                wallet.user_profile = profile
-                wallet.save()
-
-                # Create an empty store for the user
-                store = Store()
-                store.user_profile = profile
-                store.save()
-
-                # Create an empty store profile for the user
-                store_profile = StoreProfile()
-                store_profile.store = store
-                store_profile.save()
-
-                # Create an empty collection for the user's store
-                collection = Collection()
-                collection.store = store
-                collection.save()
-
-        except IntegrityError as e:
-            logger.error("Integrity Error: {}".format(e))
-            return Response(
-                {"error": "Internal server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-        except DatabaseError as e:
-            logger.error("Database Error: {}".format(e))
-            return Response(
-                {"error": "Internal server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-        except Error as e:
-            logger.error("Error: {}".format(e))
-            return Response(
-                {"error": "Internal server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-        # Create token pairs for the user
-        token_pairs: dict = create_token_pairs(user)
-
-        # Prepare the response
-        response: Response = Response()
-        # Put the refresh token in the response cookie
-        response.set_cookie(key="refresh_token", value=token_pairs["refresh"], httponly=True, samesite="Strict")
-        response.data = {"access_token": str(token_pairs["access"])}
-        response.status_code = status.HTTP_201_CREATED
-
-        return response
 
     @action(detail=False, methods=["POST"], url_path="v1/main-account-sign-up", permission_classes=[permissions.AllowAny])
     def main_account_sign_up(self, request, *args, **kwargs):
@@ -194,28 +119,17 @@ class AccountAuthViewSet(viewsets.ModelViewSet):
 
         return Response({"message": "ACCOUNT_AUTHENTICATED"}, status=status.HTTP_200_OK)
 
+    @action(detail=False, methods=["POST"], url_path="v1/main-account-update-password", permission_classes=[permissions.IsAuthenticated])
+    def main_account_update_password(self, request, *args, **kwargs):
+        """This method is used to update the user password"""
 
-#################################
-#                               #
-#     User Sign-Out ViewSet     #
-#                               #
-#################################
+        return None
+    
+    @action(detail=False, methods=["POST"], url_path="v1/main-account-update-email", permission_classes=[permissions.IsAuthenticated])
+    def main_account_update_email(self, request, *args, **kwargs):
+        """This method is used to update the user email"""
 
-class PrivateUserSignOutViewSet(viewsets.ModelViewSet):
-    """Viewset for the User Sign Out API"""
-
-    permission_classes = [permissions.IsAuthenticated]
-
-    def list(self, request, *args, **kwargs):
-        try:
-            # refresh_token = request.data.get("refresh_token")
-            refresh_token = request.COOKIES.get("refresh_token")
-
-            return Response(status=status.HTTP_205_RESET_CONTENT)
-        except Exception as e:
-            print(e)
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
+        return None
 
 #################################
 #                               #
@@ -453,7 +367,7 @@ class PrivateWalletViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return Wallet.objects.filter(user_profile=AccountProfile.objects.filter(account=self.request.user).first())
+        return Wallet.objects.filter(user_profile=AccountProfile.objects.filter(user=self.request.user).first())
 
     def list(self, request, *args, **kwargs):
         """
