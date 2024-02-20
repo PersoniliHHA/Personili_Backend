@@ -184,8 +184,8 @@ class AccountAuthViewSet(viewsets.ModelViewSet):
                             status=status.HTTP_400_BAD_REQUEST)
 
         # Get the email and password from the serializer
-        email = serializer.validated_data.get('email')
-        password = serializer.validated_data.get('password')
+        email: str = serializer.validated_data.get('email')
+        password: str = serializer.validated_data.get('password')
 
         # Authenticate the user
         account = authenticate(email=email, password=password)
@@ -193,45 +193,6 @@ class AccountAuthViewSet(viewsets.ModelViewSet):
             return Response({"error": "INVALID_EMAIL_OR_PASSWORD"}, status=status.HTTP_401_UNAUTHORIZED)
 
         return Response({"message": "ACCOUNT_AUTHENTICATED"}, status=status.HTTP_200_OK)
-#################################
-#                               #
-#     User Sign-In ViewSet      #
-#                               #
-#################################
-
-class PublicUserSignInViewSet(viewsets.ModelViewSet):
-    """Viewset for the User Sign In API"""
-
-    serializer_class = MainAccountSignInserializer
-    permission_classes = [permissions.AllowAny]
-
-    def list(self, request, *args, **kwargs):
-        """This method is used to sign in a user"""
-
-        # Validate the request data
-        serializer = MainAccountSignInserializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        # Get the email and password from the serializer
-        email = serializer.validated_data.get('email')
-        password = serializer.validated_data.get('password')
-
-        # Authenticate the user
-        user = authenticate(email=email, password=password)
-        if user is None:
-            return Response({"error": "Invalid Email or password"}, status=status.HTTP_401_UNAUTHORIZED)
-
-        # Create token pairs for the user
-        token_pairs: dict = create_token_pairs(user)
-
-        # Prepare the response
-        response = Response()
-        # Put the refresh token in the response cookie
-        response.set_cookie(key="refresh_token", value=token_pairs["refresh"], httponly=True, samesite="Strict")
-        response.data = {"access_token": str(token_pairs["access"])}
-        response.status_code = status.HTTP_200_OK
-
-        return response
 
 
 #################################

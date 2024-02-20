@@ -1,6 +1,6 @@
 
 
-def create_jwt_token(subject, payload, secret_key, algorithm):
+def create_jwt_token(payload: dict):
     """This method creates a jwt token"""
     
     return None
