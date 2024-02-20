@@ -228,6 +228,12 @@ SECURE_BROWSER_XSS_FILTER = True
 # https://docs.djangoproject.com/en/dev/ref/settings/#x-frame-options
 X_FRAME_OPTIONS = "DENY"
 
+# JWT SETTINGS
+JWT_SECRET_KEY = env.str("JWT_SECRET_KEY", default="9gpVI89xqqZdsbBZZw2Xynsc7bEHXl783KjTqDuapX0lQ0NUPBAXWfL19kqTV39N3z4xu_l7XQWnvojWwLmGkA")
+JWT_ACCESS_TOKEN_EXPIRATION = timedelta(days=int(env.str("JWT_ACCESS_TOKEN_EXPIRATION", default=1)))
+JWT_REFRESH_TOKEN_EXPIRATION = timedelta(days=int(env.str("JWT_REFRESH_TOKEN_EXPIRATION", default=160)))
+JWT_SIGNING_ALGORITHM = env.str("JWT_SIGNING_ALGORITHM", default="HS512")
+
 # EMAIL
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-backend

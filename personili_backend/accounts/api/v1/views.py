@@ -453,7 +453,7 @@ class PrivateWalletViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return Wallet.objects.filter(user_profile=UserProfile.objects.filter(user=self.request.user).first())
+        return Wallet.objects.filter(user_profile=AccountProfile.objects.filter(account=self.request.user).first())
 
     def list(self, request, *args, **kwargs):
         """
