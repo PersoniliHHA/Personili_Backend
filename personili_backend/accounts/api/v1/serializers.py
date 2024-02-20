@@ -100,24 +100,6 @@ class MainAccountSignInserializer(serializers.Serializer):
 #                                           #
 #############################################
 
-#################################
-#                               #
-#   User sign in serializer     #
-#                               #
-#################################
-
-class UserSignInSerializer(serializers.ModelSerializer):
-    """
-    Serializer for User Sign In
-    """
-    email = serializers.EmailField(required=True)
-    password = serializers.CharField(write_only=True)
-
-    class Meta:
-        model = Account
-        fields = ('email', 'password')
-        read_only_fields = ('id', 'username', 'active', 'staff', 'superuser')
-
 
 #################################
 #                               #
