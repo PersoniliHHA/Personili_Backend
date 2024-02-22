@@ -130,6 +130,14 @@ class AccountAuthViewSet(viewsets.ModelViewSet):
         """This method is used to update the user email"""
 
         return None
+    
+    def main_account_social_sign_up(self, request, *args, **kwargs):
+        """This method is used to sign up a user using social media"""
+
+        return None
+    
+
+
 
 #################################
 #                               #

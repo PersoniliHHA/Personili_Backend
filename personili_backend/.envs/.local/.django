@@ -15,7 +15,8 @@ AWS_S3_REGION_NAME=eu-west-3
 # ----------------------------------------------------------------------------
 JWT_SECRET_KEY=9gpVI89xqqZdsbBZZw2Xynsc7bEHXl783KjTqDuapX0lQ0NUPBAXWfL19kqTV39N3z4xu_l7XQWnvojWwLmGkA
 JWT_ACCESS_TOKEN_LIFETIME=1  # days
-JWT_REFRESH_TOKEN_LIFETIME=160  # days
+JWT_REFRESH_TOKEN_LIFETIME=5  # days
+JWT_SIGNING_ALGORITHM=HS512
 
 
 # DJANGO
