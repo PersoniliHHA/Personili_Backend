@@ -6,6 +6,7 @@ from django.db import models
 
 # Models
 from accounts.models import TimeStampedModel
+from organizations.models import InventoryItem
 from treebeard.mp_tree import MP_Node
 
 # Utilities
@@ -355,15 +356,13 @@ class PersonalizableZone(TimeStampedModel):
 #########################################
 class PersonalizableVariant(TimeStampedModel):
     """
-    A personalizable variant is linked to one and only one printable,
-    it has a color
-    a size
-    a material ( set of choices )
+    A personalizable variant is linked to a sku in the inventory item table and to a personalizable
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     personalizable = models.ForeignKey(Personalizable, on_delete=models.CASCADE, related_name='variants')
     brand = models.CharField(max_length=255, null=True, default="Generic Brand")
     model = models.CharField(max_length=255, null=True, default="Generic Model")
+    sku = models.ForeignKey(InventoryItem, on_delete=models.CASCADE, related_name='personalizable_variants')
     
 
 #########################################

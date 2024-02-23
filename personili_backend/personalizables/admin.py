@@ -1,17 +1,24 @@
 from django.contrib import admin
-from personalizables.models import Personalizable,  PersonalizableVariant, Category, PersonalizationType, PersonalizationMethod, PersonalizableZone,Color,Size,Material,AllowedPersonalizablesPersonalization, DesignedPersonalizableVariant
+from personalizables.models import PersonalizationType, PersonalizationMethod
+from personalizables.models import  PersonalizableZone, Personalizable, PersonalizableVariant, PersonalizableOption
+from personalizables.models import PersonalizableVariantValue, DesignedPersonalizableVariant, DesignedPersonalizableZone 
+from personalizables.models import  Category, Option, OptionValue
+from personalizables.models import  AllowedVariantPersonalizationMethod
 
 
 
+admin.register(PersonalizationType)
+admin.register(PersonalizationMethod)
+admin.register(PersonalizableZone)
+admin.register(Personalizable)
+admin.register(PersonalizableVariant)
+admin.register(PersonalizableOption)
+admin.register(PersonalizableVariantValue)
+admin.register(DesignedPersonalizableVariant)
+admin.register(DesignedPersonalizableZone)
+admin.register(Category)
+admin.register(Option)
+admin.register(OptionValue)
+admin.register(AllowedVariantPersonalizationMethod)
 
-admin.site.register(PersonalizationType)
-admin.site.register(PersonalizationMethod)
-admin.site.register(PersonalizableZone)
-admin.site.register(Personalizable)
-admin.site.register(PersonalizableVariant)
-admin.site.register(Category)
-admin.site.register(Color)
-admin.site.register(Size)
-admin.site.register(Material)
-admin.site.register(AllowedPersonalizablesPersonalization)
 
