@@ -7,18 +7,18 @@ from personalizables.models import  AllowedVariantPersonalizationMethod
 
 
 
-admin.register(PersonalizationType)
-admin.register(PersonalizationMethod)
-admin.register(PersonalizableZone)
-admin.register(Personalizable)
-admin.register(PersonalizableVariant)
-admin.register(PersonalizableOption)
-admin.register(PersonalizableVariantValue)
-admin.register(DesignedPersonalizableVariant)
-admin.register(DesignedPersonalizableZone)
-admin.register(Category)
-admin.register(Option)
-admin.register(OptionValue)
-admin.register(AllowedVariantPersonalizationMethod)
+admin.site.register(PersonalizationType)
+admin.site.register(PersonalizationMethod)
+admin.site.register(PersonalizableZone)
+admin.site.register(Personalizable)
+admin.site.register(PersonalizableVariant)
+admin.site.register(PersonalizableOption)
+admin.site.register(PersonalizableVariantValue)
+admin.site.register(DesignedPersonalizableVariant)
+admin.site.register(DesignedPersonalizableZone)
+admin.site.register(Category)
+admin.site.register(Option)
+admin.site.register(OptionValue)
+admin.site.register(AllowedVariantPersonalizationMethod)
 
 
