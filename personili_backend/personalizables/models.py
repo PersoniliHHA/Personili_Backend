@@ -98,8 +98,33 @@ class Category(TimeStampedModel, MP_Node):
         root_categories = cls.objects.filter(parent_category=None)
         return [root_category.build_category_tree() for root_category in root_categories]
 
+########################################################
+#                Options and values                    #
+########################################################
+class Option(TimeStampedModel):
+    """
+    Each option has a name and a description
+    """
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    name = models.CharField(max_length=255, null=True)
+    description = models.TextField(null=True, blank=True)
 
-    
+    def __str__(self):
+        return self.name + " - " + str(self.id)
+
+class OptionValue(TimeStampedModel):
+    """
+    Each option value is linked to one and only one option, 
+    it has a name and a description
+    """
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    option = models.ForeignKey(Option, on_delete=models.CASCADE, related_name='option_values')
+    name = models.CharField(max_length=255, null=True)
+    description = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return self.name + " - " + str(self.id)
+
 #########################################
 #       PersonalizationType model       #
 #########################################
@@ -197,7 +222,6 @@ class PersonalizationType(TimeStampedModel):
         return response
         
 
-
 #########################################
 #         PersonalizationMethod model   #
 #########################################
@@ -230,14 +254,13 @@ class Personalizable(TimeStampedModel):
     A printable model has a name, 
     a type, 
     a description, 
-    an image path, 
-    an availability and linked to a subcategory
+    an image path,
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category')
     name = models.CharField(max_length=255, null=True)
     description = models.TextField(null=True, blank=True)
-    availability = models.BooleanField(default=True)
+    image_path = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return self.name + " - " + self.category.name + " - " + str(self.id)
@@ -254,9 +277,6 @@ class Personalizable(TimeStampedModel):
         for variant in personalizable_variants:
             response.append({
                 'variant_id': variant.id,
-                'color': Color.objects.get(pk= variant.color.id).hex_code,
-                'size': Size.objects.get(pk= variant.size.id).name,
-                'material': Material.objects.get(pk = variant.material.id).code,
                 'stock_quantity': variant.stock_quantity
             })
         return response
@@ -285,67 +305,22 @@ class Personalizable(TimeStampedModel):
                 'y2': personalizable_zone.y2
             })
         return response
-    
 
 #########################################
-#              Colors model             #
+#     PersonalizableOption model        #
 #########################################
-class Color(TimeStampedModel):
+class PersonalizableOption(TimeStampedModel):
     """
-    A color has an id, a name, a hex code
+    A personalizable option is linked to a personalizable with an option
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    name = models.CharField(max_length=255, null=True)
-    hex_code = models.CharField(max_length=255, null=True)
+    personalizable = models.ForeignKey(Personalizable, on_delete=models.CASCADE, related_name='options')
+    option = models.ForeignKey('Option', on_delete=models.CASCADE, related_name='personalizables')
 
     def __str__(self):
-        return self.name + " - " + self.hex_code
+        return self.personalizable.name + " - " + self.option.name + " - " + str(self.id)
 
-#########################################
-#             Material model            #
-#########################################
-class Material(TimeStampedModel):
-    """
-    A material has an id, a name and a specific code
-    """
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    name = models.CharField(max_length=255, null=True)
-    code = models.CharField(max_length=255, null=True)
 
-    def __str__(self):
-        return self.name + " - " + self.code
-    
-#########################################
-#                Size model             #
-#########################################
-class Size(TimeStampedModel):
-    """
-    A size has an id, a list of fixed choices and a name
-    """
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    name = models.CharField(max_length=255, null=True)
-    code = models.CharField(max_length=255, null=True)
-
-    def __str__(self):
-        return self.name + " - " + self.code
-
-#########################################
-#      PersonalizableVariant model      #
-#########################################
-class PersonalizableVariant(TimeStampedModel):
-    """
-    A personalizable variant is linked to one and only one printable,
-    it has a color
-    a size
-    a material ( set of choices )
-    """
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    personalizable = models.ForeignKey(Personalizable, on_delete=models.CASCADE, related_name='variants')
-    color = models.ForeignKey(Color, on_delete=models.CASCADE, related_name='variants_of_a_color')
-    size = models.ForeignKey(Size, on_delete=models.CASCADE, related_name='variants_of_a_size')
-    material = models.ForeignKey(Material, on_delete=models.CASCADE, related_name='variants_of_a_material')
-    stock_quantity = models.IntegerField(null=True)
-    
 #########################################
 #       PersonalizableZone model        #
 #########################################
@@ -375,18 +350,50 @@ class PersonalizableZone(TimeStampedModel):
     def __str__(self):
         return self.personalizable.name + " - " + self.name
 
+#########################################
+#      PersonalizableVariant model      #
+#########################################
+class PersonalizableVariant(TimeStampedModel):
+    """
+    A personalizable variant is linked to one and only one printable,
+    it has a color
+    a size
+    a material ( set of choices )
+    """
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    personalizable = models.ForeignKey(Personalizable, on_delete=models.CASCADE, related_name='variants')
+    brand = models.CharField(max_length=255, null=True, default="Generic Brand")
+    model = models.CharField(max_length=255, null=True, default="Generic Model")
+    
+
+#########################################
+#    PersonalizableVariantValue model   #
+#########################################
+class PersonalizableVariantValue(TimeStampedModel):
+    """
+    A personalizable variant value is linked to :
+    - a personalizable variant
+    - an option value
+    - a personalizable option
+    """
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    personalizable_variant = models.ForeignKey(PersonalizableVariant, on_delete=models.CASCADE, related_name='option_values')
+    option_value = models.ForeignKey(OptionValue, on_delete=models.CASCADE, related_name='personalizable_variants')
+    personalizable_option = models.ForeignKey(PersonalizableOption, on_delete=models.CASCADE, related_name='personalizable_variants')
+   
+    def __str__(self):
+        return self.personalizable_variant.personalizable.name + " - " + self.option_value.name + " - " + str(self.id)
 
 ########################################################
 #  Allowed personalizable/personalization methd model  #
 ########################################################
-class AllowedPersonalizablesPersonalization(TimeStampedModel):
+class AllowedVariantPersonalizationMethod(TimeStampedModel):
     """
     Associates the id of the personalizable and the id of the allowed personalization type
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     personalizable = models.ForeignKey(Personalizable, on_delete=models.CASCADE, related_name='allowed_personalizables')
-    personalization_type = models.ForeignKey(PersonalizationType, on_delete=models.CASCADE, related_name='allowed_personalization_types')
-
+    personalization_method = models.ForeignKey(PersonalizationMethod, on_delete=models.CASCADE, related_name='allowed_personalizables')
     def __str__(self):
         return self.personalizable.name + " - " + str(self.id)
 
@@ -395,11 +402,12 @@ class AllowedPersonalizablesPersonalization(TimeStampedModel):
 ########################################################
 class DesignedPersonalizableVariant(TimeStampedModel):
     """
-    A designed personalizable variant is linked to a personalizable variant 
+    A designed personalizable variant is linked to:
+     - a personalizable variant 
+     -
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     personalizable_variant = models.ForeignKey(PersonalizableVariant, on_delete=models.CASCADE, related_name='designed_personalizable_variant')
-
 
 ########################################################
 #                Designed Zone model                   #
@@ -423,9 +431,5 @@ class DesignedPersonalizableZone(TimeStampedModel):
 
     def __str__(self):
         return self.personalizable_zone.name + " - " + str(self.id)
-
-
-
-
 
 
