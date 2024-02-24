@@ -10,7 +10,7 @@ class Organization(TimeStampedModel):
     """
     Every organization has a official name and a description
     """
-    id = models.UUIDField(primary_key=True, default=str(uuid4()), editable=False, db_index=True)
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     name = models.CharField(max_length=100)
     description = models.TextField(null=True)
     is_verified = models.BooleanField(default=False)
@@ -26,7 +26,7 @@ class OrganizationMembership(TimeStampedModel):
     - Membership status
     - Membership role
     """
-    id = models.UUIDField(primary_key=True, default=str(uuid4()), editable=False, db_index=True)
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
@@ -51,7 +51,7 @@ class OrganizationProfile(TimeStampedModel):
     - Organization created at
     - Organization updated at
     """
-    id = models.UUIDField(primary_key=True, default=str(uuid4()), editable=False, db_index=True)
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     organization = models.OneToOneField(Organization, on_delete=models.CASCADE)
     logo = models.ImageField(upload_to="organization_logos/")
     address = models.TextField()
@@ -72,7 +72,7 @@ class Workshop(TimeStampedModel):
     - Workshop description
     - Workshop location
     """
-    id = models.UUIDField(primary_key=True, default=str(uuid4()), editable=False, db_index=True)
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     description = models.TextField()
@@ -90,7 +90,7 @@ class Inventory(TimeStampedModel):
     - Inventory description
     - Inventory location
     """
-    id = models.UUIDField(primary_key=True, default=str(uuid4()), editable=False, db_index=True)
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     description = models.TextField()
@@ -109,7 +109,7 @@ class InventoryItem(TimeStampedModel):
     - Item price
     - Item location
     """
-    id = models.UUIDField(primary_key=True, default=str(uuid4()), editable=False, db_index=True)
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     description = models.TextField()
