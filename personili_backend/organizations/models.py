@@ -109,7 +109,7 @@ class InventoryItem(TimeStampedModel):
     - Item price
     - Item location
     """
-    id = models.UUIDField(primary_key=True, default=str(uuid4()), editable=False, db_index=True)
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     description = models.TextField()
