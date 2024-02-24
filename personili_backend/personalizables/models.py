@@ -448,14 +448,6 @@ class Product(TimeStampedModel):
     product_origin = models.CharField(max_length=255, choices=PRODUCT_ORIGIN_CHOICES, default=SELF_PERSONALIZED)
     product_type = models.CharField(max_length=255, choices=PRODUCT_TYPE_CHOICES, default='personalizable')
 
-    # Define generic foreign key fields
-    content_type = models.ForeignKey(ContentType, 
-    on_delete=models.CASCADE,
-    limit_choices_to={'model__in': ['design', 'designedpersonalizablevariant']}
-    )
-    object_id = models.UUIDField()
-    content_object = GenericForeignKey('content_type', 'object_id')
-
     def __str__(self):
         return self.name + ' - ' + str(self.id)
     
