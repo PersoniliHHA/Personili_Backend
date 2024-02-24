@@ -43,7 +43,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
 #     Personalizable ViewSet    #
 #                               #
 #################################
-class PersonalizableViewSet(viewsets.ModelViewSet):
+class PersonalizableViewSet(viewsets.ViewSet):
     """
     Viewset for the Personalizable class, in this class we define
     """
@@ -80,7 +80,7 @@ class PersonalizationTypeViewSet(viewsets.ModelViewSet):
     
 
     # Get all personalization types
-    @action(detail=False, methods=['GET'], url_path='v1/get-all-personalization-types')
+    @action(detail=False, methods=['GET'], url_path='v1/personalization-types')
     def get_all_personalization_types(self, request):
         """This method returns all personalization types"""
         response = Response()
@@ -91,7 +91,7 @@ class PersonalizationTypeViewSet(viewsets.ModelViewSet):
     
 
     # Get all personalization types and their methods
-    @action(detail=False, methods=['GET'], url_path='v1/get-all-personalization-types-and-methods')
+    @action(detail=False, methods=['GET'], url_path='v1/personalization-types-and-methods')
     def get_all_personalization_types_and_methods(self, request):
         """This method returns all personalization types and methods"""
         response = Response()
