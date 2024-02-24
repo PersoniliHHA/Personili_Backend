@@ -16,7 +16,7 @@ from utils.utilities import get_presigned_url_for_image
 #########################################
 #             Category model            #
 #########################################
-class Category(TimeStampedModel, MP_Node):
+class Category(TimeStampedModel):
     """
     Category model,
     each category has a name and a description and a picture,
@@ -90,14 +90,25 @@ class Category(TimeStampedModel, MP_Node):
                     'subcategories': []
                 }
     
-    @classmethod
-    def get_all_categories_and_their_subcategories(cls):
+    def get_category_tree(self, parent_category=None):
         """
-        This method returns all categories and their subcategories
-        It first gets the root categories, then it gets the subcategories of each root category using the build_category_tree method
+        This method returns teh entire category tree under a specific parent category, if the parent
+        category is null then the method returns the entire category tree
         """
-        root_categories = cls.objects.filter(parent_category=None)
-        return [root_category.build_category_tree() for root_category in root_categories]
+        categories = Category.objects.filter(parent_category=parent_category)
+        category_tree = []
+        for category in categories:
+            if category.availability_status == 'Available' or category.availability_status == 'ComingSoon':
+                category_dict = {}
+                category_dict["id"] = category.id
+                category_dict["name"] = category.name
+                category_dict["description"] = category.description
+                category_dict["image_path"] = category.image_path
+                category_dict["logo_path"] = get_presigned_url_for_image(category.logo_path)
+                category_dict["sub_categories"] = self.get_category_tree(category.id)
+                category_tree.append(category_dict)
+        
+        return category_tree
 
 ########################################################
 #                Options and values                    #

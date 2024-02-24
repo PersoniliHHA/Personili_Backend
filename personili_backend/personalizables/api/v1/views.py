@@ -6,7 +6,7 @@ from rest_framework.generics import get_object_or_404
 
 # Local imports
 from personalizables.models import Category, PersonalizationType, PersonalizationMethod, Personalizable, PersonalizableVariant, PersonalizableZone
-from personalizables.api.serializers import CategorySerializer, PersonalizationTypeGetSerializer, PersonalizationMethodGetSerializer
+from personalizables.api.v1.serializers import CategorySerializer, PersonalizationTypeGetSerializer, PersonalizationMethodGetSerializer
 from accounts.models import AccountProfile
 
 # Standard imports
@@ -29,11 +29,11 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    @action(detail=False, methods=['GET'], url_path='v1/get-all-categories-and-subcategories')
+    @action(detail=False, methods=['GET'], url_path='v1/personalizable-categories', permission_classes=[permissions.IsAuthenticated])
     def get_all_categories(self, request):
         """Method that returns all categories and their subcategories"""
 
-        response_data: List = Category.get_all_categories_and_their_subcategories()
+        response_data: List = Category.get_category_tree()
 
         return Response(response_data, status=status.HTTP_200_OK)
 
