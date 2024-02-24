@@ -89,8 +89,8 @@ class Category(TimeStampedModel):
                     'availability_status': "ComingSoon" if self.parent_category and Category.objects.get(pk=self.parent_category.id).availability_status == "ComingSoon"  else self.availability_status,
                     'subcategories': []
                 }
-    
-    def get_category_tree(self, parent_category=None):
+    @classmethod
+    def get_category_tree(cls, parent_category=None):
         """
         This method returns teh entire category tree under a specific parent category, if the parent
         category is null then the method returns the entire category tree
