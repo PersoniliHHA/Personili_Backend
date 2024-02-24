@@ -344,6 +344,7 @@ class PersonalizableVariant(TimeStampedModel):
         """
         This method returns the option values of this personalizable variant
         """
+        pass
 
         
 
