@@ -413,5 +413,3 @@ class DesignedPersonalizableZone(TimeStampedModel):
 
     def __str__(self):
         return self.personalizable_zone.name + " - " + str(self.id)
-
-

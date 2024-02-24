@@ -22,7 +22,7 @@ logging.basicConfig(level=logging.DEBUG)
 #                               #
 #################################
 
-class CategoryViewSet(viewsets.ModelViewSet):
+class CategoryViewSet(viewsets.ViewSet):
     """Viewset for the category class, it uses a method decorated by the action decorator to
      retrieve all categories and their subcategories"""
 
