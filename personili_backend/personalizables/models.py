@@ -239,6 +239,8 @@ class Personalizable(TimeStampedModel):
     name = models.CharField(max_length=255, null=True)
     description = models.TextField(null=True, blank=True)
     image_path = models.CharField(max_length=255, null=True, blank=True)
+    brand = models.CharField(max_length=255, null=True, default="Generic Brand")
+    model = models.CharField(max_length=255, null=True, default="Generic Model")
 
     def __str__(self):
         return self.name + " - " + self.category.name + " - " + str(self.id)
@@ -337,10 +339,14 @@ class PersonalizableVariant(TimeStampedModel):
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     personalizable = models.ForeignKey(Personalizable, on_delete=models.CASCADE, related_name='variants')
-    brand = models.CharField(max_length=255, null=True, default="Generic Brand")
-    model = models.CharField(max_length=255, null=True, default="Generic Model")
     sku = models.ForeignKey(InventoryItem, on_delete=models.CASCADE, related_name='personalizable_variants')
-    
+
+    def get_the_variant_values(self):
+        """
+        This method returns the option values of this personalizable variant
+        """
+
+        
 
 #########################################
 #    PersonalizableVariantValue model   #
