@@ -7,7 +7,6 @@ from django.db import models
 # Models
 from accounts.models import TimeStampedModel
 from organizations.models import InventoryItem
-from treebeard.mp_tree import MP_Node
 
 # Utilities
 from utils.utilities import get_presigned_url_for_image
