@@ -56,39 +56,6 @@ class Category(TimeStampedModel):
         else:
             return self
     
-    def build_category_tree(self):
-        """
-        - This method returns a dictionary with the category tree, according to the following rules:
-        - If a parent subcategory has no subcategories, then it is a leaf, only return leafs that are either available or coming soon.
-        - If a non-leaf category has all subcategories who are neither available nor coming soon, then don't return it, and this includes all the subcategories in the tree line.
-        - Consistency rule : if a parent category is marked as available, 
-        then at least one of its subcategories must be available or coming soon. 
-        If the parent category is marked by any other status othan than available 
-        then all its subcategories must be marked with the same status .
-        """
-        if self.availability_status == 'Available' or self.availability_status == 'ComingSoon':
-            if self.get_direct_subcategories():
-                return {
-                    'id': self.id,
-                    'name': self.name,
-                    'description': self.description,
-                    'image_path': self.image_path,
-                    'logo_path': get_presigned_url_for_image(self.logo_path),
-                    'parent_category': self.parent_category.id if self.parent_category else None,
-                    'availability_status': "ComingSoon" if self.parent_category and Category.objects.get(pk=self.parent_category.id).availability_status == "ComingSoon"  else self.availability_status,
-                    'subcategories': [category.build_category_tree() for category in self.subcategories.all()]
-                }
-            else:
-                return {
-                    'id': self.id,
-                    'name': self.name,
-                    'description': self.description,
-                    'image_path': self.image_path,
-                    'logo_path': get_presigned_url_for_image(self.logo_path),
-                    'parent_category': self.parent_category.id if self.parent_category else None,
-                    'availability_status': "ComingSoon" if self.parent_category and Category.objects.get(pk=self.parent_category.id).availability_status == "ComingSoon"  else self.availability_status,
-                    'subcategories': []
-                }
     @classmethod
     def get_category_tree(cls, parent_category=None):
         """
@@ -104,8 +71,7 @@ class Category(TimeStampedModel):
                 category_dict["name"] = category.name
                 category_dict["description"] = category.description
                 category_dict["image_path"] = category.image_path
-                category_dict["logo_path"] = get_presigned_url_for_image(category.logo_path)
-                category_dict["sub_categories"] = self.get_category_tree(category.id)
+                category_dict["sub_categories"] = cls.get_category_tree(category.id)
                 category_tree.append(category_dict)
         
         return category_tree
