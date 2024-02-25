@@ -38,7 +38,7 @@ Account = get_user_model()
 #                               #
 #################################
 
-class AccountAuthViewSet(viewsets.ModelViewSet):
+class AccountAuthViewSet(viewsets.ViewSet):
     """Viewset for the User Sign Up API"""
 
     queryset = Account.objects.all()

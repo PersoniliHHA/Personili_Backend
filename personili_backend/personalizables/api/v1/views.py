@@ -32,8 +32,8 @@ class CategoryViewSet(viewsets.ViewSet):
     @action(detail=False, methods=['GET'], url_path='v1/personalizable-categories', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def get_all_categories(self, request):
         """Method that returns all categories and their subcategories"""
-
         response_data: List = Category.get_category_tree()
+
 
         return Response(response_data, status=status.HTTP_200_OK)
 
