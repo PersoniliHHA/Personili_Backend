@@ -32,6 +32,7 @@ django-cors-headers="3.14.0"  # https://github.com/adamchainz/django-cors-header
 drf-spectacular="0.26.1"  # https://github.com/tfranzel/drf-spectacular
 django-webpack-loader="1.8.1"  # https://github.com/django-webpack/django-webpack-loader
 boto3 = ">=1.26.151"
+drfdocs = "^0.0.11"
 
 [tool.poetry.group.local]
 optional = true

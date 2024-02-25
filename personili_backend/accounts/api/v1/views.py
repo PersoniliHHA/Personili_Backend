@@ -131,12 +131,25 @@ class AccountAuthViewSet(viewsets.ViewSet):
 
         return None
     
+    @action(detail=False, methods=["POST"], url_path="v1/main-account-social-sign-up", permission_classes=[permissions.AllowAny])
     def main_account_social_sign_up(self, request, *args, **kwargs):
         """This method is used to sign up a user using social media"""
 
         return None
     
+    @action(detail=False, methods=["POST"], url_path="v1/main-account-social-sign-in", permission_classes=[permissions.AllowAny])
+    def main_account_social_sign_in(self, request, *args, **kwargs):
+        """This method is used to sign in a user using social media"""
 
+        return None
+    
+    @action(detail=False, methods=["POST"], url_path="v1/refresh", permission_classes=[permissions.IsAuthenticated])
+    def main_account_refresh(self, request, *args, **kwargs):
+        """This method is used to refresh the user token"""
+
+        return None
+    
+    
 
 
 #################################

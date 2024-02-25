@@ -16,10 +16,9 @@ from typing import List
 # configure logging 
 import logging
 logging.basicConfig(level=logging.DEBUG)
+
 #################################
-#                               #
 #     Cat/Sub ViewSet           #
-#                               #
 #################################
 
 class CategoryViewSet(viewsets.ViewSet):
@@ -33,15 +32,11 @@ class CategoryViewSet(viewsets.ViewSet):
     def get_all_categories(self, request):
         """Method that returns all categories and their subcategories"""
         response_data: List = Category.get_category_tree()
-
-
         return Response(response_data, status=status.HTTP_200_OK)
 
 
 #################################
-#                               #
 #     Personalizable ViewSet    #
-#                               #
 #################################
 class PersonalizableViewSet(viewsets.ViewSet):
     """
@@ -61,9 +56,7 @@ class PersonalizableViewSet(viewsets.ViewSet):
 
 
 #################################
-#                               #
 #  Personalization   ViewSet    #
-#                               #
 #################################
 class PersonalizationTypeViewSet(viewsets.ModelViewSet):
     """

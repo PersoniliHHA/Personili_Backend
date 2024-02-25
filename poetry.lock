@@ -912,6 +912,16 @@ offline = ["drf-spectacular-sidecar"]
 sidecar = ["drf-spectacular-sidecar"]
 
 [[package]]
+name = "drfdocs"
+version = "0.0.11"
+description = "Documentation for Web APIs made with Django Rest Framework."
+optional = false
+python-versions = "*"
+files = [
+    {file = "drfdocs-0.0.11.tar.gz", hash = "sha256:a94d63d714aa2796d85b695a665b17092260ab2447b9aed7453bf914a0056e1e"},
+]
+
+[[package]]
 name = "executing"
 version = "2.0.1"
 description = "Get the currently executing AST node of a frame, and other information"
@@ -3186,4 +3196,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.12, <4"
-content-hash = "7eee3e9e4a93d0fd5293eca281c2af77178d10ebfe60dae4e739225b113ac3ea"
+content-hash = "ef6020f9df8959d309735735240ea5f55af5ad6ba92188da650e63c6ea1a1dd2"
