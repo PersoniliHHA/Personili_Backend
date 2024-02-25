@@ -3,8 +3,6 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import include, path
-from django.views import defaults as default_views
-from django.views.generic import TemplateView
 
 urlpatterns = [
     #path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
@@ -22,7 +20,7 @@ urlpatterns = [
 if settings.DEBUG:
     # Static file serving when using Gunicorn + Uvicorn for local web socket development
     urlpatterns += staticfiles_urlpatterns()
-    urlpatterns += [path(r'^docs/', include('rest_framework_docs.urls'))]
+    urlpatterns += [path('docs/', include('rest_framework_docs.urls'))]
 
 # API URLS
 urlpatterns += [
