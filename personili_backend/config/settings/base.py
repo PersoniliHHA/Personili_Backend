@@ -94,7 +94,6 @@ LOCAL_APPS = [
     "accounts.apps.AccountsConfig",
     "designs.apps.DesignsConfig",
     "personalizables.apps.PersonalizablesConfig",
-    "products.apps.ProductsConfig",
     "organizations.apps.OrganizationsConfig",
     "orders.apps.OrdersConfig",
 

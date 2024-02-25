@@ -26,7 +26,6 @@ urlpatterns += [
     path("api/", include("accounts.urls")),
     #path("api/", include("designs.urls")),
     path("api/", include("personalizables.urls")),
-    #path("api/", include("products.urls")),
     #path("api/", include("orders.urls")),
     ]
 """
