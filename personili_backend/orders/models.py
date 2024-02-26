@@ -31,31 +31,31 @@ class Cart(TimeStampedModel):
 
 
     def __str__(self):
-        return f'{self.user_profile.user.username} - {self.total_amount} - {self.open}'
+        return f'{self.account_profile} - {self.total_amount} - {self.open}'
     
 
     @classmethod
-    def is_there_an_open_cart(cls, user_profile: AccountProfile) -> bool:
+    def is_there_an_open_cart(cls, account_profile: AccountProfile) -> bool:
         """
         This method will check if there is a cart which is open, if yes then it will return True, otherwise
         it will return False
         """
         try:
-            cart = cls.objects.get(user_profile=user_profile, open=True)
+            cart = cls.objects.get(account_profile=account_profile, open=True)
             return True
         except cls.DoesNotExist:
             return False
     
     @classmethod
-    def create_or_get_the_cart(cls, user_profile: AccountProfile):
+    def create_or_get_the_cart(cls, account_profile: AccountProfile):
         """
         This method will check if there is a cart which is open, if yes then it will return it, otherwise
         it will create a new one and return it as well
         """
         try:
-            cart = cls.objects.get(user_profile=user_profile, open=True)
+            cart = cls.objects.get(account_profile=account_profile, open=True)
         except cls.DoesNotExist:
-            cart = cls.objects.create(user_profile=user_profile, open=True)
+            cart = cls.objects.create(account_profile=account_profile, open=True)
         return cart
 
     def add_items_to_cart(self, products:list[Product]):
@@ -88,16 +88,16 @@ class Cart(TimeStampedModel):
             cart_item.sub_total = cart_item.product.price * quantity
             cart_item.save()      
         
-    def validate_the_cart(self, user_profile: AccountProfile, delivery_address_id: str, payment_method_id: str):
+    def validate_the_cart(self, account_profile: AccountProfile, delivery_address_id: str, payment_method_id: str):
         """
         This method will transform the cart and its items into an order with its order items
         - First it will create the order, then it will create the order items and finally it will create the bill
         """
         # Create the order
         order = Order.objects.create(
-            user_profile=user_profile,
-            delivery_address_id=delivery_address_id,
-            payment_method_id=payment_method_id,
+            account_profile=account_profile,
+            delivery_address=delivery_address_id,
+            payment_method=payment_method_id,
             order_date=datetime.now(),
             total_amount=self.total_amount
         )
@@ -161,7 +161,7 @@ class Order(TimeStampedModel):
     """
     Order model has the following fields :
     - id (primary key)
-    - user_profile (linked to the user profile table)
+    - account_profile (linked to the user profile table)
     - order_date (date the order was placed)
     - total_amount (total amount of the order)
     - status (Pending, Processing, Shipped, Delivered, Cancelled) 
@@ -227,9 +227,8 @@ class Order(TimeStampedModel):
         order = cls.objects.create (
             account_profile=account_profile_id,
             delivery_address=delivery_address_id,
-            payment_method=payment_method_id,
             order_date=datetime.now(),
-            payment_method_id=payment_method_id,
+            payment_method=payment_method_id,
             total_amount=sum([float(sub_total) for _, _, sub_total in products_ids_with_quantities_and_sub_totals])
         )
 
