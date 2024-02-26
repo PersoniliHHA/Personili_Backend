@@ -146,7 +146,7 @@ class CartItem(TimeStampedModel):
     Each cart item is linked to a cart and a product, it has a quantity and a sub total
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    cart = models.ForeignKey('Cart', on_delete=models.CASCADE, related_name='cart_items_of_a_cart')
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='cart_items_of_a_cart')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='cart_items_of_a_product')
     quantity = models.IntegerField(default=1)
     sub_total = models.DecimalField(max_digits=10, decimal_places=2)
@@ -173,16 +173,29 @@ class Order(TimeStampedModel):
     PENDING = 'Pending'
     PROCESSING = 'Processing'
     CONFIRMED = 'Confirmed'
+    CANCELLED = 'Cancelled'
     ORDER_STATUS_CHOICES = [
         (PENDING, 'Pending'),
         (PROCESSING, 'Processing'),
-        (CONFIRMED, 'Confirmed')
+        (CONFIRMED, 'Confirmed'),
+        (CANCELLED, 'Cancelled')
+    ]
+
+    # Allowed currencies
+    DA = 'DA'
+    EUR = 'EUR'
+    USD = 'USD'
+    CURRENCY_CHOICES = [
+        (DA, 'DA'),
+        (EUR, 'EUR'),
+        (USD, 'USD')
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    user_profile = models.ForeignKey(AccountProfile, on_delete=models.CASCADE)
+    account_profile = models.ForeignKey(AccountProfile, on_delete=models.CASCADE)
     order_date = models.DateTimeField(auto_now_add=True)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    currency = models.CharField(max_length=3, default=DA, choices=CURRENCY_CHOICES)
     order_status = models.CharField(max_length=20, default=PENDING, choices=ORDER_STATUS_CHOICES)
     delivery_address = models.ForeignKey(DeliveryAddress, on_delete=models.CASCADE)
     payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
@@ -252,7 +265,7 @@ class OrderItem(TimeStampedModel):
     - sub_total (sub total of the product ordered)
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    order = models.ForeignKey('Order', on_delete=models.CASCADE, related_name='order_items_of_an_order')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_items_of_an_order')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='order_items_of_a_product')
     quantity = models.IntegerField(default=1)
     sub_total = models.DecimalField(max_digits=10, decimal_places=2)
@@ -265,9 +278,84 @@ class Bill(TimeStampedModel):
     """
     Bill model has the following fields :
     - id (primary key)
-    -
     - order (linked to the order table)
     - total_amount (total amount of the order)
-    - l
+    - payment status
+    - billing_address
+    - payment_method
     """
-    pass
+    # Payment status choices
+    PAID = 'Paid'
+    UNPAID = 'Unpaid'
+    PAYMENT_STATUS_CHOICES = [
+        (PAID, 'Paid'),
+        (UNPAID, 'Unpaid')
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    order = models.OneToOneField(Order, on_delete=models.CASCADE)
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    payment_status = models.CharField(max_length=20, default=UNPAID, choices=PAYMENT_STATUS_CHOICES)
+    billing_address = models.ForeignKey(DeliveryAddress, on_delete=models.CASCADE)
+    payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.order.user_profile.user.username} - {self.total_amount} - {self.payment_status}'
+
+
+
+#########################################
+#          Delivery methods model       #
+#########################################
+class DeliveryMethod(TimeStampedModel):
+    """
+    DeliveryMethod model has the following fields :
+    - id (primary key)
+    - name (name of the delivery method)
+    - description (description of the delivery method)
+    - cost (cost of the delivery method)
+    - delivery_time (estimated delivery time)
+    """
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    cost = models.DecimalField(max_digits=10, decimal_places=2)
+    delivery_time = models.DurationField()
+
+    def __str__(self):
+        return f'{self.name} - {self.cost} - {self.delivery_time}'
+
+#########################################
+#          Delivery model               #
+#########################################
+    
+class Delivery(TimeStampedModel):
+    """
+    Delivery table has the following fields :
+    - id
+    - order (linked to the order table)
+    - delivery_date (estimated_date of delivery)
+    - status (Pending, Shipped, Delivered, Cancelled)
+    - delivery_address (linked to the delivery address table)
+    - delivery_method (linked to the delivery method table)
+    """
+    # Status choices
+    PENDING = 'Pending'
+    SHIPPED = 'Shipped'
+    DELIVERED = 'Delivered'
+    CANCELLED = 'Cancelled'
+    DELIVERY_STATUS_CHOICES = [
+        (PENDING, 'Pending'),
+        (SHIPPED, 'Shipped'),
+        (DELIVERED, 'Delivered'),
+        (CANCELLED, 'Cancelled')
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    order = models.OneToOneField('Order', on_delete=models.CASCADE)
+    delivery_date = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, default=PENDING, choices=DELIVERY_STATUS_CHOICES)
+    delivery_address = models.ForeignKey(DeliveryAddress, on_delete=models.CASCADE)
+    delivery_method = models.ForeignKey('DeliveryMethod', on_delete=models.CASCADE)
+
+
