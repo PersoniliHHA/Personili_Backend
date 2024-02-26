@@ -201,7 +201,7 @@ class Order(TimeStampedModel):
     payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.user_profile.user.username} - {self.order_date} - {self.status}'
+        return f'{self.account_profile.user.username} - {self.order_date} - {self.status}'
     
     
     def get_related_bill(self):
@@ -211,7 +211,7 @@ class Order(TimeStampedModel):
         return self.bill_set.all().first()
     
     @classmethod
-    def create_order_and_its_order_items_and_bill(cls, user_profile_id: str,
+    def create_order_and_its_order_items_and_bill(cls, account_profile_id: str,
                                                    delivery_address_id: str, 
                                                    payment_method_id: str, 
                                                    products_ids_with_quantities_and_sub_totals):
@@ -226,9 +226,9 @@ class Order(TimeStampedModel):
 
         # Create the order
         order = cls.objects.create (
-            user_profile_id=user_profile_id,
-            delivery_address_id=delivery_address_id,
-            payment_method_id=payment_method_id,
+            account_profile=account_profile_id,
+            delivery_address=delivery_address_id,
+            payment_method=payment_method_id,
             order_date=datetime.now(),
             total_amount=sum([float(sub_total) for _, _, sub_total in products_ids_with_quantities_and_sub_totals])
         )
@@ -239,7 +239,7 @@ class Order(TimeStampedModel):
             for product_id, quantity, sub_total in order_item_tuple:
                 OrderItem.objects.create(
                     order=order,
-                    product_id=product_id,
+                    product=product_id,
                     quantity=quantity,
                     sub_total=sub_total
             )
@@ -351,11 +351,11 @@ class Delivery(TimeStampedModel):
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    order = models.OneToOneField('Order', on_delete=models.CASCADE)
+    order = models.OneToOneField(Order, on_delete=models.CASCADE)
     delivery_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, default=PENDING, choices=DELIVERY_STATUS_CHOICES)
     delivery_address = models.ForeignKey(DeliveryAddress, on_delete=models.CASCADE)
-    delivery_method = models.ForeignKey('DeliveryMethod', on_delete=models.CASCADE)
+    delivery_method = models.ForeignKey(DeliveryMethod, on_delete=models.CASCADE)
 
 
 #########################################
