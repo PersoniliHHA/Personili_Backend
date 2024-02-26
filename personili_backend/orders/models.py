@@ -7,7 +7,6 @@ from datetime import datetime
 # Model imports
 from accounts.models import AccountProfile, DeliveryAddress, PaymentMethod
 from accounts.models import TimeStampedModel
-from personalizables.models import PersonalizableVariant
 from personalizables.models import Product 
 
 
@@ -201,7 +200,7 @@ class Order(TimeStampedModel):
     payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.account_profile.user.username} - {self.order_date} - {self.status}'
+        return f'{self.account_profile} - {self.order_date} - {self.status}'
     
     
     def get_related_bill(self):
@@ -230,6 +229,7 @@ class Order(TimeStampedModel):
             delivery_address=delivery_address_id,
             payment_method=payment_method_id,
             order_date=datetime.now(),
+            payment_method_id=payment_method_id,
             total_amount=sum([float(sub_total) for _, _, sub_total in products_ids_with_quantities_and_sub_totals])
         )
 
@@ -351,7 +351,7 @@ class Delivery(TimeStampedModel):
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    order = models.OneToOneField(Order, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
     delivery_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, default=PENDING, choices=DELIVERY_STATUS_CHOICES)
     delivery_address = models.ForeignKey(DeliveryAddress, on_delete=models.CASCADE)
