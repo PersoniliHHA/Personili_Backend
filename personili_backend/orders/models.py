@@ -293,14 +293,14 @@ class Bill(TimeStampedModel):
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    order = models.OneToOneField(Order, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.DO_NOTHING, related_name='bill_of_an_order')
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     payment_status = models.CharField(max_length=20, default=UNPAID, choices=PAYMENT_STATUS_CHOICES)
     billing_address = models.ForeignKey(DeliveryAddress, on_delete=models.CASCADE)
     payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.order.user_profile.user.username} - {self.total_amount} - {self.payment_status}'
+        return f'{self.order} - {self.total_amount} - {self.payment_status}'
 
 
 
@@ -354,8 +354,8 @@ class Delivery(TimeStampedModel):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     delivery_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, default=PENDING, choices=DELIVERY_STATUS_CHOICES)
-    delivery_address = models.ForeignKey(DeliveryAddress, on_delete=models.CASCADE)
-    delivery_method = models.ForeignKey(DeliveryMethod, on_delete=models.CASCADE)
+    delivery_address = models.ForeignKey(DeliveryAddress, on_delete=models.DO_NOTHING)
+    delivery_method = models.ForeignKey(DeliveryMethod, on_delete=models.DO_NOTHING)
 
 
 #########################################
@@ -371,8 +371,8 @@ class DeliveryItem(TimeStampedModel):
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     delivery = models.ForeignKey(Delivery, on_delete=models.CASCADE)
-    order_item = models.ForeignKey(OrderItem, on_delete=models.CASCADE)
+    order_item = models.ForeignKey(OrderItem, on_delete=models.DO_NOTHING)
     quantity = models.IntegerField(default=1)
     
     def __str__(self):
-        return f'{self.delivery.id} - {self.order_item.product.name} - {self.quantity}'
+        return f'{self.delivery.id} - {self.order_item.id} - {self.quantity}'
