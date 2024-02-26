@@ -191,7 +191,7 @@ class Order(TimeStampedModel):
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
-    account_profile = models.ForeignKey(AccountProfile, on_delete=models.CASCADE)
+    account_profile = models.ForeignKey(AccountProfile, on_delete=models.CASCADE, related_name='orders_of_an_account')
     order_date = models.DateTimeField(auto_now_add=True)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     currency = models.CharField(max_length=3, default=DA, choices=CURRENCY_CHOICES)
