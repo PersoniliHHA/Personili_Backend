@@ -190,14 +190,14 @@ class Order(TimeStampedModel):
         (USD, 'USD')
     ]
 
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     account_profile = models.ForeignKey(AccountProfile, on_delete=models.CASCADE)
     order_date = models.DateTimeField(auto_now_add=True)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     currency = models.CharField(max_length=3, default=DA, choices=CURRENCY_CHOICES)
     order_status = models.CharField(max_length=20, default=PENDING, choices=ORDER_STATUS_CHOICES)
-    delivery_address = models.ForeignKey(DeliveryAddress, on_delete=models.CASCADE)
-    payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
+    delivery_address = models.ForeignKey(DeliveryAddress, on_delete=models.DO_NOTHING)
+    payment_method = models.ForeignKey(PaymentMethod, on_delete=models.DO_NOTHING)
 
     def __str__(self):
         return f'{self.account_profile} - {self.order_date} - {self.status}'
@@ -210,9 +210,9 @@ class Order(TimeStampedModel):
         return self.bill_set.all().first()
     
     @classmethod
-    def create_order_and_its_order_items_and_bill(cls, account_profile_id: str,
-                                                   delivery_address_id: str, 
-                                                   payment_method_id: str, 
+    def create_order_and_its_order_items_and_bill(cls, account_profile: str,
+                                                   delivery_address: str, 
+                                                   payment_method: str, 
                                                    products_ids_with_quantities_and_sub_totals):
         """
         This method will take a list of products ids (each product id with their respective quantity and sub_total),
@@ -225,10 +225,10 @@ class Order(TimeStampedModel):
 
         # Create the order
         order = cls.objects.create (
-            account_profile=account_profile_id,
-            delivery_address=delivery_address_id,
+            account_profile=account_profile,
+            delivery_address=delivery_address,
             order_date=datetime.now(),
-            payment_method=payment_method_id,
+            payment_method=payment_method,
             total_amount=sum([float(sub_total) for _, _, sub_total in products_ids_with_quantities_and_sub_totals])
         )
 
