@@ -390,6 +390,7 @@ class DesignedPersonalizableVariant(TimeStampedModel):
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     personalizable_variant = models.ForeignKey(PersonalizableVariant, on_delete=models.CASCADE, related_name='designed_personalizable_variant')
+    name = models.CharField(max_length=255, null=True)
 
 ########################################################
 #                Designed Zone model                   #
@@ -428,24 +429,15 @@ class Product(TimeStampedModel):
      - price (price of the product)
      - status, it can be either self personalized or store personalized
     """
-    SELF_PERSONALIZED = 'For Self'
-    STORE_PERSONALIZED = 'For Store'
-    PRODUCT_ORIGIN_CHOICES = [
-        (SELF_PERSONALIZED, 'For Self'),
-        (STORE_PERSONALIZED, 'For Store')
-    ]
-
-    PRODUCT_TYPE_CHOICES = [
-        ('personalizable', 'Personalizable'),
-        ('design', 'Design')
-    ]
-
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    personalization_method = models.ForeignKey(PersonalizationMethod, on_delete=models.CASCADE)
+    self_made = models.BooleanField(default=False)
+
     name = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     designed_personalizable_variant = models.ForeignKey(DesignedPersonalizableVariant, on_delete=models.CASCADE)
-    self_made = models.BooleanField(default=False)
+    
 
     def __str__(self):
         return self.name + ' - ' + str(self.id)
