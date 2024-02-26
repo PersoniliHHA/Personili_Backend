@@ -328,7 +328,6 @@ class DeliveryMethod(TimeStampedModel):
 #########################################
 #          Delivery model               #
 #########################################
-    
 class Delivery(TimeStampedModel):
     """
     Delivery table has the following fields :
@@ -359,3 +358,21 @@ class Delivery(TimeStampedModel):
     delivery_method = models.ForeignKey('DeliveryMethod', on_delete=models.CASCADE)
 
 
+#########################################
+#      Delivery Item model              #
+#########################################
+class DeliveryItem(TimeStampedModel):
+    """
+    DeliveryItem model has the following fields :
+    - id (primary key)
+    - delivery (linked to the delivery table)
+    - order_item (linked to the order item table)
+    - quantity (quantity of the product ordered)
+    """
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    delivery = models.ForeignKey(Delivery, on_delete=models.CASCADE)
+    order_item = models.ForeignKey(OrderItem, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
+    
+    def __str__(self):
+        return f'{self.delivery.id} - {self.order_item.product.name} - {self.quantity}'
