@@ -29,6 +29,9 @@ class Store(TimeStampedModel):
     # user can can have many stores linked to its profile
     account_profile = models.ForeignKey(AccountProfile, on_delete=models.DO_NOTHING, related_name='store')
 
+    class Meta:
+        db_table = 'stores'
+
     def __str__(self):
         return self.user_profile.user.email + " - " + self.name
     
@@ -102,6 +105,9 @@ class StoreProfile(TimeStampedModel):
     is_featured = models.BooleanField(default=False)
     is_upcoming = models.BooleanField(default=False)
 
+    class Meta:
+        db_table = 'store_profiles'
+
     def __str__(self):
         return self.store.user_profile.user.email + " - " + self.store.name
     
@@ -124,6 +130,9 @@ class Collection(TimeStampedModel):
     title = models.CharField(max_length=255, default="My Collection")
     description = models.TextField(null=True, blank=True)
 
+    class Meta:
+        db_table = 'collections'
+
     def __str__(self):
         return str(self.id) + ' - ' + self.title
 
@@ -131,6 +140,29 @@ class Collection(TimeStampedModel):
         """Get the designs related to this collection, the design table has a foreign key to collection"""
         return Design.objects.filter(collection=self)
         
+
+    
+#########################################
+#             Theme model               #
+#########################################
+class Theme(TimeStampedModel):
+    """
+    Every design belong to one and only one theme, it has a title, a description, a logo
+    """
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    title = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
+    logo_path = models.CharField(max_length=255, null=True, blank=True)
+
+    class Meta:
+        db_table = 'themes'
+
+    def __str__(self):
+        return str(self.id) + ' - ' + self.title
+    
+    def get_designs_and_their_stores_related_to_this_theme(self):
+        pass
+
 
 
 #########################################
@@ -157,11 +189,11 @@ class Design(TimeStampedModel):
     ]
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name='design')
-    theme = models.ForeignKey('Theme', on_delete=models.CASCADE, related_name='design')
+    theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='design')
     title = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
     image_path = models.CharField(max_length=255, null=True, blank=True)
-    tags = models.CharField(max_length=255, default="")
+    tags = models.CharField(max_length=255, null=True, blank=True)
     status = models.CharField(max_length=255,
                               choices=STATUS,
                               default=APPROVED)
@@ -169,9 +201,14 @@ class Design(TimeStampedModel):
     # This field is used to determine if the design should be published or not on our website
     to_be_published = models.BooleanField(default=True)
 
-    # This field is used to deteremine if this design can be used with other designs when customizing a personalizable
-    can_be_used_with_other_designs = models.BooleanField(default=True)
+    # Can the design be used with other designs from other designers
+    exclusive = models.BooleanField(default=True)
 
+    # Is the design limited to a certain number of personalizables
+    limited_personalizables = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = 'designs'
 
     def __str__(self):
         return self.title + " - " + str(self.id)
@@ -222,7 +259,6 @@ class Design(TimeStampedModel):
     def get_designs_by_collection(cls):
         pass 
 
-
     def get_products_where_this_design_is_used(self):
         """
         This method returns a list of products where this design is used
@@ -231,23 +267,4 @@ class Design(TimeStampedModel):
         pass
         
 
-        
-#########################################
-#             Theme model               #
-#########################################
-class Theme(TimeStampedModel):
-    """
-    Every design belong to one and only one theme, it has a title, a description, a logo
-    """
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    title = models.CharField(max_length=255)
-    description = models.TextField(null=True, blank=True)
-    logo_path = models.CharField(max_length=255, null=True, blank=True)
-
-    def __str__(self):
-        return str(self.id) + ' - ' + self.title
     
-    def get_designs_and_their_stores_related_to_this_theme(self):
-        pass
-
-
