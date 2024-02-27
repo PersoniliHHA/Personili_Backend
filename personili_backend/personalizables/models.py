@@ -3,6 +3,8 @@ from uuid import uuid4
 
 # Django
 from django.db import models
+from django.db.models import Count
+from django.forms.models import model_to_dict
 
 # Models
 from accounts.models import TimeStampedModel
@@ -31,11 +33,13 @@ class Category(TimeStampedModel):
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     name = models.CharField(max_length=255, null=True)
-    description = models.TextField(null=True, blank=True)
     image_path = models.CharField(max_length=255, null=True, blank=True)
     logo_path = models.CharField(max_length=255, null=True, blank=True)
     parent_category = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='subcategories')
     availability_status = models.CharField(max_length=255, choices=AVAILABILITY_STATUS_CHOICES, default='Unavailable')
+
+    class Meta:
+        db_table = 'Categories'
 
     def __str__(self):
         return self.name + " - " + str(self.id)
@@ -84,7 +88,9 @@ class Option(TimeStampedModel):
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     name = models.CharField(max_length=255, null=True)
-    description = models.TextField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'Options'
 
     def __str__(self):
         return self.name + " - " + str(self.id)
@@ -96,11 +102,13 @@ class OptionValue(TimeStampedModel):
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     option = models.ForeignKey(Option, on_delete=models.CASCADE, related_name='option_values')
-    name = models.CharField(max_length=255, null=True)
-    description = models.TextField(null=True, blank=True)
+    value = models.CharField(max_length=255, null=True)
+
+    class Meta:
+        db_table = 'OptionValues'
 
     def __str__(self):
-        return self.name + " - " + str(self.id)
+        return self.value + " - " + str(self.id)
 
 #########################################
 #       PersonalizationType model       #
@@ -114,7 +122,10 @@ class PersonalizationType(TimeStampedModel):
     description = models.TextField(null=True, blank=True)
     logo_path = models.CharField(max_length=255, null=True, blank=True)
     image_path = models.CharField(max_length=255, null=True, blank=True)
-    
+
+    class Meta:
+        db_table = 'PersonalizationTypes'
+
     def __str__(self):
         """
         Returns the name of the personalization type
@@ -213,6 +224,8 @@ class PersonalizationMethod(TimeStampedModel):
     logo_path = models.CharField(max_length=255, null=True, blank=True)
     image_path = models.CharField(max_length=255, null=True, blank=True)
 
+    class Meta:
+        db_table = 'PersonalizationMethods'
 
     def __str__(self):
         return self.name
@@ -240,6 +253,10 @@ class Personalizable(TimeStampedModel):
     image_path = models.CharField(max_length=255, null=True, blank=True)
     brand = models.CharField(max_length=255, null=True, default="Generic Brand")
     model = models.CharField(max_length=255, null=True, default="Generic Model")
+
+    class Meta:
+        db_table = 'Personalizables'
+
 
     def __str__(self):
         return self.name + " - " + self.category.name + " - " + str(self.id)
@@ -296,6 +313,9 @@ class PersonalizableOption(TimeStampedModel):
     personalizable = models.ForeignKey(Personalizable, on_delete=models.CASCADE, related_name='options')
     option = models.ForeignKey('Option', on_delete=models.CASCADE, related_name='personalizables')
 
+    class Meta:
+        db_table = 'PersonalizableOptions'
+
     def __str__(self):
         return self.personalizable.name + " - " + self.option.name + " - " + str(self.id)
 
@@ -325,6 +345,8 @@ class PersonalizableZone(TimeStampedModel):
     x2 = models.FloatField(null=True)
     y2 = models.FloatField(null=True)
 
+    class Meta:
+        db_table = 'PersonalizableZones'
 
     def __str__(self):
         return self.personalizable.name + " - " + self.name
@@ -340,13 +362,15 @@ class PersonalizableVariant(TimeStampedModel):
     personalizable = models.ForeignKey(Personalizable, on_delete=models.CASCADE, related_name='variants')
     sku = models.ForeignKey(InventoryItem, on_delete=models.CASCADE, related_name='personalizable_variants')
 
+    class Meta:
+        db_table = 'PersonalizableVariants'
+
     def get_the_variant_values(self):
         """
         This method returns the option values of this personalizable variant
         """
         pass
 
-        
 
 #########################################
 #    PersonalizableVariantValue model   #
@@ -362,7 +386,10 @@ class PersonalizableVariantValue(TimeStampedModel):
     personalizable_variant = models.ForeignKey(PersonalizableVariant, on_delete=models.CASCADE, related_name='option_values')
     option_value = models.ForeignKey(OptionValue, on_delete=models.CASCADE, related_name='personalizable_variants')
     personalizable_option = models.ForeignKey(PersonalizableOption, on_delete=models.CASCADE, related_name='personalizable_variants')
-   
+    
+    class Meta:
+        db_table = 'PersonalizableVariantValues'
+
     def __str__(self):
         return self.personalizable_variant.personalizable.name + " - " + self.option_value.name + " - " + str(self.id)
 
@@ -376,11 +403,15 @@ class AllowedVariantPersonalizationMethod(TimeStampedModel):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     personalizable = models.ForeignKey(Personalizable, on_delete=models.CASCADE, related_name='allowed_personalizables')
     personalization_method = models.ForeignKey(PersonalizationMethod, on_delete=models.CASCADE, related_name='allowed_personalizables')
+    
+    class Meta:
+        db_table = 'AllowedVariantPersonalizationMethods'
+
     def __str__(self):
         return self.personalizable.name + " - " + str(self.id)
 
 ########################################################
-#                Designed Zone model                   #
+#                Designed variant model                #
 ########################################################
 class DesignedPersonalizableVariant(TimeStampedModel):
     """
@@ -391,6 +422,9 @@ class DesignedPersonalizableVariant(TimeStampedModel):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     personalizable_variant = models.ForeignKey(PersonalizableVariant, on_delete=models.CASCADE, related_name='designed_personalizable_variant')
     name = models.CharField(max_length=255, null=True)
+
+    class Meta:
+        db_table = 'DesignedPersonalizableVariants'
 
 ########################################################
 #                Designed Zone model                   #
@@ -412,9 +446,31 @@ class DesignedPersonalizableZone(TimeStampedModel):
     dh = models.FloatField(null=True)
     dw = models.FloatField(null=True)
 
+    class Meta:
+        db_table = 'DesignedPersonalizableZones'
+
     def __str__(self):
         return self.personalizable_zone.name + " - " + str(self.id)
 
+########################################################
+#            Designed variant preview                  #
+########################################################
+class DesignedPersonalizableVariantPreview(TimeStampedModel):
+    """
+    A designed personalizable variant preview is linked to a designed personalizable variant, it has:
+    - an id
+    - a designed personalizable variant
+    - image path
+    multiple previews can belong to the same designed personalizable variant
+    """
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    designed_personalizable_variant = models.ForeignKey(DesignedPersonalizableVariant, on_delete=models.CASCADE, related_name='designed_personalizable_variant_preview')
+    image_path = models.CharField(max_length=255, null=True, blank=True)
+
+    class Meta:
+        db_table = 'DesignedPersonalizableVariantPreviews'
+    def __str__(self):
+        return str(self.designed_personalizable_variant.id) + " - " + str(self.id)
 
 
 ########################################
@@ -439,30 +495,54 @@ class Product(TimeStampedModel):
     designed_personalizable_variant = models.ForeignKey(DesignedPersonalizableVariant, on_delete=models.CASCADE)
     
 
+    class Meta:
+        db_table = 'Products'
+        
     def __str__(self):
         return self.name + ' - ' + str(self.id)
     
-    
-    def get_full_product_description(self):
+    @classmethod
+    def get_highest_selling_products_light(cls,offset=0, 
+                                               limit=10, 
+                                               categories_ids: list[str]=None,
+                                               personalization_type_ids: list[str]=None):
         """
-        This method should return the id, name, price of a product as well as :
-        - the name and full profile of the store or the stores that the designs used in this product belong to, this can be obtained through the personalizable zones that are related to the designed personalizable 
-        - the full attributes of the designs used in this product, this can be obtained through the personalizable zones that are related to the designed personalizable
-        
+        This method should return the following information about the highest selling products:
+        - full product object linked to the highest selling products (based on the order item table)
+        - full category object linked to the corresponding products objects
+        - full designed personalizable variant object linked to the corresponding products objects
+        - full designed personalizable variant preview objects linked to the designed personalizable variant objects
+        - full designed personalizable zone objects linked to the designed personalizable variant objects
+        - full design objects linked to the designed personalizable zone objects
         """
-        # Prepare the response
-        response = {
-            'id': self.id,
-            'name': self.name,
-            'price': self.price,
-            'description': self.description,
-            'stores': [],
-            'designs': []
-        }
+        # Retrieve the highest selling products based on the order item table
+        highest_selling_products = cls.objects.annotate(total_sales=Count('orderitem')).order_by('-total_sales')[offset:limit]
 
-        # get the full profile of all the stores that the designs used in this product belong to
-        for personalizable_zone in self.designed_personalizable.designedpersonalizablezone_set.all():
-            pass
+        # Prepare the response
+        response = []
+
+        for product in highest_selling_products:
+            # Retrieve the related objects
+            category = product.category
+            designed_personalizable_variant = product.designed_personalizable_variant
+            designed_personalizable_variant_previews = designed_personalizable_variant.designedpersonalizablevariantpreview_set.all()
+            designed_personalizable_zones = designed_personalizable_variant.designed_personalizable_zone.all()
+            designs = [zone.design for zone in designed_personalizable_zones]
+
+            # Build the product information
+            product_info = {
+                'product': model_to_dict(product),
+                'category': model_to_dict(category),
+                'designed_personalizable_variant': model_to_dict(designed_personalizable_variant),
+                'designed_personalizable_variant_previews': [model_to_dict(designed_personalizable_variant_preview) for designed_personalizable_variant_preview in designed_personalizable_variant_previews],
+                'designed_personalizable_zones': [designed_personalizable_zones],
+                'designs': designs
+            }
+
+            response.append(product_info)
+
+        return response
+
     
     def get_stores_names_and_full_profiles(self):
         """
