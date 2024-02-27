@@ -66,7 +66,7 @@ def insert_static_data(db):
         ("e2f98d5b-9679-4db5-a7d2-1f71dd1bb441", "Boxers","image_path3", "logo_path3", "be2d099e-4bab-49b9-aab3-1d63463f384b"),
  ]
     cursor = db.cursor()
-    sql_query = "INSERT INTO categories (id, name, image_path, logo_path, parent_category) VAlUES (%s,%s,%s,%s,%s)" 
+    sql_query = "INSERT INTO categories (id, name, image_path, logo_path, parent_category_id) VAlUES (%s,%s,%s,%s,%s)" 
     
     # Execute the query with the category_data
     cursor.executemany(sql_query, category_data)
