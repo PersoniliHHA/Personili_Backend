@@ -312,7 +312,7 @@ class Bill(TimeStampedModel):
 
     class Meta:
         db_table = 'bills'
-        
+
     def __str__(self):
         return f'{self.order} - {self.total_amount} - {self.payment_status}'
 
@@ -335,6 +335,9 @@ class DeliveryMethod(TimeStampedModel):
     description = models.TextField()
     cost = models.DecimalField(max_digits=10, decimal_places=2)
     delivery_time = models.DurationField()
+
+    class Meta:
+        db_table = 'delivery_methods'
 
     def __str__(self):
         return f'{self.name} - {self.cost} - {self.delivery_time}'
@@ -371,6 +374,8 @@ class Delivery(TimeStampedModel):
     delivery_address = models.ForeignKey(DeliveryAddress, on_delete=models.DO_NOTHING)
     delivery_method = models.ForeignKey(DeliveryMethod, on_delete=models.DO_NOTHING)
 
+    class Meta:
+        db_table = 'deliveries'
 
 #########################################
 #      Delivery Item model              #
@@ -388,5 +393,8 @@ class DeliveryItem(TimeStampedModel):
     order_item = models.ForeignKey(OrderItem, on_delete=models.DO_NOTHING)
     quantity = models.IntegerField(default=1)
     
+    class Meta:
+        db_table = 'delivery_items'
+        
     def __str__(self):
         return f'{self.delivery.id} - {self.order_item.id} - {self.quantity}'
