@@ -83,7 +83,7 @@ class Account(AbstractBaseUser, TimeStampedModel):
     REQUIRED_FIELDS = []  # Email and password are required by default
 
     class Meta:
-        db_table = 'account'
+        db_table = 'accounts'
 
     def has_perm(self, perm, obj=None):
         return self.is_admin and self.is_active
@@ -127,7 +127,7 @@ class AccountProfile(TimeStampedModel):
     date_of_birth = models.DateField(null=True, blank=True)
 
     class Meta:
-        db_table = 'account_profile'
+        db_table = 'account_profiles'
 
     def __str__(self):
         return str(self.id) + " - " + self.account.email
@@ -144,7 +144,7 @@ class Role(TimeStampedModel):
     description = models.TextField(null=True)
 
     class Meta:
-        db_table = 'role'
+        db_table = 'roles'
 
     def __str__(self) -> str:
         return self.name
@@ -174,7 +174,7 @@ class DeliveryAddress(TimeStampedModel):
     country = models.CharField(max_length=255, null=True)
 
     class Meta:
-        db_table = 'delivery_address'
+        db_table = 'delivery_addresses'
 
     def __str__(self):
         return str(self.id) + " - " + self.user_profile.user.email
@@ -205,7 +205,7 @@ class PaymentMethod(TimeStampedModel):
     security_code = models.CharField(max_length=255, null=True)
 
     class Meta:
-        db_table = 'payment_details'
+        db_table = 'payment_methods'
 
     def __str__(self) -> str:
         return str(self.user_profile.user.id) + " - " + self.user_profile.user.email + " - " + self.user_profile.user.username
@@ -245,7 +245,7 @@ class Wallet(TimeStampedModel):
     rip_number = models.CharField(max_length=255, null=True)
 
     class Meta:
-        db_table = 'wallet'
+        db_table = 'wallets'
 
     def __str__(self) -> str:
         return str(self.user_profile.user.id) + " - " + self.user_profile.user.username + ' - ' + self.user_profile.user.email
@@ -277,7 +277,7 @@ class Transaction(TimeStampedModel):
     transaction_proof_path = models.CharField(max_length=255, null=True)
 
     class Meta:
-        db_table = 'transaction'
+        db_table = 'transactions'
 
     def __str__(self) -> str:
         return str(self.wallet.user_profile.user.id) + ' - ' + self.wallet.user_profile.user.username + ' - ' + self.wallet.user_profile.user.email
@@ -297,7 +297,7 @@ class Feedback(TimeStampedModel):
     message = models.TextField(null=True)
 
     class Meta:
-        db_table = 'feedback'
+        db_table = 'feedbacks'
 
     def __str__(self) -> str:
         return self.email + ' - ' + self.subject
@@ -321,7 +321,7 @@ class AccountBlacklist(TimeStampedModel):
 
 
     class Meta:
-        db_table = 'blacklist_account'
+        db_table = 'blacklist_accounts'
 
     def __str__(self) -> str:
         return self.email + ' - ' + self.reason

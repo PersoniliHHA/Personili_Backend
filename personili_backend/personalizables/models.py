@@ -39,7 +39,7 @@ class Category(TimeStampedModel):
     availability_status = models.CharField(max_length=255, choices=AVAILABILITY_STATUS_CHOICES, default='Available')
 
     class Meta:
-        db_table = 'Categories'
+        db_table = 'categories'
 
     def __str__(self):
         return self.name + " - " + str(self.id)
@@ -90,7 +90,7 @@ class Option(TimeStampedModel):
     name = models.CharField(max_length=255, null=True)
 
     class Meta:
-        db_table = 'Options'
+        db_table = 'options'
 
     def __str__(self):
         return self.name + " - " + str(self.id)
@@ -105,7 +105,7 @@ class OptionValue(TimeStampedModel):
     value = models.CharField(max_length=255, null=True)
 
     class Meta:
-        db_table = 'OptionValues'
+        db_table = 'option_values'
 
     def __str__(self):
         return self.value + " - " + str(self.id)
@@ -124,7 +124,7 @@ class PersonalizationType(TimeStampedModel):
     image_path = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
-        db_table = 'PersonalizationTypes'
+        db_table = 'personalization_types'
 
     def __str__(self):
         """
@@ -225,7 +225,7 @@ class PersonalizationMethod(TimeStampedModel):
     image_path = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
-        db_table = 'PersonalizationMethods'
+        db_table = 'personalization_methods'
 
     def __str__(self):
         return self.name
@@ -255,7 +255,7 @@ class Personalizable(TimeStampedModel):
     model = models.CharField(max_length=255, null=True, default="Generic Model")
 
     class Meta:
-        db_table = 'Personalizables'
+        db_table = 'personalizables'
 
 
     def __str__(self):
@@ -314,7 +314,7 @@ class PersonalizableOption(TimeStampedModel):
     option = models.ForeignKey('Option', on_delete=models.CASCADE, related_name='personalizables')
 
     class Meta:
-        db_table = 'PersonalizableOptions'
+        db_table = 'personalizable_options'
 
     def __str__(self):
         return self.personalizable.name + " - " + self.option.name + " - " + str(self.id)
@@ -346,7 +346,7 @@ class PersonalizableZone(TimeStampedModel):
     y2 = models.FloatField(null=True)
 
     class Meta:
-        db_table = 'PersonalizableZones'
+        db_table = 'personalizable_zones'
 
     def __str__(self):
         return self.personalizable.name + " - " + self.name
@@ -388,7 +388,7 @@ class PersonalizableVariantValue(TimeStampedModel):
     personalizable_option = models.ForeignKey(PersonalizableOption, on_delete=models.CASCADE, related_name='personalizable_variants')
     
     class Meta:
-        db_table = 'PersonalizableVariantValues'
+        db_table = 'personalizable_variant_values'
 
     def __str__(self):
         return self.personalizable_variant.personalizable.name + " - " + self.option_value.name + " - " + str(self.id)
@@ -405,7 +405,7 @@ class AllowedVariantPersonalizationMethod(TimeStampedModel):
     personalization_method = models.ForeignKey(PersonalizationMethod, on_delete=models.CASCADE, related_name='allowed_personalizables')
     
     class Meta:
-        db_table = 'AllowedVariantPersonalizationMethods'
+        db_table = 'allowed_variant_personalization_methods'
         unique_together = ('personalizable', 'personalization_method')
 
     def __str__(self):
@@ -425,7 +425,7 @@ class DesignedPersonalizableVariant(TimeStampedModel):
     name = models.CharField(max_length=255, null=True)
 
     class Meta:
-        db_table = 'DesignedPersonalizableVariants'
+        db_table = 'designed_personalizable_variants'
 
 ########################################################
 #                Designed Zone model                   #
@@ -449,7 +449,7 @@ class DesignedPersonalizableZone(TimeStampedModel):
     dw = models.FloatField(null=True)
 
     class Meta:
-        db_table = 'DesignedPersonalizableZones'
+        db_table = 'designed_personalizable_zones'
 
     def __str__(self):
         return self.personalizable_zone.name + " - " + str(self.id)
@@ -470,7 +470,7 @@ class DesignedPersonalizableVariantPreview(TimeStampedModel):
     image_path = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
-        db_table = 'DesignedPersonalizableVariantPreviews'
+        db_table = 'designed_personalizable_variant_previews'
     def __str__(self):
         return str(self.designed_personalizable_variant.id) + " - " + str(self.id)
 
@@ -498,7 +498,7 @@ class Product(TimeStampedModel):
     
 
     class Meta:
-        db_table = 'Products'
+        db_table = 'products'
 
     def __str__(self):
         return self.name + ' - ' + str(self.id)

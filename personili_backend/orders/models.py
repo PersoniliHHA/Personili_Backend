@@ -30,6 +30,9 @@ class Cart(TimeStampedModel):
     open = models.BooleanField(default=True)
 
 
+    class Meta:
+        db_table = 'carts'
+
     def __str__(self):
         return f'{self.account_profile} - {self.total_amount} - {self.open}'
     
@@ -150,6 +153,9 @@ class CartItem(TimeStampedModel):
     quantity = models.IntegerField(default=1)
     sub_total = models.DecimalField(max_digits=10, decimal_places=2)
 
+    class Meta:
+        db_table = 'cart_items'
+        
     def __str__(self):
         return f'{self.product.name} - {self.quantity} - {self.sub_total}'
 
@@ -395,6 +401,6 @@ class DeliveryItem(TimeStampedModel):
     
     class Meta:
         db_table = 'delivery_items'
-        
+
     def __str__(self):
         return f'{self.delivery.id} - {self.order_item.id} - {self.quantity}'
