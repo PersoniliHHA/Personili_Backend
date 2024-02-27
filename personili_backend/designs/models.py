@@ -150,7 +150,7 @@ class Theme(TimeStampedModel):
     Every design belong to one and only one theme, it has a title, a description, a logo
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    title = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
     logo_path = models.CharField(max_length=255, null=True, blank=True)
 
