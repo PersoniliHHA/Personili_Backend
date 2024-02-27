@@ -199,6 +199,11 @@ class Order(TimeStampedModel):
     delivery_address = models.ForeignKey(DeliveryAddress, on_delete=models.DO_NOTHING)
     payment_method = models.ForeignKey(PaymentMethod, on_delete=models.DO_NOTHING)
 
+
+    class Meta:
+        db_table = 'orders'
+        ordering = ['-order_date']
+
     def __str__(self):
         return f'{self.account_profile} - {self.order_date} - {self.status}'
     
@@ -269,6 +274,13 @@ class OrderItem(TimeStampedModel):
     quantity = models.IntegerField(default=1)
     sub_total = models.DecimalField(max_digits=10, decimal_places=2)
 
+    class Meta:
+        db_table = 'order_items'
+
+    def __str__(self):
+        return f'{self.order} - {self.product} - {self.quantity} - {self.sub_total}'
+    
+
 
 #########################################
 #             Bill model                #
@@ -298,6 +310,9 @@ class Bill(TimeStampedModel):
     billing_address = models.ForeignKey(DeliveryAddress, on_delete=models.CASCADE)
     payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
 
+    class Meta:
+        db_table = 'bills'
+        
     def __str__(self):
         return f'{self.order} - {self.total_amount} - {self.payment_status}'
 

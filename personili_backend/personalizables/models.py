@@ -36,7 +36,7 @@ class Category(TimeStampedModel):
     image_path = models.CharField(max_length=255, null=True, blank=True)
     logo_path = models.CharField(max_length=255, null=True, blank=True)
     parent_category = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='subcategories')
-    availability_status = models.CharField(max_length=255, choices=AVAILABILITY_STATUS_CHOICES, default='Unavailable')
+    availability_status = models.CharField(max_length=255, choices=AVAILABILITY_STATUS_CHOICES, default='Available')
 
     class Meta:
         db_table = 'Categories'
@@ -406,6 +406,7 @@ class AllowedVariantPersonalizationMethod(TimeStampedModel):
     
     class Meta:
         db_table = 'AllowedVariantPersonalizationMethods'
+        unique_together = ('personalizable', 'personalization_method')
 
     def __str__(self):
         return self.personalizable.name + " - " + str(self.id)
@@ -440,6 +441,7 @@ class DesignedPersonalizableZone(TimeStampedModel):
     personalizable_zone = models.ForeignKey(PersonalizableZone, on_delete=models.CASCADE, related_name='designed_personalizable_zone')
     designed_personalizable_variant = models.ForeignKey(DesignedPersonalizableVariant, on_delete=models.CASCADE, related_name='designed_personalizable_zone')
     design = models.ForeignKey('designs.Design', on_delete=models.CASCADE, related_name='designed_personalizable_zone')
+
 
     dx = models.FloatField(null=True)
     dy = models.FloatField(null=True)
@@ -497,7 +499,7 @@ class Product(TimeStampedModel):
 
     class Meta:
         db_table = 'Products'
-        
+
     def __str__(self):
         return self.name + ' - ' + str(self.id)
     
