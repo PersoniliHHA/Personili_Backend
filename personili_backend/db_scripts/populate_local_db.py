@@ -66,10 +66,10 @@ def insert_static_data(db):
         ("e2f98d5b-9679-4db5-a7d2-1f71dd1bb441", "Boxers","image_path3", "logo_path3", "be2d099e-4bab-49b9-aab3-1d63463f384b"),
  ]
     cursor = db.cursor()
-    sql = sql_query = "INSERT INTO Categories (id, name, image_path, logo_path, parent_category) VAlUES (%s,%s,%s,%s,%s)" 
+    sql_query = "INSERT INTO Category (id, name, image_path, logo_path, parent_category) VAlUES (%s,%s,%s,%s,%s)" 
     
     # Execute the query with the category_data
-    cursor.executemany(sql, category_data)
+    cursor.executemany(sql_query, category_data)
 
     # Commit the changes to the database
     db.commit()
@@ -87,7 +87,7 @@ def insert_static_data(db):
         ("74745f05-fb8b-4217-a3c8-d00aa72d415d", "Anime", faker.paragraph(), "log_path"),
     ]
     cursor = db.cursor()
-    sql_query = "INSERT INTO Themes (id, name, description, logo_path) VAlUES (%s,%s,%s,%s)"
+    sql_query = "INSERT INTO Theme (id, name, description, logo_path) VAlUES (%s,%s,%s,%s)"
     
     # Execute the query with the theme_data
     cursor.executemany(sql_query, theme_data)
