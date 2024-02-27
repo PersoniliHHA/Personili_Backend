@@ -77,17 +77,17 @@ def insert_static_data(db):
     # THEME TABLE
     # Prepare the data
     theme_data =[
-        ("14a70128-56f1-4881-a63d-e09636e812bd", "Nature & environment", faker.paragraph(), "log_path","Available", faker.date_time(), faker.date_time()),
-        ("c407faaf-6fd5-4e32-bc32-002e39a8d89e", "Abstract & Geometric", faker.paragraph(), "log_path","Available", faker.date_time(), faker.date_time()),
-        ("b4860cc4-f13c-4eb6-bcaa-7df0dce00cc8", "Culture", faker.paragraph(), "log_path","Available", faker.date_time(), faker.date_time()),
-        ("ec48f796-78cb-4c80-966f-b778bc85a2cc", "Fantasy", faker.paragraph(), "log_path", "Available",faker.date_time(), faker.date_time()),
-        ("b1f59f7d-8ad2-4e02-92de-d3f0d879b821", "Science Fiction", faker.paragraph(), "log_path","Available", faker.date_time(), faker.date_time()),
-        ("afff6767-ab17-48c7-b0a6-a84f6ded9ff5", "Social & Political", faker.paragraph(), "log_path","Available", faker.date_time(), faker.date_time()),
-        ("240a1e1b-72b5-4a95-91e9-e223f6f9faa0", "Food", faker.paragraph(), "log_path","Available", faker.date_time(), faker.date_time()),
-        ("74745f05-fb8b-4217-a3c8-d00aa72d415d", "Anime", faker.paragraph(), "log_path","Available", faker.date_time(), faker.date_time()),
+        ("14a70128-56f1-4881-a63d-e09636e812bd", "Nature & environment", faker.paragraph(), "log_path", faker.date_time(), faker.date_time()),
+        ("c407faaf-6fd5-4e32-bc32-002e39a8d89e", "Abstract & Geometric", faker.paragraph(), "log_path", faker.date_time(), faker.date_time()),
+        ("b4860cc4-f13c-4eb6-bcaa-7df0dce00cc8", "Culture", faker.paragraph(), "log_path",faker.date_time(), faker.date_time()),
+        ("ec48f796-78cb-4c80-966f-b778bc85a2cc", "Fantasy", faker.paragraph(), "log_path",faker.date_time(), faker.date_time()),
+        ("b1f59f7d-8ad2-4e02-92de-d3f0d879b821", "Science Fiction", faker.paragraph(), "log_path",faker.date_time(), faker.date_time()),
+        ("afff6767-ab17-48c7-b0a6-a84f6ded9ff5", "Social & Political", faker.paragraph(), "log_path", faker.date_time(), faker.date_time()),
+        ("240a1e1b-72b5-4a95-91e9-e223f6f9faa0", "Food", faker.paragraph(), "log_path",faker.date_time(), faker.date_time()),
+        ("74745f05-fb8b-4217-a3c8-d00aa72d415d", "Anime", faker.paragraph(), "log_path", faker.date_time(), faker.date_time()),
     ]
     cursor = db.cursor()
-    sql_query = "INSERT INTO themes (id, name, description, logo_path, availability_status, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s,%s)"
+    sql_query = "INSERT INTO themes (id, name, description, logo_path, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s)"
     
     # Execute the query with the theme_data
     cursor.executemany(sql_query, theme_data)
