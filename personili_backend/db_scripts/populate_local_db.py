@@ -67,15 +67,15 @@ def insert_static_data(db):
  ]
     cursor = db.cursor()
     sql = f"""INSERT INTO category (id, name, image_path, logo_path, parent_category) 
-    VALUES ({category_data[0][0]}, {category_data[0][1]}, {category_data[0][2]}, {category_data[0][3]}, {category_data[0][4]})
-    VALUES ({category_data[1][0]}, {category_data[1][1]}, {category_data[1][2]}, {category_data[1][3]}, {category_data[1][4]})
-    VALUES ({category_data[2][0]}, {category_data[2][1]}, {category_data[2][2]}, {category_data[2][3]}, {category_data[2][4]})
-    VALUES ({category_data[3][0]}, {category_data[3][1]}, {category_data[3][2]}, {category_data[3][3]}, {category_data[3][4]})
-    VALUES ({category_data[4][0]}, {category_data[4][1]}, {category_data[4][2]}, {category_data[4][3]}, {category_data[4][4]})
-    VALUES ({category_data[5][0]}, {category_data[5][1]}, {category_data[5][2]}, {category_data[5][3]}, {category_data[5][4]})
-    VALUES ({category_data[6][0]}, {category_data[6][1]}, {category_data[6][2]}, {category_data[6][3]}, {category_data[6][4]})
-    VALUES ({category_data[7][0]}, {category_data[7][1]}, {category_data[7][2]}, {category_data[7][3]}, {category_data[7][4]})
-    VALUES ({category_data[8][0]}, {category_data[8][1]}, {category_data[8][2]}, {category_data[8][3]}, {category_data[8][4]})"""
+    VALUES ('{category_data[0][0]}', '{category_data[0][1]}', '{category_data[0][2]}', '{category_data[0][3]}', {category_data[0][4]})
+    VALUES ('{category_data[1][0]}', '{category_data[1][1]}', '{category_data[1][2]}', '{category_data[1][3]}', {category_data[1][4]})
+    VALUES ('{category_data[2][0]}', '{category_data[2][1]}', '{category_data[2][2]}', '{category_data[2][3]}', {category_data[2][4]})
+    VALUES ('{category_data[3][0]}', '{category_data[3][1]}', '{category_data[3][2]}', '{category_data[3][3]}', {category_data[3][4]})
+    VALUES ('{category_data[4][0]}', '{category_data[4][1]}', '{category_data[4][2]}', '{category_data[4][3]}', {category_data[4][4]})
+    VALUES ('{category_data[5][0]}', '{category_data[5][1]}', '{category_data[5][2]}', '{category_data[5][3]}', {category_data[5][4]})
+    VALUES ('{category_data[6][0]}', '{category_data[6][1]}', '{category_data[6][2]}', '{category_data[6][3]}', {category_data[6][4]})
+    VALUES ('{category_data[7][0]}', '{category_data[7][1]}', '{category_data[7][2]}', '{category_data[7][3]}', {category_data[7][4]})
+    VALUES ('{category_data[8][0]}', '{category_data[8][1]}', '{category_data[8][2]}', '{category_data[8][3]}', {category_data[8][4]})"""
     
     # Execute the query with the category_data
     cursor.executemany(sql, category_data)
@@ -97,14 +97,14 @@ def insert_static_data(db):
     ]
     cursor = db.cursor()
     sql = f"""INSERT INTO theme (id, name, description, logo_path)
-    VALUES ({theme_data[0][0]}, {theme_data[0][1]}, {theme_data[0][2]}, {theme_data[0][3]})
-    VALUES ({theme_data[1][0]}, {theme_data[1][1]}, {theme_data[1][2]}, {theme_data[1][3]})
-    VALUES ({theme_data[2][0]}, {theme_data[2][1]}, {theme_data[2][2]}, {theme_data[2][3]})
-    VALUES ({theme_data[3][0]}, {theme_data[3][1]}, {theme_data[3][2]}, {theme_data[3][3]})
-    VALUES ({theme_data[4][0]}, {theme_data[4][1]}, {theme_data[4][2]}, {theme_data[4][3]})
-    VALUES ({theme_data[5][0]}, {theme_data[5][1]}, {theme_data[5][2]}, {theme_data[5][3]})
-    VALUES ({theme_data[6][0]}, {theme_data[6][1]}, {theme_data[6][2]}, {theme_data[6][3]})
-    VALUES ({theme_data[7][0]}, {theme_data[7][1]}, {theme_data[7][2]}, {theme_data[7][3]})
+    VALUES ('{theme_data[0][0]}', '{theme_data[0][1]}', '{theme_data[0][2]}', '{theme_data[0][3]}')
+    VALUES ('{theme_data[1][0]}', '{theme_data[1][1]}', '{theme_data[1][2]}', '{theme_data[1][3]}')
+    VALUES ('{theme_data[2][0]}', '{theme_data[2][1]}', '{theme_data[2][2]}', '{theme_data[2][3]}')
+    VALUES ('{theme_data[3][0]}', '{theme_data[3][1]}', '{theme_data[3][2]}', '{theme_data[3][3]}')
+    VALUES ('{theme_data[4][0]}', '{theme_data[4][1]}', '{theme_data[4][2]}', '{theme_data[4][3]}')
+    VALUES ('{theme_data[5][0]}', '{theme_data[5][1]}', '{theme_data[5][2]}', '{theme_data[5][3]}')
+    VALUES ('{theme_data[6][0]}', '{theme_data[6][1]}', '{theme_data[6][2]}', '{theme_data[6][3]}')
+    VALUES ('{theme_data[7][0]}', '{theme_data[7][1]}', '{theme_data[7][2]}', '{theme_data[7][3]}')
     """
     # Execute the query with the theme_data
 
