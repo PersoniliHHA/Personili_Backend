@@ -15,8 +15,8 @@ class Organization(TimeStampedModel):
     description = models.TextField(null=True)
     is_verified = models.BooleanField(default=False)
     commerce_registry_number = models.CharField(max_length=100, null=True)
-    contact_email = models.EmailField()
-    contact_phone = models.CharField(max_length=15)
+    contact_email = models.EmailField(null=True, unique=True)
+    contact_phone = models.CharField(max_length=15, null=True)
 
     class Meta:
         db_table = 'organizations'
