@@ -91,6 +91,7 @@ def insert_static_data(db):
     
     # Execute the query with the theme_data
     cursor.executemany(sql_query, theme_data)
+    db.commit()
 
     # Delivery methods
     # Prepare the data : id, name, description, cost, devliery time, created_at, updated_at
@@ -105,6 +106,7 @@ def insert_static_data(db):
 
     # Execute the query with the delivery_method_data
     cursor.executemany(sql_query, delivery_method_data)
+    db.commit()
 
 
     # Close the cursor and database connection
