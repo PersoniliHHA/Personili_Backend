@@ -33,7 +33,7 @@ class Store(TimeStampedModel):
         db_table = 'stores'
 
     def __str__(self):
-        return self.user_profile.user.email + " - " + self.name
+        return self.account_profile.user.email + " - " + self.name
     
     def get_full_store_profile(self):
         """
@@ -215,7 +215,7 @@ class Design(TimeStampedModel):
     
 
     @classmethod
-    def create_new_design(cls, user_profile,
+    def create_new_design(cls, account_profile,
                                serializer,
                                to_be_published=True):
         """
@@ -236,8 +236,8 @@ class Design(TimeStampedModel):
         # Store the image path in the S3 bucket
         image = serializer.validated_data.get('image')
         placeholders = {
-            "designer_id": str(user_profile.user.id),
-            "designer_email": user_profile.user.email,
+            "designer_id": str(account_profile.user.id),
+            "designer_email": account_profile.user.email,
             "collection_id": serializer.validated_data.get('collection'),
             "collection_title": Collection.objects.get(id=serializer.validated_data.get('collection')).title,
             "design_id": str(design.id),
@@ -267,4 +267,20 @@ class Design(TimeStampedModel):
         pass
         
 
-    
+#########################################
+#        Design likes model             #
+#########################################
+class DesignLikes(TimeStampedModel):
+    """
+    This model is used to store the likes of a design
+    """
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    design = models.ForeignKey(Design, on_delete=models.CASCADE, related_name='design_likes')
+    account_profile = models.ForeignKey(AccountProfile, on_delete=models.CASCADE, related_name='design_likes')
+
+    class Meta:
+        db_table = 'design_likes'
+        unique_together = ('design', 'account_profile')
+
+    def __str__(self):
+        return self.design.title + " - " + self.account_profile.id

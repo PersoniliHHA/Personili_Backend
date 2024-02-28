@@ -65,11 +65,10 @@ class OrganizationProfile(TimeStampedModel):
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     organization = models.OneToOneField(Organization, on_delete=models.CASCADE)
-    logo = models.ImageField(upload_to="organization_logos/")
+    logo_path = models.CharField(max_length=255, null=True, blank=True)
     address = models.TextField()
     phone_number = models.CharField(max_length=15)
     email = models.EmailField()
-    website = models.URLField()
     social_media_links = models.JSONField()
     is_sponsored = models.BooleanField(default=False)
     

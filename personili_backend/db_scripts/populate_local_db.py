@@ -236,6 +236,9 @@ def insert_static_data(db):
     cursor.executemany(sql_query, organization_data)
     db.commit()
 
+    # Organization profiles
+    # Prepare the data : id, organization_id, name, description, logo, address, phone_number, email, website, social_media_links, created_at, updated_at
+    
     # Close the cursor and database connection
     cursor.close()
     db.close()

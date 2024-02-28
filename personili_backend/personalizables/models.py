@@ -335,10 +335,6 @@ class PersonalizableZone(TimeStampedModel):
     image_path = models.CharField(max_length=255, null=True, blank=True)
     default_display = models.BooleanField(default=False)
     maximum_number_of_designs = models.IntegerField(null=True)
-    dx = models.FloatField(null=True)
-    dy = models.FloatField(null=True)
-    dh = models.FloatField(null=True)
-    dw = models.FloatField(null=True)
     x1 = models.FloatField(null=True)
     y1 = models.FloatField(null=True)
     x2 = models.FloatField(null=True)
@@ -442,10 +438,10 @@ class DesignedPersonalizableZone(TimeStampedModel):
     design = models.ForeignKey('designs.Design', on_delete=models.CASCADE, related_name='designed_personalizable_zone')
 
 
-    dx = models.FloatField(null=True)
-    dy = models.FloatField(null=True)
-    dh = models.FloatField(null=True)
-    dw = models.FloatField(null=True)
+    dx1 = models.FloatField(null=True)
+    dy1 = models.FloatField(null=True)
+    dx2 = models.FloatField(null=True)
+    dy2 = models.FloatField(null=True)
 
     class Meta:
         db_table = 'designed_personalizable_zones'
