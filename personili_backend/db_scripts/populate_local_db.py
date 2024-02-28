@@ -223,6 +223,10 @@ def insert_static_data(db):
     cursor.executemany(sql_query, personalization_method_data)
     db.commit()
 
+
+    # Organizations
+    # Prepare the data : id, name, description, logo_path, created_at, updated_at
+
     # Close the cursor and database connection
     cursor.close()
     db.close()

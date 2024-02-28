@@ -15,6 +15,12 @@ class Organization(TimeStampedModel):
     description = models.TextField(null=True)
     is_verified = models.BooleanField(default=False)
 
+    class Meta:
+        db_table = 'organizations'
+
+    def __str__(self):
+        return self.name
+
 
 class OrganizationMembership(TimeStampedModel):
     """
@@ -31,10 +37,13 @@ class OrganizationMembership(TimeStampedModel):
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
     role = models.CharField(max_length=100)
-    def __str__(self):
-        return self.organization.name + " " + self.account.username
+
     class Meta:
         unique_together = ['organization', 'account']
+        db_table = 'organization_memberships'
+
+    def __str__(self):
+        return self.organization.name + " " + self.account.username
 
 class OrganizationProfile(TimeStampedModel):
     """
@@ -60,6 +69,11 @@ class OrganizationProfile(TimeStampedModel):
     website = models.URLField()
     social_media_links = models.JSONField()
     is_sponsored = models.BooleanField(default=False)
+    
+    class Meta:
+        db_table = 'organization_profiles'
+
+
     def __str__(self):
         return self.organization.name
 
@@ -79,6 +93,10 @@ class Workshop(TimeStampedModel):
     location = models.TextField()
     email = models.EmailField()
     is_active = models.BooleanField(default=True)
+
+    class Meta:
+        db_table = 'workshops'
+
     def __str__(self):
         return self.name
     
@@ -96,6 +114,10 @@ class Inventory(TimeStampedModel):
     description = models.TextField()
     location = models.TextField()
     is_active = models.BooleanField(default=True)
+
+    class Meta:
+        db_table = 'inventories'
+
     def __str__(self):
         return self.name
     
@@ -116,6 +138,9 @@ class InventoryItem(TimeStampedModel):
     quantity = models.IntegerField()
     base_price = models.DecimalField(max_digits=10, decimal_places=2)
     alert_threshold = models.IntegerField(default=10)
+
+    class Meta:
+        db_table = 'inventory_items'
 
     def __str__(self):
         return self.name
