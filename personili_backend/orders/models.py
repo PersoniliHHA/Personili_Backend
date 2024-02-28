@@ -155,7 +155,7 @@ class CartItem(TimeStampedModel):
 
     class Meta:
         db_table = 'cart_items'
-        
+
     def __str__(self):
         return f'{self.product.name} - {self.quantity} - {self.sub_total}'
 
@@ -340,7 +340,7 @@ class DeliveryMethod(TimeStampedModel):
     name = models.CharField(max_length=100)
     description = models.TextField()
     cost = models.DecimalField(max_digits=10, decimal_places=2)
-    delivery_time = models.DurationField()
+    delivery_time = models.CharField()
 
     class Meta:
         db_table = 'delivery_methods'

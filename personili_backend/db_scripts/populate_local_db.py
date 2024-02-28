@@ -93,15 +93,15 @@ def insert_static_data(db):
     cursor.executemany(sql_query, theme_data)
 
     # Delivery methods
-    # Prepare the data
+    # Prepare the data : id, name, description, cost, devliery time, created_at, updated_at
     delivery_method_data = [
-        ("14a70128-56f1-4881-a63d-e09636e812bd", "Standard", "Standard delivery", faker.date_time(), faker.date_time()),
-        ("c407faaf-6fd5-4e32-bc32-002e39a8d89e", "Express", "Express delivery", faker.date_time(), faker.date_time()),
-        ("b4860cc4-f13c-4eb6-bcaa-7df0dce00cc8", "Pickup", "Pickup at the store", faker.date_time(), faker.date_time()),
+        ("14a70128-56f1-4881-a63d-e09636e812bd", "Standard", "Standard delivery method", 0, "3-5 days", faker.date_time(), faker.date_time()),
+        ("c407faaf-6fd5-4e32-bc32-002e39a8d89e", "Express", "Express delivery method", 5, "1-2 days", faker.date_time(), faker.date_time()),
+        ("b4860cc4-f13c-4eb6-bcaa-7df0dce00cc8", "Next day", "Next day delivery method", 10, "1 day", faker.date_time(), faker.date_time()),
     ]
 
     cursor = db.cursor()
-    sql_query = "INSERT INTO delivery_methods (id, name, description, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s)"
+    sql_query = "INSERT INTO delivery_methods (id, name, description, cost, delivery_time, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s)"
 
     # Execute the query with the delivery_method_data
     cursor.executemany(sql_query, delivery_method_data)
