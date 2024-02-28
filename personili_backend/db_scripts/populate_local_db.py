@@ -193,11 +193,39 @@ def insert_static_data(db):
     cursor.executemany(sql_query, personalizable_option_data)
     db.commit()
 
+
+    # Personalization types
+    # Prepare the data : id, name, description, logo_path, image_path, created_at, updated_at
+    # personalization types : digital printing, embroidery, screen printing
+    personalization_type_data = [
+        ("d9f3a0f5-2d1e-4f4b-8c7a-4d0c4e4e5f3d", "Digital Printing", "Digital Printing", "logo_path", "image_path", faker.date_time(), faker.date_time()),
+        ("e4f3a0f5-2d1e-4f4b-8c7a-4d0c4e4e5f3d", "Embroidery", "Embroidery", "logo_path", "image_path", faker.date_time(), faker.date_time()),
+        ("f4f3a0f5-2d1e-4f4b-8c7a-4d0c4e4e5f3d", "Screen Printing", "Screen Printing", "logo_path", "image_path", faker.date_time(), faker.date_time()),
+    ]
+    cursor = db.cursor()
+    sql_query = "INSERT INTO personalization_types (id, name, description, logo_path, image_path, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
+    cursor.executemany(sql_query, personalization_type_data)
+    db.commit()
+
+
+    # Personalization methods
+    # Prepare the data : id, personalization_type_id, name, description,logo_path, image_path, created_at, updated_at
+    # personalization methods : sublimation, direct to garment, heat transfer, screen printing, embroidery
+    personalization_method_data = [
+        ("e4926e08-a551-4d1c-a0ec-9f54c45ca0bf", "d9f3a0f5-2d1e-4f4b-8c7a-4d0c4e4e5f3d", "Sublimation", "Sublimation", faker.date_time(), faker.date_time()),
+        ("8b9f4bce-ec38-442e-8df9-b7d5f4b0f9ce", "e4f3a0f5-2d1e-4f4b-8c7a-4d0c4e4e5f3d", "Outline Embroidery", "Outline Embroidery", faker.date_time(), faker.date_time()),
+        ("655cfd12-e6e2-47be-a576-d3fa4e85406f", "f4f3a0f5-2d1e-4f4b-8c7a-4d0c4e4e5f3d", "Heat Transfer", "Heat Transfer", faker.date_time(), faker.date_time()),
+        ("becf5ca8-40e0-41fd-b21b-06f0f783f5d6", "f4f3a0f5-2d1e-4f4b-8c7a-4d0c4e4e5f3d", "Screen Printing", "Screen Printing", faker.date_time(), faker.date_time()),
+        ("e3a525a5-24b0-43e4-973e-4913522380ba", "f4f3a0f5-2d1e-4f4b-8c7a-4d0c4e4e5f3d", "Embroidery", "Embroidery", faker.date_time(), faker.date_time()),
+    ]
+    cursor = db.cursor()
+    sql_query = "INSERT INTO personalization_methods (id, personalization_type_id, name, description, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
+    cursor.executemany(sql_query, personalization_method_data)
+    db.commit()
+
     # Close the cursor and database connection
     cursor.close()
     db.close()
-
-
 
 
 
