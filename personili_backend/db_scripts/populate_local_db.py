@@ -92,6 +92,21 @@ def insert_static_data(db):
     # Execute the query with the theme_data
     cursor.executemany(sql_query, theme_data)
 
+    # Delivery methods
+    # Prepare the data
+    delivery_method_data = [
+        ("14a70128-56f1-4881-a63d-e09636e812bd", "Standard", "Standard delivery", faker.date_time(), faker.date_time()),
+        ("c407faaf-6fd5-4e32-bc32-002e39a8d89e", "Express", "Express delivery", faker.date_time(), faker.date_time()),
+        ("b4860cc4-f13c-4eb6-bcaa-7df0dce00cc8", "Pickup", "Pickup at the store", faker.date_time(), faker.date_time()),
+    ]
+
+    cursor = db.cursor()
+    sql_query = "INSERT INTO delivery_methods (id, name, description, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s)"
+
+    # Execute the query with the delivery_method_data
+    cursor.executemany(sql_query, delivery_method_data)
+
+
     # Close the cursor and database connection
     cursor.close()
     db.close()
