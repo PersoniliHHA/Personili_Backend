@@ -15,6 +15,8 @@ class Organization(TimeStampedModel):
     description = models.TextField(null=True)
     is_verified = models.BooleanField(default=False)
     commerce_registry_number = models.CharField(max_length=100, null=True)
+    contact_email = models.EmailField()
+    contact_phone = models.CharField(max_length=15)
 
     class Meta:
         db_table = 'organizations'
@@ -100,6 +102,33 @@ class Workshop(TimeStampedModel):
 
     def __str__(self):
         return self.name
+
+class WorkshopMembership(TimeStampedModel):
+    """
+    This is a many to many relationship between workshop and account
+    Each membership has the following information:
+    - workshop membership id
+    - workshop id
+    - account id
+    - organization membership id
+    - membership status
+    - membership role
+    
+    """
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
+    workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE)
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    organization_membership = models.ForeignKey(OrganizationMembership, on_delete=models.CASCADE)
+    is_active = models.BooleanField(default=True)
+    role = models.CharField(max_length=100)
+
+    class Meta:
+        unique_together = ['workshop', 'account']
+        db_table = 'workshop_memberships'
+
+    def __str__(self):
+        return self.workshop.name + " " + self.account.username
+
     
 class Inventory(TimeStampedModel):
     """
