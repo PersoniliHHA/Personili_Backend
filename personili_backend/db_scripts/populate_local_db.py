@@ -60,7 +60,7 @@ def insert_static_data(db):
         
         ("e88ba743-e8da-4ef2-91bb-75c164b62144", "Bottoms", "image_path2", "logo_path2", "404bfdf7-b8c4-4d68-ae2b-9e42342b94c6","Available", faker.date_time(), faker.date_time()),
         ("5a253d03-f9f5-41ad-9fd5-4189451e1804", "Pants", "image_path2", "logo_path2", "e88ba743-e8da-4ef2-91bb-75c164b62144","Available", faker.date_time(), faker.date_time()),
-        ("cb64c665-85f0-4ea6-91f9-4c296945ddd1", "Pants", "image_path2", "logo_path2", "e88ba743-e8da-4ef2-91bb-75c164b62144","Available", faker.date_time(), faker.date_time()),
+        ("cb64c665-85f0-4ea6-91f9-4c296945ddd1", "Bras", "image_path2", "logo_path2", "e88ba743-e8da-4ef2-91bb-75c164b62144","Available", faker.date_time(), faker.date_time()),
         
         ("be2d099e-4bab-49b9-aab3-1d63463f384b", "Underwear","image_path3", "logo_path3", "404bfdf7-b8c4-4d68-ae2b-9e42342b94c6","Available", faker.date_time(), faker.date_time()),
         ("e2f98d5b-9679-4db5-a7d2-1f71dd1bb441", "Boxers","image_path3", "logo_path3", "be2d099e-4bab-49b9-aab3-1d63463f384b","Available", faker.date_time(), faker.date_time()),
@@ -96,9 +96,9 @@ def insert_static_data(db):
     # Delivery methods
     # Prepare the data : id, name, description, cost, devliery time, created_at, updated_at
     delivery_method_data = [
-        ("14a70128-56f1-4881-a63d-e09636e812bd", "Standard", "Standard delivery method", 0, "3-5 days", faker.date_time(), faker.date_time()),
-        ("c407faaf-6fd5-4e32-bc32-002e39a8d89e", "Express", "Express delivery method", 5, "1-2 days", faker.date_time(), faker.date_time()),
-        ("b4860cc4-f13c-4eb6-bcaa-7df0dce00cc8", "Next day", "Next day delivery method", 10, "1 day", faker.date_time(), faker.date_time()),
+        ("9b7a49c7-88b6-4767-acf6-c51019ee94b5", "Standard", "Standard delivery method", 0, "3-5 days", faker.date_time(), faker.date_time()),
+        ("9382f4f7-97d9-4085-947f-044ec0de6e2e", "Express", "Express delivery method", 5, "1-2 days", faker.date_time(), faker.date_time()),
+        ("3373a305-c60c-44c5-be0b-fdada8a41102", "Next day", "Next day delivery method", 10, "1 day", faker.date_time(), faker.date_time()),
     ]
 
     cursor = db.cursor()
@@ -106,6 +106,24 @@ def insert_static_data(db):
 
     # Execute the query with the delivery_method_data
     cursor.executemany(sql_query, delivery_method_data)
+    db.commit()
+
+
+    # Personalizables
+    # Prepare the data : id, name, category(must be a leaf category), description, image_path, brand, model, created_at, updated_at 
+    personalizable_data = [
+        ("cec0b564-ca97-4d1f-9167-44c7d0084471", "Pillow", "59a77ce4-971a-46bd-8988-39080f0d9c25", "sleep pillow", "image path", "generic", "generic", faker.date_time(), faker.date_time()),
+        ("700970f2-7d3b-41e4-a625-8e32d7957cc0", "Phone case", "79ee3fcf-42c2-4906-badf-8380904792dc", "phone case", "image path", "generic", "generic", faker.date_time(), faker.date_time()),
+        ("33aa029c-8fe1-449f-84a1-4e14faa8ded9", "Tshirt", "bf97280e-cbc3-49ec-ad08-79618a01371b", "blank tshirt", "image path", "generic", "generic", faker.date_time(), faker.date_time()),
+        ("0bf45502-8ce8-4a83-b8b0-2071db0b4949", "Pants", "5a253d03-f9f5-41ad-9fd5-4189451e1804", "simple pants", "image path", "generic", "generic", faker.date_time(), faker.date_time()),
+        ("6709dafa-ba2b-4ddb-9d7e-2367d0b46a2d", "Boxers", "e2f98d5b-9679-4db5-a7d2-1f71dd1bb441", "sleep boxers", "image path", "generic", "generic", faker.date_time(), faker.date_time()),
+    ]
+
+    cursor = db.cursor()
+    sql_query = "INSERT INTO personalizables (id, name, category_id, description, image_path, brand, model, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+
+    # Execute the query with the personalizable_data
+    cursor.executemany(sql_query, personalizable_data)
     db.commit()
 
 
@@ -117,6 +135,7 @@ def insert_dynamic_data(db):
     """
     Insert data into dynamic tables that can be modified by the user
     """
+    pass
 def insert_data(db):
     # Insert static data
     insert_static_data(db)
