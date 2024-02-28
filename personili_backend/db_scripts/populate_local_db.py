@@ -101,7 +101,7 @@ def insert_static_data(db):
     ]
 
     cursor = db.cursor()
-    sql_query = "INSERT INTO delivery_methods (id, name, description, cost, delivery_time, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s)"
+    sql_query = "INSERT INTO delivery_methods (id, name, description, cost, delivery_time, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s,%s)"
 
     # Execute the query with the delivery_method_data
     cursor.executemany(sql_query, delivery_method_data)
