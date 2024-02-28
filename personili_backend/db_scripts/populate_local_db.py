@@ -225,7 +225,16 @@ def insert_static_data(db):
 
 
     # Organizations
-    # Prepare the data : id, name, description, logo_path, created_at, updated_at
+    # Prepare the data : id, name, description, commerce_registry_number, is_verified, created_at, updated_at
+    organization_data = [
+        ("517292a1-75b6-4688-a052-364d93ecc9b7", faker.company(), faker.paragraph(),faker.phone_number(), True, faker.date_time(), faker.date_time()),
+        ("440b3a20-16a3-4e44-bcec-8c3b60c57b47", faker.company(), faker.paragraph(),faker.phone_number(), True, faker.date_time(), faker.date_time()),
+        ("f4f3a0f5-2d1e-4f4b-8c7a-4d0c4e4e5f3d", faker.company(), faker.paragraph(),faker.phone_number(), True, faker.date_time(), faker.date_time()),
+    ]
+    cursor = db.cursor()
+    sql_query = "INSERT INTO organizations (id, name, description, commerce_registry_number, is_verified, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
+    cursor.executemany(sql_query, organization_data)
+    db.commit()
 
     # Close the cursor and database connection
     cursor.close()
