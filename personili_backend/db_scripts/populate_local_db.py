@@ -64,9 +64,9 @@ def insert_static_data(db):
         
         ("be2d099e-4bab-49b9-aab3-1d63463f384b", "Underwear","image_path3", "logo_path3", "404bfdf7-b8c4-4d68-ae2b-9e42342b94c6","Available", faker.date_time(), faker.date_time()),
         ("e2f98d5b-9679-4db5-a7d2-1f71dd1bb441", "Boxers","image_path3", "logo_path3", "be2d099e-4bab-49b9-aab3-1d63463f384b","Available", faker.date_time(), faker.date_time()),
- ]
+ ]  
     cursor = db.cursor()
-    sql_query = "INSERT INTO categories (id, name, image_path, logo_path, parent_category_id, availability_status, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s,%s,%s)" 
+    sql_query = "INSERT INTO categories (id, name, image_path, logo_path, parent_category_id, availability_status, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING" 
     
     # Execute the query with the category_data
     cursor.executemany(sql_query, category_data)
@@ -87,7 +87,7 @@ def insert_static_data(db):
         ("74745f05-fb8b-4217-a3c8-d00aa72d415d", "Anime", faker.paragraph(), "log_path", faker.date_time(), faker.date_time()),
     ]
     cursor = db.cursor()
-    sql_query = "INSERT INTO themes (id, name, description, logo_path, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s)"
+    sql_query = "INSERT INTO themes (id, name, description, logo_path, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
     
     # Execute the query with the theme_data
     cursor.executemany(sql_query, theme_data)
@@ -102,7 +102,7 @@ def insert_static_data(db):
     ]
 
     cursor = db.cursor()
-    sql_query = "INSERT INTO delivery_methods (id, name, description, cost, delivery_time, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s,%s)"
+    sql_query = "INSERT INTO delivery_methods (id, name, description, cost, delivery_time, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
 
     # Execute the query with the delivery_method_data
     cursor.executemany(sql_query, delivery_method_data)
@@ -120,10 +120,45 @@ def insert_static_data(db):
     ]
 
     cursor = db.cursor()
-    sql_query = "INSERT INTO personalizables (id, name, category_id, description, image_path, brand, model, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+    sql_query = "INSERT INTO personalizables (id, name, category_id, description, image_path, brand, model, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
 
     # Execute the query with the personalizable_data
     cursor.executemany(sql_query, personalizable_data)
+    db.commit()
+
+    # Personalizable zones
+    # Prepare the data : id, name, personalizable_id, created_at, updated_at
+
+
+
+
+    # Options
+    # Prepare the data : id, name, created_at, updated_at
+    option_data = [
+        ("345ec45d-a84d-4d0e-8c54-3ac860439fd2", "Color", faker.date_time(), faker.date_time()),
+        ("c1622200-8670-45aa-9ae8-a1be7c56d14a", "Size", faker.date_time(), faker.date_time()),
+        ("906e811c-2ff6-46fe-ac10-7cdc5020ab1c", "Material", faker.date_time(), faker.date_time()),
+    ]
+    cursor = db.cursor()
+    sql_query = "INSERT INTO options (id, name, created_at, updated_at) VAlUES (%s,%s,%s,%s) ON CONFLICT DO NOTHING"
+    cursor.executemany(sql_query, option_data)
+    db.commit()
+
+    # Option values
+    # Prepare the data : id, option_id, value, created_at, updated_at
+    option_value_data = [
+        ("906e811c-2ff6-46fe-ac10-7cdc5020ab1c", "345ec45d-a84d-4d0e-8c54-3ac860439fd2", "Red", faker.date_time(), faker.date_time()),
+        ("8c7b726b-74b3-4e77-9fad-14caca27d1d8", "345ec45d-a84d-4d0e-8c54-3ac860439fd2", "Blue", faker.date_time(), faker.date_time()),
+        ("79adcf21-8147-4df4-8edb-dc2889b2f4c1", "345ec45d-a84d-4d0e-8c54-3ac860439fd2", "Green", faker.date_time(), faker.date_time()),
+        ("ee5106fa-b45e-455e-8960-a5a76f7fe1eb", "c1622200-8670-45aa-9ae8-a1be7c56d14a", "Small", faker.date_time(), faker.date_time()),
+        ("e2e9b4e5-435c-46bb-a7bc-d2d47784be1e", "c1622200-8670-45aa-9ae8-a1be7c56d14a", "Medium", faker.date_time(), faker.date_time()),
+        ("7439d69c-d757-4a0e-b560-20c2dba1d180", "c1622200-8670-45aa-9ae8-a1be7c56d14a", "Large", faker.date_time(), faker.date_time()),
+        ("14f62005-f2f6-4596-b597-1ff29b47d172", "906e811c-2ff6-46fe-ac10-7cdc5020ab1c", "Cotton", faker.date_time(), faker.date_time()),
+        ("c7b0798b-6785-4a55-94f6-7b20526df760", "906e811c-2ff6-46fe-ac10-7cdc5020ab1c", "Polyester", faker.date_time(), faker.date_time()),
+    ]
+    cursor = db.cursor()
+    sql_query = "INSERT INTO option_values (id, option_id, value, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
+    cursor.executemany(sql_query, option_value_data)
     db.commit()
 
 
