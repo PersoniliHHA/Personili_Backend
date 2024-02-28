@@ -127,10 +127,36 @@ def insert_static_data(db):
     db.commit()
 
     # Personalizable zones
-    # Prepare the data : id, name, personalizable_id, created_at, updated_at
+    # Prepare the data : id, personalizable_id, name, x1, y1, x2, y2, max_nb_designs created_at, updated_at
+    personalizable_zone_data = [
+        # Tshirt
+        ("1e7c5e5e-3b3b-4a4d-8d0d-7a3c3e7f9d0e", "33aa029c-8fe1-449f-84a1-4e14faa8ded9", "Front", 0, 0, 100, 100, 4, faker.date_time(), faker.date_time()),
+        ("1e7c5e5e-3b3b-4a4d-8d0d-7a3c3e7f9d0e", "33aa029c-8fe1-449f-84a1-4e14faa8ded9", "Back", 0, 0, 100, 100, 4, faker.date_time(), faker.date_time()),
+        ("f4e5e5e-3b3b-4a4d-8d0d-7a3c3e7f9d0e", "33aa029c-8fe1-449f-84a1-4e14faa8ded9", "Left side", 0, 0, 100, 100, 2, faker.date_time(), faker.date_time()),
+        ("f4e5e5e-3b3b-4a4d-8d0d-7a3c3e7f9d0e", "33aa029c-8fe1-449f-84a1-4e14faa8ded9", "Right side", 0, 0, 100, 100, 2, faker.date_time(), faker.date_time()),
+        
+        # Phone case
+        ("1e7c5e5e-3b3b-4a4d-8d0d-7a3c3e7f9d0e", "700970f2-7d3b-41e4-a625-8e32d7957cc0", "Front", 0, 0, 100, 100, 1, faker.date_time(), faker.date_time()),
+        
+        # Pants
+        ("1e7c5e5e-3b3b-4a4d-8d0d-7a3c3e7f9d0e", "0bf45502-8ce8-4a83-b8b0-2071db0b4949", "Front", 0, 0, 100, 100, 1, faker.date_time(), faker.date_time()),
+        ("1e7c5e5e-3b3b-4a4d-8d0d-7a3c3e7f9d0e", "0bf45502-8ce8-4a83-b8b0-2071db0b4949", "Back", 0, 0, 100, 100, 1, faker.date_time(), faker.date_time()),
+        
+        # Boxers
+        ("1e7c5e5e-3b3b-4a4d-8d0d-7a3c3e7f9d0e", "6709dafa-ba2b-4ddb-9d7e-2367d0b46a2d", "Front", 0, 0, 100, 100, 1, faker.date_time(), faker.date_time()),
+        ("1e7c5e5e-3b3b-4a4d-8d0d-7a3c3e7f9d0e", "6709dafa-ba2b-4ddb-9d7e-2367d0b46a2d", "Front", 0, 0, 100, 100, 1, faker.date_time(), faker.date_time()),
 
+        # Pillows
+        ("1e7c5e5e-3b3b-4a4d-8d0d-7a3c3e7f9d0e", "cec0b564-ca97-4d1f-9167-44c7d0084471", "Front", 0, 0, 100, 100, 1, faker.date_time(), faker.date_time()),
+        ("1e7c5e5e-3b3b-4a4d-8d0d-7a3c3e7f9d0e", "cec0b564-ca97-4d1f-9167-44c7d0084471", "Back", 0, 0, 100, 100, 1, faker.date_time(), faker.date_time()),
+    ]
 
+    cursor = db.cursor()
+    sql_query = "INSERT INTO personalizable_zones (id, personalizable_id, name, x1, y1, x2, y2, max_nb_designs, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
 
+    # Execute the query with the personalizable_zone_data
+    cursor.executemany(sql_query, personalizable_zone_data)
+    db.commit()
 
     # Options
     # Prepare the data : id, name, created_at, updated_at
@@ -238,7 +264,7 @@ def insert_static_data(db):
 
     # Organization profiles
     # Prepare the data : id, organization_id, name, description, logo, address, phone_number, email, website, social_media_links, created_at, updated_at
-    
+
     # Close the cursor and database connection
     cursor.close()
     db.close()
