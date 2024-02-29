@@ -133,7 +133,7 @@ def insert_static_data(db):
         ("fa1ce80b-ee75-421b-915a-78c0d3ab60d8", "33aa029c-8fe1-449f-84a1-4e14faa8ded9", "Front", 0, 0, 100, 100, 4, faker.date_time(), faker.date_time()),
         ("cd663fc5-20f4-4dfd-9898-8a6dfa60d6d4", "33aa029c-8fe1-449f-84a1-4e14faa8ded9", "Back", 0, 0, 100, 100, 4, faker.date_time(), faker.date_time()),
         ("cba8c97f-2e04-4c49-9d84-153972d6266e", "33aa029c-8fe1-449f-84a1-4e14faa8ded9", "Left side", 0, 0, 100, 100, 2, faker.date_time(), faker.date_time()),
-        ("6ebb4f8d-8590-4334-a8d3-70452c2581a9",  "33aa029c-8fe1-449f-84a1-4e14faa8ded9", "Right side", 0, 0, 100, 100, 2, faker.date_time(), faker.date_time()),
+        ("6ebb4f8d-8590-4334-a8d3-70452c2581a9", "33aa029c-8fe1-449f-84a1-4e14faa8ded9", "Right side", 0, 0, 100, 100, 2, faker.date_time(), faker.date_time()),
         
         # Phone case
         ("de5509d8-0022-48b0-8e43-6b5b49bbbff4", "700970f2-7d3b-41e4-a625-8e32d7957cc0", "Front", 0, 0, 100, 100, 1, faker.date_time(), faker.date_time()),
@@ -263,7 +263,19 @@ def insert_static_data(db):
     db.commit()
 
     # Organization profiles
-    # Prepare the data : id, organization_id, name, description, logo, address, phone_number, email, website, social_media_links, created_at, updated_at
+    # Prepare the data : id, organization_id, logo_path, banner_path, address, facebook_link, x_link, instegram_link, linkedin_link, youtube_link , is_sponsored, created_at, updated_at
+    organization_profile_data = [
+        ("e16fb7d9-0f6f-46ac-8864-90d017328d3d", "517292a1-75b6-4688-a052-364d93ecc9b7", "logo_path", "banner_path", faker.address(), faker.uri(), faker.uri(), faker.uri(), faker.uri(), faker.uri(), True, faker.date_time(), faker.date_time()),
+        ("37eebac5-c9aa-489a-bb93-2728526b7adc", "440b3a20-16a3-4e44-bcec-8c3b60c57b47", "logo_path", "banner_path", faker.address(), faker.uri(), faker.uri(), faker.uri(), faker.uri(), faker.uri(), True, faker.date_time(), faker.date_time()),
+        ("7a650f39-aebf-46fd-a6af-1d532f968f7a", "f4f3a0f5-2d1e-4f4b-8c7a-4d0c4e4e5f3d", "logo_path", "banner_path", faker.address(), faker.uri(), faker.uri(), faker.uri(), faker.uri(), faker.uri(), True, faker.date_time(), faker.date_time()),
+    ]
+    cursor = db.cursor()
+    sql_query = "INSERT INTO organization_profiles (id, organization_id, logo_path, banner_path, address, facebook_link, x_link, instegram_link, linkedin_link, youtube_link, is_sponsored, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
+    cursor.executemany(sql_query, organization_profile_data)
+    db.commit()
+
+    # Workshops
+    # Prepare the data : id, organization_id, name, description, address, created_at, updated_at
 
     # Close the cursor and database connection
     cursor.close()

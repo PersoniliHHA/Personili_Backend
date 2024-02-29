@@ -66,10 +66,17 @@ class OrganizationProfile(TimeStampedModel):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     organization = models.OneToOneField(Organization, on_delete=models.CASCADE)
     logo_path = models.CharField(max_length=255, null=True, blank=True)
+    banner_path = models.CharField(max_length=255, null=True, blank=True)
+    
     address = models.TextField()
     phone_number = models.CharField(max_length=15)
-    email = models.EmailField()
-    social_media_links = models.JSONField()
+    
+    facebook_link = models.URLField(null=True, blank=True)
+    instagram_link = models.URLField(null=True, blank=True)
+    x_link = models.URLField(null=True, blank=True)
+    linkedin_link = models.URLField(null=True, blank=True)
+    youtube_link = models.URLField(null=True, blank=True)
+    
     is_sponsored = models.BooleanField(default=False)
     
     class Meta:
