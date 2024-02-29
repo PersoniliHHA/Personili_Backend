@@ -327,13 +327,13 @@ class PersonalizableZone(TimeStampedModel):
     - A personalizable zone is linked to one and only one personalizable but a personalizable can have many zones, 
     it has an id, 
     a name, 
-    an image path and coordinates dx, dy, dh, dw, x1, y1, x2, y2
+    an image path and coordinates x1, y1, x2, y2
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     personalizable = models.ForeignKey(Personalizable, on_delete=models.CASCADE, related_name='zones')
     name = models.CharField(max_length=255, null=True)
     image_path = models.CharField(max_length=255, null=True, blank=True)
-    max_nb_designs = models.IntegerField(null=True)
+    max_nb_designs = models.IntegerField(null=True, default=1)
     x1 = models.FloatField(null=True)
     y1 = models.FloatField(null=True)
     x2 = models.FloatField(null=True)
