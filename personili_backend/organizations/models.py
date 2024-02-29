@@ -69,7 +69,6 @@ class OrganizationProfile(TimeStampedModel):
     banner_path = models.CharField(max_length=255, null=True, blank=True)
     
     address = models.TextField()
-    phone_number = models.CharField(max_length=15)
     
     facebook_link = models.URLField(null=True, blank=True)
     instagram_link = models.URLField(null=True, blank=True)
