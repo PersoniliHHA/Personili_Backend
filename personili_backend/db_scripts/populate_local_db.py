@@ -133,7 +133,7 @@ def insert_static_data(db):
         ("fa1ce80b-ee75-421b-915a-78c0d3ab60d8", "33aa029c-8fe1-449f-84a1-4e14faa8ded9", "Front", 0, 0, 100, 100, 4, faker.date_time(), faker.date_time()),
         ("cd663fc5-20f4-4dfd-9898-8a6dfa60d6d4", "33aa029c-8fe1-449f-84a1-4e14faa8ded9", "Back", 0, 0, 100, 100, 4, faker.date_time(), faker.date_time()),
         ("cba8c97f-2e04-4c49-9d84-153972d6266e", "33aa029c-8fe1-449f-84a1-4e14faa8ded9", "Left side", 0, 0, 100, 100, 2, faker.date_time(), faker.date_time()),
-        ("f4e5e5e-3b3b-4a4d-8d0d-7a3c3e7f9d0e", "33aa029c-8fe1-449f-84a1-4e14faa8ded9", "Right side", 0, 0, 100, 100, 2, faker.date_time(), faker.date_time()),
+        ("6ebb4f8d-8590-4334-a8d3-70452c2581a9",  "33aa029c-8fe1-449f-84a1-4e14faa8ded9", "Right side", 0, 0, 100, 100, 2, faker.date_time(), faker.date_time()),
         
         # Phone case
         ("de5509d8-0022-48b0-8e43-6b5b49bbbff4", "700970f2-7d3b-41e4-a625-8e32d7957cc0", "Front", 0, 0, 100, 100, 1, faker.date_time(), faker.date_time()),
