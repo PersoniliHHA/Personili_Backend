@@ -2,6 +2,7 @@ from psycopg2 import connect
 import os
 from faker import Faker
 from django.contrib.auth.hashers import make_password
+import random
 
 
 faker = Faker()
@@ -74,6 +75,40 @@ def insert_static_data(db):
 
     # Commit the changes to the database
     db.commit()
+
+    # Account profiles
+    # Prepare the data : id, account_id, first_name, last_name, phone_number, profile_picture_path, age, gender(Male, Female or Not specified), date_of_birth, created_at, updated_at
+    account_profile_data = [
+        ("0734b5e3-fb69-4b55-a931-6a3f05a331f8", "75f55f9a-e913-4082-8444-68d251b937ff", faker.first_name(), faker.last_name(), faker.phone_number(), faker.url(), random.randint(13, 110), random.choice(["Male", "Female", "Not sepcified"]), faker.date(), faker.date_time(), faker.date_time()),
+        ("06cbd596-5520-430b-aa3c-2392af714b50", "b452214d-332b-4834-a329-7cbd14e53a3e", faker.first_name(), faker.last_name(), faker.phone_number(), faker.url(), random.randint(13, 110), random.choice(["Male", "Female", "Not specified"]), faker.date(), faker.date_time(), faker.date_time()),
+        ("e8651dce-3327-406a-9740-01cd2f6663ea", "3ad2dbd7-0299-4719-aeda-6345707971e5", faker.first_name(), faker.last_name(), faker.phone_number(), faker.url(), random.randint(13, 110), random.choice(["Male", "Female", "Not specified"]), faker.date(), faker.date_time(), faker.date_time()),
+        ("2df77093-e107-44a0-a172-bc4735563954", "1649f446-a76c-4bfd-8083-534eef38830e", faker.first_name(), faker.last_name(), faker.phone_number(), faker.url(), random.randint(13, 110), random.choice(["Male", "Female", "Not specified"]), faker.date(), faker.date_time(), faker.date_time()),
+        
+        ("7a9ea5d6-f892-461b-bf4b-004f7ab19e27", "e55d3819-8367-4e84-9cc5-4f324648db0a", faker.first_name(), faker.last_name(), faker.phone_number(), faker.url(), random.randint(13, 110), random.choice(["Male", "Female", "Not specified"]), faker.date(), faker.date_time(), faker.date_time()),
+        ("9184675c-b235-4da2-a63d-b2443f61f9cc", "4d1d359e-ad95-4265-a2b8-74846dcb88b6", faker.first_name(), faker.last_name(), faker.phone_number(), faker.url(), random.randint(13, 110), random.choice(["Male", "Female", "Not specified"]), faker.date(), faker.date_time(), faker.date_time()),
+        ("4d57ec73-e6e9-4d6a-971e-ffcbefdeecbf", "e1731581-ca5a-49ba-b17a-023ac3509f00", faker.first_name(), faker.last_name(), faker.phone_number(), faker.url(), random.randint(13, 110), random.choice(["Male", "Female", "Not specified"]), faker.date(), faker.date_time(), faker.date_time()),
+        ("59dedb05-5dbd-465f-af80-f90b1e9fe22c", "ec448ce4-5551-4f0f-8911-496ec43d9165", faker.first_name(), faker.last_name(), faker.phone_number(), faker.url(), random.randint(13, 110), random.choice(["Male", "Female", "Not specified"]), faker.date(), faker.date_time(), faker.date_time()),
+        ("eeb6e276-11d1-40a5-bc5b-1f429cc53fd0", "9e49a30c-efc5-4315-9923-63bb8a7cec24", faker.first_name(), faker.last_name(), faker.phone_number(), faker.url(), random.randint(13, 110), random.choice(["Male", "Female", "Not specified"]), faker.date(), faker.date_time(), faker.date_time()),
+        ("ce6714db-644b-41c6-ad32-c4404c8befcd", "1e62b388-23fa-46c0-a069-91f1e8e6f603", faker.first_name(), faker.last_name(), faker.phone_number(), faker.url(), random.randint(13, 110), random.choice(["Male", "Female", "Not specified"]), faker.date(), faker.date_time(), faker.date_time()),
+        
+        ("5794b5c0-eed7-4272-ae95-b55929c45056", "8423e696-0ad0-459e-a379-42694f04c813", faker.first_name(), faker.last_name(), faker.phone_number(), faker.url(), random.randint(13, 110), random.choice(["Male", "Female", "Not specified"]), faker.date(), faker.date_time(), faker.date_time()),
+        ("5c3c5907-c30a-4302-af20-e42705b86046", "16338984-449e-4040-9266-dd9a6423286e", faker.first_name(), faker.last_name(), faker.phone_number(), faker.url(), random.randint(13, 110), random.choice(["Male", "Female", "Not specified"]), faker.date(), faker.date_time(), faker.date_time()),
+        ("c1c32cf6-165a-4910-940d-18f04bb69c2b", "0c206a71-9217-4f74-8807-8ebddbe01834", faker.first_name(), faker.last_name(), faker.phone_number(), faker.url(), random.randint(13, 110), random.choice(["Male", "Female", "Not specified"]), faker.date(), faker.date_time(), faker.date_time()),
+        ("56827a2b-630b-43d4-b8ef-d87ba6af1871", "2f19af4f-90af-4a0b-9f75-6b9e8e3c49e3", faker.first_name(), faker.last_name(), faker.phone_number(), faker.url(), random.randint(13, 110), random.choice(["Male", "Female", "Not specified"]), faker.date(), faker.date_time(), faker.date_time()),
+        ("c6704024-9f1b-4c2a-a720-ce349303138f", "ad185cf2-4e8b-44ec-af64-f2d638d5bfd2", faker.first_name(), faker.last_name(), faker.phone_number(), faker.url(), random.randint(13, 110), random.choice(["Male", "Female", "Not specified"]), faker.date(), faker.date_time(), faker.date_time()),
+
+        ("159c083d-61d1-4915-baf1-ffe7ae65df5b", "7dd4ffa8-5b5d-4470-96cd-de14de61eb23", faker.first_name(), faker.last_name(), faker.phone_number(), faker.url(), random.randint(13, 110), random.choice(["Male", "Female", "Not specified"]), faker.date(), faker.date_time(), faker.date_time()),
+        ("9a0970a9-95ef-4a62-9f9c-7e0911f6a486", "8d8e15a8-575f-4ea7-8fb5-3b9fe4397c98", faker.first_name(), faker.last_name(), faker.phone_number(), faker.url(), random.randint(13, 110), random.choice(["Male", "Female", "Not specified"]), faker.date(), faker.date_time(), faker.date_time()),
+        ("b893579d-2ddd-4e2b-9ca7-f6e9514ae603", "81885568-220c-4957-a316-f64d0eb9565c", faker.first_name(), faker.last_name(), faker.phone_number(), faker.url(), random.randint(13, 110), random.choice(["Male", "Female", "Not specified"]), faker.date(), faker.date_time(), faker.date_time()),
+        ("08924234-1df8-4cb4-bf12-a6aa719982ce", "0510efef-aa59-47ca-948f-e5fb1715ea63", faker.first_name(), faker.last_name(), faker.phone_number(), faker.url(), random.randint(13, 110), random.choice(["Male", "Female", "Not specified"]), faker.date(), faker.date_time(), faker.date_time()),
+    ]
+    cursor = db.cursor()
+    sql_query = "INSERT INTO account_profiles (id, account_id, first_name, last_name, phone_number, profile_picture_path,age, gender, date_of_birth, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
+    cursor.executemany(sql_query, account_profile_data)
+
+    # Commit the changes to the database
+    db.commit()
+        
 
 
     # CATEGORY TABLE
@@ -337,10 +372,6 @@ def insert_static_data(db):
     # Close the cursor and database connection
     cursor.close()
     db.close()
-
-
-
-
 
 
 
