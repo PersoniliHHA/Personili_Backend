@@ -275,7 +275,17 @@ def insert_static_data(db):
     db.commit()
 
     # Workshops
-    # Prepare the data : id, organization_id, name, description, address, created_at, updated_at
+    # Prepare the data : id, organization_id, name, description, address, email, phone, is_active, created_at, updated_at
+    workshop_data = [
+        ("e1e2cd6a-aaf2-4407-91dd-e87ec880e341", "517292a1-75b6-4688-a052-364d93ecc9b7", faker.company(), faker.paragraph(), faker.address(), faker.email(), faker.phone_number(), True, faker.date_time(), faker.date_time()),
+        ("753c4f48-0e9d-4062-9795-25f43ed40232", "440b3a20-16a3-4e44-bcec-8c3b60c57b47", faker.company(), faker.paragraph(), faker.address(), faker.email(), faker.phone_number(), True, faker.date_time(), faker.date_time()),
+        ("2f42a7e6-25a9-4039-8c6c-62dcac1601bc", "f4f3a0f5-2d1e-4f4b-8c7a-4d0c4e4e5f3d", faker.company(), faker.paragraph(), faker.address(), faker.email(), faker.phone_number(), True, faker.date_time(), faker.date_time()),
+    ]
+    cursor = db.cursor()
+    sql_query = "INSERT INTO workshops (id, organization_id, name, description, address, email, phone, is_active, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
+    cursor.executemany(sql_query, workshop_data)
+    db.commit()
+
 
     # Close the cursor and database connection
     cursor.close()

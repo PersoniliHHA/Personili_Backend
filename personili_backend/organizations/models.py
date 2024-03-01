@@ -98,15 +98,16 @@ class Workshop(TimeStampedModel):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     description = models.TextField()
-    location = models.TextField()
-    email = models.EmailField()
+    address = models.TextField()
+    email = models.EmailField(null=True, unique=True)
+    phone = models.CharField(max_length=15, null=True)
     is_active = models.BooleanField(default=True)
 
     class Meta:
         db_table = 'workshops'
 
     def __str__(self):
-        return self.name
+        return self.name + " " + self.organization.name
 
 class WorkshopMembership(TimeStampedModel):
     """
