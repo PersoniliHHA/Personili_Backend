@@ -1,6 +1,7 @@
 from psycopg2 import connect
 import os
 from faker import Faker
+from django.contrib.auth.hashers import make_password
 
 
 faker = Faker()
@@ -19,6 +20,7 @@ def connect_to_database():
 def insert_static_data(db):
     """
     Insert data into static tables that shouldn't be modified by the user
+    - Accounts
     - Category table
     - Theme table
     - Delivery methods
@@ -34,8 +36,33 @@ def insert_static_data(db):
     - Workshops
     - Inventories
     - Inventory items
-    - Accounts
     """
+
+    # ACCOUNTS TABLE
+    # Prepare the data: id, email, password(hashed), email_verified, is_active, is_staff, is_admin, is_superuser, created_at, updated_at
+    account_data = [
+        ("75f55f9a-e913-4082-8444-68d251b937ff", faker.email(), make_password(faker.sentence()), True, True, False, False, False, faker.date_time(), faker.date_time()),
+        ("b452214d-332b-4834-a329-7cbd14e53a3e", faker.email(), make_password(faker.sentence()), True, True, False, False, False, faker.date_time(), faker.date_time()),
+        ("3ad2dbd7-0299-4719-aeda-6345707971e5", faker.email(), make_password(faker.sentence()), True, True, False, False, False, faker.date_time(), faker.date_time()),
+        ("1649f446-a76c-4bfd-8083-534eef38830e", faker.email(), make_password(faker.sentence()), True, True, False, False, False, faker.date_time(), faker.date_time()),
+        ("e55d3819-8367-4e84-9cc5-4f324648db0a", faker.email(), make_password(faker.sentence()), True, True, False, False, False, faker.date_time(), faker.date_time()),
+        ("4d1d359e-ad95-4265-a2b8-74846dcb88b6", faker.email(), make_password(faker.sentence()), True, True, False, False, False, faker.date_time(), faker.date_time()),
+        ("e1731581-ca5a-49ba-b17a-023ac3509f00", faker.email(), make_password(faker.sentence()), True, True, False, False, False, faker.date_time(), faker.date_time()),
+        ("ec448ce4-5551-4f0f-8911-496ec43d9165", faker.email(), make_password(faker.sentence()), True, True, False, False, False, faker.date_time(), faker.date_time()),
+        ("9e49a30c-efc5-4315-9923-63bb8a7cec24", faker.email(), make_password(faker.sentence()), True, True, False, False, False, faker.date_time(), faker.date_time()),
+        ("1e62b388-23fa-46c0-a069-91f1e8e6f603", faker.email(), make_password(faker.sentence()), True, True, False, False, False, faker.date_time(), faker.date_time()),
+        ("8423e696-0ad0-459e-a379-42694f04c813", faker.email(), make_password(faker.sentence()), True, True, False, False, False, faker.date_time(), faker.date_time()),
+        ("16338984-449e-4040-9266-dd9a6423286e", faker.email(), make_password(faker.sentence()), True, True, False, False, False, faker.date_time(), faker.date_time()),
+        ("0c206a71-9217-4f74-8807-8ebddbe01834", faker.email(), make_password(faker.sentence()), True, True, False, False, False, faker.date_time(), faker.date_time()),
+        ("2f19af4f-90af-4a0b-9f75-6b9e8e3c49e3", faker.email(), make_password(faker.sentence()), True, True, False, False, False, faker.date_time(), faker.date_time()),
+        ("ad185cf2-4e8b-44ec-af64-f2d638d5bfd2", faker.email(), make_password(faker.sentence()), True, True, False, False, False, faker.date_time(), faker.date_time()),
+        ("7dd4ffa8-5b5d-4470-96cd-de14de61eb23", faker.email(), make_password(faker.sentence()), True, True, False, False, False, faker.date_time(), faker.date_time()),
+        ("8d8e15a8-575f-4ea7-8fb5-3b9fe4397c98", faker.email(), make_password(faker.sentence()), True, True, False, False, False, faker.date_time(), faker.date_time()),
+        ("81885568-220c-4957-a316-f64d0eb9565c", faker.email(), make_password(faker.sentence()), True, True, False, False, False, faker.date_time(), faker.date_time()),
+        ("0510efef-aa59-47ca-948f-e5fb1715ea63", faker.email(), make_password(faker.sentence()), True, True, False, False, False, faker.date_time(), faker.date_time()),
+     
+    ]
+
     # CATEGORY TABLE
     # Prepare the data
     category_data = [
