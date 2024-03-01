@@ -72,6 +72,10 @@ def insert_static_data(db):
     sql_query = "INSERT INTO accounts (id, email, password, email_verified, is_active, is_staff, is_admin, is_superuser, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
     cursor.executemany(sql_query, account_data)
 
+    # Commit the changes to the database
+    db.commit()
+
+
     # CATEGORY TABLE
     # Prepare the data
     category_data = [

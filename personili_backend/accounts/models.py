@@ -166,7 +166,7 @@ class DeliveryAddress(TimeStampedModel):
     - Country
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    account_profile = models.ForeignKey(AccountProfile, on_delete=models.CASCADE, related_name='deliveryaddress')
+    account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='deliveryaddress')
     street = models.CharField(max_length=255, null=True)
     city = models.CharField(max_length=255, null=True)
     zip_code = models.CharField(max_length=255, null=True)
