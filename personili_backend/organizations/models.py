@@ -100,7 +100,7 @@ class Workshop(TimeStampedModel):
     description = models.TextField()
     address = models.TextField()
     email = models.EmailField(null=True, unique=True)
-    phone = models.CharField(max_length=15, null=True)
+    phone = models.CharField(max_length=25, null=True)
     is_active = models.BooleanField(default=True)
 
     class Meta:
