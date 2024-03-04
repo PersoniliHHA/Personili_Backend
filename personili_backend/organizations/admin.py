@@ -1,4 +1,4 @@
-from organizations.models import Organization, OrganizationProfile,  Workshop, Inventory, InventoryItem, OrganizationMembership
+from organizations.models import Organization, OrganizationProfile,  Workshop, Inventory, InventoryItem, OrganizationMembership, WorkshopMembership
 from django.contrib import admin
 
 
@@ -10,6 +10,7 @@ admin.site.register(Inventory)
 admin.site.register(InventoryItem)
 admin.site.register(OrganizationProfile)
 admin.site.register(OrganizationMembership)
+admin.site.register(WorkshopMembership)
 
 
 

@@ -349,6 +349,17 @@ def insert_static_data(db):
     cursor.executemany(sql_query, organization_profile_data)
     db.commit()
 
+    # Organization memberships
+    # Prepare the data : id, account_id, organization_id, role, is_active, created_at, updated_at
+    organization_membership_data = [
+        ("db3e96c3-2854-4db2-a2fb-80b2cbf8c5f2", "75f55f9a-e913-4082-8444-68d251b937ff", "517292a1-75b6-4688-a052-364d93ecc9b7", "Owner", True, faker.date_time(), faker.date_time()),
+        ("640b7a98-652d-454d-a7ec-902fa3db3918", "b452214d-332b-4834-a329-7cbd14e53a3e", "517292a1-75b6-4688-a052-364d93ecc9b7", "Employer", True, faker.date_time(), faker.date_time()),
+        ("9844c817-902c-457b-9c70-d9e7bed6e6a4", "3ad2dbd7-0299-4719-aeda-6345707971e5", "517292a1-75b6-4688-a052-364d93ecc9b7", "Employer", True, faker.date_time(), faker.date_time()),
+        ("a191590c-e90b-4b45-acd9-eb67f00edf35", "1649f446-a76c-4bfd-8083-534eef38830e", "517292a1-75b6-4688-a052-364d93ecc9b7", "Employer", True, faker.date_time(), faker.date_time()),
+    
+    
+    ]
+
     # Workshops
     # Prepare the data : id, organization_id, name, description, address, email, phone, is_active, created_at, updated_at
     workshop_data = [
@@ -368,6 +379,19 @@ def insert_static_data(db):
     cursor.executemany(sql_query, workshop_data)
     db.commit()
 
+    # Workshop memberships
+    # Prepare the data : id, account_id, workshop_id, orgaziation_membership_id, role, i_active, created_at, updated_at
+    workshop_membership_data = [
+        ("152369af-1b16-4a12-b36e-6da8633ba8db", "75f55f9a-e913-4082-8444-68d251b937ff", "e1e2cd6a-aaf2-4407-91dd-e87ec880e341", "db3e96c3-2854-4db2-a2fb-80b2cbf8c5f2", "Owner", True, faker.date_time(), faker.date_time()),
+        ("8877d968-6120-4c69-a9a0-5e9ea9d0283f", "b452214d-332b-4834-a329-7cbd14e53a3e", "e1e2cd6a-aaf2-4407-91dd-e87ec880e341", "640b7a98-652d-454d-a7ec-902fa3db3918", "Employer", True, faker.date_time(), faker.date_time()),
+        ("4be45d32-5316-40b3-97f1-df392f9bbdfe", "3ad2dbd7-0299-4719-aeda-6345707971e5", "09cb14c3-0396-48bb-a98c-443922af58b9", "9844c817-902c-457b-9c70-d9e7bed6e6a4", "Employer", True, faker.date_time(), faker.date_time()),
+        ("c69c5e5f-f0b8-4b01-9c76-f0fd7ebc8a90", "1649f446-a76c-4bfd-8083-534eef38830e", "09cb14c3-0396-48bb-a98c-443922af58b9", "a191590c-e90b-4b45-acd9-eb67f00edf35", "Employer", True, faker.date_time(), faker.date_time()),    
+    ]
+    cursor = db.cursor()
+    sql_query = "INSERT INTO workshop_memberships (id, account_id, workshop_id, orgaziation_membership_id, role, i_active, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
+    cursor.executemany(sql_query, workshop_membership_data)
+    db.commit()
+  
     # Inventories
     # Prepare the data : id, workshop_id, name, description, address, is_active, created_at, updated_at
     inventory_data = [
