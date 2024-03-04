@@ -422,10 +422,9 @@ def insert_static_data(db):
         ("11c15493-28c7-44aa-ae89-5ec1c8181bf5", "c57ffd6f-df49-4a24-ab53-7c543ce6139d", faker.name()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
         ("abc06b2a-b6d9-4923-a98c-3a8b47fe9fa4", "c57ffd6f-df49-4a24-ab53-7c543ce6139d", faker.name()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
         ("abd65f56-8bb3-4052-af5b-95cb2ae5d35f", "c57ffd6f-df49-4a24-ab53-7c543ce6139d", faker.name()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
-    name
-    name
+
         ("d11ff08e-9750-417d-ba70-b1c09c2a2f15", "49e9567f-9e2a-464a-8ee2-db657ad65c7d", faker.name()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
-        ("a9ee8dda-6a35-4499-ac5f-12719886b946", "49e9567f-9e2a-464a-8ee2-db657ad65c7d", faker.name()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time(name
+        ("a9ee8dda-6a35-4499-ac5f-12719886b946", "49e9567f-9e2a-464a-8ee2-db657ad65c7d", faker.name()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
         
         ("16a70411-1a48-401f-914e-6d0c187dbd30", "7b0f0cf7-8d52-46d9-a4e1-1fa83970494e", faker.name()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
 
