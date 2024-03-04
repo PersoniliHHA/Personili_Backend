@@ -167,12 +167,19 @@ class InventoryItem(TimeStampedModel):
     - Item price
     - Item location
     """
+    CURRENCY_CHOICES = (
+        ('USD', 'United States Dollar'),
+        ('EUR', 'Euro'),
+        ('DA', 'Algerian Dinar'),
+
+    )
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
     quantity = models.IntegerField()
     base_price = models.DecimalField(max_digits=10, decimal_places=2)
+    currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default='DA')
     alert_threshold = models.IntegerField(default=10)
 
     class Meta:
