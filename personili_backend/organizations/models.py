@@ -46,7 +46,7 @@ class OrganizationMembership(TimeStampedModel):
         db_table = 'organization_memberships'
 
     def __str__(self):
-        return self.organization.name + " " + self.account.username
+        return self.organization.name + " " + self.account.email
 
 class OrganizationProfile(TimeStampedModel):
     """
