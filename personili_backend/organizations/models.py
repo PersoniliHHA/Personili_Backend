@@ -133,7 +133,7 @@ class WorkshopMembership(TimeStampedModel):
         db_table = 'workshop_memberships'
 
     def __str__(self):
-        return self.workshop.name + " " + self.account.username
+        return self.workshop.name + " " + self.account.email
 
     
 class Inventory(TimeStampedModel):
