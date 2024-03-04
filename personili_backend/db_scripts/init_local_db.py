@@ -417,28 +417,27 @@ def insert_static_data(db):
     # Inventory items
     # prepare the data : id, inventory_id, name, description, base_price, currency, alert_threshold, quantity, created_at, updated_at
     inventory_item_data = [
-        ("cc1e2912-8091-4164-8537-9b1c6f7baadb", "c57ffd6f-df49-4a24-ab53-7c543ce6139d", faker.word()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
-        ("05823476-792a-4f50-8b48-a666c0dd163b", "c57ffd6f-df49-4a24-ab53-7c543ce6139d", faker.word()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
-        ("11c15493-28c7-44aa-ae89-5ec1c8181bf5", "c57ffd6f-df49-4a24-ab53-7c543ce6139d", faker.word()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
-        ("abc06b2a-b6d9-4923-a98c-3a8b47fe9fa4", "c57ffd6f-df49-4a24-ab53-7c543ce6139d", faker.word()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
-        ("abd65f56-8bb3-4052-af5b-95cb2ae5d35f", "c57ffd6f-df49-4a24-ab53-7c543ce6139d", faker.word()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
+        ("cc1e2912-8091-4164-8537-9b1c6f7baadb", "c57ffd6f-df49-4a24-ab53-7c543ce6139d", faker.name()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
+        ("05823476-792a-4f50-8b48-a666c0dd163b", "c57ffd6f-df49-4a24-ab53-7c543ce6139d", faker.name()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
+        ("11c15493-28c7-44aa-ae89-5ec1c8181bf5", "c57ffd6f-df49-4a24-ab53-7c543ce6139d", faker.name()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
+        ("abc06b2a-b6d9-4923-a98c-3a8b47fe9fa4", "c57ffd6f-df49-4a24-ab53-7c543ce6139d", faker.name()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
+        ("abd65f56-8bb3-4052-af5b-95cb2ae5d35f", "c57ffd6f-df49-4a24-ab53-7c543ce6139d", faker.name()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
+    name
+    name
+        ("d11ff08e-9750-417d-ba70-b1c09c2a2f15", "49e9567f-9e2a-464a-8ee2-db657ad65c7d", faker.name()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
+        ("a9ee8dda-6a35-4499-ac5f-12719886b946", "49e9567f-9e2a-464a-8ee2-db657ad65c7d", faker.name()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time(name
         
-        
-        ("d11ff08e-9750-417d-ba70-b1c09c2a2f15", "49e9567f-9e2a-464a-8ee2-db657ad65c7d", faker.word()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
-        ("a9ee8dda-6a35-4499-ac5f-12719886b946", "49e9567f-9e2a-464a-8ee2-db657ad65c7d", faker.word()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
+        ("16a70411-1a48-401f-914e-6d0c187dbd30", "7b0f0cf7-8d52-46d9-a4e1-1fa83970494e", faker.name()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
 
-        ("16a70411-1a48-401f-914e-6d0c187dbd30", "7b0f0cf7-8d52-46d9-a4e1-1fa83970494e", faker.word()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
+        ("f132fcd1-ca70-487f-98ff-c6bef38b1840", "65208aa6-d0d9-47e0-8917-6a3970361b39", faker.name()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
+        ("5736602c-0ef6-469a-8ca8-fa1cc3ce6b56", "65208aa6-d0d9-47e0-8917-6a3970361b39", faker.name()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
 
-        ("f132fcd1-ca70-487f-98ff-c6bef38b1840", "65208aa6-d0d9-47e0-8917-6a3970361b39", faker.word()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
-        ("5736602c-0ef6-469a-8ca8-fa1cc3ce6b56", "65208aa6-d0d9-47e0-8917-6a3970361b39", faker.word()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
+        ("1b667e3b-8893-4ced-a8dc-217f5c3c8433", "adb053ad-b649-4661-b049-7ec3fbde2797", faker.name()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
+        ("b2a994b7-4a84-4360-945d-4b11079a4655", "adb053ad-b649-4661-b049-7ec3fbde2797", faker.name()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
 
-        ("1b667e3b-8893-4ced-a8dc-217f5c3c8433", "adb053ad-b649-4661-b049-7ec3fbde2797", faker.word()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
-        ("b2a994b7-4a84-4360-945d-4b11079a4655", "adb053ad-b649-4661-b049-7ec3fbde2797", faker.word()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
-
-        
-        ("9858effe-f4c3-4e5e-80c8-ce6d0fdf0eb2", "bcd3b65a-11f8-4c18-b438-b41100a0395f", faker.word()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
-        ("522a03db-42c7-4833-84da-8c80304ca85e", "bcd3b65a-11f8-4c18-b438-b41100a0395f", faker.word()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
-        ("27cf0f8c-ac67-4ae1-877e-54b09c70579c", "bcd3b65a-11f8-4c18-b438-b41100a0395f", faker.word()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
+        ("9858effe-f4c3-4e5e-80c8-ce6d0fdf0eb2", "bcd3b65a-11f8-4c18-b438-b41100a0395f", faker.name()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
+        ("522a03db-42c7-4833-84da-8c80304ca85e", "bcd3b65a-11f8-4c18-b438-b41100a0395f", faker.name()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
+        ("27cf0f8c-ac67-4ae1-877e-54b09c70579c", "bcd3b65a-11f8-4c18-b438-b41100a0395f", faker.name()+" -Inventory item", faker.paragraph(), faker.random_int(10, 100),"DA", 10, 100, faker.date_time(), faker.date_time()),
 
     ]
     cursor = db.cursor()
