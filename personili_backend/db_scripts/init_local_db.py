@@ -388,7 +388,7 @@ def insert_static_data(db):
         ("c69c5e5f-f0b8-4b01-9c76-f0fd7ebc8a90", "1649f446-a76c-4bfd-8083-534eef38830e", "09cb14c3-0396-48bb-a98c-443922af58b9", "a191590c-e90b-4b45-acd9-eb67f00edf35", "Employer", True, faker.date_time(), faker.date_time()),    
     ]
     cursor = db.cursor()
-    sql_query = "INSERT INTO workshop_memberships (id, account_id, workshop_id, orgaziation_membership_id, role, i_active, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
+    sql_query = "INSERT INTO workshop_memberships (id, account_id, workshop_id, organization_membership_id, role, i_active, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
     cursor.executemany(sql_query, workshop_membership_data)
     db.commit()
   
