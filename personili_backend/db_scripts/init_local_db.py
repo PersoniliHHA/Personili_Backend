@@ -375,7 +375,6 @@ def insert_static_data(db):
         ("70b870df-7393-4855-a09d-2ae249da7afc", "440b3a20-16a3-4e44-bcec-8c3b60c57b47", faker.company(), faker.paragraph(), faker.address(), faker.email(), faker.phone_number(), True, faker.date_time(), faker.date_time()),
         ("8bcc8e9f-6087-4b09-8fa2-eaacc9705b9b", "440b3a20-16a3-4e44-bcec-8c3b60c57b47", faker.company(), faker.paragraph(), faker.address(), faker.email(), faker.phone_number(), True, faker.date_time(), faker.date_time()),
     
-    
     ]
     cursor = db.cursor()
     sql_query = "INSERT INTO workshops (id, organization_id, name, description, address, email, phone, is_active, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
