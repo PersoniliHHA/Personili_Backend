@@ -250,7 +250,7 @@ class Design(TimeStampedModel):
         design.save()
         
         return design.id, presigned_image_url
-    
+
     @classmethod
     def get_designs_by_theme(cls):
         pass
