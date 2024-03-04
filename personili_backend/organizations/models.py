@@ -147,8 +147,8 @@ class Inventory(TimeStampedModel):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
-    description = models.TextField()
-    location = models.TextField()
+    description = models.TextField(null=True, blank=True)
+    address = models.TextField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
 
     class Meta:

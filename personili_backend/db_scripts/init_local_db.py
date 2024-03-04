@@ -368,6 +368,25 @@ def insert_static_data(db):
     cursor.executemany(sql_query, workshop_data)
     db.commit()
 
+    # Inventories
+    # Prepare the data : id, workshop_id, name, description, address, is_active, created_at, updated_at
+    inventory_data = [
+        ("c57ffd6f-df49-4a24-ab53-7c543ce6139d", "e1e2cd6a-aaf2-4407-91dd-e87ec880e341", faker.company()+" -Inventory", faker.paragraph(), faker.address(), True, faker.date_time(), faker.date_time()),
+        ("49e9567f-9e2a-464a-8ee2-db657ad65c7d", "09cb14c3-0396-48bb-a98c-443922af58b9", faker.company()+" -Inventory", faker.paragraph(), faker.address(), True, faker.date_time(), faker.date_time()),
+        ("7b0f0cf7-8d52-46d9-a4e1-1fa83970494e", "09cb14c3-0396-48bb-a98c-443922af58b9", faker.company()+" -Inventory", faker.paragraph(), faker.address(), True, faker.date_time(), faker.date_time()),
+        
+        ("65208aa6-d0d9-47e0-8917-6a3970361b39", "2f42a7e6-25a9-4039-8c6c-62dcac1601bc", faker.company()+" -Inventory", faker.paragraph(), faker.address(), True, faker.date_time(), faker.date_time()),
+        ("b23ebb96-8a97-4d99-ba33-6d0947c85aac", "2f42a7e6-25a9-4039-8c6c-62dcac1601bc", faker.company()+" -Inventory", faker.paragraph(), faker.address(), True, faker.date_time(), faker.date_time()),
+
+        ("e2262ce4-353d-4956-8cf4-5c4be5a1efc7", "753c4f48-0e9d-4062-9795-25f43ed40232", faker.company()+" -Inventory", faker.paragraph(), faker.address(), True, faker.date_time(), faker.date_time()),
+        ("adb053ad-b649-4661-b049-7ec3fbde2797", "70b870df-7393-4855-a09d-2ae249da7afc", faker.company()+" -Inventory", faker.paragraph(), faker.address(), True, faker.date_time(), faker.date_time()),
+        ("bcd3b65a-11f8-4c18-b438-b41100a0395f", "8bcc8e9f-6087-4b09-8fa2-eaacc9705b9b", faker.company()+" -Inventory", faker.paragraph(), faker.address(), True, faker.date_time(), faker.date_time()),
+    ]
+
+    cursor = db.cursor()
+    sql_query = "INSERT INTO inventories (id, workshop_id, name, description, address, is_active, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
+    cursor.executemany(sql_query, inventory_data)
+    db.commit()
 
     # Close the cursor and database connection
     cursor.close()
