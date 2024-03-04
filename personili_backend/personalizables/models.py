@@ -357,7 +357,7 @@ class PersonalizableVariant(TimeStampedModel):
     sku = models.ForeignKey(InventoryItem, on_delete=models.CASCADE, related_name='personalizable_variants')
 
     class Meta:
-        db_table = 'PersonalizableVariants'
+        db_table = 'personalizable_variants'
 
     def get_the_variant_values(self):
         """
