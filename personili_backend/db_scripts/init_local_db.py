@@ -108,8 +108,32 @@ def insert_static_data(db):
 
     # Commit the changes to the database
     db.commit()
-        
 
+    # Delivery addresses table
+    # Prepare the data : id, account_profile_id, street, city, state, country, zip_code, created_at, updated_at
+    delivery_address_data = [
+        ("e57ce561-adf6-406b-a22a-3de79d52f918", "75f55f9a-e913-4082-8444-68d251b937ff", faker.street_address(), faker.city(), faker.state(), faker.country(), faker.zipcode(), faker.date_time(), faker.date_time()),
+        ("166bc376-6d9a-4e57-8f9b-baa58e8af888", "b452214d-332b-4834-a329-7cbd14e53a3e", faker.street_address(), faker.city(), faker.state(), faker.country(), faker.zipcode(), faker.date_time(), faker.date_time()),
+        ("c0955ddc-daaa-48fe-8800-a566ff5dfbbf", "3ad2dbd7-0299-4719-aeda-6345707971e5", faker.street_address(), faker.city(), faker.state(), faker.country(), faker.zipcode(), faker.date_time(), faker.date_time()),
+        ("4e8e482d-9435-4ec8-96e4-4166dd64c801", "1649f446-a76c-4bfd-8083-534eef38830e", faker.street_address(), faker.city(), faker.state(), faker.country(), faker.zipcode(), faker.date_time(), faker.date_time()),
+        
+        ("12e1d01d-2826-4f9b-9973-82e0adc03101", "e55d3819-8367-4e84-9cc5-4f324648db0a", faker.street_address(), faker.city(), faker.state(), faker.country(), faker.zipcode(), faker.date_time(), faker.date_time()),
+        ("4b9abe42-5855-4554-84d5-c1a2eb3b6936", "4d1d359e-ad95-4265-a2b8-74846dcb88b6", faker.street_address(), faker.city(), faker.state(), faker.country(), faker.zipcode(), faker.date_time(), faker.date_time()),
+        ("290ca5e1-60d5-4ba8-9e7b-6bd456bb981a", "e1731581-ca5a-49ba-b17a-023ac3509f00", faker.street_address(), faker.city(), faker.state(), faker.country(), faker.zipcode(), faker.date_time(), faker.date_time()),
+        ("f89cfaad-f518-4053-892e-f2c150b54917", "ec448ce4-5551-4f0f-8911-496ec43d9165", faker.street_address(), faker.city(), faker.state(), faker.country(), faker.zipcode(), faker.date_time(), faker.date_time()),
+        ("398b8de6-14ae-46d5-8317-dc71831557de", "9e49a30c-efc5-4315-9923-63bb8a7cec24", faker.street_address(), faker.city(), faker.state(), faker.country(), faker.zipcode(), faker.date_time(), faker.date_time()),
+        ("4327ac82-8fb6-4dc6-b270-db70a2452abb", "1e62b388-23fa-46c0-a069-91f1e8e6f603", faker.street_address(), faker.city(), faker.state(), faker.country(), faker.zipcode(), faker.date_time(), faker.date_time()),
+    ]
+
+    cursor = db.cursor()
+    sql_query = "INSERT INTO delivery_addresses (id, account_profile_id, street, city, state, country, zip_code, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
+    cursor.executemany(sql_query, delivery_address_data)
+
+    # Commit the changes to the database
+    db.commit()
+
+    
+    #############################################################################################################################################
 
     # CATEGORY TABLE
     # Prepare the data

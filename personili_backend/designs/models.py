@@ -158,7 +158,7 @@ class Theme(TimeStampedModel):
         db_table = 'themes'
 
     def __str__(self):
-        return str(self.id) + ' - ' + self.title
+        return str(self.id) + ' - ' + self.name
     
     def get_designs_and_their_stores_related_to_this_theme(self):
         pass
