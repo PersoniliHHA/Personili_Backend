@@ -385,7 +385,7 @@ class PersonalizableVariantValue(TimeStampedModel):
         db_table = 'personalizable_variant_values'
 
     def __str__(self):
-        return self.personalizable_variant.personalizable.name + " - " + self.option_value.name + " - " + str(self.id)
+        return self.personalizable_variant.personalizable.name + " - " + self.option_value.value + " - " + str(self.id)
 
 ########################################################
 #  Allowed personalizable/personalization methd model  #
