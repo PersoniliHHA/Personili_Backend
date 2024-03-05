@@ -107,7 +107,7 @@ class OptionValue(TimeStampedModel):
         db_table = 'option_values'
 
     def __str__(self):
-        return self.value + " - " + str(self.id)
+        return self.value + " - " + str(self.option.name)
 
 #########################################
 #       PersonalizationType model       #
@@ -343,7 +343,7 @@ class PersonalizableZone(TimeStampedModel):
         db_table = 'personalizable_zones'
 
     def __str__(self):
-        return self.personalizable.name + " - " + self.name
+        return self.personalizable.name + " - " + self.name + " - " + str(self.id)
 
 #########################################
 #      PersonalizableVariant model      #
@@ -356,6 +356,9 @@ class PersonalizableVariant(TimeStampedModel):
     personalizable = models.ForeignKey(Personalizable, on_delete=models.CASCADE, related_name='variants')
     sku = models.ForeignKey(InventoryItem, on_delete=models.CASCADE, related_name='personalizable_variants')
 
+    def __str__(self):
+        return "variant of : " + self.personalizable.name + " - " + str(self.id)
+    
     class Meta:
         db_table = 'personalizable_variants'
 
@@ -484,6 +487,7 @@ class Product(TimeStampedModel):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     personalization_method = models.ForeignKey(PersonalizationMethod, on_delete=models.CASCADE)
+    # if it's self made it won't 
     self_made = models.BooleanField(default=False)
 
     name = models.CharField(max_length=255)
