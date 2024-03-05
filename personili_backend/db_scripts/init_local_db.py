@@ -275,8 +275,8 @@ def insert_static_data(db):
     # Prepare the data : id, option_id, value, created_at, updated_at
     option_value_data = [
         # Color
-        ("de3ec9d6-0f21-4981-a8a2-cc8e3f626df9", "345ec45d-a84d-4d0e-8c54-3ac860439fd2", "Red", faker.date_time(), faker.date_time()),
-        ("64bb6750-919d-45ed-a00f-3ea16dc39ea9", "345ec45d-a84d-4d0e-8c54-3ac860439fd2", "Blue", faker.date_time(), faker.date_time()),
+        ("de3ec9d6-0f21-4981-a8a2-cc8e3f626df9", "345ec45d-a84d-4d0e-8c54-3ac860439fd2", "White", faker.date_time(), faker.date_time()),
+        ("64bb6750-919d-45ed-a00f-3ea16dc39ea9", "345ec45d-a84d-4d0e-8c54-3ac860439fd2", "Black", faker.date_time(), faker.date_time()),
         ("6f2a143b-356d-4342-8751-f87d171ecc22", "345ec45d-a84d-4d0e-8c54-3ac860439fd2", "Green", faker.date_time(), faker.date_time()),
         # Size
         ("e31431a5-0aed-4b3a-94cb-a567fa5e7439", "c1622200-8670-45aa-9ae8-a1be7c56d14a", "Small", faker.date_time(), faker.date_time()),
@@ -293,15 +293,22 @@ def insert_static_data(db):
     db.commit()
 
     # Personalizable options
-    # Prepare the data : id, personalizable_id, option_id, option_id, created_at, updated_at
+    # Prepare the data : id, personalizable_id, option_id, created_at, updated_at
     personalizable_option_data = [
         # Tshirt
+        # Tshirt and color
         ("0c926a08-d1e7-47c0-adcd-80ec283c5e60", "33aa029c-8fe1-449f-84a1-4e14faa8ded9", "345ec45d-a84d-4d0e-8c54-3ac860439fd2", faker.date_time(), faker.date_time()),
+        # Tshirt and size
         ("8c7b726b-74b3-4e77-9fad-14caca27d1d8", "33aa029c-8fe1-449f-84a1-4e14faa8ded9", "c1622200-8670-45aa-9ae8-a1be7c56d14a",  faker.date_time(), faker.date_time()),
+        # Tshirt and material
         ("79adcf21-8147-4df4-8edb-dc2889b2f4c1", "33aa029c-8fe1-449f-84a1-4e14faa8ded9", "906e811c-2ff6-46fe-ac10-7cdc5020ab1c", faker.date_time(), faker.date_time()),
+        
         # Phone case
+        # Phone case and color
         ("ee5106fa-b45e-455e-8960-a5a76f7fe1eb", "700970f2-7d3b-41e4-a625-8e32d7957cc0", "345ec45d-a84d-4d0e-8c54-3ac860439fd2", faker.date_time(), faker.date_time()),
+        # Phone case and material
         ("e2e9b4e5-435c-46bb-a7bc-d2d47784be1e", "700970f2-7d3b-41e4-a625-8e32d7957cc0", "906e811c-2ff6-46fe-ac10-7cdc5020ab1c", faker.date_time(), faker.date_time()),
+        
         # Pants
         ("3e68b6a9-bdc9-4317-88e3-7bb080b9094c", "0bf45502-8ce8-4a83-b8b0-2071db0b4949", "345ec45d-a84d-4d0e-8c54-3ac860439fd2", faker.date_time(), faker.date_time()),
         ("97bb2b90-8116-44f8-8c61-8faddb971224", "0bf45502-8ce8-4a83-b8b0-2071db0b4949", "c1622200-8670-45aa-9ae8-a1be7c56d14a", faker.date_time(), faker.date_time()),
@@ -473,31 +480,88 @@ def insert_static_data(db):
     # Personalizable variants
     # Prepare the data : id, personalizable_id, sku_id (foreign key to inventory item table), created_at, updated_at
     personalizable_variant_data = [
+        # tshirts
         ("79168a62-6e54-4c5b-8fc4-90f92681f15d", "33aa029c-8fe1-449f-84a1-4e14faa8ded9", "cc1e2912-8091-4164-8537-9b1c6f7baadb", faker.date_time(), faker.date_time()),
         ("7298f650-420c-473b-b052-ad9c664390bd", "33aa029c-8fe1-449f-84a1-4e14faa8ded9", "05823476-792a-4f50-8b48-a666c0dd163b", faker.date_time(), faker.date_time()),
         ("496a1baf-bc28-4c79-aa60-271d7f6a04bc", "33aa029c-8fe1-449f-84a1-4e14faa8ded9", "11c15493-28c7-44aa-ae89-5ec1c8181bf5", faker.date_time(), faker.date_time()),
         ("5ca0c4b8-8c5b-4362-b496-e4317c19f722", "33aa029c-8fe1-449f-84a1-4e14faa8ded9", "abc06b2a-b6d9-4923-a98c-3a8b47fe9fa4", faker.date_time(), faker.date_time()),
         ("3e7dcf25-aad7-4369-a283-9be0dc0102f9", "33aa029c-8fe1-449f-84a1-4e14faa8ded9", "abd65f56-8bb3-4052-af5b-95cb2ae5d35f", faker.date_time(), faker.date_time()),
         
+        # phone case
         ("c91b37ec-278a-4f3c-a40f-dfebb2718745", "700970f2-7d3b-41e4-a625-8e32d7957cc0", "d11ff08e-9750-417d-ba70-b1c09c2a2f15", faker.date_time(), faker.date_time()),
         ("63459aa7-92b2-4e7d-ad6c-01453693172b", "700970f2-7d3b-41e4-a625-8e32d7957cc0", "a9ee8dda-6a35-4499-ac5f-12719886b946", faker.date_time(), faker.date_time()),
 
+        # pants
         ("37b4f2cb-77ab-4d98-9a89-7001e5a8a4e5", "0bf45502-8ce8-4a83-b8b0-2071db0b4949", "16a70411-1a48-401f-914e-6d0c187dbd30", faker.date_time(), faker.date_time()),
-
-        ("e2736073-d5f8-405f-b67c-e8c996f02a08", "6709dafa-ba2b-4ddb-9d7e-2367d0b46a2d", "f132fcd1-ca70-487f-98ff-c6bef38b1840", faker.date_time(), faker.date_time()),
-        ("14cacb59-3a58-44e0-8ec0-c279aed8bf96", "6709dafa-ba2b-4ddb-9d7e-2367d0b46a2d", "5736602c-0ef6-469a-8ca8-fa1cc3ce6b56", faker.date_time(), faker.date_time()),
-
-        ("a128c9ce-ae99-46e7-a766-bd4530b89510", "cec0b564-ca97-4d1f-9167-44c7d0084471", "1b667e3b-8893-4ced-a8dc-217f5c3c8433", faker.date_time(), faker.date_time()),
-        ("8add44a1-fa11-42b3-9929-a1335fbcb657", "cec0b564-ca97-4d1f-9167-44c7d0084471", "b2a994b7-4a84-4360-945d-4b11079a4655", faker.date_time(), faker.date_time()),
-
         ("1eea5af4-359b-4271-ac51-a005c36c5326", "0bf45502-8ce8-4a83-b8b0-2071db0b4949", "9858effe-f4c3-4e5e-80c8-ce6d0fdf0eb2", faker.date_time(), faker.date_time()),
         ("3717ae66-5c11-454f-95d7-b07d2c98d1de", "0bf45502-8ce8-4a83-b8b0-2071db0b4949", "522a03db-42c7-4833-84da-8c80304ca85e", faker.date_time(), faker.date_time()),
         ("48576d08-a98a-4d73-866c-678b1d7a7f04", "0bf45502-8ce8-4a83-b8b0-2071db0b4949", "27cf0f8c-ac67-4ae1-877e-54b09c70579c", faker.date_time(), faker.date_time()),
 
+
+        # boxers
+        ("e2736073-d5f8-405f-b67c-e8c996f02a08", "6709dafa-ba2b-4ddb-9d7e-2367d0b46a2d", "f132fcd1-ca70-487f-98ff-c6bef38b1840", faker.date_time(), faker.date_time()),
+        ("14cacb59-3a58-44e0-8ec0-c279aed8bf96", "6709dafa-ba2b-4ddb-9d7e-2367d0b46a2d", "5736602c-0ef6-469a-8ca8-fa1cc3ce6b56", faker.date_time(), faker.date_time()),
+        
+        # pillows
+        ("a128c9ce-ae99-46e7-a766-bd4530b89510", "cec0b564-ca97-4d1f-9167-44c7d0084471", "1b667e3b-8893-4ced-a8dc-217f5c3c8433", faker.date_time(), faker.date_time()),
+        ("8add44a1-fa11-42b3-9929-a1335fbcb657", "cec0b564-ca97-4d1f-9167-44c7d0084471", "b2a994b7-4a84-4360-945d-4b11079a4655", faker.date_time(), faker.date_time()),
+
+       
     ]
     cursor = db.cursor()
     sql_query = "INSERT INTO personalizable_variants (id, personalizable_id, sku_id, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
     cursor.executemany(sql_query, personalizable_variant_data)
+    db.commit()
+
+    # Personalizable variant values
+    # Prepare the data : id, personalizable_variant_id, personalizable_option_id, option_value_id, created_at, updated_at
+    personalizable_variant_value_data = [
+        # 5 tshirts with different sizes and colors
+        # tshirt 1 : white cotton small
+         # material : cotton
+        ("e0e5d8d4-3b5c-4f8b-8d6c-1c5e0b4c6c4a", "79168a62-6e54-4c5b-8fc4-90f92681f15d", "79adcf21-8147-4df4-8edb-dc2889b2f4c1", "4ce80fca-af0f-4676-9100-2b748eadb0bf", faker.date_time(), faker.date_time()),
+        # color : white
+        ("a94a79fd-0c67-484e-be68-43bf66e064de", "79168a62-6e54-4c5b-8fc4-90f92681f15d", "0c926a08-d1e7-47c0-adcd-80ec283c5e60", "de3ec9d6-0f21-4981-a8a2-cc8e3f626df9", faker.date_time(), faker.date_time()),
+        # size : small
+        ("55020d49-1648-4530-badf-573cae180b09", "79168a62-6e54-4c5b-8fc4-90f92681f15d", "8c7b726b-74b3-4e77-9fad-14caca27d1d8", "e31431a5-0aed-4b3a-94cb-a567fa5e7439", faker.date_time(), faker.date_time()),
+
+        # thisrt 2 : white cotton large
+        # material: cotton
+        ("7cfbe10e-d79f-4649-b78e-1eec95302a9c", "7298f650-420c-473b-b052-ad9c664390bd", "79adcf21-8147-4df4-8edb-dc2889b2f4c1", "4ce80fca-af0f-4676-9100-2b748eadb0bf", faker.date_time(), faker.date_time()),
+        # color white :
+        ("d1d3bac8-4899-4df7-8e4e-5361fbf19bae", "7298f650-420c-473b-b052-ad9c664390bd", "0c926a08-d1e7-47c0-adcd-80ec283c5e60", "de3ec9d6-0f21-4981-a8a2-cc8e3f626df9", faker.date_time(), faker.date_time()),
+        # size : large
+        ("033389c2-b5ec-4929-8bc6-e1f5e0da573d", "7298f650-420c-473b-b052-ad9c664390bd", "8c7b726b-74b3-4e77-9fad-14caca27d1d8", "253886bf-20b3-4b84-9375-d48f779aa026", faker.date_time(), faker.date_time()),
+        
+        # tshirt 3 : white cotton medium
+        # material: cotton
+        ("79cc6010-e874-477b-8127-deef399a3e7b", "496a1baf-bc28-4c79-aa60-271d7f6a04bc", "79adcf21-8147-4df4-8edb-dc2889b2f4c1", "4ce80fca-af0f-4676-9100-2b748eadb0bf", faker.date_time(), faker.date_time()),
+        # color white :
+        ("ec499165-0aec-414c-a323-e6fdd0f29627", "496a1baf-bc28-4c79-aa60-271d7f6a04bc", "0c926a08-d1e7-47c0-adcd-80ec283c5e60", "de3ec9d6-0f21-4981-a8a2-cc8e3f626df9", faker.date_time(), faker.date_time()),
+        # size : medium
+        ("ff3d314c-a310-4d90-9b38-34dbd9b97ad6", "496a1baf-bc28-4c79-aa60-271d7f6a04bc", "8c7b726b-74b3-4e77-9fad-14caca27d1d8", "ecef3173-9c2b-4743-94f4-8a02f7aec69b", faker.date_time(), faker.date_time()),
+        
+
+        # tshirt 4 : black polyster small
+        # material: polyster
+        ("492f7fea-79f4-4643-b838-42b7ffb32018", "5ca0c4b8-8c5b-4362-b496-e4317c19f722", "79adcf21-8147-4df4-8edb-dc2889b2f4c1", "0524ad82-10b1-4ce9-9c31-9f94387642c3", faker.date_time(), faker.date_time()),
+        # color black :
+        ("8f6c4fdc-05d8-4401-9b3b-3b6efc772e0f", "5ca0c4b8-8c5b-4362-b496-e4317c19f722", "0c926a08-d1e7-47c0-adcd-80ec283c5e60", "64bb6750-919d-45ed-a00f-3ea16dc39ea9", faker.date_time(), faker.date_time()),
+        # size : small
+        ("298d0afd-3035-4dde-bb6b-9ba7c8a113fe", "5ca0c4b8-8c5b-4362-b496-e4317c19f722", "8c7b726b-74b3-4e77-9fad-14caca27d1d8", "e31431a5-0aed-4b3a-94cb-a567fa5e7439", faker.date_time(), faker.date_time()),
+        
+        # tshirt 5 : black polyster medium
+        # material: polyster
+        ("bb22b36d-3eb5-4cac-be9f-31d068c5346b", "3e7dcf25-aad7-4369-a283-9be0dc0102f9", "79adcf21-8147-4df4-8edb-dc2889b2f4c1", "0524ad82-10b1-4ce9-9c31-9f94387642c3", faker.date_time(), faker.date_time()),
+        # color black :
+        ("581a480d-35e5-45aa-af9a-cbb1b30f5a2a", "3e7dcf25-aad7-4369-a283-9be0dc0102f9", "0c926a08-d1e7-47c0-adcd-80ec283c5e60", "64bb6750-919d-45ed-a00f-3ea16dc39ea9", faker.date_time(), faker.date_time()),
+        # size : small
+        ("c0837303-50f9-4cbe-a50d-f32a18117184", "3e7dcf25-aad7-4369-a283-9be0dc0102f9", "8c7b726b-74b3-4e77-9fad-14caca27d1d8", "ecef3173-9c2b-4743-94f4-8a02f7aec69b", faker.date_time(), faker.date_time()),
+        
+    ]
+    cursor = db.cursor()
+    sql_query = "INSERT INTO personalizable_variant_values (id, personalizable_variant_id, personalizable_option_id, option_value_id, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
+    cursor.executemany(sql_query, personalizable_variant_value_data)
     db.commit()
 
 
