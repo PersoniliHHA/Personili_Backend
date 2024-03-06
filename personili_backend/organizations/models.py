@@ -67,6 +67,7 @@ class OrganizationProfile(TimeStampedModel):
     organization = models.OneToOneField(Organization, on_delete=models.CASCADE)
     logo_path = models.CharField(max_length=255, null=True, blank=True)
     banner_path = models.CharField(max_length=255, null=True, blank=True)
+    is_sponsored = models.BooleanField(default=False)
     
     address = models.TextField()
     

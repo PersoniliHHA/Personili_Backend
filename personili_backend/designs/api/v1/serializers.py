@@ -130,5 +130,5 @@ class ThemeSerializerGet(serializers.ModelSerializer):
 
     class Meta:
         model = Theme
-        read_only_fields = '__all__'
+        read_only_fields = []
         exclude = ('created_at', 'updated_at')

@@ -89,11 +89,9 @@ class StoreProfile(TimeStampedModel):
     """
     ## Type choices
     PERSONAL = "personal"
-    VERIFIED = "Verified"
     SPONSORED = "Sponsored"
     TYPE = [
         (PERSONAL, 'Personal'),
-        (VERIFIED, 'Verified'),
         (SPONSORED, 'Sponsored'),
     ]
 
@@ -103,7 +101,7 @@ class StoreProfile(TimeStampedModel):
     biography = models.TextField(null=True, blank=True)
     store_logo_path = models.CharField(max_length=255, null=True, blank=True)
     store_banner_path = models.CharField(max_length=255, null=True, blank=True)
-    is_sponsored = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'store_profiles'
@@ -250,7 +248,13 @@ class Design(TimeStampedModel):
             q_objects.add(Q(collection__workshop_id=workshop_id), Q.AND)
         if sponsored_store:
             q_objects.add(Q(collection__store__store_profile__type=StoreProfile.SPONSORED), Q.AND)
-        
+        if sponsored_workshop:
+            q_objects.add(Q(collection__workshop__organization_is_sponsored=True), Q.AND)
+        # search for the search term in the title, the description, the tags of the design
+        if search_term:
+            q_objects.add(Q(title__icontains=search_term) | 
+                          Q(description__icontains=search_term) | 
+                          Q(tags__icontains=search_term), Q.AND)
 
         popular_designs = (cls.objects.filter(status=cls.APPROVED)
                    .annotate(num_likes=models.Count('design_likes'))
@@ -293,7 +297,7 @@ class DesignLike(TimeStampedModel):
         unique_together = ('design', 'account_profile')
 
     def __str__(self):
-        return self.design.title + " - " + self.account_profile.id
+        return self.design.title + " - " + self.account_profile.account.email
     
 
 
