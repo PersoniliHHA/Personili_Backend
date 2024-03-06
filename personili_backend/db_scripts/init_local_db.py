@@ -690,14 +690,14 @@ def insert_static_data(db):
     # Store collections
     # prepare the data : id, name, store_id, workshop_id, created_at, updated_at (store_id and workshop_id cannot be filled both)
     store_collection_data = [
-        ("c41526d6-d0ae-456c-8cf5-0c549e4eac42", faker.phrase(), "3a1fe8af-e41a-4d47-9be5-419d52993206", None, faker.date_time(), faker.date_time()),
-        ("5ff408e7-60b7-4ff5-b9a2-cc012f3ae65c", faker.phrase(), "64a94a5f-0faa-4290-8903-28f1554e612c", None, faker.date_time(), faker.date_time()),
-        ("ed215c51-ef3f-40a6-ba25-61969efefff2", faker.phrase(), "8bbafc9e-90e6-4ff6-9462-33d5303dc9ca", None, faker.date_time(), faker.date_time()),
-        ("456310ce-0414-42cd-aeaa-9d89f024fd00", faker.phrase(), "dcd2f5f7-a8dd-4f4c-8614-8cfd0c99dc4a", None, faker.date_time(), faker.date_time()),
+        ("c41526d6-d0ae-456c-8cf5-0c549e4eac42", faker.last_name(), "3a1fe8af-e41a-4d47-9be5-419d52993206", None, faker.date_time(), faker.date_time()),
+        ("5ff408e7-60b7-4ff5-b9a2-cc012f3ae65c", faker.last_name(), "64a94a5f-0faa-4290-8903-28f1554e612c", None, faker.date_time(), faker.date_time()),
+        ("ed215c51-ef3f-40a6-ba25-61969efefff2", faker.last_name(), "8bbafc9e-90e6-4ff6-9462-33d5303dc9ca", None, faker.date_time(), faker.date_time()),
+        ("456310ce-0414-42cd-aeaa-9d89f024fd00", faker.last_name(), "dcd2f5f7-a8dd-4f4c-8614-8cfd0c99dc4a", None, faker.date_time(), faker.date_time()),
         
-        ("2a887af1-e4df-4b43-98d4-57fdd34cc427", faker.phrase(), None, "e1e2cd6a-aaf2-4407-91dd-e87ec880e341", faker.date_time(), faker.date_time()),
-        ("2c714c80-4f83-4e7d-beed-6ceed76c8d18", faker.phrase(), None, "09cb14c3-0396-48bb-a98c-443922af58b9", faker.date_time(), faker.date_time()),
-        ("f2f21290-55c1-48f9-9dd8-bd68f4ec145a", faker.phrase(), None, "2f42a7e6-25a9-4039-8c6c-62dcac1601bc", faker.date_time(), faker.date_time()),
+        ("2a887af1-e4df-4b43-98d4-57fdd34cc427", faker.last_name(), None, "e1e2cd6a-aaf2-4407-91dd-e87ec880e341", faker.date_time(), faker.date_time()),
+        ("2c714c80-4f83-4e7d-beed-6ceed76c8d18", faker.last_name(), None, "09cb14c3-0396-48bb-a98c-443922af58b9", faker.date_time(), faker.date_time()),
+        ("f2f21290-55c1-48f9-9dd8-bd68f4ec145a", faker.last_name(), None, "2f42a7e6-25a9-4039-8c6c-62dcac1601bc", faker.date_time(), faker.date_time()),
     
     ]
     cursor = db.cursor()
