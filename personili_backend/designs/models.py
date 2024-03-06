@@ -219,12 +219,12 @@ class Design(TimeStampedModel):
         return self.title + " - " + str(self.id)
     
     @classmethod
-    def get_popular_designs_light(cls, 
+    def get_designs_light(cls, 
                                   theme_id= None,
                                   store_id=None,
                                   workshop_id=None,
-                                  sponsored_store=False,
-                                  sponsored_workshop=False,
+                                  sponsored_stores=False,
+                                  sponsored_workshops=False,
                                   search_term=None,
                                   limit=20, 
                                   offset=0):
@@ -246,9 +246,9 @@ class Design(TimeStampedModel):
             q_objects.add(Q(collection__store_id=store_id), Q.AND)
         if workshop_id:
             q_objects.add(Q(collection__workshop_id=workshop_id), Q.AND)
-        if sponsored_store:
+        if sponsored_stores:
             q_objects.add(Q(collection__store__store_profile__type=StoreProfile.SPONSORED), Q.AND)
-        if sponsored_workshop:
+        if sponsored_workshops:
             q_objects.add(Q(collection__workshop__organization_is_sponsored=True), Q.AND)
         # search for the search term in the title, the description, the tags of the design
         if search_term:
