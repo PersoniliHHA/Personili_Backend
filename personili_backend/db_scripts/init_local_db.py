@@ -176,15 +176,15 @@ def insert_static_data(db):
     # THEME TABLE
     # Prepare the data
     theme_data =[
-        ("14a70128-56f1-4881-a63d-e09636e812bd", "Nature & environment", faker.paragraph(), "logo_path", faker.date_time(), faker.date_time()),
-        ("c407faaf-6fd5-4e32-bc32-002e39a8d89e", "Abstract & Geometric", faker.paragraph(), "logo_path", faker.date_time(), faker.date_time()),
-        ("b4860cc4-f13c-4eb6-bcaa-7df0dce00cc8", "Culture", faker.paragraph(), "logo_path",faker.date_time(), faker.date_time()),
-        ("ec48f796-78cb-4c80-966f-b778bc85a2cc", "Fantasy", faker.paragraph(), "logo_path",faker.date_time(), faker.date_time()),
-        ("b1f59f7d-8ad2-4e02-92de-d3f0d879b821", "Science Fiction", faker.paragraph(), "logo_path",faker.date_time(), faker.date_time()),
-        ("afff6767-ab17-48c7-b0a6-a84f6ded9ff5", "Social & Political", faker.paragraph(), "logo_path", faker.date_time(), faker.date_time()),
-        ("240a1e1b-72b5-4a95-91e9-e223f6f9faa0", "Food", faker.paragraph(), "logo_path",faker.date_time(), faker.date_time()),
-        ("74745f05-fb8b-4217-a3c8-d00aa72d415d", "Anime", faker.paragraph(), "logo_path", faker.date_time(), faker.date_time()),
-        ("d5623fd9-b017-4ff7-9e15-2f228e22b7e2", "Others", faker.paragraph(), "logo_path", faker.date_time(), faker.date_time()),
+        ("14a70128-56f1-4881-a63d-e09636e812bd", "Nature & environment", faker.paragraph(), faker.image_url(), faker.date_time(), faker.date_time()),
+        ("c407faaf-6fd5-4e32-bc32-002e39a8d89e", "Abstract & Geometric", faker.paragraph(), faker.image_url(), faker.date_time(), faker.date_time()),
+        ("b4860cc4-f13c-4eb6-bcaa-7df0dce00cc8", "Culture", faker.paragraph(), faker.image_url(),faker.date_time(), faker.date_time()),
+        ("ec48f796-78cb-4c80-966f-b778bc85a2cc", "Fantasy", faker.paragraph(), faker.image_url(),faker.date_time(), faker.date_time()),
+        ("b1f59f7d-8ad2-4e02-92de-d3f0d879b821", "Science Fiction", faker.paragraph(),faker.image_url(),faker.date_time(), faker.date_time()),
+        ("afff6767-ab17-48c7-b0a6-a84f6ded9ff5", "Social & Political", faker.paragraph(),faker.image_url(), faker.date_time(), faker.date_time()),
+        ("240a1e1b-72b5-4a95-91e9-e223f6f9faa0", "Food", faker.paragraph(),  faker.image_url(),faker.date_time(), faker.date_time()),
+        ("74745f05-fb8b-4217-a3c8-d00aa72d415d", "Anime", faker.paragraph(), faker.image_url(), faker.date_time(), faker.date_time()),
+        ("d5623fd9-b017-4ff7-9e15-2f228e22b7e2", "Others", faker.paragraph(),faker.image_url(), faker.date_time(), faker.date_time()),
     
     ]
     cursor = db.cursor()
@@ -213,11 +213,11 @@ def insert_static_data(db):
     # Personalizables
     # Prepare the data : id, name, category(must be a leaf category), description, image_path, brand, model, created_at, updated_at 
     personalizable_data = [
-        ("cec0b564-ca97-4d1f-9167-44c7d0084471", "Pillow", "59a77ce4-971a-46bd-8988-39080f0d9c25", "sleep pillow", "image path", "generic", "generic", faker.date_time(), faker.date_time()),
-        ("700970f2-7d3b-41e4-a625-8e32d7957cc0", "Phone case", "79ee3fcf-42c2-4906-badf-8380904792dc", "phone case", "image path", "generic", "generic", faker.date_time(), faker.date_time()),
-        ("33aa029c-8fe1-449f-84a1-4e14faa8ded9", "Tshirt", "bf97280e-cbc3-49ec-ad08-79618a01371b", "blank tshirt", "image path", "generic", "generic", faker.date_time(), faker.date_time()),
-        ("0bf45502-8ce8-4a83-b8b0-2071db0b4949", "Pants", "5a253d03-f9f5-41ad-9fd5-4189451e1804", "simple pants", "image path", "generic", "generic", faker.date_time(), faker.date_time()),
-        ("6709dafa-ba2b-4ddb-9d7e-2367d0b46a2d", "Boxers", "e2f98d5b-9679-4db5-a7d2-1f71dd1bb441", "sleep boxers", "image path", "generic", "generic", faker.date_time(), faker.date_time()),
+        ("cec0b564-ca97-4d1f-9167-44c7d0084471", "Pillow", "59a77ce4-971a-46bd-8988-39080f0d9c25", "sleep pillow",faker.image_url(), "generic", "generic", faker.date_time(), faker.date_time()),
+        ("700970f2-7d3b-41e4-a625-8e32d7957cc0", "Phone case", "79ee3fcf-42c2-4906-badf-8380904792dc", "phone case",faker.image_url(), "generic", "generic", faker.date_time(), faker.date_time()),
+        ("33aa029c-8fe1-449f-84a1-4e14faa8ded9", "Tshirt", "bf97280e-cbc3-49ec-ad08-79618a01371b", "blank tshirt",faker.image_url(), "generic", "generic", faker.date_time(), faker.date_time()),
+        ("0bf45502-8ce8-4a83-b8b0-2071db0b4949", "Pants", "5a253d03-f9f5-41ad-9fd5-4189451e1804", "simple pants", faker.image_url(), "generic", "generic", faker.date_time(), faker.date_time()),
+        ("6709dafa-ba2b-4ddb-9d7e-2367d0b46a2d", "Boxers", "e2f98d5b-9679-4db5-a7d2-1f71dd1bb441", "sleep boxers",faker.image_url(), "generic", "generic", faker.date_time(), faker.date_time()),
     ]
 
     cursor = db.cursor()
@@ -384,9 +384,9 @@ def insert_static_data(db):
     # Organization profiles
     # Prepare the data : id, organization_id, logo_path, banner_path, address, facebook_link, x_link, instagram_link, linkedin_link, youtube_link , is_sponsored, created_at, updated_at
     organization_profile_data = [
-        ("e16fb7d9-0f6f-46ac-8864-90d017328d3d", "517292a1-75b6-4688-a052-364d93ecc9b7", "logo_path", "banner_path", faker.address(), faker.uri(), faker.uri(), faker.uri(), faker.uri(), faker.uri(), True, faker.date_time(), faker.date_time()),
-        ("37eebac5-c9aa-489a-bb93-2728526b7adc", "440b3a20-16a3-4e44-bcec-8c3b60c57b47", "logo_path", "banner_path", faker.address(), faker.uri(), faker.uri(), faker.uri(), faker.uri(), faker.uri(), True, faker.date_time(), faker.date_time()),
-        ("7a650f39-aebf-46fd-a6af-1d532f968f7a", "f4f3a0f5-2d1e-4f4b-8c7a-4d0c4e4e5f3d", "logo_path", "banner_path", faker.address(), faker.uri(), faker.uri(), faker.uri(), faker.uri(), faker.uri(), True, faker.date_time(), faker.date_time()),
+        ("e16fb7d9-0f6f-46ac-8864-90d017328d3d", "517292a1-75b6-4688-a052-364d93ecc9b7", faker.image_url(), faker.image_url(), faker.address(), faker.uri(), faker.uri(), faker.uri(), faker.uri(), faker.uri(), True, faker.date_time(), faker.date_time()),
+        ("37eebac5-c9aa-489a-bb93-2728526b7adc", "440b3a20-16a3-4e44-bcec-8c3b60c57b47", faker.image_url(), faker.image_url(), faker.address(), faker.uri(), faker.uri(), faker.uri(), faker.uri(), faker.uri(), True, faker.date_time(), faker.date_time()),
+        ("7a650f39-aebf-46fd-a6af-1d532f968f7a", "f4f3a0f5-2d1e-4f4b-8c7a-4d0c4e4e5f3d", faker.image_url(), faker.image_url(), faker.address(), faker.uri(), faker.uri(), faker.uri(), faker.uri(), faker.uri(), True, faker.date_time(), faker.date_time()),
     ]
     cursor = db.cursor()
     sql_query = "INSERT INTO organization_profiles (id, organization_id, logo_path, banner_path, address, facebook_link, x_link, instagram_link, linkedin_link, youtube_link, is_sponsored, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
@@ -685,6 +685,24 @@ def insert_static_data(db):
     cursor = db.cursor()
     sql_query = "INSERT INTO store_profiles (id, store_id, type, biography, store_logo_path, store_banner_path, is_trending, is_bestseller, is_featured, is_upcoming, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
     cursor.executemany(sql_query, store_profile_data)
+    db.commit()
+
+    # Store collections
+    # prepare the data : id, name, store_id, workshop_id, created_at, updated_at (store_id and workshop_id cannot be filled both)
+    store_collection_data = [
+        ("c41526d6-d0ae-456c-8cf5-0c549e4eac42", faker.phrase(), "3a1fe8af-e41a-4d47-9be5-419d52993206", None, faker.date_time(), faker.date_time()),
+        ("5ff408e7-60b7-4ff5-b9a2-cc012f3ae65c", faker.phrase(), "64a94a5f-0faa-4290-8903-28f1554e612c", None, faker.date_time(), faker.date_time()),
+        ("ed215c51-ef3f-40a6-ba25-61969efefff2", faker.phrase(), "8bbafc9e-90e6-4ff6-9462-33d5303dc9ca", None, faker.date_time(), faker.date_time()),
+        ("456310ce-0414-42cd-aeaa-9d89f024fd00", faker.phrase(), "dcd2f5f7-a8dd-4f4c-8614-8cfd0c99dc4a", None, faker.date_time(), faker.date_time()),
+        
+        ("2a887af1-e4df-4b43-98d4-57fdd34cc427", faker.phrase(), None, "e1e2cd6a-aaf2-4407-91dd-e87ec880e341", faker.date_time(), faker.date_time()),
+        ("2c714c80-4f83-4e7d-beed-6ceed76c8d18", faker.phrase(), None, "09cb14c3-0396-48bb-a98c-443922af58b9", faker.date_time(), faker.date_time()),
+        ("f2f21290-55c1-48f9-9dd8-bd68f4ec145a", faker.phrase(), None, "2f42a7e6-25a9-4039-8c6c-62dcac1601bc", faker.date_time(), faker.date_time()),
+    
+    ]
+    cursor = db.cursor()
+    sql_query = "INSERT INTO store_collections (id, name, store_id, workshop_id, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
+    cursor.executemany(sql_query, store_collection_data)
     db.commit()
 
     
