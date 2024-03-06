@@ -75,7 +75,6 @@ class DesignsViewSet(viewsets.ModelViewSet):
         theme = request.query_params.get('theme', None)
         store = request.query_params.get('store', None)
         workshop = request.query_params.get('workshop', None)
-        popular = request.query_params.get('popular', None)
         sponsored_stores = request.query_params.get('sponsored_stores', None)
         sponsored_workshops = request.query_params.get('sponsored_workshops', None)
         search_term = request.query_params.get('search_term', None)

@@ -107,7 +107,7 @@ class StoreProfile(TimeStampedModel):
         db_table = 'store_profiles'
 
     def __str__(self):
-        return self.store.account_profile.user.email + " - " + self.store.name
+        return self.store.account_profile.account.email + " - " + self.store.name
     
     def get_store_products(self):
         """
