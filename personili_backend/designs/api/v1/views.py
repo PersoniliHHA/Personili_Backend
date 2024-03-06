@@ -62,12 +62,9 @@ class DesignsViewSet(viewsets.ModelViewSet):
         return DesignSerializerBase
 
     @action(detail=False, methods=['GET'], url_path='v1/designs/popular', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
-    def get_all_designs_sorted_by_criteria_light(self, request):
+    def get_popular_designs_light(self, request):
         """
-        Get a list of designs that includes : the id and title of the design,
-        the id and name of the store,
-        the design image.
-        Perform a join between the four tables, theme, store, store profile, design and collection
+        Get a list of popular designs based on number of likes
         """
         popular_designs = Design.get_popular_designs_light(offset=0, limit=10)
         response = Response(popular_designs, status=status.HTTP_200_OK)
