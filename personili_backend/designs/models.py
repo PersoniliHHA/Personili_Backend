@@ -257,10 +257,11 @@ class Design(TimeStampedModel):
                           Q(tags__icontains=search_term), Q.AND)
 
         popular_designs = (cls.objects.filter(status=cls.APPROVED)
-                   .annotate(num_likes=models.Count('design_likes'))
-                   .select_related('collection__store', 'collection__workshop', 'theme')
-                   .prefetch_related('design_previews')
-                   .order_by('-num_likes')[offset:offset+limit])
+                           .filter(q_objects)
+                           .annotate(num_likes=models.Count('design_likes')) 
+                           .select_related('collection__store', 'collection__workshop', 'theme')
+                           .prefetch_related('design_previews')
+                           .order_by('-num_likes')[offset:offset+limit])
         result = []
         for design in popular_designs:
             design_data = {
