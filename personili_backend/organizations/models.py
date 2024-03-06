@@ -64,7 +64,7 @@ class OrganizationProfile(TimeStampedModel):
     - Organization updated at
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
-    organization = models.OneToOneField(Organization, on_delete=models.CASCADE)
+    organization = models.OneToOneField(Organization, on_delete=models.CASCADE, related_name='orgprofile')
     logo_path = models.CharField(max_length=255, null=True, blank=True)
     banner_path = models.CharField(max_length=255, null=True, blank=True)
     sponsored = models.BooleanField(default=False)
