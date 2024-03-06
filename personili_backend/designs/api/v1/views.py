@@ -66,7 +66,7 @@ class DesignsViewSet(viewsets.ModelViewSet):
         """
         Get a list of popular designs based on number of likes
         """
-        popular_designs = Design.get_popular_designs_light(offset=0, limit=10)
+        popular_designs = Design.optimized_get_popular_designs_light(offset=0, limit=10)
         response = Response(popular_designs, status=status.HTTP_200_OK)
 
         return response
