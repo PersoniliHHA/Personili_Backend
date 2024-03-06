@@ -299,7 +299,7 @@ class Design(TimeStampedModel):
 #########################################
 #        Design likes model             #
 #########################################
-class DesignLikes(TimeStampedModel):
+class DesignLike(TimeStampedModel):
     """
     This model is used to store the likes of a design
     """
