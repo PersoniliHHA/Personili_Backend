@@ -85,7 +85,7 @@ class StoreProfile(TimeStampedModel):
     """
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    store = models.OneToOneField(Store, on_delete=models.CASCADE, related_name='store_profile')
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_profile')
     biography = models.TextField(null=True, blank=True)
     store_logo_path = models.CharField(max_length=255, null=True, blank=True)
     store_banner_path = models.CharField(max_length=255, null=True, blank=True)
