@@ -5,6 +5,7 @@ from enum import Enum
 # Django
 from django.db import models
 from django.core import serializers
+from django.db.models import Q
 
 # Models
 from accounts.models import AccountProfile
@@ -102,10 +103,7 @@ class StoreProfile(TimeStampedModel):
     biography = models.TextField(null=True, blank=True)
     store_logo_path = models.CharField(max_length=255, null=True, blank=True)
     store_banner_path = models.CharField(max_length=255, null=True, blank=True)
-    is_trending = models.BooleanField(default=False)
-    is_bestseller = models.BooleanField(default=False)
-    is_featured = models.BooleanField(default=False)
-    is_upcoming = models.BooleanField(default=False)
+    is_sponsored = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'store_profiles'
@@ -222,49 +220,38 @@ class Design(TimeStampedModel):
     def __str__(self):
         return self.title + " - " + str(self.id)
     
+    @classmethod
+    def get_popular_designs_light(cls, 
+                                  theme_id= None,
+                                  store_id=None,
+                                  workshop_id=None,
+                                  sponsored_store=False,
+                                  sponsored_workshop=False,
+                                  search_term=None,
+                                  limit=20, 
+                                  offset=0):
+        """
+        This method returns the most popular designs (the ones that were approved)
+        compute the number of likes per design and return the top "limit" designs
+        for each design we get :
+        - id
+        - title
+        - image_path
+        - store name or workshop name and its organization name depending on which one is not null
+        - number of likes
+        - design preview objects
+        """
+        q_objects = Q()
+        if theme_id:
+            q_objects.add(Q(theme_id=theme_id), Q.AND)
+        if store_id:
+            q_objects.add(Q(collection__store_id=store_id), Q.AND)
+        if workshop_id:
+            q_objects.add(Q(collection__workshop_id=workshop_id), Q.AND)
+        if sponsored_store:
+            q_objects.add(Q(collection__store__store_profile__type=StoreProfile.SPONSORED), Q.AND)
+        
 
-    @classmethod
-    def get_popular_designs_light(cls, limit=10, offset=0):
-        """
-        This method returns the most popular designs (the ones that were approved)
-        compute the number of likes per design and return the top "limit" designs
-        for each design we get :
-        - id
-        - title
-        - image_path
-        - store name or workshop name and its organization name depending on which one is not null
-        - number of likes
-        - design preview objects
-        """
-        popular_designs = cls.objects.filter(status=cls.APPROVED).annotate(num_likes=models.Count('design_likes')).order_by('-num_likes')[offset:offset+limit]
-        result = []
-        for design in popular_designs:
-            design_data = {
-                'id': design.id,
-                'title': design.title,
-                'image_path': design.image_path,
-                'store_name': design.collection.store.name if design.collection.store else None,
-                'workshop_name': design.collection.workshop.name if design.collection.workshop else None,
-                'organization_name': design.collection.workshop.organization.name if design.collection.workshop else None,
-                'num_likes': design.num_likes,
-                'design_previews': list(design.design_previews.values('id', 'image_path'))
-            }
-            result.append(design_data)
-        return result
-    
-    @classmethod
-    def optimized_get_popular_designs_light(cls, limit=10, offset=0):
-        """
-        This method returns the most popular designs (the ones that were approved)
-        compute the number of likes per design and return the top "limit" designs
-        for each design we get :
-        - id
-        - title
-        - image_path
-        - store name or workshop name and its organization name depending on which one is not null
-        - number of likes
-        - design preview objects
-        """
         popular_designs = (cls.objects.filter(status=cls.APPROVED)
                    .annotate(num_likes=models.Count('design_likes'))
                    .select_related('collection__store', 'collection__workshop', 'theme')
@@ -288,16 +275,6 @@ class Design(TimeStampedModel):
         
         return result
 
-    
-        
-    @classmethod
-    def get_popular_designs_full(cls, 
-                            limit=10, 
-                            offset=0):
-        """
-        This method returns the most popular designs, we can use the number of likes as a metric
-        """
-        pass
 
 
 #########################################

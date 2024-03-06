@@ -7,9 +7,10 @@ from rest_framework.response import Response
 # Local imports
 from designs.models import Store, Design, Collection, Theme
 from accounts.models import AccountProfile
-from designs.api.v1.serializers import DesignSerializerBase, DesignPostSerializer, DesignGetSerializerHeavy, DesignGetSerializerLight
+from designs.api.v1.serializers import DesignSerializerBase, DesignPostSerializer, DesignGetSerializerLight, ThemeSerializerGet
 from utils.constants import DESIGNER_UPLOADED_IMAGES_PATH_TEMPLATES
 from utils.utilities import store_image_in_s3
+
 
 # boto3 imports
 import boto3
@@ -61,18 +62,36 @@ class DesignsViewSet(viewsets.ModelViewSet):
 
         return DesignSerializerBase
 
+    ################################### GET APIS, PUBLIC #####################################
+    
+    ##### Get the designs based on criteria : theme, store, workshop, nb of likes, sponsored stores, sponsored workshops
     @action(detail=False, methods=['GET'], url_path='v1/designs/popular', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def get_popular_designs_light(self, request):
         """
         Get a list of popular designs based on number of likes
+        criteria for getting designs : theme, store(sponsored,), workshop, popular
         """
-        popular_designs = Design.optimized_get_popular_designs_light(offset=0, limit=20)
+        popular_designs = Design.get_popular_designs_light(offset=0, limit=20)
         response = Response(popular_designs, status=status.HTTP_200_OK)
 
         return response
 
+    @action(detail=False, methods=['GET'], url_path='v1/designs/themes', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    def get_themes(self, request):
+        """
+        Get all themes
+        """
+        themes = Theme.objects.all()
+        serializer = ThemeSerializerGet(themes, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    ###########################################################################################
+    ################################### GET APIS, PRIVATE #####################################
+
+
+    ###########################################################################################
     @action(detail=False, methods=['POST'], url_path='v1/add-new-design-for-designer', permission_classes=[permissions.IsAuthenticated])
-    def get_design_by_id(self, pk):
+    def get_design_details(self, pk):
         return get_object_or_404(Design, pk=pk)
 
     @action(detail=False, methods=['GET'], url_path='get-all-designs-by-designer', permission_classes=[permissions.IsAuthenticated])

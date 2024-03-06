@@ -116,3 +116,20 @@ class StoreSerializerPost(serializers.ModelSerializer):
     class Meta:
         model = Store
         fields = ('id', 'name', 'description', 'logo', 'banner', 'theme', 'is_active', 'is_featured', 'is_verified', 'is_suspended')
+
+
+#################################
+#                               #
+#      Theme serializer         #
+#                               #
+#################################
+class ThemeSerializerGet(serializers.ModelSerializer):
+    """
+    Serializer for Theme
+    """
+
+    class Meta:
+        model = Theme
+        fields = '__all__'
+        read_only_fields = ('id')
+        exclude = ('created_at', 'updated_at')
