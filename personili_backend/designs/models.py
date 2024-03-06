@@ -206,13 +206,13 @@ class Design(TimeStampedModel):
     tags = models.CharField(max_length=255, null=True, blank=True)
     status = models.CharField(max_length=255,
                               choices=STATUS,
-                              default=APPROVED)
+                              default=PENDING)
     
     # This field is used to determine if the design should be published or not on our website
     to_be_published = models.BooleanField(default=True)
 
     # Can the design be used with other designs from other designers
-    exclusive = models.BooleanField(default=True)
+    exclusive_usage = models.BooleanField(default=True)
 
     # Is the design limited to a certain number of personalizables
     limited_personalizables = models.BooleanField(default=False)
