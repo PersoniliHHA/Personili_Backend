@@ -705,11 +705,39 @@ def insert_static_data(db):
     cursor.executemany(sql_query, store_collection_data)
     db.commit()
 
-    
+    # Designs
+    # prepare the data : id, collection_id, theme_id, title, description, image_path, tags, status(pending, approved, rejected), to_be_published, exclusive_usage, limited_personalizables, created_at, updated_at
+    design_data = [
+        ("e8be8bc6-4ae8-4264-9907-0fe4ca590018", "c41526d6-d0ae-456c-8cf5-0c549e4eac42", "14a70128-56f1-4881-a63d-e09636e812bd", faker.last_name(), faker.paragraph(), faker.image_url(), faker.words(), "approved", True, False, False, faker.date_time(), faker.date_time()),
+        ("e00f0078-fc7e-41fc-a00d-1c8439387b0d", "c41526d6-d0ae-456c-8cf5-0c549e4eac42", "14a70128-56f1-4881-a63d-e09636e812bd", faker.last_name(), faker.paragraph(), faker.image_url(), faker.words(), "approved", True, False, False, faker.date_time(), faker.date_time()),
+        
+        ("0eac82cc-975e-485b-998b-08bc148befed", "5ff408e7-60b7-4ff5-b9a2-cc012f3ae65c", "c407faaf-6fd5-4e32-bc32-002e39a8d89e", faker.last_name(), faker.paragraph(), faker.image_url(), faker.words(), "pending", True, False, False, faker.date_time(), faker.date_time()),
+        ("16cda768-851e-448f-8676-c4f5610e4693", "5ff408e7-60b7-4ff5-b9a2-cc012f3ae65c", "b1f59f7d-8ad2-4e02-92de-d3f0d879b821", faker.last_name(), faker.paragraph(), faker.image_url(), faker.words(), "approved", True, False, False, faker.date_time(), faker.date_time()),
+
+        ("2ae3295f-f884-407a-91f1-8c070f1958d4", "ed215c51-ef3f-40a6-ba25-61969efefff2", "afff6767-ab17-48c7-b0a6-a84f6ded9ff5", faker.last_name(), faker.paragraph(), faker.image_url(), faker.words(), "rejected", True, False, False, faker.date_time(), faker.date_time()),
+        ("02a727c3-275f-431f-9865-6f984e3ccde1", "ed215c51-ef3f-40a6-ba25-61969efefff2", "240a1e1b-72b5-4a95-91e9-e223f6f9faa0", faker.last_name(), faker.paragraph(), faker.image_url(), faker.words(), "approved", True, False, False, faker.date_time(), faker.date_time()),
+
+        ("ba3f4983-98bb-41c6-98f7-ce945ccd1f49", "456310ce-0414-42cd-aeaa-9d89f024fd00", "d5623fd9-b017-4ff7-9e15-2f228e22b7e2", faker.last_name(), faker.paragraph(), faker.image_url(), faker.words(), "approved", True, False, False, faker.date_time(), faker.date_time()),
+        ("9cf24dd9-da10-48c0-9c7f-7925b5eda1cf", "456310ce-0414-42cd-aeaa-9d89f024fd00", "74745f05-fb8b-4217-a3c8-d00aa72d415d", faker.last_name(), faker.paragraph(), faker.image_url(), faker.words(), "approved", True, False, False, faker.date_time(), faker.date_time()),
+
+        ("dd568de2-6890-4e6b-8f77-69136edd13e7", "2a887af1-e4df-4b43-98d4-57fdd34cc427", "ec48f796-78cb-4c80-966f-b778bc85a2cc", faker.last_name(), faker.paragraph(), faker.image_url(), faker.words(), "approved", True, False, False, faker.date_time(), faker.date_time()),
+        ("72892788-17cd-4247-8a89-2e2dcbf1e407", "2a887af1-e4df-4b43-98d4-57fdd34cc427", "ec48f796-78cb-4c80-966f-b778bc85a2cc", faker.last_name(), faker.paragraph(), faker.image_url(), faker.words(), "approved", True, False, False, faker.date_time(), faker.date_time()),
+
+        ("103c4b2c-1324-4331-ac0b-42efb390de75", "2c714c80-4f83-4e7d-beed-6ceed76c8d18", "14a70128-56f1-4881-a63d-e09636e812bd", faker.last_name(), faker.paragraph(), faker.image_url(), faker.words(), "approved", True, False, False, faker.date_time(), faker.date_time()),
+        ("45324e5d-9a7d-4d24-8e70-781ca05846c6", "2c714c80-4f83-4e7d-beed-6ceed76c8d18", "c407faaf-6fd5-4e32-bc32-002e39a8d89e", faker.last_name(), faker.paragraph(), faker.image_url(), faker.words(), "approved", True, False, False, faker.date_time(), faker.date_time()),
+
+        ("8b3fa826-d998-48dc-b581-4f4e68d69fd2", "f2f21290-55c1-48f9-9dd8-bd68f4ec145a", "74745f05-fb8b-4217-a3c8-d00aa72d415d", faker.last_name(), faker.paragraph(), faker.image_url(), faker.words(), "approved", True, False, False, faker.date_time(), faker.date_time()),
+        ("5cd84c45-879a-426a-a912-f595f52fbd06", "f2f21290-55c1-48f9-9dd8-bd68f4ec145a", "74745f05-fb8b-4217-a3c8-d00aa72d415d", faker.last_name(), faker.paragraph(), faker.image_url(), faker.words(), "approved", True, False, False, faker.date_time(), faker.date_time()),
+    ]
+    cursor = db.cursor()
+    sql_query = "INSERT INTO designs (id, collection_id, theme_id, title, description, image_path, tags, status, to_be_published, exclusive_usage, limited_personalizables, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
+    cursor.executemany(sql_query, design_data)
+    db.commit()
+
+
     # Close the cursor and database connection
     cursor.close()
     db.close()
-
 
 def insert_data(db):
     # Insert static data

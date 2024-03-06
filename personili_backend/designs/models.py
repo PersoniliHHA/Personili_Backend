@@ -4,6 +4,7 @@ from enum import Enum
 
 # Django
 from django.db import models
+from django.core import serializers
 
 # Models
 from accounts.models import AccountProfile
@@ -133,8 +134,6 @@ class Collection(TimeStampedModel):
     store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='collection', null=True, blank=True, default=None)
     workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE, related_name='collection', null=True, blank=True, default=None)
     
-    
-
     class Meta:
         db_table = 'collections'
 
@@ -292,7 +291,9 @@ class Design(TimeStampedModel):
         - previews
         """
         most_liked_designs = Design.objects.all().order_by('-design_likes').values('id', 'title', 'image_path', 'store__name', 'design_likes').all()[offset:limit]
-        pass
+        
+        # convert most_liked_designs to json
+        most_liked_designs = list(most_liked_designs)
 
     @classmethod
     def get_popular_designs_full(cls, 
