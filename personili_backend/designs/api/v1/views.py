@@ -76,7 +76,7 @@ class DesignsViewSet(viewsets.ModelViewSet):
         store = request.query_params.get('store', None)
         workshop = request.query_params.get('workshop', None)
         sponsored_stores = request.query_params.get('sponsored_stores', None)
-        sponsored_workshops = request.query_params.get('sponsored_workshops', None)
+        sponsored_organizations = request.query_params.get('sponsored_organizations', None)
         search_term = request.query_params.get('search_term', None)
         try :
 
@@ -86,7 +86,7 @@ class DesignsViewSet(viewsets.ModelViewSet):
                                                     store_id=store,
                                                     workshop_id=workshop,
                                                     sponsored_stores=sponsored_stores,
-                                                    sponsored_workshops=sponsored_workshops,
+                                                    sponsored_organizations=sponsored_organizations,
                                                     search_term=search_term)
         except Exception as e:
             logging.error(f"get_popular_designs_light action method error :{e.args} ")
