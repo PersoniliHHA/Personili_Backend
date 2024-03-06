@@ -664,7 +664,7 @@ def insert_static_data(db):
     # Stores
     # prepare the data : id, name, account_profile_id, created_at, updated_at
     store_data = [
-        ("3a1fe8af-e41a-4d47-9be5-419d52993206", faker.company(), "75f55f9a-e913-4082-8444-68d251b937ff", faker.date_time(), faker.date_time()),
+        ("3a1fe8af-e41a-4d47-9be5-419d52993206", faker.company(), "0734b5e3-fb69-4b55-a931-6a3f05a331f8", faker.date_time(), faker.date_time()),
         ("64a94a5f-0faa-4290-8903-28f1554e612c", faker.company(), "06cbd596-5520-430b-aa3c-2392af714b50", faker.date_time(), faker.date_time()),
         ("8bbafc9e-90e6-4ff6-9462-33d5303dc9ca", faker.company(), "e8651dce-3327-406a-9740-01cd2f6663ea", faker.date_time(), faker.date_time()),
         ("dcd2f5f7-a8dd-4f4c-8614-8cfd0c99dc4a", faker.company(), "2df77093-e107-44a0-a172-bc4735563954", faker.date_time(), faker.date_time()),
