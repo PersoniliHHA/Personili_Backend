@@ -103,6 +103,7 @@ class StoreProfile(TimeStampedModel):
     store_banner_path = models.CharField(max_length=255, null=True, blank=True)
     is_verified = models.BooleanField(default=False)
 
+
     class Meta:
         db_table = 'store_profiles'
 
@@ -249,7 +250,7 @@ class Design(TimeStampedModel):
         if sponsored_stores:
             q_objects.add(Q(collection__store__store_profile__type=StoreProfile.SPONSORED), Q.AND)
         if sponsored_workshops:
-            q_objects.add(Q(collection__workshop__organization_is_sponsored=True), Q.AND)
+            q_objects.add(Q(collection__workshop__organization__organization_profile_sponsored=True), Q.AND)
         # search for the search term in the title, the description, the tags of the design
         if search_term:
             q_objects.add(Q(title__icontains=search_term) | 
@@ -259,7 +260,7 @@ class Design(TimeStampedModel):
         popular_designs = (cls.objects.filter(status=cls.APPROVED)
                            .filter(q_objects)
                            .annotate(num_likes=models.Count('design_likes')) 
-                           .select_related('collection__store', 'collection__workshop', 'theme')
+                           .select_related('collection__store', 'collection__workshop','colleciton__workshop__organization', 'theme')
                            .prefetch_related('design_previews')
                            .order_by('-num_likes')[offset:offset+limit])
         result = []
