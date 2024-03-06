@@ -65,7 +65,7 @@ class DesignsViewSet(viewsets.ModelViewSet):
     ################################### GET APIS, PUBLIC #####################################
     
     ##### Get the designs based on criteria : theme, store, workshop, nb of likes, sponsored stores, sponsored workshops
-    @action(detail=False, methods=['GET'], url_path='v1/designs/', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    @action(detail=False, methods=['GET'], url_path='v1/designs', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def get_popular_designs_light(self, request):
         """
         Get a list of popular designs based on number of likes
@@ -79,17 +79,21 @@ class DesignsViewSet(viewsets.ModelViewSet):
         sponsored_stores = request.query_params.get('sponsored_stores', None)
         sponsored_workshops = request.query_params.get('sponsored_workshops', None)
         search_term = request.query_params.get('search_term', None)
+        try :
 
-        popular_designs = Design.get_designs_light(offset=0, 
-                                                   limit=20,
-                                                   theme_id=theme,
-                                                   store_id=store,
-                                                   workshop_id=workshop,
-                                                   popular=popular,
-                                                   sponsored_store=sponsored_stores,
-                                                   sponsored_workshop=sponsored_workshops,
-                                                   search_term=search_term)
-        
+            popular_designs = Design.get_designs_light(offset=0, 
+                                                    limit=20,
+                                                    theme_id=theme,
+                                                    store_id=store,
+                                                    workshop_id=workshop,
+                                                    popular=popular,
+                                                    sponsored_store=sponsored_stores,
+                                                    sponsored_workshop=sponsored_workshops,
+                                                    search_term=search_term)
+        except Exception as e:
+            logging.error(f"get_popular_designs_light action method error :{e.__str__} ")
+            return Response({"error": "UNKNOWN INTERNAL ERROR"}, status=400)
+            
         response = Response(popular_designs, status=status.HTTP_200_OK)
 
         return response
