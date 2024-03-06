@@ -66,7 +66,7 @@ class DesignsViewSet(viewsets.ModelViewSet):
     
     ##### Get the designs based on criteria : theme, store, workshop, nb of likes, sponsored stores, sponsored workshops
     @action(detail=False, methods=['GET'], url_path='v1/designs', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
-    def get_popular_designs_light(self, request):
+    def get_designs_light(self, request):
         """
         Get a list of popular designs based on number of likes
         criteria for getting designs : theme, store(sponsored,), workshop, popular
@@ -90,7 +90,7 @@ class DesignsViewSet(viewsets.ModelViewSet):
                                                     sponsored_workshop=sponsored_workshops,
                                                     search_term=search_term)
         except Exception as e:
-            logging.error(f"get_popular_designs_light action method error :{e.__str__} ")
+            logging.error(f"get_popular_designs_light action method error :{e.args} ")
             return Response({"error": "UNKNOWN INTERNAL ERROR"}, status=400)
             
         response = Response(popular_designs, status=status.HTTP_200_OK)
