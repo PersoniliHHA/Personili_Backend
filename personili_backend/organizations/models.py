@@ -77,7 +77,6 @@ class OrganizationProfile(TimeStampedModel):
     linkedin_link = models.URLField(null=True, blank=True)
     youtube_link = models.URLField(null=True, blank=True)
     
-    is_sponsored = models.BooleanField(default=False)
     
     class Meta:
         db_table = 'organization_profiles'
