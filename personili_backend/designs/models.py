@@ -283,6 +283,8 @@ class Design(TimeStampedModel):
                 'design_previews': list(design.design_previews.values('id', 'image_path'))
             }
             result.append(design_data)
+        
+        return result
 
     
         
