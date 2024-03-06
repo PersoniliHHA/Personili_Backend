@@ -76,6 +76,7 @@ class DesignsViewSet(viewsets.ModelViewSet):
 
         return response
 
+    ##### Get the themes
     @action(detail=False, methods=['GET'], url_path='v1/designs/themes', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def get_themes(self, request):
         """
@@ -86,6 +87,7 @@ class DesignsViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     ###########################################################################################
+    
     ################################### GET APIS, PRIVATE #####################################
 
 
