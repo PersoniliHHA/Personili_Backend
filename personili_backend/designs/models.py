@@ -269,7 +269,7 @@ class Design(TimeStampedModel):
                 'store_sponsored': design.collection.store.storeprofile.is_sponsored if design.collection.store else None,
                 'workshop_name': design.collection.workshop.name if design.collection.workshop else None,
                 'organization_name': design.collection.workshop.organization.name if design.collection.workshop else None,
-                'organization_sponsored': design.collection.workshop.organization.orgprofile_set.first().is_sponsored if design.collection.workshop else None,
+                'organization_sponsored': design.collection.workshop.organization.orgprofile.is_sponsored if design.collection.workshop else None,
                 'num_likes': design.num_likes,
                 'design_previews': list(design.design_previews.values('id', 'image_path'))
             }
