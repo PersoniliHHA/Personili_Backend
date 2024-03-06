@@ -278,7 +278,7 @@ class Design(TimeStampedModel):
                 'image_path': design.image_path,
                 'store_name': design.collection.store.name if design.collection.store else None,
                 'workshop_name': design.collection.workshop.name if design.collection.workshop else None,
-                'organization_name': design.collection.store.organization.name if design.collection.store else design.collection.workshop.organization.name,
+                'organization_name': design.collection.workshop.organization.name if design.collection.workshop else None,
                 'num_likes': design.num_likes,
                 'design_previews': list(design.design_previews.values('id', 'image_path'))
             }
