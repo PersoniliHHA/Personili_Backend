@@ -86,8 +86,8 @@ class DesignsViewSet(viewsets.ModelViewSet):
                                                     theme_id=theme,
                                                     store_id=store,
                                                     workshop_id=workshop,
-                                                    sponsored_store=sponsored_stores,
-                                                    sponsored_workshop=sponsored_workshops,
+                                                    sponsored_stores=sponsored_stores,
+                                                    sponsored_workshops=sponsored_workshops,
                                                     search_term=search_term)
         except Exception as e:
             logging.error(f"get_popular_designs_light action method error :{e.args} ")
