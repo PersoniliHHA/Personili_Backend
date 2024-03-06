@@ -734,6 +734,9 @@ def insert_static_data(db):
     cursor.executemany(sql_query, design_data)
     db.commit()
 
+    # Design likes
+    # prepare data : id, design_id, account_profile_id,
+
 
     # Close the cursor and database connection
     cursor.close()

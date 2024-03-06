@@ -50,7 +50,7 @@ class DesignsViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_user_profile(self):
-        user_profile = get_object_or_404(UserProfile, user=self.request.user)
+        user_profile = get_object_or_404(AccountProfile, user=self.request.user)
         return user_profile
 
     def get_serializer_class(self):
@@ -61,7 +61,7 @@ class DesignsViewSet(viewsets.ModelViewSet):
 
         return DesignSerializerBase
 
-    @action(detail=False, methods=['GET'], url_path='get-all-designs-by-criteria-light', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    @action(detail=False, methods=['GET'], url_path='v1/designs/popular', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def get_all_designs_sorted_by_criteria_light(self, request):
         """
         Get a list of designs that includes : the id and title of the design,
@@ -69,7 +69,10 @@ class DesignsViewSet(viewsets.ModelViewSet):
         the design image.
         Perform a join between the four tables, theme, store, store profile, design and collection
         """
-        pass
+        popular_designs = Design.get_popular_designs_light(offset=0, limit=10)
+        response = Response(popular_designs, status=status.HTTP_200_OK)
+
+        return response
 
     @action(detail=False, methods=['POST'], url_path='v1/add-new-design-for-designer', permission_classes=[permissions.IsAuthenticated])
     def get_design_by_id(self, pk):
@@ -81,7 +84,7 @@ class DesignsViewSet(viewsets.ModelViewSet):
         Get all designs by store
         """
         designs = Design.objects.filter(store=pk)
-        serializer = D(designs, many=True)
+        serializer = Design(designs, many=True)
         return Response(serializer.data)
 
     @action(detail=False, methods=['GET'])

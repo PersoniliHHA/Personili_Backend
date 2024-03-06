@@ -224,77 +224,68 @@ class Design(TimeStampedModel):
     
 
     @classmethod
-    def create_new_design(cls, account_profile,
-                               serializer,
-                               to_be_published=True):
+    def get_popular_designs_light(cls, limit=10, offset=0):
         """
-        This method creates a new design:
-        - First it creates the initial design, then store the image in the S3 bucket, then it creates the designed personalizable
-        """
-       
-        # Create the design
-        design = Design(
-            title=serializer.validated_data.get('title'),
-            description=serializer.validated_data.get('description'),
-            theme=Theme.objects.get(id=serializer.validated_data.get('theme')),
-            collection=Collection.objects.get(pk=serializer.validated_data.get('collection')),
-            tags=serializer.validated_data.get('tags'),
-            to_be_published=to_be_published,
-        )
-      
-        # Store the image path in the S3 bucket
-        image = serializer.validated_data.get('image')
-        placeholders = {
-            "designer_id": str(account_profile.user.id),
-            "designer_email": account_profile.user.email,
-            "collection_id": serializer.validated_data.get('collection'),
-            "collection_title": Collection.objects.get(id=serializer.validated_data.get('collection')).title,
-            "design_id": str(design.id),
-            "design_title": serializer.validated_data.get('title')
-        }
-        image_path = DESIGNER_UPLOADED_IMAGES_PATH_TEMPLATES.get("uploaded_designs").format(**placeholders)
-        presigned_image_url = store_image_in_s3(image, image_path)
-
-        design.image_path = image_path
-        design.save()
-        
-        return design.id, presigned_image_url
-
-    @classmethod
-    def get_designs_by_theme(cls):
-        pass
-
-    @classmethod
-    def get_designs_by_collection(cls):
-        pass 
-
-    def get_products_where_this_design_is_used(self):
-        """
-        This method returns a list of products where this design is used
-        - We need to loop through the designed zones of each designed personalizable and 
-        """
-        pass
-    
-    @classmethod
-    def get_popular_designs_light(cls, 
-                            limit=10, 
-                            offset=0):
-        """
-        This method returns the most popular designs
+        This method returns the most popular designs (the ones that were approved)
         compute the number of likes per design and return the top "limit" designs
         for each design we get :
         - id
         - title
         - image_path
-        - store name or workshop name
+        - store name or workshop name and its organization name depending on which one is not null
         - number of likes
-        - previews
+        - design preview objects
         """
-        most_liked_designs = Design.objects.all().order_by('-design_likes').values('id', 'title', 'image_path', 'store__name', 'design_likes').all()[offset:limit]
-        
-        # convert most_liked_designs to json
-        most_liked_designs = list(most_liked_designs)
+        popular_designs = cls.objects.filter(status=cls.APPROVED).annotate(num_likes=models.Count('design_likes')).order_by('-num_likes')[offset:offset+limit]
+        result = []
+        for design in popular_designs:
+            design_data = {
+                'id': design.id,
+                'title': design.title,
+                'image_path': design.image_path,
+                'store_name': design.collection.store.name if design.collection.store else None,
+                'workshop_name': design.collection.workshop.name if design.collection.workshop else None,
+                'organization_name': design.collection.store.organization.name if design.collection.store else design.collection.workshop.organization.name,
+                'num_likes': design.num_likes,
+                'design_previews': list(design.design_previews.values('id', 'image_path'))
+            }
+            result.append(design_data)
+        return result
+    
+    @classmethod
+    def optimized_get_popular_designs_light(cls, limit=10, offset=0):
+        """
+        This method returns the most popular designs (the ones that were approved)
+        compute the number of likes per design and return the top "limit" designs
+        for each design we get :
+        - id
+        - title
+        - image_path
+        - store name or workshop name and its organization name depending on which one is not null
+        - number of likes
+        - design preview objects
+        """
+        popular_designs = (cls.objects.filter(status=cls.APPROVED)
+                   .annotate(num_likes=models.Count('design_likes'))
+                   .select_related('collection__store', 'collection__workshop')
+                   .prefetch_related('design_previews')
+                   .order_by('-num_likes')[offset:offset+limit])
+        result = []
+        for design in popular_designs:
+            design_data = {
+                'id': design.id,
+                'title': design.title,
+                'image_path': design.image_path,
+                'store_name': design.collection.store.name if design.collection.store else None,
+                'workshop_name': design.collection.workshop.name if design.collection.workshop else None,
+                'organization_name': design.collection.store.organization.name if design.collection.store else design.collection.workshop.organization.name,
+                'num_likes': design.num_likes,
+                'design_previews': list(design.design_previews.values('id', 'image_path'))
+            }
+            result.append(design_data)
 
+    
+        
     @classmethod
     def get_popular_designs_full(cls, 
                             limit=10, 
