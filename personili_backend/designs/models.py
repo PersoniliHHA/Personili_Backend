@@ -249,9 +249,9 @@ class Design(TimeStampedModel):
             q_objects.add(Q(collection__workshop_id=workshop_id), Q.AND)
         if sponsored_stores and sponsored_organizations:
             q_objects.add(Q(collection__store__store_profile__type=StoreProfile.SPONSORED) |
-                          Q(collection__workshop__organization__orgprofile_set_sponsored=True), Q.AND)
+                          Q(collection__workshop__organization__orgprofile_sponsored=True), Q.AND)
         if sponsored_organizations and not sponsored_stores:
-            q_objects.add(Q(collection__workshop__organization__orgprofile_set_sponsored=True), Q.AND)
+            q_objects.add(Q(collection__workshop__organization__orgprofile_sponsored=True), Q.AND)
         if sponsored_stores and not sponsored_organizations:
             q_objects.add(Q(collection__store__store_profile__type=StoreProfile.SPONSORED), Q.AND)
 
