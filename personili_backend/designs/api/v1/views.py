@@ -86,7 +86,6 @@ class DesignsViewSet(viewsets.ModelViewSet):
                                                     theme_id=theme,
                                                     store_id=store,
                                                     workshop_id=workshop,
-                                                    popular=popular,
                                                     sponsored_store=sponsored_stores,
                                                     sponsored_workshop=sponsored_workshops,
                                                     search_term=search_term)
