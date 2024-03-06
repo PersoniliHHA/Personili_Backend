@@ -648,6 +648,12 @@ def insert_static_data(db):
 
 
         # pillow 2 : white and silk and medium
+        # variant value and material: silk
+        ("f8b6e4b7-5e0f-4f8f-8c1b-5a3f5a0c6e3a", "8add44a1-fa11-42b3-9929-a1335fbcb657", "c7b0798b-6785-4a55-94f6-7b20526df760", "c12018bc-e01b-4a9c-9bb0-2231abf8b2fc", faker.date_time(), faker.date_time()),
+        # variant value and color : white
+        ("7e6b8a3c-3d4e-4c4e-8f9d-5e0b4e7e6b8a", "8add44a1-fa11-42b3-9929-a1335fbcb657", "12acedee-9fe1-4397-a36c-e51235322830", "de3ec9d6-0f21-4981-a8a2-cc8e3f626df9", faker.date_time(), faker.date_time()),
+        # variant value and size : medium
+        ("f8b6e4b7-5e0f-4f8f-8c1b-5a3f5a0c6e3a", "8add44a1-fa11-42b3-9929-a1335fbcb657", "39e772b7-df9f-44e2-9276-1190ce4530ec", "ecef3173-9c2b-4743-94f4-8a02f7aec69b", faker.date_time(), faker.date_time()),
 
     ]
     cursor = db.cursor()

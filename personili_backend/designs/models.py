@@ -9,6 +9,7 @@ from django.db import models
 from accounts.models import AccountProfile
 from accounts.models import TimeStampedModel
 from personalizables.models import PersonalizableVariant
+from organizations.models import Workshop
 
 # Utils
 from utils.constants import DESIGNER_UPLOADED_IMAGES_PATH_TEMPLATES
@@ -33,7 +34,7 @@ class Store(TimeStampedModel):
         db_table = 'stores'
 
     def __str__(self):
-        return self.account_profile.user.email + " - " + self.name
+        return self.account_profile.account.email + " - " + self.name
     
     def get_full_store_profile(self):
         """
@@ -109,7 +110,7 @@ class StoreProfile(TimeStampedModel):
         db_table = 'store_profiles'
 
     def __str__(self):
-        return self.store.user_profile.user.email + " - " + self.store.name
+        return self.store.account_profile.user.email + " - " + self.store.name
     
     def get_store_products(self):
         """
@@ -123,18 +124,27 @@ class StoreProfile(TimeStampedModel):
 #########################################
 class Collection(TimeStampedModel):
     """
-    Every collection belongs to one and only one store, it has a title, a description, a list of tags
+    Every collection can be either linked to a store or a workshop
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    name = models.CharField(max_length=255, default="My Collection")
+    
+    # only one of the two fields should be filled
     store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='collection')
-    title = models.CharField(max_length=255, default="My Collection")
-    description = models.TextField(null=True, blank=True)
+    workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE, related_name='collection', null=True, blank=True)
+    
+    
 
     class Meta:
         db_table = 'collections'
 
+    def save(self, *args, **kwargs):
+        if self.store and self.workshop:
+            raise ValueError('A collection can only be linked to a store or a workshop, not both')
+        super(Collection, self).save(*args, **kwargs)
+
     def __str__(self):
-        return str(self.id) + ' - ' + self.title
+        return str(self.id) + ' - ' + self.name
 
     def get_designs(self):
         """Get the designs related to this collection, the design table has a foreign key to collection"""
@@ -265,7 +275,34 @@ class Design(TimeStampedModel):
         - We need to loop through the designed zones of each designed personalizable and 
         """
         pass
-        
+    
+    @classmethod
+    def get_popular_designs_light(cls, 
+                            limit=10, 
+                            offset=0):
+        """
+        This method returns the most popular designs
+        compute the number of likes per design and return the top "limit" designs
+        for each design we get :
+        - id
+        - title
+        - image_path
+        - store name or workshop name
+        - number of likes
+        - previews
+        """
+        most_liked_designs = Design.objects.all().order_by('-design_likes').values('id', 'title', 'image_path', 'store__name', 'design_likes').all()[offset:limit]
+        pass
+
+    @classmethod
+    def get_popular_designs_full(cls, 
+                            limit=10, 
+                            offset=0):
+        """
+        This method returns the most popular designs, we can use the number of likes as a metric
+        """
+        pass
+
 
 #########################################
 #        Design likes model             #
@@ -284,3 +321,22 @@ class DesignLikes(TimeStampedModel):
 
     def __str__(self):
         return self.design.title + " - " + self.account_profile.id
+    
+
+
+#########################################
+#        Design previews model          #
+#########################################
+class DesignPreview(TimeStampedModel):
+    """
+    This model is used to store the previews of a design
+    """
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    design = models.ForeignKey(Design, on_delete=models.CASCADE, related_name='design_previews')
+    image_path = models.CharField(max_length=255, null=True, blank=True)
+
+    class Meta:
+        db_table = 'design_previews'
+
+    def __str__(self):
+        return self.design.title + " - " + str(self.id)

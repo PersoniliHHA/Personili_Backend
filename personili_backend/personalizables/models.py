@@ -472,7 +472,7 @@ class DesignedPersonalizableVariantPreview(TimeStampedModel):
         return str(self.designed_personalizable_variant.id) + " - " + str(self.id)
 
 
-########################################
+#########################################
 #             Product model             #
 #########################################
 class Product(TimeStampedModel):
@@ -543,9 +543,48 @@ class Product(TimeStampedModel):
 
         return response
 
+    @classmethod
+    def get_highest_selling_products(cls,offset=0,
+                                        limit=10, 
+                                        categories_ids: list[str]=None,
+                                        personalization_type_ids: list[str]=None):
+        """
+        Get a list of all the highest selling products, the information returned are the following :
+        - product id
+        - product name and price
+        - product preview and related designs
+        - product category
+        - product designed personalizable variant id
+        - product personalizable variant id and stock quantity
+        - workshop or designer name who created the design
+        """
+        highest_selling_products = (cls.objects
+                            .select_related('category', 'designed_personalizable_variant')
+                            .prefetch_related('designed_personalizable_variant__designedpersonalizablevariantpreview_set',
+                                              'designed_personalizable_variant__designed_personalizable_zone')
+                            .annotate(total_sales=Count('orderitem'))
+                            .order_by('-total_sales')[offset:limit])
     
     def get_stores_names_and_full_profiles(self):
         """
         This method should return the name and full profile of the store or the stores that the designs used in this product belong to, this can be obtained through the personalizable zones that are related to the designed personalizable 
         """
         pass
+
+
+#########################################
+#        Product previews               #
+#########################################
+class ProductPreview(TimeStampedModel):
+    """
+    A product preview is linked to a product, it has an id and an image path
+    """
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_previews')
+    image_path = models.CharField(max_length=255, null=True, blank=True)
+
+    class Meta:
+        db_table = 'product_previews'
+
+    def __str__(self):
+        return self.product.name + " - " + str(self.id)
