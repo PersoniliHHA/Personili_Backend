@@ -701,7 +701,7 @@ def insert_static_data(db):
     
     ]
     cursor = db.cursor()
-    sql_query = "INSERT INTO store_collections (id, name, store_id, workshop_id, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
+    sql_query = "INSERT INTO collections (id, name, store_id, workshop_id, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
     cursor.executemany(sql_query, store_collection_data)
     db.commit()
 
