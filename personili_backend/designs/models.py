@@ -82,26 +82,15 @@ class StoreProfile(TimeStampedModel):
     - biography
     - store_logo_path
     - store_banner_path
-    - is_trending
-    - is_bestseller
-    - is_featured
-    - is_upcoming
     """
-    ## Type choices
-    PERSONAL = "personal"
-    SPONSORED = "Sponsored"
-    TYPE = [
-        (PERSONAL, 'Personal'),
-        (SPONSORED, 'Sponsored'),
-    ]
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     store = models.OneToOneField(Store, on_delete=models.CASCADE, related_name='store_profile')
-    type = models.CharField(max_length=255, choices=TYPE, default=PERSONAL)
     biography = models.TextField(null=True, blank=True)
     store_logo_path = models.CharField(max_length=255, null=True, blank=True)
     store_banner_path = models.CharField(max_length=255, null=True, blank=True)
     is_verified = models.BooleanField(default=False)
+    is_sponsored = models.BooleanField(default=False)
 
 
     class Meta:
@@ -248,13 +237,13 @@ class Design(TimeStampedModel):
         if workshop_id:
             q_objects.add(Q(collection__workshop_id=workshop_id), Q.AND)
         if sponsored_stores and sponsored_organizations:
-            q_objects.add(Q(collection__store__store_profile__type=StoreProfile.SPONSORED) |
-                          Q(collection__workshop__organization__orgprofile__sponsored=True), Q.AND)
+            q_objects.add(Q(collection__store__store_profile__is_sponsored=True) |
+                          Q(collection__workshop__organization__orgprofile__is_sponsored=True), Q.AND)
         else:
             if sponsored_organizations and not sponsored_stores:
-                q_objects.add(Q(collection__workshop__organization__orgprofile__sponsored=True), Q.AND)
+                q_objects.add(Q(collection__workshop__organization__orgprofile__is_sponsored=True), Q.AND)
             if sponsored_stores and not sponsored_organizations:
-                q_objects.add(Q(collection__store__store_profile__type=StoreProfile.SPONSORED), Q.AND)
+                q_objects.add(Q(collection__store__store_profile__is_sponsored=True), Q.AND)
 
         # search for the search term in the title, the description, the tags of the design
         if search_term:
@@ -276,10 +265,11 @@ class Design(TimeStampedModel):
                 'theme': design.theme.name,
                 'image_path': design.image_path,
                 'store_name': design.collection.store.name if design.collection.store else None,
-                'store_status': design.collection.store.store_profile.type if design.collection.store else None,
+                'store_verified': design.collection.store.store_profile.is_verified if design.collection.store else None,
+                'store_sponsored': design.collection.store.store_profile.sponsored if design.collection.store else None,
                 'workshop_name': design.collection.workshop.name if design.collection.workshop else None,
                 'organization_name': design.collection.workshop.organization.name if design.collection.workshop else None,
-                'organization_status': design.collection.workshop.organization.orgprofile.type if design.collection.workshop else None,
+                'organization_sponsored': design.collection.workshop.organization.orgprofile.is_sponsored if design.collection.workshop else None,
                 'num_likes': design.num_likes,
                 'design_previews': list(design.design_previews.values('id', 'image_path'))
             }
