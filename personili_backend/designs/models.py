@@ -130,8 +130,8 @@ class Collection(TimeStampedModel):
     name = models.CharField(max_length=255, default="My Collection")
     
     # only one of the two fields should be filled
-    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='collection')
-    workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE, related_name='collection', null=True, blank=True)
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='collection', null=True, blank=True, default=None)
+    workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE, related_name='collection', null=True, blank=True, default=None)
     
     
 
