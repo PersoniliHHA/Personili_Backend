@@ -661,7 +661,33 @@ def insert_static_data(db):
     cursor.executemany(sql_query, personalizable_variant_value_data)
     db.commit()
 
+    # Stores
+    # prepare the data : id, name, account_profile_id, created_at, updated_at
+    store_data = [
+        ("3a1fe8af-e41a-4d47-9be5-419d52993206", faker.company(), "75f55f9a-e913-4082-8444-68d251b937ff", faker.date_time(), faker.date_time()),
+        ("64a94a5f-0faa-4290-8903-28f1554e612c", faker.company(), "06cbd596-5520-430b-aa3c-2392af714b50", faker.date_time(), faker.date_time()),
+        ("8bbafc9e-90e6-4ff6-9462-33d5303dc9ca", faker.company(), "e8651dce-3327-406a-9740-01cd2f6663ea", faker.date_time(), faker.date_time()),
+        ("dcd2f5f7-a8dd-4f4c-8614-8cfd0c99dc4a", faker.company(), "2df77093-e107-44a0-a172-bc4735563954", faker.date_time(), faker.date_time()),
+    ]
+    cursor = db.cursor()
+    sql_query = "INSERT INTO stores (id, name, account_profile_id, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
+    cursor.executemany(sql_query, store_data)
+    db.commit()
 
+    # Store profiles
+    # prepare the data : id, store_id, type(verified or personal or sponosored), biography, store_logo_path, store_banner_path, is_trending, is_bestseller, is_featured, is_upcoming, created_at, updated_at
+    store_profile_data = [
+        ("36fde06d-0c99-4cfe-8dcc-18ba8da85a77", "3a1fe8af-e41a-4d47-9be5-419d52993206", "verified", faker.paragraph(), faker.image_url(), faker.image_url(), False, True, False, False, faker.date_time(), faker.date_time()),
+        ("436ddae4-2323-403b-bcf9-28a026cb187f", "64a94a5f-0faa-4290-8903-28f1554e612c", "personal", faker.paragraph(), faker.image_url(), faker.image_url(), False, True, False, False, faker.date_time(), faker.date_time()),
+        ("fd0e8d11-ebc8-4c24-b96c-2ea290ccbdd2", "8bbafc9e-90e6-4ff6-9462-33d5303dc9ca", "sponsored", faker.paragraph(), faker.image_url(), faker.image_url(), True, False, True, False, faker.date_time(), faker.date_time()),
+        ("d43ecf4d-e6ad-4640-a9b9-ac5821cde9a9", "dcd2f5f7-a8dd-4f4c-8614-8cfd0c99dc4a", "verified", faker.paragraph(), faker.image_url(), faker.image_url(), True, True, True, False, faker.date_time(), faker.date_time()),
+    ]
+    cursor = db.cursor()
+    sql_query = "INSERT INTO store_profiles (id, store_id, type, biography, store_logo_path, store_banner_path, is_trending, is_bestseller, is_featured, is_upcoming, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
+    cursor.executemany(sql_query, store_profile_data)
+    db.commit()
+
+    
     # Close the cursor and database connection
     cursor.close()
     db.close()
