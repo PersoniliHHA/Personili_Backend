@@ -264,7 +264,7 @@ class Design(TimeStampedModel):
         popular_designs = (cls.objects.filter(status=cls.APPROVED)
                            .filter(q_objects)
                            .annotate(num_likes=models.Count('design_likes')) 
-                           .select_related('collection__store', 'collection__workshop_organization', 'theme')
+                           .select_related('collection__store', 'collection__workshop__organization', 'theme')
                            .prefetch_related('design_previews')
                            .order_by('-num_likes')[offset:offset+limit])
         result = []
