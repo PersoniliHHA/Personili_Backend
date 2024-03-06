@@ -85,7 +85,7 @@ class StoreProfile(TimeStampedModel):
     """
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store_profile')
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='storeprofile')
     biography = models.TextField(null=True, blank=True)
     store_logo_path = models.CharField(max_length=255, null=True, blank=True)
     store_banner_path = models.CharField(max_length=255, null=True, blank=True)
@@ -237,13 +237,13 @@ class Design(TimeStampedModel):
         if workshop_id:
             q_objects.add(Q(collection__workshop_id=workshop_id), Q.AND)
         if sponsored_stores and sponsored_organizations:
-            q_objects.add(Q(collection__store__store_profile__is_sponsored=True) |
+            q_objects.add(Q(collection__store__storeprofile__is_sponsored=True) |
                           Q(collection__workshop__organization__orgprofile__is_sponsored=True), Q.AND)
         else:
             if sponsored_organizations and not sponsored_stores:
                 q_objects.add(Q(collection__workshop__organization__orgprofile__is_sponsored=True), Q.AND)
             if sponsored_stores and not sponsored_organizations:
-                q_objects.add(Q(collection__store__store_profile__is_sponsored=True), Q.AND)
+                q_objects.add(Q(collection__store__storeprofile__is_sponsored=True), Q.AND)
 
         # search for the search term in the title, the description, the tags of the design
         if search_term:
@@ -251,7 +251,7 @@ class Design(TimeStampedModel):
                           Q(description__icontains=search_term) | 
                           Q(tags__icontains=search_term), Q.AND)
             
-        popular_designs = (cls.objects.filter(status=cls.APPROVED)
+        popular_designs = (cls.objects.filter(status=cls.APPROVED, to_be_published=True)
                            .filter(q_objects)
                            .annotate(num_likes=models.Count('design_likes')) 
                            .select_related('collection__store', 'collection__workshop__organization', 'theme')
