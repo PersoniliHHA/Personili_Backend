@@ -120,8 +120,8 @@ class Product(TimeStampedModel):
                 "product_organization_name": product.organization.name,
                 "product_price": product.price,
                 "product_preview": [preview.image_path for preview in product.productpreview.all()],
-                "product_theme_ids": [zone.design.theme.id for zone in product.designed_personalizable_variant.designed_personalizable_zone.all()] if theme_id else None,
-                "product_designs": [zone.design.id for zone in product.designed_personalizable_variant.designed_personalizable_zone.all()] if design_id else None
+                "product_theme_ids": [zone.design.theme.id for zone in product.product_designed_personalizable_variant.designed_personalizable_variant.designed_personalizable_zone.all()] if design_id else None,
+                "product_designs": [zone.design.id for zone in product.product_designed_personalizable_variant.designed_personalizable_variant.designed_personalizable_zone.all()] if design_id else None
             }
             # Remove the null key values
             product_data = {k: v for k, v in product_data.items() if v is not None}
