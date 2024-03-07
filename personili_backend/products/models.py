@@ -106,7 +106,7 @@ class Product(TimeStampedModel):
                     .order_by('-num_sales','-num_reviews', '-avg_rating'))
         
         # Now prepare the json response
-        products_list = []
+        products = {"products": []}
         for product in products:
             product = {
                 "product_id": product.id,
@@ -120,8 +120,11 @@ class Product(TimeStampedModel):
                 "product_organization_id": product.organization.id,
                 "product_organization_name": product.organization.name,
                 "product_preview": [preview.image_path for preview in product.productpreview.all()]
-
             }
+            products["products_list"].append(product)
+        
+        products["count"] = len(products["products_list"])
+
                 
 
 class ProductPreview(TimeStampedModel):

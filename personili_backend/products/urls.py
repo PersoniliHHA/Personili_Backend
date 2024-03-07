@@ -4,9 +4,10 @@ from rest_framework.routers import DefaultRouter
 # django imports
 from django.urls import path, include
 
-from personalizables.api.v1.views import CategoryViewSet, PersonalizationTypeViewSet, PersonalizableViewSet
+from products.api.v1.views import ProductViewSet
 
 router = DefaultRouter()
+router.register(r'products', ProductViewSet, basename='products')
 
 urlpatterns = [
  path('', include(router.urls)),

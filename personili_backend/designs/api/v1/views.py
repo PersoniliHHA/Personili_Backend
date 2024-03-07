@@ -68,8 +68,13 @@ class DesignsViewSet(viewsets.ViewSet):
     @action(detail=False, methods=['GET'], url_path='v1/designs', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def get_designs_light(self, request):
         """
-        Get a list of popular designs based on number of likes
-        criteria for getting designs : theme, store(sponsored,), workshop, popular
+        Get the designs based on different criterias : 
+        - theme
+        - store
+        - workshop
+        - sponsored stores
+        - sponsored organizations
+        - search term
         """
         # Get the query parameters from the request
         theme = request.query_params.get('theme', None)
