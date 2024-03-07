@@ -18,51 +18,6 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="Product",
-            fields=[
-                ("created_at", models.DateTimeField(auto_now_add=True)),
-                ("updated_at", models.DateTimeField(auto_now=True)),
-                (
-                    "id",
-                    models.UUIDField(
-                        default=uuid.uuid4,
-                        editable=False,
-                        primary_key=True,
-                        serialize=False,
-                    ),
-                ),
-                ("self_made", models.BooleanField(default=False)),
-                ("title", models.CharField(max_length=255)),
-                ("description", models.TextField(max_length=1000)),
-                ("price", models.DecimalField(decimal_places=2, max_digits=10)),
-                (
-                    "category",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="personalizables.category",
-                    ),
-                ),
-                (
-                    "organization",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="organizations.organization",
-                    ),
-                ),
-                (
-                    "personalization_method",
-                    models.ForeignKey(
-                        null=True,
-                        on_delete=django.db.models.deletion.CASCADE,
-                        to="personalizables.personalizationmethod",
-                    ),
-                ),
-            ],
-            options={
-                "db_table": "products",
-            },
-        ),
-        migrations.CreateModel(
             name="Event",
             fields=[
                 ("created_at", models.DateTimeField(auto_now_add=True)),
