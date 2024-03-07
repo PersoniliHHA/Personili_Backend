@@ -156,8 +156,8 @@ class ProductDesignedPersonalizableVariant(TimeStampedModel):
     This table is a junction table between the product and the designed personalizable variant tables
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    designed_personalizable_variant = models.ForeignKey(DesignedPersonalizableVariant, on_delete=models.CASCADE, related_name='productdesignedpersonalizablevariant')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='productdesignedpersonalizablevariant')
+    designed_personalizable_variant = models.ForeignKey(DesignedPersonalizableVariant, on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'product_designed_personalizable_variants'
