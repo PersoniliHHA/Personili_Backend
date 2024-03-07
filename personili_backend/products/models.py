@@ -90,10 +90,10 @@ class Product(TimeStampedModel):
                         .select_related('personalization_method'))
         if theme_id:
             products = (products.filter(productdesignedpersonalizablevariant__designed_personalizable_variant__designed_personalizable_zone__design__theme_id=theme_id)
-                        .prefetch_related('designed_personalizable_variant__designed_personalizable_zone__design__theme'))
+                        .prefetch_related('productdesignedpersonalizablevariant__designed_personalizable_variant__designed_personalizable_zone__design__theme'))
         if design_id:
             products = (products.filter(productdesignedpersonalizablevariant__designed_personalizable_variant__designed_personalizable_zone__design_id=design_id)
-                        .prefetch_related('product_designed_personalizable_variants__designed_personalizable_variant__designed_personalizable_zone__design'))
+                        .prefetch_related('productdesignedpersonalizablevariant__product_designed_personalizable_variants__designed_personalizable_variant__designed_personalizable_zone__design'))
         if sponsored_organization_ids:
             products = (products.filter(organization_id__in=sponsored_organization_ids)
                         .select_related('organization'))
