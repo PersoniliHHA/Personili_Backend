@@ -102,7 +102,7 @@ class Product(TimeStampedModel):
         products = (products.prefetch_related('productpreview', 'organization')
                     .annotate(num_reviews=Count('productreview'))
                     .annotate(avg_rating=Avg('productreview__rating'))
-                    .annotate(num_sales=Count('orderitem_set'))
+                    .annotate(num_sales=Count('orderitem'))
                     .order_by('-num_sales','-num_reviews', '-avg_rating'))
         
         # Now prepare the json response
