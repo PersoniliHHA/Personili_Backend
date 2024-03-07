@@ -255,14 +255,14 @@ class Design(TimeStampedModel):
                           Q(collection__store__name__icontains=search_term) | 
                           Q(collection__workshop__name__icontains=search_term), Q.AND)
             
-        popular_designs = (cls.objects.filter(status=cls.APPROVED, to_be_published=True)
+        designs = (cls.objects.filter(status=cls.APPROVED, to_be_published=True)
                            .filter(q_objects)
                            .annotate(num_likes=models.Count('design_likes')) 
                            .select_related('collection__store', 'collection__workshop__organization', 'theme')
                            .prefetch_related('design_previews')
                            .order_by('-num_likes')[offset:offset+limit])
-        result = []
-        for design in popular_designs:
+        result = {"designs_list":[]}
+        for design in designs:
             design_data = {
                 'design_id': design.id,
                 'design_title': design.title,
@@ -280,7 +280,9 @@ class Design(TimeStampedModel):
             }
             # remove None values from the dictionary
             design_data = {k: v for k, v in design_data.items() if v is not None}
-            result.append(design_data)
+            result['designs_list'].append(design_data)
+
+        result["count"] = designs.count()
         
         return result
     
