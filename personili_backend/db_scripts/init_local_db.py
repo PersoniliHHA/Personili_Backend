@@ -710,11 +710,14 @@ def insert_static_data(db):
     design_data = [
         ("e8be8bc6-4ae8-4264-9907-0fe4ca590018", "c41526d6-d0ae-456c-8cf5-0c549e4eac42", "14a70128-56f1-4881-a63d-e09636e812bd", faker.last_name(), faker.paragraph(), faker.image_url(), faker.words(), "approved", True, False, False, faker.date_time(), faker.date_time()),
         ("e00f0078-fc7e-41fc-a00d-1c8439387b0d", "c41526d6-d0ae-456c-8cf5-0c549e4eac42", "14a70128-56f1-4881-a63d-e09636e812bd", faker.last_name(), faker.paragraph(), faker.image_url(), faker.words(), "approved", True, False, False, faker.date_time(), faker.date_time()),
+        ("1030c335-8329-418e-ac7c-5e2eefec01b4", "c41526d6-d0ae-456c-8cf5-0c549e4eac42", "14a70128-56f1-4881-a63d-e09636e812bd", faker.last_name(), faker.paragraph(), faker.image_url(), faker.words(), "approved", True, False, False, faker.date_time(), faker.date_time()),
+        ("3ace0690-484e-41d8-a766-1546caab1eed", "c41526d6-d0ae-456c-8cf5-0c549e4eac42", "14a70128-56f1-4881-a63d-e09636e812bd", faker.last_name(), faker.paragraph(), faker.image_url(), faker.words(), "approved", True, False, False, faker.date_time(), faker.date_time()),
+        ("24c0323e-82ec-4b58-8979-db2dddeba166", "c41526d6-d0ae-456c-8cf5-0c549e4eac42", "14a70128-56f1-4881-a63d-e09636e812bd", faker.last_name(), faker.paragraph(), faker.image_url(), faker.words(), "approved", True, False, False, faker.date_time(), faker.date_time()),
         
-        ("0eac82cc-975e-485b-998b-08bc148befed", "5ff408e7-60b7-4ff5-b9a2-cc012f3ae65c", "c407faaf-6fd5-4e32-bc32-002e39a8d89e", faker.last_name(), faker.paragraph(), faker.image_url(), faker.words(), "pending", True, False, False, faker.date_time(), faker.date_time()),
+        ("0eac82cc-975e-485b-998b-08bc148befed", "5ff408e7-60b7-4ff5-b9a2-cc012f3ae65c", "c407faaf-6fd5-4e32-bc32-002e39a8d89e", faker.last_name(), faker.paragraph(), faker.image_url(), faker.words(), "rejected", True, False, False, faker.date_time(), faker.date_time()),
         ("16cda768-851e-448f-8676-c4f5610e4693", "5ff408e7-60b7-4ff5-b9a2-cc012f3ae65c", "b1f59f7d-8ad2-4e02-92de-d3f0d879b821", faker.last_name(), faker.paragraph(), faker.image_url(), faker.words(), "approved", True, False, False, faker.date_time(), faker.date_time()),
 
-        ("2ae3295f-f884-407a-91f1-8c070f1958d4", "ed215c51-ef3f-40a6-ba25-61969efefff2", "afff6767-ab17-48c7-b0a6-a84f6ded9ff5", faker.last_name(), faker.paragraph(), faker.image_url(), faker.words(), "rejected", True, False, False, faker.date_time(), faker.date_time()),
+        ("2ae3295f-f884-407a-91f1-8c070f1958d4", "ed215c51-ef3f-40a6-ba25-61969efefff2", "afff6767-ab17-48c7-b0a6-a84f6ded9ff5", faker.last_name(), faker.paragraph(), faker.image_url(), faker.words(), "approved", True, False, False, faker.date_time(), faker.date_time()),
         ("02a727c3-275f-431f-9865-6f984e3ccde1", "ed215c51-ef3f-40a6-ba25-61969efefff2", "240a1e1b-72b5-4a95-91e9-e223f6f9faa0", faker.last_name(), faker.paragraph(), faker.image_url(), faker.words(), "approved", True, False, False, faker.date_time(), faker.date_time()),
 
         ("ba3f4983-98bb-41c6-98f7-ce945ccd1f49", "456310ce-0414-42cd-aeaa-9d89f024fd00", "d5623fd9-b017-4ff7-9e15-2f228e22b7e2", faker.last_name(), faker.paragraph(), faker.image_url(), faker.words(), "approved", True, False, False, faker.date_time(), faker.date_time()),

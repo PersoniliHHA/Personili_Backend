@@ -7,7 +7,7 @@ from datetime import datetime
 # Model imports
 from accounts.models import AccountProfile, DeliveryAddress, PaymentMethod
 from accounts.models import TimeStampedModel
-from personalizables.models import Product 
+from products.models import Product
 
 
 

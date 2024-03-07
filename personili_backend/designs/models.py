@@ -113,7 +113,7 @@ class Collection(TimeStampedModel):
     """
     Every collection can be either linked to a store or a workshop
     """
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     name = models.CharField(max_length=255, default="My Collection")
     
     # only one of the two fields should be filled
@@ -253,8 +253,7 @@ class Design(TimeStampedModel):
                           Q(theme__name__icontains=search_term) | 
                           Q(theme__description__icontains=search_term) | 
                           Q(collection__store__name__icontains=search_term) | 
-                          Q(collection__workshop__name__icontains=search_term) | 
-                          Q(collection__workshop__organization__name__icontains=search_term), Q.AND)
+                          Q(collection__workshop__name__icontains=search_term), Q.AND)
             
         popular_designs = (cls.objects.filter(status=cls.APPROVED, to_be_published=True)
                            .filter(q_objects)

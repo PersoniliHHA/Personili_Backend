@@ -96,6 +96,7 @@ LOCAL_APPS = [
     "personalizables.apps.PersonalizablesConfig",
     "organizations.apps.OrganizationsConfig",
     "orders.apps.OrdersConfig",
+    "products.apps.ProductsConfig",
 
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

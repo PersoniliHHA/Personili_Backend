@@ -42,7 +42,7 @@ class PublicStoresViewSet_GetStores(viewsets.ModelViewSet):
 #  Designs ViewSet              #
 #                               #
 #################################
-class DesignsViewSet(viewsets.ModelViewSet):
+class DesignsViewSet(viewsets.ViewSet):
     """
     ViewSet for the Design class
     """
@@ -112,68 +112,6 @@ class DesignsViewSet(viewsets.ModelViewSet):
 
 
     ###########################################################################################
-    @action(detail=False, methods=['POST'], url_path='v1/add-new-design-for-designer', permission_classes=[permissions.IsAuthenticated])
-    def get_design_details(self, pk):
-        return get_object_or_404(Design, pk=pk)
-
-    @action(detail=False, methods=['GET'], url_path='get-all-designs-by-designer', permission_classes=[permissions.IsAuthenticated])
-    def get_designs_by_store(self, request, pk=None):
-        """
-        Get all designs by store
-        """
-        designs = Design.objects.filter(store=pk)
-        serializer = Design(designs, many=True)
-        return Response(serializer.data)
-
-    @action(detail=False, methods=['GET'])
-    def get_designs_by_collection(self, request, pk=None):
-        """
-        Get all designs by collection
-        """
-        designs = Design.objects.filter(collection=pk)
-        serializer = DesignSerializerBase(designs, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    @action(detail=False, methods=['GET'])
-    def get_designs_by_theme(self, request, pk=None):
-        """
-        Get all designs by theme
-        """
-        designs = Design.objects.filter(theme=pk, status="APPROVED", to_publish=True)
-        serializer = DesignSerializerBase(designs, many=True)
-        return Response(serializer.data)
-
-    @action(detail=True, methods=['POST'], url_path='add-new-design-for-designer', permission_classes=[permissions.IsAuthenticated])
-    def add_new_design_for_designer(self, request, pk=None):
-        """
-        Add a new design
-        """
-        # Get the store of the user
-        user_profile = self.get_user_profile()
-        
-        # Get the data from the request and validate the serializer
-        serializer = DesignPostSerializer(data=request.data)
-
-        if serializer.is_valid():
-            try :
-                # Create the design
-                design_id , image_presigned_url = Design.create_new_design(
-                    user_profile=user_profile,
-                    serializer=serializer,
-                )
-            except ClientError as e:
-                logging.error(f"add_new_design_for_designer action method error :{str(e)} ")
-                return Response({"error": "UNKNOWN INTERNAL ERROR"}, status=400)
-
-            except Exception as e:
-                # first log the error
-                logging.error(f"add_new_design_for_designer action method error :{e.__str__} ")
-                return Response({"error": "UNKNOWN INTERNAL ERROR"}, status=400)
-
-            return Response({"message": "Design created successfully", "design_id": design_id, "image_url": image_presigned_url}, status=201)
-
-        return Response({"error": "BAD REQUEST"}, status=400)
-
 
 class CollectionViewSet(viewsets.ModelViewSet):
     """
