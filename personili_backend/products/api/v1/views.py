@@ -26,7 +26,7 @@ class ProductViewSet(viewsets.ViewSet):
         user_profile = get_object_or_404(AccountProfile, user=self.request.user)
         return user_profile
     
-    @action(detail=False, methods=['GET'], url_path='v1/products', permission_classes=[permissions.AuthenticatedOrReadOnly])
+    @action(detail=False, methods=['GET'], url_path='v1/products', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def get_products_light(self, request):
         """
         This method is used to get the list of products with minimal information and based on criterias :
