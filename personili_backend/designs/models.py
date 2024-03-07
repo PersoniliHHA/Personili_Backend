@@ -245,11 +245,16 @@ class Design(TimeStampedModel):
             if sponsored_stores and not sponsored_organizations:
                 q_objects.add(Q(collection__store__storeprofile__is_sponsored=True), Q.AND)
 
-        # search for the search term in the title, the description, the tags of the design
+        # search for the search term in the title, the description, the tags of the design, also the theme name and description, the store name and organization name
         if search_term:
             q_objects.add(Q(title__icontains=search_term) | 
                           Q(description__icontains=search_term) | 
-                          Q(tags__icontains=search_term), Q.AND)
+                          Q(tags__icontains=search_term) | 
+                          Q(theme__name__icontains=search_term) | 
+                          Q(theme__description__icontains=search_term) | 
+                          Q(collection__store__name__icontains=search_term) | 
+                          Q(collection__workshop__name__icontains=search_term) | 
+                          Q(collection__workshop__organization__name__icontains=search_term), Q.AND)
             
         popular_designs = (cls.objects.filter(status=cls.APPROVED, to_be_published=True)
                            .filter(q_objects)
