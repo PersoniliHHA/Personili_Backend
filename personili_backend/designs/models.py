@@ -270,9 +270,11 @@ class Design(TimeStampedModel):
                 'workshop_name': design.collection.workshop.name if design.collection.workshop else None,
                 'organization_name': design.collection.workshop.organization.name if design.collection.workshop else None,
                 'organization_sponsored': design.collection.workshop.organization.orgprofile.is_sponsored if design.collection.workshop else None,
-                'num_likes': design.num_likes,
+                'nb_likes': design.num_likes,
                 'design_previews': list(design.design_previews.values('id', 'image_path'))
             }
+            # remove None values from the dictionary
+            design_data = {k: v for k, v in design_data.items() if v is not None}
             result.append(design_data)
         
         return result
