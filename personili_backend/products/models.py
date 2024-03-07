@@ -130,7 +130,7 @@ class Product(TimeStampedModel):
         
         
         
-        response["count"] = len(products["products_list"])
+        response["count"] = len(response["products_list"])
 
                 
 
