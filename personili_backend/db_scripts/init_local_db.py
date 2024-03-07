@@ -683,7 +683,7 @@ def insert_static_data(db):
         ("d43ecf4d-e6ad-4640-a9b9-ac5821cde9a9", "dcd2f5f7-a8dd-4f4c-8614-8cfd0c99dc4a",faker.paragraph(), faker.image_url(), faker.image_url(), True, True, faker.date_time(), faker.date_time()),
     ]
     cursor = db.cursor()
-    sql_query = "INSERT INTO store_profiles (id, store_id, type, biography, store_logo_path, store_banner_path, is_trending, is_bestseller, is_featured, is_upcoming, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
+    sql_query = "INSERT INTO store_profiles (id, store_id, biography, store_logo_path, store_banner_path, is_sponsored, is_verified, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
     cursor.executemany(sql_query, store_profile_data)
     db.commit()
 
