@@ -9,6 +9,7 @@ from accounts.models import Account
 from designs.models import Design, Collection, Store, Theme
 from organizations.models import Organization
 from personalizables.models import Category, Personalizable, PersonalizationMethod, DesignedPersonalizableVariant, DesignedPersonalizableZone
+from orders.models import Order, OrderItem
 
 from django.db.models import Count
 from django.forms.models import model_to_dict
@@ -76,8 +77,9 @@ class Product(TimeStampedModel):
         - theme of the designs used
         - title and description of the product
         """
-        # Start with the base query (only non self made products)
+        # Start with the base query (only non self made products) and their previews
         products = cls.objects.filter(self_made=False)
+
         # Add filters incrementally
         if category_id:
             products = products.filter(category_id=category_id)
@@ -97,22 +99,46 @@ class Product(TimeStampedModel):
             products = (products.filter(organization_id__in=sponsored_organization_ids)
                         .select_related('organization'))
         
-        
-        # Now get the products ordered by the number of sales and average rating
-        products = (products.annotate(total_sales=Count('orderitem'),
-                                      average_rating=Avg('productreview__rating'))
-                    .order_by('-total_sales')[offset:limit])
+        # Now get the products and their previews ordered by the number of sales and average rating
+        products = (products.prefetch_related('productpreview', 'organization')
+                    .annotate(num_reviews=Count('productreview'))
+                    .annotate(avg_rating=Avg('productreview__rating'))
+                    .annotate(num_sales=Count('orderitem'))
+                    .order_by('-num_sales','-num_reviews', '-avg_rating'))
         
         # Now prepare the json response
         products_list = []
         for product in products:
-            product_dict = model_to_dict(product)
-            product_dict['organization'] = model_to_dict(product.organization)
-            product_dict['average_rating'] = product.average_rating
-            product_dict['total_sales'] = product.total_sales
-            products_list.append(product_dict)
-        
-        
+            product = {
+                "product_id": product.id,
+                "product_title": product.title,
+                "product_description": product.description,
+                "product_rating": product.avg_rating,
+                "product_num_reviews": product.num_reviews,
+                "product_num_sales": product.num_sales,
+                "product_category_id": product.category.id,
+                "product_theme_ids": [zone.design.theme.id for zone in product.designed_personalizable_variant.designed_personalizable_zone.all()] if theme_id else None,
+                "product_organization_id": product.organization.id,
+                "product_organization_name": product.organization.name,
+                "product_preview": [preview.image_path for preview in product.productpreview.all()]
+
+            }
+                
+
+class ProductPreview(TimeStampedModel):
+    """
+    This table is used to store the product preview
+    """
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='productpreview')
+    image_path = models.CharField(max_length=255)
+
+    class Meta:
+        db_table = 'product_previews'
+
+    def __str__(self):
+        return self.product.title + " " + self.id
+    
 
 class ProductDesignedPersonalizableVariant(TimeStampedModel):
     """
