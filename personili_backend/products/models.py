@@ -132,6 +132,8 @@ class Product(TimeStampedModel):
         
         response["count"] = len(response["products_list"])
 
+        return response
+
                 
 
 class ProductPreview(TimeStampedModel):
