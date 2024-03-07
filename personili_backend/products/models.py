@@ -99,7 +99,7 @@ class Product(TimeStampedModel):
                         .select_related('organization'))
         
         # Now get the products and their previews ordered by the number of sales and average rating
-        products = (products.prefetch_related('productpreview', 'organization')
+        products = (products.prefetch_related('productpreview', 'organization', 'category')
                     .annotate(num_reviews=Count('productreview'))
                     .annotate(avg_rating=Avg('productreview__rating'))
                     .annotate(num_sales=Count('orderitem'))
@@ -116,13 +116,17 @@ class Product(TimeStampedModel):
                 "product_num_reviews": product.num_reviews,
                 "product_num_sales": product.num_sales,
                 "product_category_id": product.category.id,
-                "product_theme_ids": [zone.design.theme.id for zone in product.designed_personalizable_variant.designed_personalizable_zone.all()] if theme_id else None,
                 "product_organization_id": product.organization.id,
                 "product_organization_name": product.organization.name,
-                "product_preview": [preview.image_path for preview in product.productpreview.all()]
+                "product_price": product.price,
+                "product_preview": [preview.image_path for preview in product.productpreview.all()],
+                "product_theme_ids": [zone.design.theme.id for zone in product.designed_personalizable_variant.designed_personalizable_zone.all()] if theme_id else None,
+                "product_designs": [zone.design.id for zone in product.designed_personalizable_variant.designed_personalizable_zone.all()] if design_id else None
             }
             products["products_list"].append(product)
         
+        # remove None values
+        products["products_list"] = [{k: v for k, v in product.items() if v is not None} for product in products["products_list"]]
         products["count"] = len(products["products_list"])
 
                 
