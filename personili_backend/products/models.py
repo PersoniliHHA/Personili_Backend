@@ -106,9 +106,9 @@ class Product(TimeStampedModel):
                     .order_by('-num_sales','-num_reviews', '-avg_rating'))
         
         # Now prepare the json response
-        response = {"products": []}
+        response = {"products_list": []}
         for product in products:
-            product = {
+            product_data = {
                 "product_id": product.id,
                 "product_title": product.title,
                 "product_description": product.description,
@@ -124,9 +124,9 @@ class Product(TimeStampedModel):
                 "product_designs": [zone.design.id for zone in product.designed_personalizable_variant.designed_personalizable_zone.all()] if design_id else None
             }
             # Remove the null key values
-            product = {k: v for k, v in product.items() if v is not None}
+            product_data = {k: v for k, v in product_data.items() if v is not None}
             
-            response["products_list"].append(product)
+            response["products_list"].append(product_data)
         
         
         
