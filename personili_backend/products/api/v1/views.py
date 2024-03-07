@@ -41,23 +41,23 @@ class ProductViewSet(viewsets.ViewSet):
         # Get the query parameters
         offset = request.query_params.get('offset', 0)
         limit = request.query_params.get('limit', 10)
-        category_id = request.query_params.get('category_id', None)
-        personalization_method_id = request.query_params.get('personalization_method_id', None)
-        theme_id = request.query_params.get('theme_id', None)
-        design_id = request.query_params.get('design_id', None)
-        organization_id = request.query_params.get('organization_id', None)
-        sponsored_organization_ids = request.query_params.get('sponsored_organization_ids', None)
+        category_id = request.query_params.get('category', None)
+        personalization_method_id = request.query_params.get('personalization_method', None)
+        theme_id = request.query_params.get('theme', None)
+        design_id = request.query_params.get('design', None)
+        organization_id = request.query_params.get('organization', None)
+        sponsored_organization_ids = request.query_params.get('sponsored_organizations', None)
 
         try :
             # Get the products based on the query parameters
-            products = Product.get_products_light(offset,
-                                                limit,
-                                                category_id, 
-                                                personalization_method_id, 
-                                                theme_id, 
-                                                design_id, 
-                                                organization_id, 
-                                                sponsored_organization_ids)
+            products = Product.get_products_light(offset=offset,
+                                                limit=limit,
+                                                category_id=category_id, 
+                                                organization_id=organization_id, 
+                                                personalization_method_id=personalization_method_id, 
+                                                design_id=design_id, 
+                                                theme_id=theme_id, 
+                                                sponsored_organization_ids=sponsored_organization_ids)
 
             # Return the response
             response = Response(products, status=status.HTTP_200_OK)

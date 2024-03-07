@@ -89,7 +89,7 @@ class Product(TimeStampedModel):
             products = (products.filter(personalization_method_id=personalization_method_id)
                         .select_related('personalization_method'))
         if theme_id:
-            products = (products.filter(designed_personalizable_variant__designed_personalizable_zone__design__theme_id=theme_id)
+            products = (products.filter(product_designed_personalizable_variants__designed_personalizable_variant__designed_personalizable_zone__design__theme_id=theme_id)
                         .prefetch_related('designed_personalizable_variant__designed_personalizable_zone__design__theme'))
         if design_id:
             products = (products.filter(product_designed_personalizable_variants__designed_personalizable_variant__designed_personalizable_zone__design_id=design_id)
