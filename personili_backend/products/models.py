@@ -9,7 +9,6 @@ from accounts.models import Account
 from designs.models import Design, Collection, Store, Theme
 from organizations.models import Organization
 from personalizables.models import Category, Personalizable, PersonalizationMethod, DesignedPersonalizableVariant, DesignedPersonalizableZone
-from orders.models import Order, OrderItem
 
 from django.db.models import Count
 from django.forms.models import model_to_dict
