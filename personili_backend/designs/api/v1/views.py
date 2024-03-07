@@ -77,9 +77,10 @@ class DesignsViewSet(viewsets.ViewSet):
         - search term
         """
         # Get the query parameters from the request
-        theme = request.query_params.get('theme', None)
-        store = request.query_params.get('store', None)
-        workshop = request.query_params.get('workshop', None)
+        themes = request.query_params.get('themes', None)
+        stores = request.query_params.get('stores', None)
+        workshops = request.query_params.get('workshops', None)
+        organizations = request.query_params.get('organizations', None)
         sponsored_stores = request.query_params.get('sponsored_stores', None)
         sponsored_organizations = request.query_params.get('sponsored_organizations', None)
         search_term = request.query_params.get('search_term', None)
@@ -87,9 +88,10 @@ class DesignsViewSet(viewsets.ViewSet):
 
             popular_designs = Design.get_designs_light(offset=0, 
                                                     limit=20,
-                                                    theme_id=theme,
-                                                    store_id=store,
-                                                    workshop_id=workshop,
+                                                    theme_ids=themes,
+                                                    store_ids=stores,
+                                                    workshop_ids=workshops,
+                                                    organization_ids=organizations,
                                                     sponsored_stores=sponsored_stores,
                                                     sponsored_organizations=sponsored_organizations,
                                                     search_term=search_term)

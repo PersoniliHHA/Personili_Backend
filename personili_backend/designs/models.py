@@ -210,9 +210,10 @@ class Design(TimeStampedModel):
     
     @classmethod
     def get_designs_light(cls, 
-                                  theme_id= None,
-                                  store_id=None,
-                                  workshop_id=None,
+                                  theme_ids= None,
+                                  store_ids=None,
+                                  workshop_ids=None,
+                                  organization_ids=None,
                                   sponsored_stores=False,
                                   sponsored_organizations=False,
                                   search_term=None,
@@ -230,12 +231,14 @@ class Design(TimeStampedModel):
         - design preview objects
         """
         q_objects = Q()
-        if theme_id:
-            q_objects.add(Q(theme_id=theme_id), Q.AND)
-        if store_id:
-            q_objects.add(Q(collection__store_id=store_id), Q.AND)
-        if workshop_id:
-            q_objects.add(Q(collection__workshop_id=workshop_id), Q.AND)
+        if theme_ids:
+            q_objects.add(Q(theme_id__in=theme_ids), Q.AND)
+        if store_ids:
+            q_objects.add(Q(collection__store_id__in=store_ids), Q.AND)
+        if workshop_ids:
+            q_objects.add(Q(collection__workshop_id__in=workshop_ids), Q.AND)
+        if organization_ids:
+            q_objects.add(Q(collection__workshop__organization_id__in=organization_ids), Q.AND)
         if sponsored_stores and sponsored_organizations:
             q_objects.add(Q(collection__store__storeprofile__is_sponsored=True) |
                           Q(collection__workshop__organization__orgprofile__is_sponsored=True), Q.AND)
