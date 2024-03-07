@@ -48,13 +48,20 @@ class ProductViewSet(viewsets.ViewSet):
         organization_id = request.query_params.get('organization_id', None)
         sponsored_organization_ids = request.query_params.get('sponsored_organization_ids', None)
 
-        # Get the products based on the query parameters
-        products = Product.get_products_light(category_id, 
-                                              personalization_method_id, 
-                                              theme_id, 
-                                              design_id, 
-                                              organization_id, 
-                                              sponsored_organization_ids)
+        try :
+            # Get the products based on the query parameters
+            products = Product.get_products_light(offset,
+                                                limit,
+                                                category_id, 
+                                                personalization_method_id, 
+                                                theme_id, 
+                                                design_id, 
+                                                organization_id, 
+                                                sponsored_organization_ids)
 
-        # Return the response
-        response = Response(products, status=status.HTTP_200_OK)
+            # Return the response
+            response = Response(products, status=status.HTTP_200_OK)
+            return response
+        except Exception as e:
+            logging.error(f"get_products_light action method error :{e.args} ")
+            return Response({"error": "UNKNOWN_INTERNAL_ERROR"}, status=400)

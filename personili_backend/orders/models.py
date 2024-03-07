@@ -275,8 +275,8 @@ class OrderItem(TimeStampedModel):
     - sub_total (sub total of the product ordered)
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_items_of_an_order')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='order_items_of_a_product')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='orderitem')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='orderitem')
     quantity = models.IntegerField(default=1)
     sub_total = models.DecimalField(max_digits=10, decimal_places=2)
 
@@ -284,7 +284,7 @@ class OrderItem(TimeStampedModel):
         db_table = 'order_items'
 
     def __str__(self):
-        return f'{self.order} - {self.product} - {self.quantity} - {self.sub_total}'
+        return f'{self.order} - {self.product.title} - {self.quantity} - {self.sub_total}'
     
 
 
