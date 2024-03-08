@@ -7,6 +7,7 @@ from rest_framework.generics import get_object_or_404
 # Local imports
 from products.models import Product, ProductDesignedPersonalizableVariant, ProductReview, Promotion
 from accounts.models import AccountProfile
+from personalizables.models import Category
 
 # Utils
 from utils.validators import is_all_valid_uuid4
@@ -78,6 +79,9 @@ class ProductViewSet(viewsets.ViewSet):
             if not is_all_valid_uuid4(category_ids):
                 return Response({"error": "BAD_REQUEST"}, status=400)
             
+            # Get all the leaf categories
+            leaf_categories_ids = Category.get_leaf_categories_from_list(category_ids)
+            
         if personalization_method_ids:
             personalization_method_ids = personalization_method_ids.split(",")
             if not is_all_valid_uuid4(personalization_method_ids):
@@ -115,7 +119,7 @@ class ProductViewSet(viewsets.ViewSet):
                                                 limit=limit,
                                                 max_price=max_price,
                                                 min_price=min_price,
-                                                category_ids=category_ids, 
+                                                category_ids=leaf_categories_ids, 
                                                 organization_ids=organization_ids, 
                                                 personalization_method_ids=personalization_method_ids, 
                                                 design_ids=design_ids, 
