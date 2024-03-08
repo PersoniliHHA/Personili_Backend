@@ -73,24 +73,35 @@ class ProductViewSet(viewsets.ViewSet):
         
         ##### category_ids, personalization_method_ids, theme_ids, design_id, organization_ids, sponsored_organization_ids should be valid uuid format
         if category_ids:
-            if not is_all_valid_uuid4(category_ids.split(",")):
+            category_ids = category_ids.split(",")
+            if not is_all_valid_uuid4(category_ids):
                 return Response({"error": "BAD_REQUEST"}, status=400)
+            
         if personalization_method_ids:
-            if not is_all_valid_uuid4(personalization_method_ids.split(",")):
+            personalization_method_ids = personalization_method_ids.split(",")
+            if not is_all_valid_uuid4(personalization_method_ids):
                 return Response({"error": "BAD_REQUEST"}, status=400)
+            
         if theme_ids:
-            if not is_all_valid_uuid4(theme_ids.split(",")):
+            theme_ids = theme_ids.split(",")
+            if not is_all_valid_uuid4(theme_ids):
                 return Response({"error": "BAD_REQUEST"}, status=400)
+            
         if design_ids:
-            if not is_all_valid_uuid4(design_ids.split(",")):
+            design_ids = design_ids.split(",")
+            if not is_all_valid_uuid4(design_ids):
                 return Response({"error": "BAD_REQUEST"}, status=400)
+            
         if organization_ids:
-            if not is_all_valid_uuid4(organization_ids.split(",")):
+            organizations_ids = organization_ids.split(",")
+            if not is_all_valid_uuid4(organizations_ids):
                 return Response({"error": "BAD_REQUEST"}, status=400)
+            
         if sponsored_organizations:
             # sponsored_organizations should ba valid boolean value
             if sponsored_organizations not in ["true", "false", "True", "False"]:
                 return Response({"error": "BAD_REQUEST"}, status=400)
+            
         if search_term:
             # search term has to be a string and not longer than 100 characters
             if not isinstance(search_term, str) or len(search_term) > 100:
