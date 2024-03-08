@@ -54,10 +54,15 @@ class ProductViewSet(viewsets.ViewSet):
         search_term = request.query_params.get('search_term', None)
 
         ####################### Query parameters validation ########################
-        # offset and limit should be integers and greater than 0
-        if not offset.isdigit() or not limit.isdigit() or int(offset) < 0 or int(limit) < 0 or int(limit) > 100:
-            return Response({"error": "BAD_REQUEST"}, status=400)
-        # category_ids, personalization_method_ids, theme_ids, design_id, organization_ids, sponsored_organization_ids should be valid uuid format
+        ##### offset and limit should be integers and greater than 0
+        if (not offset or not limit) or (not offset and not limit):
+            offset = 0
+            limit = 20
+        if offset and limit:
+            if not (offset.isdigit() and limit.isdigit()) or (int(offset) < 0 or int(limit) < 0) or (int(offset) > int(limit)):
+                return Response({"error": "BAD_REQUEST"}, status=400)
+        
+        ##### category_ids, personalization_method_ids, theme_ids, design_id, organization_ids, sponsored_organization_ids should be valid uuid format
         if category_ids:
             if not is_all_valid_uuid4(category_ids.split(",")):
                 return Response({"error": "BAD_REQUEST"}, status=400)
