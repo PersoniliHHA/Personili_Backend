@@ -80,7 +80,7 @@ class ProductViewSet(viewsets.ViewSet):
                 return Response({"error": "BAD_REQUEST"}, status=400)
             
             # Get all the leaf categories
-            leaf_categories_ids = Category.get_leaf_categories_from_list(category_ids)
+            category_ids = Category.get_leaf_categories_from_list(category_ids)
             
         if personalization_method_ids:
             personalization_method_ids = personalization_method_ids.split(",")
@@ -119,7 +119,7 @@ class ProductViewSet(viewsets.ViewSet):
                                                 limit=limit,
                                                 max_price=max_price,
                                                 min_price=min_price,
-                                                category_ids=leaf_categories_ids, 
+                                                category_ids=category_ids, 
                                                 organization_ids=organization_ids, 
                                                 personalization_method_ids=personalization_method_ids, 
                                                 design_ids=design_ids, 
