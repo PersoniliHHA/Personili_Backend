@@ -75,6 +75,9 @@ class ProductViewSet(viewsets.ViewSet):
         
         ##### category_ids, personalization_method_ids, theme_ids, design_id, organization_ids, sponsored_organization_ids should be valid uuid format
         if category_ids:
+            # remove the white spaces
+            category_ids = category_ids.replace(" ", "")
+            # split the string into a list
             category_ids = category_ids.split(",")
             if not is_all_valid_uuid4(category_ids):
                 return Response({"error": "BAD_REQUEST"}, status=400)
@@ -83,21 +86,33 @@ class ProductViewSet(viewsets.ViewSet):
             category_ids = Category.get_leaf_categories_from_list(category_ids)
             
         if personalization_method_ids:
+            # remove the white spaces
+            personalization_method_ids = personalization_method_ids.replace(" ", "")
+            # split the string into a list
             personalization_method_ids = personalization_method_ids.split(",")
             if not is_all_valid_uuid4(personalization_method_ids):
                 return Response({"error": "BAD_REQUEST"}, status=400)
             
         if theme_ids:
+            # remove the white spaces
+            theme_ids = theme_ids.replace(" ", "")
+            # split the string into a list
             theme_ids = theme_ids.split(",")
             if not is_all_valid_uuid4(theme_ids):
                 return Response({"error": "BAD_REQUEST"}, status=400)
             
         if design_ids:
+            # remove the white spaces
+            design_ids = design_ids.replace(" ", "")
+            # split the string into a list
             design_ids = design_ids.split(",")
             if not is_all_valid_uuid4(design_ids):
                 return Response({"error": "BAD_REQUEST"}, status=400)
             
         if organization_ids:
+            # remove the white spaces
+            organization_ids = organization_ids.replace(" ", "")
+            # split the string into a list
             organization_ids = organization_ids.split(",")
             if not is_all_valid_uuid4(organization_ids):
                 return Response({"error": "BAD_REQUEST"}, status=400)
