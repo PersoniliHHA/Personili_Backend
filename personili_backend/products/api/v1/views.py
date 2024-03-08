@@ -52,8 +52,8 @@ class ProductViewSet(viewsets.ViewSet):
         organization_ids = request.query_params.get('organizations', None)
         sponsored_organizations = request.query_params.get('sponsored_organizations', None)
         search_term = request.query_params.get('search_term', None)
-        price_min = request.query_params.get('price_min', None)
-        price_max = request.query_params.get('price_max', None)
+        min_price = request.query_params.get('min_p', None)
+        max_price = request.query_params.get('max_p', None)
 
         ####################### Query parameters validation ########################
         ##### offset and limit should be integers and greater than 0
@@ -64,12 +64,12 @@ class ProductViewSet(viewsets.ViewSet):
             if not (offset.isdigit() and limit.isdigit()) or (int(offset) < 0 or int(limit) < 0) or (int(offset) > int(limit)):
                 return Response({"error": "BAD_REQUEST"}, status=400)
         ##### price min and price max should be integers and greater than 0
-        if price_min and price_max:
-            if not (price_min.isdigit() and price_max.isdigit()) or (int(price_min) < 0 or int(price_max) < 0) or (int(price_min) > int(price_max)):
+        if min_price and max_price:
+            if not (min_price.isdigit() and max_price.isdigit()) or (int(min_price) < 0 or int(max_price) < 0) or (int(min_price) > int(max_price)):
                 return Response({"error": "BAD_REQUEST"}, status=400)
         else :
-            price_min = 0
-            price_max = 1000000
+            min_price = 0
+            max_price = 1000000
         
         ##### category_ids, personalization_method_ids, theme_ids, design_id, organization_ids, sponsored_organization_ids should be valid uuid format
         if category_ids:
@@ -101,12 +101,15 @@ class ProductViewSet(viewsets.ViewSet):
             # Get the products based on the query parameters
             products = Product.get_products_light(offset=offset,
                                                 limit=limit,
+                                                max_price=max_price,
+                                                min_price=min_price,
                                                 category_id=category_ids, 
                                                 organization_id=organization_ids, 
                                                 personalization_method_id=personalization_method_ids, 
                                                 design_id=design_id, 
                                                 theme_id=theme_ids, 
-                                                sponsored_organizations=sponsored_organizations)
+                                                sponsored_organizations=sponsored_organizations,
+                                                search_term=search_term)
 
             # Return the response
             response = Response(products, status=status.HTTP_200_OK)
