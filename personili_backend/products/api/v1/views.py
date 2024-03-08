@@ -106,7 +106,7 @@ class ProductViewSet(viewsets.ViewSet):
                                                 category_ids=category_ids, 
                                                 organization_ids=organization_ids, 
                                                 personalization_method_ids=personalization_method_ids, 
-                                                design_ids=design_id, 
+                                                design_ids=design_ids, 
                                                 theme_ids=theme_ids, 
                                                 sponsored_organizations=sponsored_organizations,
                                                 search_term=search_term)
