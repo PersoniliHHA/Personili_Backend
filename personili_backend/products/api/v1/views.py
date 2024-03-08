@@ -99,7 +99,7 @@ class ProductViewSet(viewsets.ViewSet):
             
         if sponsored_organizations:
             # sponsored_organizations should ba valid boolean value
-            if sponsored_organizations not in ["true", "false", "True", "False"]:
+            if sponsored_organizations not in ["true","True"]:
                 return Response({"error": "BAD_REQUEST"}, status=400)
             
         if search_term:

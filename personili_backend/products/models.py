@@ -102,7 +102,7 @@ class Product(TimeStampedModel):
             products = (products.filter(productdesignedpersonalizablevariant__designed_personalizable_variant__designed_personalizable_zone__design_id__in=design_ids)
                         .prefetch_related('productdesignedpersonalizablevariant__product_designed_personalizable_variants__designed_personalizable_variant__designed_personalizable_zone__design'))
         if sponsored_organizations:
-            products = (products.filter(organization__is_sponsored=True)
+            products = (products.filter(organization_is_sponsored=True)
                         .select_related('organization'))
         if search_term:
             products = products.filter(Q(title__icontains=search_term) | 
