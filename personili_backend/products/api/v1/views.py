@@ -94,6 +94,8 @@ class ProductViewSet(viewsets.ViewSet):
             
         if organization_ids:
             organizations_ids = organization_ids.split(",")
+            print("inside here")
+            print(organizations_ids)
             if not is_all_valid_uuid4(organizations_ids):
                 return Response({"error": "BAD_REQUEST"}, status=400)
             

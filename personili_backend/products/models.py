@@ -53,11 +53,11 @@ class Product(TimeStampedModel):
                            limit: int,
                            max_price: float=None,
                            min_price: float=None,
-                           category_ids: str=None,
-                           organization_ids: str=None,
-                           personalization_method_ids: str=None,
-                           design_ids: str=None,
-                           theme_ids: str=None,
+                           category_ids: list[str]=None,
+                           organization_ids: list[str]=None,
+                           personalization_method_ids: list[str]=None,
+                           design_ids: list[str]=None,
+                           theme_ids: list[str]=None,
                            sponsored_organizations =None,
                            search_term: str=None):
         
