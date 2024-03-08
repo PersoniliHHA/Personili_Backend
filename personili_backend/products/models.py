@@ -49,8 +49,10 @@ class Product(TimeStampedModel):
 
     @classmethod
     def get_products_light(cls,
-                           offset=0,
-                           limit=20,
+                           offset: int,
+                           limit: int,
+                           max_price: float=None,
+                           min_price: float=None,
                            category_id: str=None,
                            organization_id: str=None,
                            personalization_method_id: str=None,
@@ -79,7 +81,9 @@ class Product(TimeStampedModel):
         """
         # Start with the base query (only non self made products) and their previews
         products = cls.objects.filter(self_made=False)
-
+        # Filter the price
+        if max_price and min_price:
+            products = products.filter(price__lte=max_price, price__gte=min_price)
         # Add filters incrementally
         if category_id:
             products = products.filter(category_id=category_id)
@@ -95,8 +99,8 @@ class Product(TimeStampedModel):
         if design_id:
             products = (products.filter(productdesignedpersonalizablevariant__designed_personalizable_variant__designed_personalizable_zone__design_id=design_id)
                         .prefetch_related('productdesignedpersonalizablevariant__product_designed_personalizable_variants__designed_personalizable_variant__designed_personalizable_zone__design'))
-        if sponsored_organization_ids:
-            products = (products.filter(organization_id__in=sponsored_organization_ids)
+        if sponsored_organizations:
+            products = (products.filter(organization__is_sponsored=True)
                         .select_related('organization'))
         if search_term:
             products = products.filter(Q(title__icontains=search_term) | 
@@ -107,7 +111,7 @@ class Product(TimeStampedModel):
                     .annotate(num_reviews=Count('productreview'))
                     .annotate(avg_rating=Avg('productreview__rating'))
                     .annotate(num_sales=Count('orderitem'))
-                    .order_by('-num_sales','-num_reviews', '-avg_rating'))
+                    .order_by('-num_sales','-num_reviews', '-avg_rating')[offset:offset+limit])
         
         # Now prepare the json response
         response = {"products_list": []}

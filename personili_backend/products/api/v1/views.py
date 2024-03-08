@@ -45,13 +45,15 @@ class ProductViewSet(viewsets.ViewSet):
         # Get the query parameters
         offset = request.query_params.get('offset', 0)
         limit = request.query_params.get('limit', 10)
-        category_ids = request.query_params.get('categoris', None)
+        category_ids = request.query_params.get('categories', None)
         personalization_method_ids = request.query_params.get('personalization_methods', None)
         theme_ids = request.query_params.get('themes', None)
         design_id = request.query_params.get('design', None)
         organization_ids = request.query_params.get('organizations', None)
         sponsored_organizations = request.query_params.get('sponsored_organizations', None)
         search_term = request.query_params.get('search_term', None)
+        price_min = request.query_params.get('price_min', None)
+        price_max = request.query_params.get('price_max', None)
 
         ####################### Query parameters validation ########################
         ##### offset and limit should be integers and greater than 0
@@ -61,6 +63,13 @@ class ProductViewSet(viewsets.ViewSet):
         if offset and limit:
             if not (offset.isdigit() and limit.isdigit()) or (int(offset) < 0 or int(limit) < 0) or (int(offset) > int(limit)):
                 return Response({"error": "BAD_REQUEST"}, status=400)
+        ##### price min and price max should be integers and greater than 0
+        if price_min and price_max:
+            if not (price_min.isdigit() and price_max.isdigit()) or (int(price_min) < 0 or int(price_max) < 0) or (int(price_min) > int(price_max)):
+                return Response({"error": "BAD_REQUEST"}, status=400)
+        else :
+            price_min = 0
+            price_max = 1000000
         
         ##### category_ids, personalization_method_ids, theme_ids, design_id, organization_ids, sponsored_organization_ids should be valid uuid format
         if category_ids:
