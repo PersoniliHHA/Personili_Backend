@@ -57,12 +57,13 @@ class ProductViewSet(viewsets.ViewSet):
 
         ####################### Query parameters validation ########################
         ##### offset and limit should be integers and greater than 0
-        if (not offset or not limit) or (not offset and not limit):
-            offset = 0
-            limit = 20
         if offset and limit:
             if not (offset.isdigit() and limit.isdigit()) or (int(offset) < 0 or int(limit) < 0) or (int(offset) > int(limit)):
                 return Response({"error": "BAD_REQUEST"}, status=400)
+        else:
+            offset = 0
+            limit = 20
+        
         ##### price min and price max should be integers and greater than 0
         if min_price and max_price:
             if not (min_price.isdigit() and max_price.isdigit()) or (int(min_price) < 0 or int(max_price) < 0) or (int(min_price) > int(max_price)):
