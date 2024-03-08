@@ -90,7 +90,7 @@ def is_all_valid_uuid4(list_of_uuids: list[str]):
     """
     for uuid_str in list_of_uuids:
         try:
-            uuid.UUID(uuid_str, version=4)
+            uuid.UUID(uuid_str.strip(), version=4)
         except ValueError:
             return False
     return True
