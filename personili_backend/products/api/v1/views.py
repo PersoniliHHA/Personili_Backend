@@ -103,11 +103,11 @@ class ProductViewSet(viewsets.ViewSet):
                                                 limit=limit,
                                                 max_price=max_price,
                                                 min_price=min_price,
-                                                category_id=category_ids, 
-                                                organization_id=organization_ids, 
-                                                personalization_method_id=personalization_method_ids, 
-                                                design_id=design_id, 
-                                                theme_id=theme_ids, 
+                                                category_ids=category_ids, 
+                                                organization_ids=organization_ids, 
+                                                personalization_method_ids=personalization_method_ids, 
+                                                design_ids=design_id, 
+                                                theme_ids=theme_ids, 
                                                 sponsored_organizations=sponsored_organizations,
                                                 search_term=search_term)
 

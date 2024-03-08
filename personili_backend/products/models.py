@@ -87,19 +87,19 @@ class Product(TimeStampedModel):
             products = products.filter(price__lte=max_price, price__gte=min_price)
         
         # Add filters incrementally
-        if category_id:
-            products = products.filter(category_id=category_id)
-        if organization_id:
-            products = (products.filter(organization_id=organization_id)
+        if category_ids:
+            products = products.filter(category_id__in=category_ids)
+        if organization_ids:
+            products = (products.filter(organization_id__in=organization_ids)
                         .select_related('organization'))
-        if personalization_method_id:
-            products = (products.filter(personalization_method_id=personalization_method_id)
+        if personalization_method_ids:
+            products = (products.filter(personalization_method_id__in=personalization_method_ids)
                         .select_related('personalization_method'))
-        if theme_id:
-            products = (products.filter(productdesignedpersonalizablevariant__designed_personalizable_variant__designed_personalizable_zone__design__theme_id=theme_id)
+        if theme_ids:
+            products = (products.filter(productdesignedpersonalizablevariant__designed_personalizable_variant__designed_personalizable_zone__design__theme_id__in=theme_ids)
                         .prefetch_related('productdesignedpersonalizablevariant__designed_personalizable_variant__designed_personalizable_zone__design__theme'))
-        if design_id:
-            products = (products.filter(productdesignedpersonalizablevariant__designed_personalizable_variant__designed_personalizable_zone__design_id=design_id)
+        if design_ids:
+            products = (products.filter(productdesignedpersonalizablevariant__designed_personalizable_variant__designed_personalizable_zone__design_id__in=design_ids)
                         .prefetch_related('productdesignedpersonalizablevariant__product_designed_personalizable_variants__designed_personalizable_variant__designed_personalizable_zone__design'))
         if sponsored_organizations:
             products = (products.filter(organization__is_sponsored=True)
