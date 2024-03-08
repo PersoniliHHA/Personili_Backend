@@ -43,8 +43,8 @@ class ProductViewSet(viewsets.ViewSet):
         - search term 
         """
         # Get the query parameters
-        offset = request.query_params.get('offset', 0)
-        limit = request.query_params.get('limit', 10)
+        offset = request.query_params.get('offset', None)
+        limit = request.query_params.get('limit', None)
         category_ids = request.query_params.get('categories', None)
         personalization_method_ids = request.query_params.get('personalization_methods', None)
         theme_ids = request.query_params.get('themes', None)
