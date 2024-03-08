@@ -107,7 +107,19 @@ class ProductViewSet(viewsets.ViewSet):
             if not isinstance(search_term, str) or len(search_term) > 100:
                 return Response({"error": "BAD_REQUEST"}, status=400)
         ###########################################################################
-
+        ## print all parameters
+        print(f"offset : {offset}")
+        print(f"limit : {limit}")
+        print(f"category_ids : {category_ids}")
+        print(f"personalization_method_ids : {personalization_method_ids}")
+        print(f"theme_ids : {theme_ids}")
+        print(f"design_ids : {design_ids}")
+        print(f"organization_ids : {organization_ids}")
+        print(f"sponsored_organizations : {sponsored_organizations}")
+        print(f"search_term : {search_term}")
+        print(f"min_price : {min_price}")
+        print(f"max_price : {max_price}")
+        ## print all parameters
         try :
             # Get the products based on the query parameters
             products = Product.get_products_light(offset=offset,
