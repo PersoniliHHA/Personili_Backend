@@ -88,9 +88,9 @@ def is_all_valid_uuid4(list_of_uuids: list[str]):
     """
     Validate the list of uuids, they should all be valid uuids
     """
-    for uuid in list_of_uuids:
+    for uuid_str in list_of_uuids:
         try:
-            uuid_obj = uuid.UUID(uuid, version=4)
+            uuid.UUID(uuid_str, version=4)
         except ValueError:
             return False
     return True
