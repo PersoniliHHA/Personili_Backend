@@ -48,7 +48,7 @@ class ProductViewSet(viewsets.ViewSet):
         category_ids = request.query_params.get('categories', None)
         personalization_method_ids = request.query_params.get('personalization_methods', None)
         theme_ids = request.query_params.get('themes', None)
-        design_id = request.query_params.get('design', None)
+        design_ids = request.query_params.get('designs', None)
         organization_ids = request.query_params.get('organizations', None)
         sponsored_organizations = request.query_params.get('sponsored_organizations', None)
         search_term = request.query_params.get('search_term', None)
@@ -81,8 +81,8 @@ class ProductViewSet(viewsets.ViewSet):
         if theme_ids:
             if not is_all_valid_uuid4(theme_ids.split(",")):
                 return Response({"error": "BAD_REQUEST"}, status=400)
-        if design_id:
-            if not is_all_valid_uuid4([design_id]):
+        if design_ids:
+            if not is_all_valid_uuid4(design_ids.split(",")):
                 return Response({"error": "BAD_REQUEST"}, status=400)
         if organization_ids:
             if not is_all_valid_uuid4(organization_ids.split(",")):
