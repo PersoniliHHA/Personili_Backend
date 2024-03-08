@@ -81,9 +81,11 @@ class Product(TimeStampedModel):
         """
         # Start with the base query (only non self made products) and their previews
         products = cls.objects.filter(self_made=False)
+        
         # Filter the price
         if max_price and min_price:
             products = products.filter(price__lte=max_price, price__gte=min_price)
+        
         # Add filters incrementally
         if category_id:
             products = products.filter(category_id=category_id)
