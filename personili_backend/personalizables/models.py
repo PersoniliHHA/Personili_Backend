@@ -91,7 +91,7 @@ class Category(TimeStampedModel):
             # check if the category has subcategories
             subcategories = Category.objects.filter(parent_category=category_id)
             if len(subcategories) == 0:
-                leaf_categories.append(category_id.id)
+                leaf_categories.append(category_id)
             else:
                 leaf_categories.extend(cls.get_leaf_categories_from_list([subcategory.id for subcategory in subcategories]))
         
