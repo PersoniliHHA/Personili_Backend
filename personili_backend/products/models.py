@@ -56,7 +56,8 @@ class Product(TimeStampedModel):
                            personalization_method_id: str=None,
                            design_id: str=None,
                            theme_id: str=None,
-                           sponsored_organization_ids: list=None):
+                           sponsored_organizations =None,
+                           search_term: str=None):
         
         """
         This method returns a list of products ordered by the number of sales with the following infos :
@@ -97,6 +98,9 @@ class Product(TimeStampedModel):
         if sponsored_organization_ids:
             products = (products.filter(organization_id__in=sponsored_organization_ids)
                         .select_related('organization'))
+        if search_term:
+            products = products.filter(Q(title__icontains=search_term) | 
+                                       Q(description__icontains=search_term))
         
         # Now get the products and their previews ordered by the number of sales and average rating
         products = (products.prefetch_related('productpreview', 'organization', 'category')

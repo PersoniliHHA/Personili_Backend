@@ -8,6 +8,9 @@ from rest_framework.generics import get_object_or_404
 from products.models import Product, ProductDesignedPersonalizableVariant, ProductReview, Promotion
 from accounts.models import AccountProfile
 
+# Utils
+from utils.validators import is_all_valid_uuid4
+
 
 # configure logging 
 import logging
@@ -31,6 +34,7 @@ class ProductViewSet(viewsets.ViewSet):
         """
         This method is used to get the list of products with minimal information and based on criterias :
         - category_id
+        - personalization_type_id
         - personalization_method_id
         - theme_id
         - design_id
@@ -41,23 +45,54 @@ class ProductViewSet(viewsets.ViewSet):
         # Get the query parameters
         offset = request.query_params.get('offset', 0)
         limit = request.query_params.get('limit', 10)
-        category_id = request.query_params.get('category', None)
-        personalization_method_id = request.query_params.get('personalization_method', None)
-        theme_id = request.query_params.get('theme', None)
+        category_ids = request.query_params.get('categoris', None)
+        personalization_method_ids = request.query_params.get('personalization_methods', None)
+        theme_ids = request.query_params.get('themes', None)
         design_id = request.query_params.get('design', None)
-        organization_id = request.query_params.get('organization', None)
-        sponsored_organization_ids = request.query_params.get('sponsored_organizations', None)
+        organization_ids = request.query_params.get('organizations', None)
+        sponsored_organizations = request.query_params.get('sponsored_organizations', None)
+        search_term = request.query_params.get('search_term', None)
+
+        ####################### Query parameters validation ########################
+        # offset and limit should be integers and greater than 0
+        if not offset.isdigit() or not limit.isdigit() or int(offset) < 0 or int(limit) < 0 or int(limit) > 100:
+            return Response({"error": "BAD_REQUEST"}, status=400)
+        # category_ids, personalization_method_ids, theme_ids, design_id, organization_ids, sponsored_organization_ids should be valid uuid format
+        if category_ids:
+            if not is_all_valid_uuid4(category_ids.split(",")):
+                return Response({"error": "BAD_REQUEST"}, status=400)
+        if personalization_method_ids:
+            if not is_all_valid_uuid4(personalization_method_ids.split(",")):
+                return Response({"error": "BAD_REQUEST"}, status=400)
+        if theme_ids:
+            if not is_all_valid_uuid4(theme_ids.split(",")):
+                return Response({"error": "BAD_REQUEST"}, status=400)
+        if design_id:
+            if not is_all_valid_uuid4([design_id]):
+                return Response({"error": "BAD_REQUEST"}, status=400)
+        if organization_ids:
+            if not is_all_valid_uuid4(organization_ids.split(",")):
+                return Response({"error": "BAD_REQUEST"}, status=400)
+        if sponsored_organizations:
+            # sponsored_organizations should ba valid boolean value
+            if sponsored_organizations not in ["true", "false", "True", "False"]:
+                return Response({"error": "BAD_REQUEST"}, status=400)
+        if search_term:
+            # search term has to be a string and not longer than 100 characters
+            if not isinstance(search_term, str) or len(search_term) > 100:
+                return Response({"error": "BAD_REQUEST"}, status=400)
+        ###########################################################################
 
         try :
             # Get the products based on the query parameters
             products = Product.get_products_light(offset=offset,
                                                 limit=limit,
-                                                category_id=category_id, 
-                                                organization_id=organization_id, 
-                                                personalization_method_id=personalization_method_id, 
+                                                category_id=category_ids, 
+                                                organization_id=organization_ids, 
+                                                personalization_method_id=personalization_method_ids, 
                                                 design_id=design_id, 
-                                                theme_id=theme_id, 
-                                                sponsored_organization_ids=sponsored_organization_ids)
+                                                theme_id=theme_ids, 
+                                                sponsored_organizations=sponsored_organizations)
 
             # Return the response
             response = Response(products, status=status.HTTP_200_OK)

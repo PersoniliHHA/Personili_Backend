@@ -1,5 +1,6 @@
 from rest_framework.serializers import ValidationError
 import re
+import uuid
 
 """
 Field validation methods for serializers
@@ -81,3 +82,15 @@ def validate_date_of_birth(value):
         if not re.match(r"^(19|20)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$", value):
             raise ValidationError("INVALID_DATE_OF_BIRTH")
     return value
+
+
+def is_all_valid_uuid4(list_of_uuids: list[str]):
+    """
+    Validate the list of uuids, they should all be valid uuids
+    """
+    for uuid in list_of_uuids:
+        try:
+            uuid_obj = uuid.UUID(uuid, version=4)
+        except ValueError:
+            return False
+    return True

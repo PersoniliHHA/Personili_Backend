@@ -62,7 +62,7 @@ class Category(TimeStampedModel):
     @classmethod
     def get_category_tree(cls, parent_category=None):
         """
-        This method returns teh entire category tree under a specific parent category, if the parent
+        This method returns the entire category tree under a specific parent category, if the parent
         category is null then the method returns the entire category tree
         """
         categories = Category.objects.filter(parent_category=parent_category)
@@ -78,6 +78,24 @@ class Category(TimeStampedModel):
         
         return category_tree
 
+
+    @classmethod
+    def get_leaf_categories_from_list(cls, 
+                                      category_ids: list[str]):
+        """
+        This method takes a list of ids containing categories and returns a list of leaf categories, if a category has subcategories then it is not a leaf category.
+        If a category in the category_ids is already a leaf category then it is added to the list of leaf categories
+        """
+        leaf_categories = []
+        for category_id in category_ids:
+            # check if the category has subcategories
+            subcategories = Category.objects.filter(parent_category=category_id)
+            if len(subcategories) == 0:
+                leaf_categories.append(category_id)
+            else:
+                leaf_categories.extend(cls.get_leaf_categories_from_list([subcategory.id for subcategory in subcategories]))
+        
+        return leaf_categories
 ########################################################
 #                Options and values                    #
 ########################################################
