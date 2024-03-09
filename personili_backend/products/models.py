@@ -96,11 +96,11 @@ class Product(TimeStampedModel):
             products = (products.filter(personalization_method_id__in=personalization_method_ids)
                         .select_related('personalization_method'))
         if theme_ids:
-            products = (products.filter(product_designed_personalizable_variant__designed_personalizable_variant__designed_personalizable_zone__design__theme_id__in=theme_ids)
-                        .prefetch_related('product_designed_personalizable_variant__designed_personalizable_variant__designed_personalizable_zone__design__theme'))
+            products = (products.filter(product_designed_personalizable_variant__designed_personalizable_variant_zone__design__theme_id__in=theme_ids)
+                        .prefetch_related('product_designed_personalizable_variant__designed_personalizable_variant_zone__design__theme'))
         if design_ids:
-            products = (products.filter(product_designed_personalizable_variant__designed_personalizable_variant__designed_personalizable_zone__design_id__in=design_ids)
-                        .prefetch_related('product_designed_personalizable_variant__designed_personalizable_variant__designed_personalizable_zone__design'))
+            products = (products.filter(product_designed_personalizable_variant__designed_personalizable_variant_zone__design_id__in=design_ids)
+                        .prefetch_related('product_designed_personalizable_variant__designed_personalizable_variant_zone__design'))
         if sponsored_organizations:
             products = (products.filter(organization__orgprofile__is_sponsored=True)
                         .select_related('organization'))
