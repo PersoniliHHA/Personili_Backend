@@ -10,6 +10,7 @@ from accounts.models import AccountProfile
 from designs.api.v1.serializers import DesignSerializerBase, DesignPostSerializer, DesignGetSerializerLight, ThemeSerializerGet
 from utils.constants import DESIGNER_UPLOADED_IMAGES_PATH_TEMPLATES
 from utils.utilities import store_image_in_s3
+from utils.validators import is_all_valid_uuid4
 
 
 # boto3 imports
@@ -80,6 +81,8 @@ class DesignsViewSet(viewsets.ViewSet):
         - 
         """
         # Get the query parameters from the request
+        offset = request.query_params.get('offset', None)
+        limit = request.query_params.get('limit', None)
         themes = request.query_params.get('themes', None)
         stores = request.query_params.get('stores', None)
         workshops = request.query_params.get('workshops', None)
@@ -87,6 +90,70 @@ class DesignsViewSet(viewsets.ViewSet):
         sponsored_stores = request.query_params.get('sponsored_stores', None)
         sponsored_organizations = request.query_params.get('sponsored_organizations', None)
         search_term = request.query_params.get('search_term', None)
+        
+        ####################### Query parameters validation ########################
+        if offset and limit:
+            if not (offset.isdigit() and limit.isdigit()):
+                return Response({"error": "BAD_REQUEST"}, status=400)
+            elif (int(offset) < 0 or int(limit) < 0) or (int(offset) > int(limit)):
+                return Response({"error": "BAD_REQUEST"}, status=400)
+        else:
+            offset = 0
+            limit = 20
+        
+        ##### price min and price max should be integers and greater than 0
+        if min_price and max_price:
+            if not (min_price.isdigit() and max_price.isdigit()) or (int(min_price) < 0 or int(max_price) < 0) or (int(min_price) > int(max_price)):
+                return Response({"error": "BAD_REQUEST"}, status=400)
+        else :
+            min_price = 0
+            max_price = 1000000
+        if theme_ids:
+            # remove the white spaces
+            theme_ids = theme_ids.replace(" ", "")
+            # split the string into a list
+            theme_ids = theme_ids.split(",")
+            if not is_all_valid_uuid4(theme_ids):
+                return Response({"error": "BAD_REQUEST"}, status=400)
+            
+        if design_ids:
+            # remove the white spaces
+            design_ids = design_ids.replace(" ", "")
+            # split the string into a list
+            design_ids = design_ids.split(",")
+            if not is_all_valid_uuid4(design_ids):
+                return Response({"error": "BAD_REQUEST"}, status=400)
+            
+        if organization_ids:
+            # remove the white spaces
+            organization_ids = organization_ids.replace(" ", "")
+            # split the string into a list
+            organization_ids = organization_ids.split(",")
+            if not is_all_valid_uuid4(organization_ids):
+                return Response({"error": "BAD_REQUEST"}, status=400)
+            
+        if sponsored_organizations:
+            # sponsored_organizations should ba valid boolean value
+            if sponsored_organizations not in ["true","True"]:
+                return Response({"error": "BAD_REQUEST"}, status=400)
+        
+        if sponsored_stores:
+            # sponsored_stores should ba valid boolean value
+            if sponsored_stores not in ["true","True"]:
+                return Response({"error": "BAD_REQUEST"}, status=400)
+        
+        if workshops:
+            # remove the white spaces
+            workshops = workshops.replace(" ", "")
+            # split the string into a list
+            workshops = workshops.split(",")
+            if not is_all_valid_uuid4(workshops):
+                return Response({"error": "BAD_REQUEST"}, status=400)
+            
+        if search_term:
+            # search term has to be a string and not longer than 100 characters
+            if not isinstance(search_term, str) or len(search_term) > 100:
+                return Response({"error": "BAD_REQUEST"}, status=400)
         try :
 
             popular_designs = Design.get_designs_light(offset=0, 
