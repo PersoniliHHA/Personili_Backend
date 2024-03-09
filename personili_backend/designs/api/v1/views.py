@@ -67,7 +67,7 @@ class DesignsViewSet(viewsets.ViewSet):
     
     ##### Get the designs based on criteria : theme, store, workshop, nb of likes, sponsored stores, sponsored workshops
     @action(detail=False, methods=['GET'], url_path='v1/designs', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
-    def get_designs_light(self, request):
+    def get_designs(self, request):
         """
         Get the designs based on different criterias : 
         - themes
@@ -83,10 +83,10 @@ class DesignsViewSet(viewsets.ViewSet):
         # Get the query parameters from the request
         offset = request.query_params.get('offset', None)
         limit = request.query_params.get('limit', None)
-        themes = request.query_params.get('themes', None)
-        stores = request.query_params.get('stores', None)
-        workshops = request.query_params.get('workshops', None)
-        organizations = request.query_params.get('organizations', None)
+        theme_ids = request.query_params.get('themes', None)
+        store_ids = request.query_params.get('stores', None)
+        workshop_ids = request.query_params.get('workshops', None)
+        organization_ids = request.query_params.get('organizations', None)
         sponsored_stores = request.query_params.get('sponsored_stores', None)
         sponsored_organizations = request.query_params.get('sponsored_organizations', None)
         search_term = request.query_params.get('search_term', None)
@@ -118,20 +118,20 @@ class DesignsViewSet(viewsets.ViewSet):
             if not is_all_valid_uuid4(theme_ids):
                 return Response({"error": "BAD_REQUEST"}, status=400)
             
-        if design_ids:
-            # remove the white spaces
-            design_ids = design_ids.replace(" ", "")
-            # split the string into a list
-            design_ids = design_ids.split(",")
-            if not is_all_valid_uuid4(design_ids):
-                return Response({"error": "BAD_REQUEST"}, status=400)
-            
         if organization_ids:
             # remove the white spaces
             organization_ids = organization_ids.replace(" ", "")
             # split the string into a list
             organization_ids = organization_ids.split(",")
             if not is_all_valid_uuid4(organization_ids):
+                return Response({"error": "BAD_REQUEST"}, status=400)
+        
+        if store_ids:
+            # remove the white spaces
+            store_ids = store_ids.replace(" ", "")
+            # split the string into a list
+            store_ids = store_ids.split(",")
+            if not is_all_valid_uuid4(store_ids):
                 return Response({"error": "BAD_REQUEST"}, status=400)
             
         if sponsored_organizations:
@@ -144,12 +144,12 @@ class DesignsViewSet(viewsets.ViewSet):
             if sponsored_stores not in ["true","True"]:
                 return Response({"error": "BAD_REQUEST"}, status=400)
         
-        if workshops:
+        if workshop_ids:
             # remove the white spaces
-            workshops = workshops.replace(" ", "")
+            workshop_ids = workshop_ids.replace(" ", "")
             # split the string into a list
-            workshops = workshops.split(",")
-            if not is_all_valid_uuid4(workshops):
+            workshop_ids = workshop_ids.split(",")
+            if not is_all_valid_uuid4(workshop_ids):
                 return Response({"error": "BAD_REQUEST"}, status=400)
             
         if search_term:
@@ -161,13 +161,14 @@ class DesignsViewSet(viewsets.ViewSet):
             popular_designs = Design.get_designs_light(
                                                     offset=0, 
                                                     limit=20,
-                                                    theme_ids=themes,
-                                                    store_ids=stores,
-                                                    workshop_ids=workshops,
-                                                    organization_ids=organizations,
+                                                    theme_ids=theme_ids,
+                                                    store_ids=store_ids,
+                                                    workshop_ids=workshop_ids,
+                                                    organization_ids=organization_ids,
                                                     sponsored_stores=sponsored_stores,
                                                     sponsored_organizations=sponsored_organizations,
-                                                    search_term=search_term)
+                                                    search_term=search_term,
+                                                    free=free)
         except Exception as e:
             logging.error(f"get_popular_designs_light action method error :{e.args} ")
             return Response({"error": "UNKNOWN INTERNAL ERROR"}, status=400)
@@ -175,6 +176,17 @@ class DesignsViewSet(viewsets.ViewSet):
         response = Response(popular_designs, status=status.HTTP_200_OK)
 
         return response
+
+    ##### Get a list of designs with the minimum information
+    @action(detail=False, methods=['GET'], url_path='v1/designs/light', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    def get_designs_light(self, request):
+        """
+        This api returns the following data :
+        - design id
+        - design name
+        - design image
+        """
+        pass
 
     ##### Get the themes
     @action(detail=False, methods=['GET'], url_path='v1/designs/themes', permission_classes=[permissions.IsAuthenticatedOrReadOnly])

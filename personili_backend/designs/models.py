@@ -259,7 +259,9 @@ class Design(TimeStampedModel):
                           Q(tags__icontains=search_term) | 
                           Q(theme__name__icontains=search_term) | 
                           Q(theme__description__icontains=search_term) | 
-                          Q(collection__store__name__icontains=search_term) | 
+                          Q(collection__store__name__icontains=search_term) |
+                          Q(collection__store__storeprofile__biography__icontains=search_term) |
+                          Q(collection__workshop__organization__name__icontains=search_term) |
                           Q(collection__workshop__name__icontains=search_term), Q.AND)
             
         designs = (cls.objects.filter(status=cls.APPROVED, to_be_published=True)
