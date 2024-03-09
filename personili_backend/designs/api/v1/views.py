@@ -98,6 +98,7 @@ class DesignsViewSet(viewsets.ViewSet):
             else:
                 offset = int(offset)
                 limit = int(limit)
+                print(type(offset), type(limit))
                 if (offset < 0 or limit < 0) or (offset > limit):
                     return Response({"error": "BAD_REQUEST"}, status=400)
         else:
