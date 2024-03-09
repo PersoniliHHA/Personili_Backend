@@ -95,7 +95,7 @@ class DesignsViewSet(viewsets.ViewSet):
         if offset and limit:
             if not (offset.isdigit() and limit.isdigit()):
                 return Response({"error": "BAD_REQUEST"}, status=400)
-            elif (int(offset) < 0 or int(limit) < 0) or (int(offset) > int(limit)):
+            elif ((int(offset) < 0) or (int(limit) < 0)) or (int(offset) > int(limit)):
                 return Response({"error": "BAD_REQUEST"}, status=400)
         else:
             offset = 0
