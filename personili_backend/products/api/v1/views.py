@@ -70,9 +70,6 @@ class ProductViewSet(viewsets.ViewSet):
             if not (offset.isdigit() and limit.isdigit()):
                 return Response({"error": "BAD_REQUEST"}, status=400)
             else:
-                offset = int(offset)
-                limit = int(limit)
-                print(type(offset), type(limit))
                 if (offset < 0 or limit < 0) or (offset > limit):
                     return Response({"error": "BAD_REQUEST"}, status=400)
         else:

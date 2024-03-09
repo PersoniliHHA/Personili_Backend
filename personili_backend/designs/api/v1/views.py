@@ -90,6 +90,7 @@ class DesignsViewSet(viewsets.ViewSet):
         sponsored_stores = request.query_params.get('sponsored_stores', None)
         sponsored_organizations = request.query_params.get('sponsored_organizations', None)
         search_term = request.query_params.get('search_term', None)
+        free = request.query_params.get('free', None)
         
         ####################### Query parameters validation ########################
         if offset and limit:
@@ -104,14 +105,11 @@ class DesignsViewSet(viewsets.ViewSet):
         else:
             offset = 0
             limit = 20
-        
-        ##### price min and price max should be integers and greater than 0
-        if min_price and max_price:
-            if not (min_price.isdigit() and max_price.isdigit()) or (int(min_price) < 0 or int(max_price) < 0) or (int(min_price) > int(max_price)):
+
+        if free:
+            if free not in ["true","True"]:
                 return Response({"error": "BAD_REQUEST"}, status=400)
-        else :
-            min_price = 0
-            max_price = 1000000
+        
         if theme_ids:
             # remove the white spaces
             theme_ids = theme_ids.replace(" ", "")
