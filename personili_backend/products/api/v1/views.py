@@ -147,7 +147,8 @@ class ProductViewSet(viewsets.ViewSet):
 
         try :
             # Get the products based on the query parameters
-            products = Product.get_products_light(offset=offset,
+            products = Product.get_products_light(
+                                                offset=offset,
                                                 limit=limit,
                                                 max_price=max_price,
                                                 min_price=min_price,
