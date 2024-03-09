@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
 
 # Local imports
-from products.models import Product, ProductDesignedPersonalizableVariant, ProductReview, Promotion
+from products.models import Product, ProductReview, Promotion
 from accounts.models import AccountProfile
 from personalizables.models import Category
 
@@ -63,6 +63,7 @@ class ProductViewSet(viewsets.ViewSet):
         search_term = request.query_params.get('search_term', None)
         min_price = request.query_params.get('min_p', None)
         max_price = request.query_params.get('max_p', None)
+        with_promotion = request.query_params.get('with_promotion', None)
 
         ####################### Query parameters validation ########################
         ##### offset and limit should be integers and greater than 0
@@ -131,6 +132,11 @@ class ProductViewSet(viewsets.ViewSet):
         if sponsored_organizations:
             # sponsored_organizations should ba valid boolean value
             if sponsored_organizations not in ["true","True"]:
+                return Response({"error": "BAD_REQUEST"}, status=400)
+        
+        if with_promotion:
+            # with_promotion should ba valid boolean value
+            if with_promotion not in ["true","True"]:
                 return Response({"error": "BAD_REQUEST"}, status=400)
             
         if search_term:

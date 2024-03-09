@@ -158,7 +158,8 @@ class DesignsViewSet(viewsets.ViewSet):
                 return Response({"error": "BAD_REQUEST"}, status=400)
         try :
 
-            popular_designs = Design.get_designs_light(offset=0, 
+            popular_designs = Design.get_designs_light(
+                                                    offset=0, 
                                                     limit=20,
                                                     theme_ids=themes,
                                                     store_ids=stores,

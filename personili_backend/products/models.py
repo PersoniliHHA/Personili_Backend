@@ -6,9 +6,8 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 # Create your models here.
 from accounts.models import TimeStampedModel
 from accounts.models import Account
-from designs.models import Design, Collection, Store, Theme
-from organizations.models import Organization
-from personalizables.models import Category, Personalizable, PersonalizationMethod, DesignedPersonalizableVariant, DesignedPersonalizableZone
+from organizations.models import Organization, Workshop
+from personalizables.models import Category, PersonalizationMethod
 
 from django.db.models import Count
 from django.forms.models import model_to_dict
@@ -32,6 +31,7 @@ class Product(TimeStampedModel):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     personalization_method = models.ForeignKey(PersonalizationMethod, on_delete=models.CASCADE, null=True)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE, related_name='workshop', null=True)
 
     # if it's self made it won't be published on the store
     self_made = models.BooleanField(default=False)
@@ -99,8 +99,8 @@ class Product(TimeStampedModel):
             products = (products.filter(productdesignedpersonalizablevariant__designed_personalizable_variant__designed_personalizable_zone__design__theme_id__in=theme_ids)
                         .prefetch_related('productdesignedpersonalizablevariant__designed_personalizable_variant__designed_personalizable_zone__design__theme'))
         if design_ids:
-            products = (products.filter(productdesignedpersonalizablevariant__designed_personalizable_variant__designed_personalizable_zone__design_id__in=design_ids)
-                        .prefetch_related('productdesignedpersonalizablevariant__designed_personalizable_variant__designed_personalizable_zone__design'))
+            products = (products.filter(product_designed_personalizable_variant__designed_personalizable_zone__design_id__in=design_ids)
+                        .prefetch_related('product_designed_personalizable_variant__designed_personalizable_zone__design'))
         if sponsored_organizations:
             products = (products.filter(organization__orgprofile__is_sponsored=True)
                         .select_related('organization'))
@@ -159,22 +159,6 @@ class ProductPreview(TimeStampedModel):
 
     def __str__(self):
         return self.product.title + " " + self.id
-
-
-class ProductDesignedPersonalizableVariant(TimeStampedModel):
-    """
-    This table is a junction table between the product and the designed personalizable variant tables
-    """
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='productdesignedpersonalizablevariant')
-    designed_personalizable_variant = models.ForeignKey(DesignedPersonalizableVariant, on_delete=models.CASCADE)
-
-    class Meta:
-        db_table = 'product_designed_personalizable_variants'
-        unique_together = ['product', 'designed_personalizable_variant']
-
-    def __str__(self):
-        return self.product.title + " " + self.designed_personalizable_variant.name
 
 
 class ProductReview(TimeStampedModel):

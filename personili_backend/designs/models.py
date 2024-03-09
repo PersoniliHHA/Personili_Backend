@@ -192,6 +192,7 @@ class Design(TimeStampedModel):
     status = models.CharField(max_length=255,
                               choices=STATUS,
                               default=PENDING)
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     
     # This field is used to determine if the design should be published or not on our website
     to_be_published = models.BooleanField(default=True)
@@ -218,7 +219,8 @@ class Design(TimeStampedModel):
                                   sponsored_organizations=False,
                                   search_term=None,
                                   limit=20, 
-                                  offset=0):
+                                  offset=0,
+                                  free = None):
         """
         This method returns the most popular designs (the ones that were approved)
         compute the number of likes per design and return the top "limit" designs
@@ -231,6 +233,8 @@ class Design(TimeStampedModel):
         - design preview objects
         """
         q_objects = Q()
+        if free:
+            q_objects.add(Q(price=0.0), Q.AND)
         if theme_ids:
             q_objects.add(Q(theme_id__in=theme_ids), Q.AND)
         if store_ids:

@@ -433,10 +433,11 @@ class DesignedPersonalizableVariant(TimeStampedModel):
     """
     A designed personalizable variant is linked to:
      - a personalizable variant 
-     -
+     - a product : each product can have many designed personalizable variants, but a designed personalizable variant is linked to one and only one product
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     personalizable_variant = models.ForeignKey(PersonalizableVariant, on_delete=models.CASCADE, related_name='designed_personalizable_variant')
+    product = models.ForeignKey('products.Product', on_delete=models.CASCADE, related_name='product_designed_personalizable_variant')
     name = models.CharField(max_length=255, null=True)
 
     class Meta:
