@@ -71,12 +71,15 @@ class ProductViewSet(viewsets.ViewSet):
             if not (offset.isdigit() and limit.isdigit()):
                 return Response({"error": "BAD_REQUEST"}, status=400)
             else:
+                offset = int(offset)
+                limit = int(limit)
+                print(type(offset), type(limit))
                 if (offset < 0 or limit < 0) or (offset > limit):
                     return Response({"error": "BAD_REQUEST"}, status=400)
         else:
             offset = 0
             limit = 20
-        
+            
         ##### price min and price max should be integers and greater than 0
         if min_price and max_price:
             if not (min_price.isdigit() and max_price.isdigit()) or (int(min_price) < 0 or int(max_price) < 0) or (int(min_price) > int(max_price)):
