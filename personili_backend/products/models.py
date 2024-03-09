@@ -159,7 +159,7 @@ class ProductPreview(TimeStampedModel):
 
     def __str__(self):
         return self.product.title + " " + self.id
-    
+
 
 class ProductDesignedPersonalizableVariant(TimeStampedModel):
     """
@@ -175,8 +175,33 @@ class ProductDesignedPersonalizableVariant(TimeStampedModel):
 
     def __str__(self):
         return self.product.title + " " + self.designed_personalizable_variant.name
+
+
+class ProductReview(TimeStampedModel):
+    """
+    This table is used to store the product reviews
+    the fields are : 
+    - product
+    - account
+    - rating
+    - comment
+    """
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='productreview')
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    comment = models.TextField(max_length=1000)
+
+    class Meta:
+        db_table = 'product_reviews'
+
+    def __str__(self):
+        return self.product.title + " " + self.account.email + " " + self.rating + " " + self.id
     
 
+#####################################################################################
+#                             Promotions and Events                                #
+#####################################################################################
 class Promotion(TimeStampedModel):
     """
     Abstract class for all the promotions
@@ -193,19 +218,30 @@ class DiscountPromotion(Promotion):
     This is for percentage based discounts
     """
     percentage = models.DecimalField(max_digits=5, decimal_places=2)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='discountpromotion')
     class Meta:
         db_table = 'discount_promotions'
 
     def __str__(self):
         return self.product.title + " " + self.start_date + " " + self.end_date + " " + self.is_active + " " + self.id + " " + self.percentage
 
+class ProductDiscountPromotion(DiscountPromotion):
+    """
+    This is for percentage based discounts
+    """
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    discount_promotion = models.ForeignKey(DiscountPromotion, on_delete=models.CASCADE)
+    class Meta:
+        db_table = 'product_discount_promotions'
+        unique_together = ['product', 'discount_promotion']
+
+    def __str__(self):
+        return self.product.title + " " + self.start_date + " " + self.end_date + " " + self.is_active + " " + self.id + " " + self.percentage
 class AmountPromotion(Promotion):
     """
     This is for amount based discounts
     """
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='amountpromotion')
     class Meta:
         db_table = 'amount_promotions'
 
@@ -217,12 +253,89 @@ class CodePromotion(Promotion):
     This is for code based discounts
     """
     code = models.CharField(max_length=255)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='codepromotion')
     class Meta:
         db_table = 'code_promotions'
 
     def __str__(self):
         return self.product.title + " " + self.start_date + " " + self.end_date + " " + self.is_active + " " + self.id + " " + self.code
+
+class FirstTimePurchasePromotion(Promotion):
+    """
+    This is for first time purchase discounts
+    """
+    discount_percentage = models.DecimalField(max_digits=5, decimal_places=2)
+    class Meta:
+        db_table = 'first_time_purchase_promotions'
+
+    def __str__(self):
+        return self.product.title + " " + self.start_date + " " + self.end_date + " " + self.is_active + " " + self.id
+
+class LoyaltyPromotion(Promotion):
+    """
+    This is for loyalty discounts
+    """
+    points_per_purchase = models.IntegerField()
+    class Meta:
+        db_table = 'loyalty_promotions'
+
+    def __str__(self):
+        return self.product.title + " " + self.start_date + " " + self.end_date + " " + self.is_active + " " + self.id
+
+
+class ReferralPromotion(Promotion):
+    """
+    This is for referral discounts
+    """
+    discount_percentage = models.DecimalField(max_digits=5, decimal_places=2)
+    class Meta:
+        db_table = 'referral_promotions'
+
+    def __str__(self):
+        return self.product.title + " " + self.start_date + " " + self.end_date + " " + self.is_active + " " + self.id
+    
+class FreeShippingPromotion(Promotion):
+    """
+    This is for free shipping discounts
+    """
+    min_order_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    class Meta:
+        db_table = 'free_shipping_promotions'
+
+    def __str__(self):
+        return self.product.title + " " + self.start_date + " " + self.end_date + " " + self.is_active + " " + self.id
+
+class FlashSalePromotion(Promotion):
+    """
+    This is for flash sale discounts
+    """
+    discount_percentage = models.DecimalField(max_digits=5, decimal_places=2)
+    class Meta:
+        db_table = 'flash_sale_promotions'
+
+    def __str__(self):
+        return self.product.title + " " + self.start_date + " " + self.end_date + " " + self.is_active + " " + self.id
+    
+class MembersOnlyPromotion(Promotion):
+    """
+    This is for members only discounts
+    """
+    discount_percentage = models.DecimalField(max_digits=5, decimal_places=2)
+    class Meta:
+        db_table = 'members_only_promotions'
+
+    def __str__(self):
+        return self.product.title + " " + self.start_date + " " + self.end_date + " " + self.is_active + " " + self.id
+
+class BulkPurchasePromotion(Promotion):
+    """
+    This is for bulk purchase discounts
+    """
+    discount_percentage = models.DecimalField(max_digits=5, decimal_places=2)
+    class Meta:
+        db_table = 'bulk_purchase_promotions'
+
+    def __str__(self):
+        return self.product.title + " " + self.start_date + " " + self.end_date + " " + self.is_active + " " + self.id
 
 class Event(TimeStampedModel):
     """
@@ -241,17 +354,4 @@ class Event(TimeStampedModel):
         return self.product.title + " " + self.start_date + " " + self.end_date + " " + self.is_active + " " + self.id
 
 
-class ProductReview(TimeStampedModel):
-    """
-    """
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='productreview')
-    account = models.ForeignKey(Account, on_delete=models.CASCADE)
-    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
-    comment = models.TextField(max_length=1000)
 
-    class Meta:
-        db_table = 'product_reviews'
-
-    def __str__(self):
-        return self.product.title + " " + self.account.email + " " + self.rating + " " + self.id

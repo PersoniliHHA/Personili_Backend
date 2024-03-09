@@ -29,19 +29,25 @@ class ProductViewSet(viewsets.ViewSet):
     def get_user_profile(self):
         user_profile = get_object_or_404(AccountProfile, user=self.request.user)
         return user_profile
-    
-    @action(detail=False, methods=['GET'], url_path='v1/products', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    #################################### GET APIS, PUBLIC #####################################
+    ##### GET PRODUCTS LIGHT #####
+    @action(detail=False, methods=['GET'], url_path='v1/products', permission_classes=[permissions.ReadOnly])
     def get_products_light(self, request):
         """
         This method is used to get the list of products with minimal information and based on criterias :
-        - category_id
-        - personalization_type_id
-        - personalization_method_id
-        - theme_id
-        - design_id
-        - organization_id
+        - category_ids
+        - personalization_type_ids
+        - personalization_method_ids
+        - theme_ids
+        - design_ids
+        - organization_ids
         - sponsored_organization_ids
         - search term 
+        - limit
+        - offset
+        - min_price
+        - max_price
+        - promotion type : discount, free shipping, etc
         """
         # Get the query parameters
         offset = request.query_params.get('offset', None)

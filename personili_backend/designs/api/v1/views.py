@@ -69,12 +69,15 @@ class DesignsViewSet(viewsets.ViewSet):
     def get_designs_light(self, request):
         """
         Get the designs based on different criterias : 
-        - theme
-        - store
-        - workshop
+        - themes
+        - stores
+        - workshops
         - sponsored stores
         - sponsored organizations
         - search term
+        - offset
+        - limit
+        - 
         """
         # Get the query parameters from the request
         themes = request.query_params.get('themes', None)

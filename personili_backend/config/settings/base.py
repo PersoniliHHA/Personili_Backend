@@ -199,7 +199,6 @@ TEMPLATES = [
                 "django.template.context_processors.static",
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
-                #"hih_pod_platform.users.context_processors.allauth_settings",
             ],
         },
     }
@@ -332,7 +331,5 @@ WEBPACK_LOADER = {
         "IGNORE": [r".+\.hot-update.js", r".+\.map"],
     }
 }
-# Your stuff...
-# ------------------------------------------------------------------------------
-# AWS S3 Bucket access key and secret key
+
 
