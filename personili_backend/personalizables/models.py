@@ -9,7 +9,6 @@ from django.forms.models import model_to_dict
 # Models
 from accounts.models import TimeStampedModel
 from organizations.models import InventoryItem
-from products.models import Product
 
 # Utilities
 from utils.utilities import get_presigned_url_for_image
@@ -436,9 +435,10 @@ class DesignedPersonalizableVariant(TimeStampedModel):
      - a personalizable variant 
      - a product : each product can have many designed personalizable variants, but a designed personalizable variant is linked to one and only one product
     """
+
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     personalizable_variant = models.ForeignKey(PersonalizableVariant, on_delete=models.CASCADE, related_name='designed_personalizable_variant')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_designed_personalizable_variant')
+    product = models.ForeignKey('products.Product', on_delete=models.CASCADE, related_name='product_designed_personalizable_variant')
     name = models.CharField(max_length=255, null=True)
 
     class Meta:
