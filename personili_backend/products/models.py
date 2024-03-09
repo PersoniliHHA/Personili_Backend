@@ -48,7 +48,7 @@ class Product(TimeStampedModel):
         return self.title + ' - ' + str(self.id)
 
     @classmethod
-    def get_products_light(cls,
+    def get_products(cls,
                            offset: int,
                            limit: int,
                            max_price: float=None,
@@ -97,7 +97,7 @@ class Product(TimeStampedModel):
                         .select_related('personalization_method'))
         if theme_ids:
             products = (products.filter(productdesignedpersonalizablevariant__designed_personalizable_variant__designed_personalizable_zone__design__theme_id__in=theme_ids)
-                        .prefetch_related('productdesignedpersonalizablevariant__designed_personalizable_variant__designed_personalizable_zone__design__theme'))
+                        .prefetch_related('product_designed_personalizable_variant__designed_personalizable_variant__designed_personalizable_zone__design__theme'))
         if design_ids:
             products = (products.filter(product_designed_personalizable_variant__designed_personalizable_zone__design_id__in=design_ids)
                         .prefetch_related('product_designed_personalizable_variant__designed_personalizable_zone__design'))

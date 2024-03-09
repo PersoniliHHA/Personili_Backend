@@ -79,7 +79,7 @@ class ProductViewSet(viewsets.ViewSet):
         else:
             offset = 0
             limit = 20
-            
+
         ##### price min and price max should be integers and greater than 0
         if min_price and max_price:
             if not (min_price.isdigit() and max_price.isdigit()) or (int(min_price) < 0 or int(max_price) < 0) or (int(min_price) > int(max_price)):
@@ -150,7 +150,7 @@ class ProductViewSet(viewsets.ViewSet):
 
         try :
             # Get the products based on the query parameters
-            products = Product.get_products_light(
+            products = Product.get_products(
                                                 offset=offset,
                                                 limit=limit,
                                                 max_price=max_price,
