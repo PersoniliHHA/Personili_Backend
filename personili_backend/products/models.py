@@ -224,7 +224,7 @@ class DiscountPromotion(Promotion):
     def __str__(self):
         return self.product.title + " " + self.start_date + " " + self.end_date + " " + self.is_active + " " + self.id + " " + self.percentage
 
-class ProductDiscountPromotion(DiscountPromotion):
+class ProductDiscountPromotion(models.Model):
     """
     This is for percentage based discounts
     """

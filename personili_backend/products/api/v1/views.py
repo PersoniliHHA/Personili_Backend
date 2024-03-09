@@ -23,15 +23,17 @@ class ProductViewSet(viewsets.ViewSet):
     ViewSet class for the product app
     """
     queryset = Product.objects.all()
-    
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+    def get_permissions(self):
+        if self.action == 'get_products_light':
+            return [permissions.IsAuthenticatedOrReadOnly()]
+        return super().get_permissions()
     def get_user_profile(self):
         user_profile = get_object_or_404(AccountProfile, user=self.request.user)
         return user_profile
     #################################### GET APIS, PUBLIC #####################################
     ##### GET PRODUCTS LIGHT #####
-    @action(detail=False, methods=['GET'], url_path='v1/products', permission_classes=[permissions.ReadOnly])
+    @action(detail=False, methods=['GET'], url_path='v1/products', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def get_products_light(self, request):
         """
         This method is used to get the list of products with minimal information and based on criterias :
