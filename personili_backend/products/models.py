@@ -129,10 +129,10 @@ class Product(TimeStampedModel):
                 "product_organization_id": product.organization.id,
                 "product_organization_name": product.organization.name,
                 "product_price": product.price,
-                "product_designs_image_path": [zone.design.image_path for variant in product.product_designed_personalizable_variant.all() for zone in variant.designed_personalizable_variant.designed_personalizable_zone.all()],
+                "product_designs_image_path": [zone.design.image_path for variant in product.product_designed_personalizable_variant.all() for zone in variant.designed_personalizable_zone.all()],
                 "product_preview": [preview.image_path for preview in product.productpreview.all()],
-                "product_theme_ids": [zone.design.theme.id for variant in product.product_designed_personalizable_variant.all() for zone in variant.designed_personalizable_variant.designed_personalizable_zone.all()] if theme_ids else None,
-                "product_designs": [zone.design.id for variant in product.product_designed_personalizable_variant.all() for zone in variant.designed_personalizable_variant.designed_personalizable_zone.all()] if design_ids else None
+                "product_theme_ids": [zone.design.theme.id for variant in product.product_designed_personalizable_variant.all() for zone in variant.designed_personalizable_zone.all()] if theme_ids else None,
+                "product_designs": [zone.design.id for variant in product.product_designed_personalizable_variant.all() for zone in variant.designed_personalizable_zone.all()] if design_ids else None
                 }
             # Remove the null key values
             product_data = {k: v for k, v in product_data.items() if v is not None}
