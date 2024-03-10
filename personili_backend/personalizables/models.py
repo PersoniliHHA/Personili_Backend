@@ -10,8 +10,7 @@ from django.forms.models import model_to_dict
 from accounts.models import TimeStampedModel
 from organizations.models import InventoryItem
 
-# Utilities
-from utils.utilities import get_presigned_url_for_image
+
 
 
 #########################################
@@ -150,53 +149,6 @@ class PersonalizationType(TimeStampedModel):
         return self.name + " - " + str(self.id)
     
     @classmethod
-    def get_all_personalization_types(cls):
-        """
-        This method should return a list of dictionaries, each dictionary contain the name, description, logo and image of the personalization type
-        """
-        personalization_types = [
-            {   
-                'id': personalization_type.id,
-                'name': personalization_type.name,
-                'description': personalization_type.description,
-                'logo_path': get_presigned_url_for_image(personalization_type.logo_path),
-                'image_path': get_presigned_url_for_image(personalization_type.image_path)
-            } for personalization_type in PersonalizationType.objects.all()
-        ]
-        return personalization_types
-    
-    @classmethod
-    def get_all_personaliation_types_with_related_personalization_methods(cls):
-        """
-        This method should return a list of nested dictionaries, each dictionary contain the name, description, logo and image of the personalization type
-        and another dictionary containing id, name and description of the personalization method of this particular personlization type
-        """
-        personalization_types = [
-            {   
-                'id': personalization_type.id,
-                'name': personalization_type.name,
-                'description': personalization_type.description,
-                'logo_path': get_presigned_url_for_image(personalization_type.logo_path),
-                'image_path': get_presigned_url_for_image(personalization_type.image_path),
-                'personalization_methods': [
-                    {
-                        'id': personalization_method.id,
-                        'name': personalization_method.name,
-                        'description': personalization_method.description,
-                        'logo_path': get_presigned_url_for_image(personalization_method.logo_path),
-                        'image_path': get_presigned_url_for_image(personalization_method.image_path)
-                    } for personalization_method in PersonalizationMethod.objects.filter(personalization_type=personalization_type)
-                ]
-            } for personalization_type in PersonalizationType.objects.all()
-        ]
-        return personalization_types
-
-    def get_related_personalization_methods(self):
-        """
-        """
-        return self.personalization_method.all()
-    
-    @classmethod
     def get_allowed_personalizables_and_their_zones_for_personalization_type(cls, personalization_type_id):
         """
         This method returns a list of ids of personalizables that are allowed for this personalization type
@@ -294,30 +246,6 @@ class Personalizable(TimeStampedModel):
             })
         return response
     
-    def get_personalizable_zones_of_a_personalizable(self):
-        """
-        This method takes the id of a personalizable and 
-        returns a list of personalizable zones
-        """
-        response = []
-        personalizable_zones = self.zones.all()
-        for personalizable_zone in personalizable_zones:
-            response.append({
-                'personalizable_id': personalizable_zone.id,
-                'name': personalizable_zone.name,
-                'image_url': get_presigned_url_for_image(personalizable_zone.image_path),
-                'default_display': personalizable_zone.default_display,
-                'maximum_number_of_designs_allowed': personalizable_zone.maximum_number_of_designs,
-                'dx': personalizable_zone.dx,
-                'dy': personalizable_zone.dy,
-                'dh': personalizable_zone.dh,
-                'dw': personalizable_zone.dw,
-                'x1': personalizable_zone.x1,
-                'y1': personalizable_zone.y1,
-                'x2': personalizable_zone.x2,
-                'y2': personalizable_zone.y2
-            })
-        return response
 
 #########################################
 #     PersonalizableOption model        #
