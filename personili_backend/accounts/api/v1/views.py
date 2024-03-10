@@ -87,8 +87,8 @@ class AccountAuthViewSet(viewsets.ViewSet):
                 send_email_activation_link()
                 
                 # Generate the access and refresh tokens
-                access_token = create_access_token(account_profile.id)
-                refresh_token = create_refresh_token(account_profile.id)
+                access_token = create_access_token(str(account_profile.id))
+                refresh_token = create_refresh_token(str(account_profile.id))
 
                 
                 return Response({"message": "ACCOUNT_CREATED",
@@ -140,8 +140,8 @@ class AccountAuthViewSet(viewsets.ViewSet):
         account_profile = AccountProfile.objects.filter(user=account).first()
 
         # Generate the access and refresh tokens
-        access_token = create_access_token(account_profile.id)
-        refresh_token = create_refresh_token(account_profile.id)
+        access_token = create_access_token(str(account_profile.id))
+        refresh_token = create_refresh_token(str(account_profile.id))
 
         return Response({"message": "SUCCESSFUL LOGIN",
                          "details": {
