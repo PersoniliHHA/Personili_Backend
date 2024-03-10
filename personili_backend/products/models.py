@@ -109,7 +109,7 @@ class Product(TimeStampedModel):
                                        Q(description__icontains=search_term))
         
         # Now get the products and their previews ordered by the number of sales and average rating
-        products = (products.prefetch_related('productpreview', 'organization', 'category')
+        products = (products.prefetch_related('productpreview', 'organization', 'category', 'product_designed_personalizable_variant__designed_personalizable_variant_zone__design__theme')
                     .annotate(num_reviews=Count('productreview'))
                     .annotate(avg_rating=Avg('productreview__rating'))
                     .annotate(num_sales=Count('orderitem'))
@@ -129,6 +129,7 @@ class Product(TimeStampedModel):
                 "product_organization_id": product.organization.id,
                 "product_organization_name": product.organization.name,
                 "product_price": product.price,
+                "product_designs_image_path": [zone.design.image_path for variant in product.product_designed_personalizable_variant.all() for zone in variant.designed_personalizable_variant.designed_personalizable_zone.all()],
                 "product_preview": [preview.image_path for preview in product.productpreview.all()],
                 "product_theme_ids": [zone.design.theme.id for variant in product.product_designed_personalizable_variant.all() for zone in variant.designed_personalizable_variant.designed_personalizable_zone.all()] if theme_ids else None,
                 "product_designs": [zone.design.id for variant in product.product_designed_personalizable_variant.all() for zone in variant.designed_personalizable_variant.designed_personalizable_zone.all()] if design_ids else None
