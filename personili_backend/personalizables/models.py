@@ -11,8 +11,6 @@ from accounts.models import TimeStampedModel
 from organizations.models import InventoryItem
 
 
-
-
 #########################################
 #             Category model            #
 #########################################
