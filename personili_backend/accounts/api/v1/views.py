@@ -27,7 +27,7 @@ import logging as logger
 from typing import Optional
 
 # Security
-from personili_backend.security.jwt import create_access_token, create_refresh_token, verify_access_token, verify_refresh_token
+from security.jwt import create_access_token, create_refresh_token, verify_access_token, verify_refresh_token
 
 logger.basicConfig(level=logger.DEBUG)
 
