@@ -9,7 +9,6 @@ from designs.models import Store, Design, Collection, Theme
 from accounts.models import AccountProfile
 from designs.api.v1.serializers import DesignSerializerBase, DesignPostSerializer, DesignGetSerializerLight, ThemeSerializerGet
 from utils.constants import DESIGNER_UPLOADED_IMAGES_PATH_TEMPLATES
-from utils.utilities import store_image_in_s3
 from utils.validators import is_all_valid_uuid4
 
 
