@@ -24,19 +24,9 @@ class ProductViewSet(viewsets.ViewSet):
     """
     queryset = Product.objects.all()
 
-    def get_permissions(self):
-        if self.action == 'get_products_light':
-            return [permissions.IsAuthenticatedOrReadOnly()]
-        return super().get_permissions()
-    
-    def get_authenticators(self):
-        if self.action == 'get_products_light':
-            return []
-        return super().get_authenticators()
-
-    def get_user_profile(self):
-        user_profile = get_object_or_404(AccountProfile, user=self.request.user)
-        return user_profile
+    def get_account_profile(self, profile_id: str) -> AccountProfile:
+        account_profile = get_object_or_404(AccountProfile, id=profile_id)
+        return account_profile
     
     #################################### GET APIS, PUBLIC #####################################
     ##### GET PRODUCTS LIGHT #####
@@ -58,6 +48,10 @@ class ProductViewSet(viewsets.ViewSet):
         - max_price
         - promotion type : discount, free shipping, etc
         """
+        # specify the permission and authentication classes
+        self.permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+        self.authentication_classes = []
+
         # Get the query parameters
         offset = request.query_params.get('offset', None)
         limit = request.query_params.get('limit', None)
