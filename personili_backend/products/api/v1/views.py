@@ -28,9 +28,16 @@ class ProductViewSet(viewsets.ViewSet):
         if self.action == 'get_products_light':
             return [permissions.IsAuthenticatedOrReadOnly()]
         return super().get_permissions()
+    
+    def get_authenticators(self):
+        if self.action == 'get_products_light':
+            return []
+        return super().get_authenticators()
+
     def get_user_profile(self):
         user_profile = get_object_or_404(AccountProfile, user=self.request.user)
         return user_profile
+    
     #################################### GET APIS, PUBLIC #####################################
     ##### GET PRODUCTS LIGHT #####
     @action(detail=False, methods=['GET'], url_path='v1/products', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
@@ -168,4 +175,17 @@ class ProductViewSet(viewsets.ViewSet):
             return response
         except Exception as e:
             logging.error(f"get_products_light action method error :{e.args} ")
+            return Response({"error": "UNKNOWN_INTERNAL_ERROR"}, status=400)
+
+    @action(detail=False, methods=['GET'], url_path='v1/products/<uuid:product_id>', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    def get_product_detail(self, request, product_id):
+        """
+        This method is used to get the detail of a product
+        """
+        try:
+            product = Product.get_product_detail(product_id)
+            response = Response(product, status=status.HTTP_200_OK)
+            return response
+        except Exception as e:
+            logging.error(f"get_product_detail action method error :{e.args} ")
             return Response({"error": "UNKNOWN_INTERNAL_ERROR"}, status=400)

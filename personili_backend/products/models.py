@@ -33,8 +33,11 @@ class Product(TimeStampedModel):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE, related_name='workshop', null=True)
 
-    # if it's self made it won't be published on the store
+    # if it's self made it won't be published on the store (made by the buyer himself)
     self_made = models.BooleanField(default=False)
+
+    # to be published or not (products are created but not published until the organization decides to publish them)
+    to_be_published = models.BooleanField(default=False)
 
     title = models.CharField(max_length=255)
     description = models.TextField(max_length=1000)
@@ -128,11 +131,12 @@ class Product(TimeStampedModel):
                 "product_category_id": product.category.id,
                 "product_organization_id": product.organization.id,
                 "product_organization_name": product.organization.name,
+                "product_workshop_id": product.workshop.id if product.workshop else None,
                 "product_price": product.price,
                 "product_designs_image_path": [zone.design.image_path for variant in product.product_designed_personalizable_variant.all() for zone in variant.designed_personalizable_variant_zone.all()],
                 "product_preview": [preview.image_path for preview in product.productpreview.all()],
                 "product_theme_ids": [zone.design.theme.id for variant in product.product_designed_personalizable_variant.all() for zone in variant.designed_personalizable_variant_zone.all()] if theme_ids else None,
-                "product_designs": [zone.design.id for variant in product.product_designed_personalizable_variant.all() for zone in variant.designed_personalizable_variant_zone.all()] if design_ids else None
+                "product_designs_ids": [zone.design.id for variant in product.product_designed_personalizable_variant.all() for zone in variant.designed_personalizable_variant_zone.all()] if design_ids else None
                 }
             # Remove the null key values
             product_data = {k: v for k, v in product_data.items() if v is not None}
