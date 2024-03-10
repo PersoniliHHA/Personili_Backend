@@ -15,7 +15,6 @@ from organizations.models import Workshop
 
 # Utils
 from utils.constants import DESIGNER_UPLOADED_IMAGES_PATH_TEMPLATES
-from utils.utilities import store_image_in_s3
 
 
 #########################################
