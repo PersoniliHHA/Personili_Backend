@@ -83,7 +83,7 @@ class Product(TimeStampedModel):
         - title and description of the product
         """
         # Start with the base query (only non self made products) and their previews
-        products = cls.objects.filter(self_made=False)
+        products = cls.objects.filter(self_made=False, to_be_published=True)
         
         # Filter the price
         if max_price and min_price:
