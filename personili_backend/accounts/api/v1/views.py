@@ -110,7 +110,7 @@ class AccountAuthViewSet(viewsets.ViewSet):
             return Response({"ERROR": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 
-    @action(detail=False, methods=["POST"], url_path="v1/accounts/signin", permission_classes=[permissions.AllowAny])
+    @action(detail=False, methods=["POST"], url_path="v1/accounts/sign-in", permission_classes=[permissions.AllowAny])
     def main_account_sign_in(self, request, *args, **kwargs):
         """This method is used to sign in a user"""
 

@@ -83,7 +83,7 @@ def verify_jwt_token(token: str):
 
 def create_access_token(account_profile_id: str):
     """This method creates an access token"""
-    nb_days = settings.JWT_ACCESS_TOKEN_EXPIRATION_TIME 
+    nb_days = settings.JWT_ACCESS_TOKEN_EXPIRATION 
     future_exp_time = datetime.utcnow() + timedelta(days=nb_days)
     registred_claims = {
         "iss": "personili",
@@ -99,7 +99,7 @@ def create_access_token(account_profile_id: str):
 
 def create_refresh_token(account_profile_id: str):
     """This method creates a refresh token"""
-    nb_days = settings.JWT_REFRESH_TOKEN_EXPIRATION_TIME
+    nb_days = settings.JWT_REFRESH_TOKEN_EXPIRATION
     future_exp_time = datetime.utcnow() + timedelta(days=nb_days)
     registred_claims = {
         "iss": "personili",
