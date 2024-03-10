@@ -122,7 +122,7 @@ class AccountAuthViewSet(viewsets.ViewSet):
         serializer = MainAccountSignInserializer(data=request.data)
         if not serializer.is_valid():
             return Response({
-                                "ERROR": "INIVALID_REQUEST_DATA",
+                                "ERROR": "BAD_REQUEST",
                                 "DETAILS": serializer.errors,
                             }, 
                             status=status.HTTP_400_BAD_REQUEST)
@@ -137,7 +137,7 @@ class AccountAuthViewSet(viewsets.ViewSet):
             return Response({"error": "INVALID_EMAIL_OR_PASSWORD"}, status=status.HTTP_401_UNAUTHORIZED)
 
         # Get the account profile
-        account_profile = AccountProfile.objects.filter(user=account).first()
+        account_profile = AccountProfile.objects.filter(account=account).first()
 
         # Generate the access and refresh tokens
         access_token = create_access_token(str(account_profile.id))
