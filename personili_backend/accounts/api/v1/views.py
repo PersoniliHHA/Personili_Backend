@@ -26,6 +26,8 @@ from emails.email_utils import send_email_activation_link
 import logging as logger
 from typing import Optional
 
+# Security
+from personili_backend.security.jwt import create_access_token, create_refresh_token, verify_access_token, verify_refresh_token
 
 logger.basicConfig(level=logger.DEBUG)
 
@@ -44,14 +46,18 @@ class AccountAuthViewSet(viewsets.ViewSet):
     queryset = Account.objects.all()
     serializer_class = MainAccountSignUpserializer
 
-    @action(detail=False, methods=["POST"], url_path="v1/main-account-sign-up", permission_classes=[permissions.AllowAny])
+    @action(detail=False, methods=["POST"], url_path="v1/accounts/sign-up", permission_classes=[permissions.AllowAny])
     def main_account_sign_up(self, request, *args, **kwargs):
-        """This method is used to register a new user
+        """
+        This method is used to register a new user
         Checks to make before creating a new user:
         - Check if the user with this email already exists
         - Check if the email is blacklisted or not
         - the account will be created with a its profile empty
         """
+        # specify the permission and authentication classes
+        self.permission_classes = [permissions.AllowAny]
+        self.authentication_classes = []
 
         # 1- Validate the request data
         serializer = MainAccountSignUpserializer(data=request.data)
@@ -80,8 +86,15 @@ class AccountAuthViewSet(viewsets.ViewSet):
                 # Send activation email
                 send_email_activation_link()
                 
+                # Generate the access and refresh tokens
+                access_token = create_access_token(account_profile.id)
+                refresh_token = create_refresh_token(account_profile.id)
+
+                
                 return Response({"message": "ACCOUNT_CREATED",
                                  "details": {
+                                        "account_id": account.id,
+                                        "account_profile_id": account_profile.id,
                                         "email": account.email,
                                         "first_name": account_profile.first_name,
                                         "last_name": account_profile.last_name,
@@ -89,15 +102,21 @@ class AccountAuthViewSet(viewsets.ViewSet):
                                         "age": account_profile.age,
                                         "gender": account_profile.gender,
                                         "date_of_birth": account_profile.date_of_birth,
+                                        "access_token": access_token,
+                                        "refresh_token": refresh_token,
                                  }}, status=status.HTTP_201_CREATED)
 
         except (IntegrityError, DatabaseError, Error) as e:
             return Response({"ERROR": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 
-    @action(detail=False, methods=["POST"], url_path="v1/main-account-sign-in", permission_classes=[permissions.AllowAny])
+    @action(detail=False, methods=["POST"], url_path="v1/accounts/signin", permission_classes=[permissions.AllowAny])
     def main_account_sign_in(self, request, *args, **kwargs):
         """This method is used to sign in a user"""
+
+        # specify the permission and authentication classes
+        self.permission_classes = [permissions.AllowAny]
+        self.authentication_classes = []
 
         # Validate the request data
         serializer = MainAccountSignInserializer(data=request.data)
@@ -117,7 +136,20 @@ class AccountAuthViewSet(viewsets.ViewSet):
         if account is None:
             return Response({"error": "INVALID_EMAIL_OR_PASSWORD"}, status=status.HTTP_401_UNAUTHORIZED)
 
-        return Response({"message": "ACCOUNT_AUTHENTICATED"}, status=status.HTTP_200_OK)
+        # Get the account profile
+        account_profile = AccountProfile.objects.filter(user=account).first()
+
+        # Generate the access and refresh tokens
+        access_token = create_access_token(account_profile.id)
+        refresh_token = create_refresh_token(account_profile.id)
+
+        return Response({"message": "SUCCESSFUL LOGIN",
+                         "details": {
+                            "account_id": account.id,
+                            "account_profile_id": account_profile.id,
+                            "access_token": access_token,
+                            "refresh_token": refresh_token,
+                         }},status=status.HTTP_200_OK)
 
     @action(detail=False, methods=["POST"], url_path="v1/main-account-update-password", permission_classes=[permissions.IsAuthenticated])
     def main_account_update_password(self, request, *args, **kwargs):
