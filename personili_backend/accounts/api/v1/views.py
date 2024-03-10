@@ -93,8 +93,6 @@ class AccountAuthViewSet(viewsets.ViewSet):
                 
                 return Response({"message": "ACCOUNT_CREATED",
                                  "details": {
-                                        "account_id": account.id,
-                                        "account_profile_id": account_profile.id,
                                         "email": account.email,
                                         "first_name": account_profile.first_name,
                                         "last_name": account_profile.last_name,
@@ -145,8 +143,6 @@ class AccountAuthViewSet(viewsets.ViewSet):
 
         return Response({"message": "SUCCESSFUL LOGIN",
                          "details": {
-                            "account_id": account.id,
-                            "account_profile_id": account_profile.id,
                             "access_token": access_token,
                             "refresh_token": refresh_token,
                          }},status=status.HTTP_200_OK)
