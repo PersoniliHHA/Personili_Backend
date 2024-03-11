@@ -83,7 +83,7 @@ def verify_jwt_token(token: str):
             "payload": base64url_decode(payload)
         }
 
-def create_access_token(account_profile_id: str):
+def create_access_token(account_id: str):
     """This method creates an access token"""
     nb_days = settings.JWT_ACCESS_TOKEN_EXPIRATION 
     future_exp_time = datetime.utcnow() + timedelta(days=nb_days)
@@ -93,13 +93,13 @@ def create_access_token(account_profile_id: str):
         "exp": future_exp_time.timestamp()
     }
     private_claims = {
-        "ar": account_profile_id,
+        "aid": account_id,
         "tk": "acc"
     }
     access_token: str = generate_jwt_token(registred_claims, private_claims)
     return access_token
 
-def create_refresh_token(account_profile_id: str):
+def create_refresh_token(account_id: str):
     """This method creates a refresh token"""
     nb_days = settings.JWT_REFRESH_TOKEN_EXPIRATION
     future_exp_time = datetime.utcnow() + timedelta(days=nb_days)
@@ -109,7 +109,7 @@ def create_refresh_token(account_profile_id: str):
         "exp": future_exp_time.timestamp()
     }
     private_claims = {
-        "ar": account_profile_id,
+        "ar": account_id,
         "tk": "ref"
     }
     refresh_token: str = generate_jwt_token(registred_claims, private_claims)

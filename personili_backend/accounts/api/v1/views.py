@@ -87,8 +87,8 @@ class AccountAuthViewSet(viewsets.ViewSet):
                 send_email_activation_link()
                 
                 # Generate the access and refresh tokens
-                access_token = create_access_token(str(account_profile.id))
-                refresh_token = create_refresh_token(str(account_profile.id))
+                access_token = create_access_token(str(account.id))
+                refresh_token = create_refresh_token(str(account.id))
 
                 
                 return Response({"message": "ACCOUNT_CREATED",
@@ -134,12 +134,9 @@ class AccountAuthViewSet(viewsets.ViewSet):
         if account is None:
             return Response({"error": "INVALID_EMAIL_OR_PASSWORD"}, status=status.HTTP_401_UNAUTHORIZED)
 
-        # Get the account profile
-        account_profile = AccountProfile.objects.filter(account=account).first()
-
         # Generate the access and refresh tokens
-        access_token = create_access_token(str(account_profile.id))
-        refresh_token = create_refresh_token(str(account_profile.id))
+        access_token = create_access_token(str(account.id))
+        refresh_token = create_refresh_token(str(account.id))
 
         return Response({"message": "SUCCESSFUL LOGIN",
                          "details": {

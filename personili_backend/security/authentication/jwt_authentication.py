@@ -5,7 +5,7 @@ from django.conf import settings
 
 from security.jwt import verify_access_token, verify_refresh_token
 
-from accounts.models import AccountProfile
+from accounts.models import Account
 
 import json
 ###############################
@@ -67,17 +67,17 @@ class JWTAuthentication(BaseAuthentication):
             return None
         
         # get the account profile
-        account_profile_id = private_claims.get('ar')
-        if not account_profile_id:
+        account_id = private_claims.get('aid')
+        if not account_id:
             return None
         
         # check if the account profile exists
         try:
-            account_profile = AccountProfile.objects.get(id=account_profile_id)
-        except AccountProfile.DoesNotExist:
+            account = Account.objects.get(id=account_id)
+        except Account.DoesNotExist:
             return None
         
-        return (account_profile, None)
+        return (account, None)
 
     
 
