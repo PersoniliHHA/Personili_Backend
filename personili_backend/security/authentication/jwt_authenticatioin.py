@@ -74,7 +74,7 @@ class JWTAuthentication(BaseAuthentication):
         except AccountProfile.DoesNotExist:
             return None
         
-        return account_profile
+        return (account_profile, None)
 
     
 
