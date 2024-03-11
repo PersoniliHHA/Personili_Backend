@@ -207,7 +207,7 @@ class DesignsViewSet(viewsets.ViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     ##### Like a design
-    @action(detail=True, methods=['POST'], url_path='like', permission_classes=[permissions.IsAuthenticated])
+    @action(detail=True, methods=['POST'], url_path='like')
     def like_design(self, request, pk=None):
         """
         Like a design
