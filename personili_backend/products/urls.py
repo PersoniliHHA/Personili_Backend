@@ -9,6 +9,7 @@ from products.api.v1.views import ProductViewSet
 router = DefaultRouter()
 router.register(r'products', ProductViewSet, basename='products')
 
+
 urlpatterns = [
- path('', include(router.urls)),
+ path('v1/products', include(router.urls)),
 ]
