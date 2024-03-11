@@ -210,7 +210,7 @@ class Product(TimeStampedModel):
                         for zone in variant.designed_personalizable_variant_zone.all()
                     ],
             "product_num_reviews": product_details.num_reviews,
-            "product_avg_rating": product_details.avg_rating,
+            "product_avg_rating": "{:.1f}".format(product_details.avg_rating),
             "product_num_sales": product_details.num_sales,    
             }
         return response
