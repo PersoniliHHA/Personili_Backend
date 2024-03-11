@@ -7,6 +7,7 @@ from security.jwt import verify_access_token, verify_refresh_token
 
 from accounts.models import AccountProfile
 
+import json
 ###############################
 # Custom Authentication Class #
 ###############################
@@ -39,10 +40,12 @@ class JWTAuthentication(BaseAuthentication):
         
         # Check the header
         header = token_components.get('header')
+        header = json.loads(header)
         if not header or header.get('alg') != settings.JWT_SIGNING_ALGORITHM or header.get('typ') != 'JWT':
             return None
         # Check the payload
         payload = token_components.get('payload')
+        payload = json.loads(payload)
         if not payload:
             return None
         # Check the registered claims
