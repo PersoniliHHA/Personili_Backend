@@ -7,7 +7,7 @@ from django.urls import path, include
 from designs.api.v1.views import DesignsViewSet
 
 router = DefaultRouter()
-router.register(r'designs', DesignsViewSet, basename='designs')
+router.register(r'v1/designs', DesignsViewSet, basename='designs')
 
 urlpatterns = [
     path('', include(router.urls)),

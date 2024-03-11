@@ -209,7 +209,7 @@ class Design(TimeStampedModel):
         return self.title + " - " + str(self.id)
     
     @classmethod
-    def get_designs_light(cls, 
+    def get_designs(cls, 
                                   theme_ids= None,
                                   store_ids=None,
                                   workshop_ids=None,
@@ -297,8 +297,54 @@ class Design(TimeStampedModel):
     @classmethod
     def get_full_design_details(cls, design_id:str):
         """
+        This method returns all the infos related to a specific design :
+        - design id
+        - design title
+        - design description
+        - design image path
+        - design tags
+        - design price
+        - design theme id and name
+        - design exclusive or not
+        - design store id and name and logo or workshop id and name and organization name and logo
         """
-        pass
+        
+        design = (cls.objects.filter(id=design_id, status=cls.APPROVED, to_be_published=True)
+                                    .select_related('collection__store', 'collection__workshop__organization', 'theme')
+                                    .prefetch_related('design_previews')
+                                    .annotate(num_likes=models.Count('design_likes'))
+                                    .values('id', 
+                                    'title', 'description', 'image_path', 'tags', 
+                                    'price', 'exclusive_usage', 'theme_id', 'theme__name', 
+                                    'collection__store_id', 'collection__store__name', 
+                                    'collection__store__storeprofile__store_logo_path', 
+                                    'collection__workshop_id', 'collection__workshop__name', 
+                                    'collection__workshop__organization__name', 
+                                    'collection__workshop__organization__orgprofile__organization_logo_path')
+                                    .first())
+        
+        design_details: dict = {
+            'design_id': design.get('id'),
+            'design_title': design.get('title'),
+            'design_description':design.get('description'),
+            'design_image_path': design.get('image_path'),
+            'design_tags': design.get('tags'),
+            'design_price': design.get('price'),
+            'design_exclusive': design.get('exclusive_usage'),
+            'design_nb_likes': design.get('num_likes'),
+            'theme_id': design.get('theme_id'),
+            'theme_name': design.get('theme__name'),
+            'store_id': design.get('collection__store_id'),
+            'store_name': design.get('collection__store__name'),
+            'store_logo_path': design.get('collection__store__storeprofile__store_logo_path'),
+            'workshop_id': design.get('collection__workshop_id'),
+            'workshop_name': design.get('collection__workshop__name'),
+            'organization_name': design.get('collection__workshop__organization__name'),
+            'organization_logo_path': design.get('collection__workshop__organization__orgprofile__organization_logo_path'),
+            'design_previews': list(design.get('design_previews'))
+        }
+        return design_details
+
 
 
 #########################################

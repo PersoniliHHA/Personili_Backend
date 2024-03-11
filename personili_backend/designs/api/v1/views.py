@@ -65,7 +65,7 @@ class DesignsViewSet(viewsets.ViewSet):
     ################################### GET APIS, PUBLIC #####################################
     
     ##### Get the designs based on criteria : theme, store, workshop, nb of likes, sponsored stores, sponsored workshops
-    @action(detail=False, methods=['GET'], url_path='v1/designs', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    @action(detail=False, methods=['GET'], url_path='catalog', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def get_designs(self, request):
         """
         Get the designs based on different criterias : 
@@ -157,7 +157,7 @@ class DesignsViewSet(viewsets.ViewSet):
                 return Response({"error": "BAD_REQUEST"}, status=400)
         try :
 
-            popular_designs = Design.get_designs_light(
+            popular_designs = Design.get_designs(
                                                     offset=0, 
                                                     limit=20,
                                                     theme_ids=theme_ids,
@@ -175,20 +175,29 @@ class DesignsViewSet(viewsets.ViewSet):
         response = Response(popular_designs, status=status.HTTP_200_OK)
 
         return response
-
-    ##### Get a list of designs with the minimum information
-    @action(detail=False, methods=['GET'], url_path='v1/designs/light', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
-    def get_designs_light(self, request):
+    
+    ##### Get the full design
+    @action(detail=True, methods=['GET'], url_path='details', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    def get_design_by_id(self, request, pk=None):
         """
-        This api returns the following data :
-        - design id
-        - design name
-        - design image
+        Get the full details of a design by its id
         """
-        pass
+        # first check if the design exists and that it is to be published and that is approved
+        design = get_object_or_404(Design, pk=pk)
+        if not design or not design.status == Design.APPROVED or not design.to_be_published:
+            return Response({"error": "NOT_FOUND"}, status=404)
+        
+        try :
+            design_details = Design.get_full_design_details(design_id=pk)
+            response = Response(design_details, status=status.HTTP_200_OK)
+            return response
+        
+        except Exception as e:
+            logging.error(f"get_design_by_id action method error :{e.args} ")
+            return Response({"error": "UNKNOWN_ERROR"}, status=400)
 
     ##### Get the themes
-    @action(detail=False, methods=['GET'], url_path='v1/designs/themes', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    @action(detail=False, methods=['GET'], url_path='themes', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def get_themes(self, request):
         """
         Get all themes
@@ -196,6 +205,9 @@ class DesignsViewSet(viewsets.ViewSet):
         themes = Theme.objects.all()
         serializer = ThemeSerializerGet(themes, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+     ################################### GET APIS, PUBLIC #####################################
+   
     
     ###########################################################################################
     

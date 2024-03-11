@@ -31,7 +31,7 @@ class ProductViewSet(viewsets.ViewSet):
     #################################### GET APIS, PUBLIC #####################################
     ##### GET PRODUCTS LIGHT #####
     @action(detail=False, methods=['GET'], url_path='catalog', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
-    def get_products_light(self, request):
+    def get_products(self, request):
         """
         This method is used to get the list of products with minimal information and based on criterias :
         - category_ids
