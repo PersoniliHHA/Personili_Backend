@@ -212,7 +212,7 @@ class DesignsViewSet(viewsets.ViewSet):
         """
         Like a design
         """
-        self.permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+        self.permission_classes = []
         self.authentication_classes = [JWTAuthentication]
         account_profile = request.user
         
