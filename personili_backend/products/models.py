@@ -172,7 +172,7 @@ class Product(TimeStampedModel):
                               .annotate(num_reviews=Count('productreview'))
                               .annotate(avg_rating=Avg('productreview__rating'))
                               .annotate(num_sales=Count('orderitem'))
-                              .annotate(num_design_likes=Count('product_designed_personalizable_variant__designed_personalizable_variant_zone__design__designlike'))
+                              .annotate(num_design_likes=Count('product_designed_personalizable_variant__designed_personalizable_variant_zone__design__design_likes'))
                               .first())
         response: dict = {
             "product_id": product_details.id,
