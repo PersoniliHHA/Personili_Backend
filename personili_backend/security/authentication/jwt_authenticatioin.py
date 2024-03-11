@@ -20,8 +20,7 @@ class JWTAuthentication(BaseAuthentication):
         Custom authenticate method that checks the validity of the access token
         """
         raw_token: str = request.headers.get('Authorization')
-        
-        
+        print(raw_token)
         
         # Check if the token is present
         if not raw_token:
@@ -32,6 +31,7 @@ class JWTAuthentication(BaseAuthentication):
 
         # Check if the token if the token is valid
         token_components: dict = verify_access_token(token)
+        print(token_components)
 
         # Check the signature 
         if not token_components.get('is_valid_signature'):
