@@ -200,6 +200,7 @@ class Product(TimeStampedModel):
             "product_previews": [{"image_path": preview.image_path} for preview in product_details.productpreview.all()],
             "designs_used": [{
                             "design_id": zone.design.id,
+                            "design_title": zone.design.title,
                             "design_image_path": zone.design.image_path,
                             "theme_id": zone.design.theme.id,
                             "theme_name": zone.design.theme.name,
