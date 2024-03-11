@@ -91,7 +91,7 @@ def create_access_token(account_profile_id: str):
         "exp": future_exp_time.timestamp()
     }
     private_claims = {
-        "pr": account_profile_id,
+        "ar": account_profile_id,
         "tk": "acc"
     }
     access_token: str = generate_jwt_token(registred_claims, private_claims)
@@ -107,7 +107,7 @@ def create_refresh_token(account_profile_id: str):
         "exp": future_exp_time.timestamp()
     }
     private_claims = {
-         "pr": account_profile_id,
+        "ar": account_profile_id,
         "tk": "ref"
     }
     refresh_token: str = generate_jwt_token(registred_claims, private_claims)

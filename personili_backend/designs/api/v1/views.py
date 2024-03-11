@@ -11,6 +11,8 @@ from designs.api.v1.serializers import DesignSerializerBase, DesignPostSerialize
 from utils.constants import DESIGNER_UPLOADED_IMAGES_PATH_TEMPLATES
 from utils.validators import is_all_valid_uuid4
 
+from security.authentication.jwt_authenticatioin import JWTAuthentication
+
 
 # boto3 imports
 import boto3
@@ -47,20 +49,10 @@ class DesignsViewSet(viewsets.ViewSet):
     ViewSet for the Design class
     """
     queryset = Design.objects.all()
-    serializer_class = DesignSerializerBase
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_user_profile(self):
         user_profile = get_object_or_404(AccountProfile, user=self.request.user)
         return user_profile
-
-    def get_serializer_class(self):
-        if self.action == "add-new-design-for-designer":
-            return DesignPostSerializer
-        elif self.action == "get-all-designs-by-criteria-light":
-            return DesignGetSerializerLight
-
-        return DesignSerializerBase
 
     ################################### GET APIS, PUBLIC #####################################
     
@@ -79,6 +71,9 @@ class DesignsViewSet(viewsets.ViewSet):
         - limit
         - 
         """
+        self.permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+        self.authentication_classes = []
+        
         # Get the query parameters from the request
         offset = request.query_params.get('offset', None)
         limit = request.query_params.get('limit', None)
@@ -181,6 +176,9 @@ class DesignsViewSet(viewsets.ViewSet):
         """
         Get the full details of a design by its id
         """
+        self.permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+        self.authentication_classes = []
+
         # first check if the design exists and that it is to be published and that is approved
         design = get_object_or_404(Design, pk=pk)
         if not design or not design.status == Design.APPROVED or not design.to_be_published:
@@ -201,11 +199,40 @@ class DesignsViewSet(viewsets.ViewSet):
         """
         Get all themes
         """
+        self.permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+        self.authentication_classes = []
+
         themes = Theme.objects.all()
         serializer = ThemeSerializerGet(themes, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
-     ################################### GET APIS, PUBLIC #####################################
+    ##### Like a design
+    @action(detail=True, methods=['POST'], url_path='like', permission_classes=[permissions.IsAuthenticated])
+    def like_design(self, request, pk=None):
+        """
+        Like a design
+        """
+        self.permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+        self.authentication_classes = [JWTAuthentication]
+        account_profile = request.user
+        
+        # Check the design exists
+        design = get_object_or_404(Design, pk=pk)
+        if not design:
+            return Response({"error": "NOT_FOUND"}, status=404)
+        
+        # Check if the user has already liked the design
+        if design.is_liked_by(account_profile):
+            return Response({"error": "ALREADY_LIKED"}, status=400)
+        
+        try:
+            design.like(account_profile)
+            return Response({"message": "LIKED"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            logging.error(f"like_design action method error :{e.args} ")
+            return Response({"error": "UNKNOWN_ERROR"}, status=400)
+        
+    ################################### GET APIS, PUBLIC #####################################
    
     
     ###########################################################################################

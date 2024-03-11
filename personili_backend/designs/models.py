@@ -349,8 +349,24 @@ class Design(TimeStampedModel):
             ]
         }
         return design_details
+    
+    def like(self, account_profile: AccountProfile):
+        """
+        This method is used to like a design, it creates a design like object
+        """
+        DesignLike.objects.create(design=self, account_profile=account_profile)
+    
+    def unlike(self, account_profile: AccountProfile):
+        """
+        This method is used to unlike a design, it deletes the design like object
+        """
+        DesignLike.objects.filter(design=self, account_profile=account_profile).delete()
 
-
+    def is_liked_by(self, account_profile: AccountProfile):
+        """
+        This method checks if a design is liked by a specific user
+        """
+        return DesignLike.objects.filter(design=self, account_profile=account_profile).exists()
 
 #########################################
 #        Design likes model             #
