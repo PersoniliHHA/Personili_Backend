@@ -1,7 +1,7 @@
 # Rest framework 
 from rest_framework.authentication import BaseAuthentication
 
-from config import settings
+from django.conf import settings
 
 from security.jwt import verify_access_token, verify_refresh_token
 
