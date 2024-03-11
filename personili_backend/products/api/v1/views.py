@@ -30,7 +30,7 @@ class ProductViewSet(viewsets.ViewSet):
     
     #################################### GET APIS, PUBLIC #####################################
     ##### GET PRODUCTS LIGHT #####
-    @action(detail=False, methods=['GET'], url_path='', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    @action(detail=False, methods=['GET'], url_path='catalog', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def get_products_light(self, request):
         """
         This method is used to get the list of products with minimal information and based on criterias :
@@ -171,7 +171,7 @@ class ProductViewSet(viewsets.ViewSet):
             logging.error(f"get_products_light action method error :{e.args} ")
             return Response({"error": "UNKNOWN_INTERNAL_ERROR"}, status=400)
 
-    @action(detail=True, methods=['GET'], url_path='', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    @action(detail=True, methods=['GET'], url_path='details', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def get_product_detail(self, request, product_id):
         """
         This method is used to get the detail of a product
