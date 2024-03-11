@@ -1,7 +1,10 @@
-# Settings
-from django.conf import settings
+# Standard Library Imports
 import base64
 from datetime import datetime, timedelta
+
+# settings
+from config import settings
+
 
 # Cryptogrphay imports
 import hmac
