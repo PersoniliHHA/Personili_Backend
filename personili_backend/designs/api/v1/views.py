@@ -158,8 +158,8 @@ class DesignsViewSet(viewsets.ViewSet):
         try :
 
             popular_designs = Design.get_designs(
-                                                    offset=0, 
-                                                    limit=20,
+                                                    offset=offset, 
+                                                    limit=limit,
                                                     theme_ids=theme_ids,
                                                     store_ids=store_ids,
                                                     workshop_ids=workshop_ids,
