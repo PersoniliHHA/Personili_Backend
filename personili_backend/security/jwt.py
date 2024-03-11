@@ -69,7 +69,7 @@ def verify_jwt_token(token: str):
         payload_decoded = json.loads(base64url_decode(payload))
 
         # Check if the token is expired
-        if 'exp' in payload_decoded.get('registered_claims') and datetime.datetime.now() > datetime.datetime.fromtimestamp(payload_decoded.get('registered_claims').get('exp')):
+        if 'exp' in payload_decoded.get('registered_claims') and datetime.now() > datetime.fromtimestamp(payload_decoded.get('registered_claims').get('exp')):
             return {
                 "is_valid_signature": False,
                 "error": "Token is expired"
