@@ -300,7 +300,7 @@ ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 # django-rest-framework - https://www.django-rest-framework.org/api-guide/settings/
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "security.authentication.JWTAuthentication",
+        "security.authentication.jwt_authentication.JWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     ),
     'DEFAULT_RENDERER_CLASSES': (
