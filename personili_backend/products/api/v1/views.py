@@ -172,13 +172,17 @@ class ProductViewSet(viewsets.ViewSet):
             return Response({"error": "UNKNOWN_INTERNAL_ERROR"}, status=400)
 
     @action(detail=True, methods=['GET'], url_path='details', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
-    def get_product_detail(self, request, product_id):
+    def get_product_detail(self, request, pk=None):
         """
         This method is used to get the detail of a product
         """
         self.permission_classes = [permissions.IsAuthenticatedOrReadOnly]
         self.authentication_classes = []
         try:
+            # Get the product id
+            product_id = pk
+            if not product_id:
+                return Response({"error": "BAD_REQUEST"}, status=400)
             # First check if the product exists and that it's not self made or not to be published
             product: Product = get_object_or_404(Product, id=product_id)
             if not product or product.self_made or not product.to_be_published:
