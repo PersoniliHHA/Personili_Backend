@@ -212,8 +212,9 @@ class DesignsViewSet(viewsets.ViewSet):
         """
         Like a design
         """
-        self.permission_classes = []
         self.authentication_classes = [JWTAuthentication]
+        self.permission_classes = [permissions.IsAuthenticated]
+        
         account_profile = request.user
         
         # Check the design exists
