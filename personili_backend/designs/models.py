@@ -320,7 +320,7 @@ class Design(TimeStampedModel):
                                     'collection__store__storeprofile__store_logo_path', 
                                     'collection__workshop_id', 'collection__workshop__name', 
                                     'collection__workshop__organization__name', 
-                                    'collection__workshop__organization__orgprofile__organization_logo_path')
+                                    'collection__workshop__organization__orgprofile__logo_path')
                                     .first())
         
         design_details: dict = {
@@ -340,8 +340,13 @@ class Design(TimeStampedModel):
             'workshop_id': design.get('collection__workshop_id'),
             'workshop_name': design.get('collection__workshop__name'),
             'organization_name': design.get('collection__workshop__organization__name'),
-            'organization_logo_path': design.get('collection__workshop__organization__orgprofile__organization_logo_path'),
-            'design_previews': list(design.get('design_previews'))
+            'organization_logo_path': design.get('collection__workshop__organization__orgprofile__logo_path'),
+            'design_previews': [
+                {
+                    'id': preview.get('id'),
+                    'image_path': preview.get('image_path')
+                } for preview in design.get('design_previews', [])
+            ]
         }
         return design_details
 
