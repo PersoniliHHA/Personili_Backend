@@ -133,11 +133,12 @@ class Product(TimeStampedModel):
                 "product_organization_name": product.organization.name,
                 "product_workshop_id": product.workshop.id if product.workshop else None,
                 "product_price": product.price,
-                "product_designs_image_path": [zone.design.image_path for variant in product.product_designed_personalizable_variant.all() for zone in variant.designed_personalizable_variant_zone.all()],
+                "product_designs": [{"design_id": zone.design.id, 
+                                     "theme_id": zone.design.theme.id, 
+                                     "design_image_path": zone.design.image_path} for variant in product.product_designed_personalizable_variant.all() for zone in variant.designed_personalizable_variant_zone.all()],
                 "product_preview": [preview.image_path for preview in product.productpreview.all()],
                 "product_theme_ids": [zone.design.theme.id for variant in product.product_designed_personalizable_variant.all() for zone in variant.designed_personalizable_variant_zone.all()] if theme_ids else None,
-                "product_designs_ids": [zone.design.id for variant in product.product_designed_personalizable_variant.all() for zone in variant.designed_personalizable_variant_zone.all()] if design_ids else None
-                }
+                  }
             # Remove the null key values
             product_data = {k: v for k, v in product_data.items() if v is not None}
             
@@ -149,8 +150,64 @@ class Product(TimeStampedModel):
 
         return response
 
-                
 
+    @classmethod
+    def get_full_product_details(cls, product_id: str):
+        """
+        This method takes a product id and returns the full details of the product:
+        - Product id
+        - Product title
+        - Product description
+        - Product price
+        - Product category
+        - Product organization and workshop name
+        - Product reviews
+        - Product previews ids and images
+        - Product designs ids and images
+        - Product themes
+        """
+        product_details = (cls.objects.filter(id=product_id)
+                              .select_related('organization__orgprofile', 'workshop' 'category', 'personalization_method__personalization_type')
+                              .prefetch_related('productpreview', 'productreview', 'product_designed_personalizable_variant__designed_personalizable_variant_zone__design__theme')      
+                              .annotate(num_reviews=Count('productreview'))
+                              .annotate(avg_rating=Avg('productreview__rating'))
+                              .annotate(num_sales=Count('orderitem'))
+                              .annotate(num_design_likes=Count('product_designed_personalizable_variant__designed_personalizable_variant_zone__design__designlike'))
+                              .first())
+        response: dict = {
+            "product_id": product_details.id,
+            "product_title": product_details.title,
+            "product_description": product_details.description,
+            "product_price": product_details.price,
+            "product_category_id": product_details.category.id,
+            "product_category_name": product_details.category.name,
+            "product_organization_id": product_details.organization.id,
+            "product_organization_name": product_details.organization.name,
+            "product_organization_logo": product_details.organization.orgprofile.logo_path,
+            "product_organization_sponsored": product_details.organization.orgprofile.is_sponsored,
+            "product_workshop_id": product_details.workshop.id if product_details.workshop else None,
+            "product_workshop_name": product_details.workshop.name if product_details.workshop else None,
+            "product_personalization_method_id": product_details.personalization_method.id if product_details.personalization_method else None,
+            "product_personalization_method_name": product_details.personalization_method.name if product_details.personalization_method else None,
+            "product_personalization_type_id": product_details.personalization_method.personalization_type.id if product_details.personalization_method else None,
+            "product_personalization_type_name": product_details.personalization_method.personalization_type.name if product_details.personalization_method else None,
+            "product_reviews": [
+                {"account_id": review.account.id, 
+                 "account_email": review.account.email, 
+                 "rating": review.rating, 
+                 "comment": review.comment} for review in product_details.productreview.all()],
+            "product_previews": [{"image_path": preview.image_path} for preview in product_details.productpreview.all()],
+            "designs_used": [{"design_id": zone.design.id, 
+                              "design_image_path": zone.design.image_path, 
+                              "theme_id": zone.design.theme.id, 
+                              "theme_name": zone.design.theme.name,
+                              "design_likes": zone.design.num_design_likes 
+                              } for variant in product_details.product_designed_personalizable_variant.all() for zone in variant.designed_personalizable_variant_zone.all()],
+            "product_num_reviews": product_details.num_reviews,
+            "product_avg_rating": product_details.avg_rating,
+            "product_num_sales": product_details.num_sales,    
+            }
+        return response
 class ProductPreview(TimeStampedModel):
     """
     This table is used to store the product preview

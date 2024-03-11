@@ -176,10 +176,20 @@ class ProductViewSet(viewsets.ViewSet):
         """
         This method is used to get the detail of a product
         """
+        self.permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+        self.authentication_classes = []
         try:
-            product = Product.get_product_detail(product_id)
-            response = Response(product, status=status.HTTP_200_OK)
+            # First check if the product exists and that it's not self made or not to be published
+            product: Product = get_object_or_404(Product, id=product_id)
+            if not product or product.self_made or not product.to_be_published:
+                return Response({"error": "NOT_FOUND"}, status=404)
+            
+            # Get the full details  of the product
+            product_details: dict = Product.get_full_product_details(product_id)
+            response = Response(product_details, status=status.HTTP_200_OK)
+
             return response
         except Exception as e:
             logging.error(f"get_product_detail action method error :{e.args} ")
             return Response({"error": "UNKNOWN_INTERNAL_ERROR"}, status=400)
+    
