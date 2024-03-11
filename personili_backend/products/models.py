@@ -174,7 +174,6 @@ class Product(TimeStampedModel):
                               .annotate(num_reviews=Count('productreview'))
                               .annotate(avg_rating=Avg('productreview__rating'))
                               .annotate(num_sales=Count('orderitem'))
-                              .annotate(num_design_likes=Count('product_designed_personalizable_variant__designed_personalizable_variant_zone__design__design_likes'))
                               .first())
         response: dict = {
             "product_id": product_details.id,
@@ -199,11 +198,16 @@ class Product(TimeStampedModel):
                  "rating": review.rating, 
                  "comment": review.comment} for review in product_details.productreview.all()],
             "product_previews": [{"image_path": preview.image_path} for preview in product_details.productpreview.all()],
-            "designs_used": [{"design_id": design.id,
-                              "design_image_path": design.image_path,
-                              "theme_id": design.theme.id,
-                              "theme_name": design.theme.name,
-                              "num_likes": design.design_likes.count()} for variant in product_details.product_designed_personalizable_variant.all() for zone in variant.designed_personalizable_variant_zone.all() for design in zone.design.design_likes.all()],
+            "designs_used": [{
+                            "design_id": zone.design.id,
+                            "design_image_path": zone.design.image_path,
+                            "theme_id": zone.design.theme.id,
+                            "theme_name": zone.design.theme.name,
+                            "num_likes": zone.design.design_likes.count()
+                        } 
+                        for variant in product_details.product_designed_personalizable_variant.all() 
+                        for zone in variant.designed_personalizable_variant_zone.all()
+                    ],
             "product_num_reviews": product_details.num_reviews,
             "product_avg_rating": product_details.avg_rating,
             "product_num_sales": product_details.num_sales,    
