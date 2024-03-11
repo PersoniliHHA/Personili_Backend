@@ -11,7 +11,7 @@ from designs.api.v1.serializers import DesignSerializerBase, DesignPostSerialize
 from utils.constants import DESIGNER_UPLOADED_IMAGES_PATH_TEMPLATES
 from utils.validators import is_all_valid_uuid4
 
-from security.authentication.jwt_authenticatioin import JWTAuthentication
+from personili_backend.security.authentication.jwt_authentication import JWTAuthentication
 
 
 # boto3 imports
@@ -49,7 +49,7 @@ class DesignsViewSet(viewsets.ViewSet):
     ViewSet for the Design class
     """
     queryset = Design.objects.all()
-
+    
     def get_user_profile(self):
         user_profile = get_object_or_404(AccountProfile, user=self.request.user)
         return user_profile
