@@ -215,7 +215,8 @@ class DesignsViewSet(viewsets.ViewSet):
         self.authentication_classes = [JWTAuthentication]
         self.permission_classes = [permissions.IsAuthenticated]
         
-        account_profile = request.user
+        account = request.user
+        account_profile = AccountProfile.objects.get(account=account)
         
         # Check the design exists
         design = get_object_or_404(Design, pk=pk)
