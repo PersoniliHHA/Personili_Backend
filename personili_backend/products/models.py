@@ -248,7 +248,7 @@ class ProductReview(TimeStampedModel):
         db_table = 'product_reviews'
 
     def __str__(self):
-        return self.product.title + " " + self.account.email + " " + self.rating + " " + self.id
+        return self.product.title + " " + self.account.email + " " + self.rating + " " + str(self.id)
     
 
 #####################################################################################
