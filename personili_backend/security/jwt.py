@@ -45,6 +45,7 @@ def generate_jwt_token(registred_claims: dict,
         "private_claims": private_claims,
         "public_claims": public_claims
     }
+    print(settings.JWT_SECRET_KEY)
     secret = settings.JWT_SECRET_KEY
 
     signature = hmac.new(secret.encode("utf-8"), 
