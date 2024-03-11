@@ -19,7 +19,8 @@ class JWTAuthentication(BaseAuthentication):
         """
         Custom authenticate method that checks the validity of the access token
         """
-        raw_token: str = request.META.get('Authorization')
+        raw_token: str = request.headers.get('Authorization')
+        
         
         
         # Check if the token is present
