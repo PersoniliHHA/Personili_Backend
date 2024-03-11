@@ -31,6 +31,7 @@ class Product(TimeStampedModel):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     personalization_method = models.ForeignKey(PersonalizationMethod, on_delete=models.CASCADE, null=True)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    # what does this mean? the workshop owner of the design or the workshop that will handle the 
     workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE, related_name='workshop', null=True)
 
     # if it's self made it won't be published on the store (made by the buyer himself)
@@ -132,6 +133,7 @@ class Product(TimeStampedModel):
                 "product_organization_id": product.organization.id,
                 "product_organization_name": product.organization.name,
                 "product_workshop_id": product.workshop.id if product.workshop else None,
+                "product_workshop_name": product.workshop.name if product.workshop else None,
                 "product_price": product.price,
                 "product_designs": [{"design_id": zone.design.id, 
                                      "theme_id": zone.design.theme.id, 
@@ -167,7 +169,7 @@ class Product(TimeStampedModel):
         - Product themes
         """
         product_details = (cls.objects.filter(id=product_id)
-                              .select_related('organization__orgprofile', 'workshop' 'category', 'personalization_method__personalization_type')
+                              .select_related('organization__orgprofile', 'workshop', 'category', 'personalization_method__personalization_type')
                               .prefetch_related('productpreview', 'productreview', 'product_designed_personalizable_variant__designed_personalizable_variant_zone__design__theme')      
                               .annotate(num_reviews=Count('productreview'))
                               .annotate(avg_rating=Avg('productreview__rating'))
