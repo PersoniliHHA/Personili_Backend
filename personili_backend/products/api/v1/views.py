@@ -171,7 +171,7 @@ class ProductViewSet(viewsets.ViewSet):
             logging.error(f"get_products_light action method error :{e.args} ")
             return Response({"error": "UNKNOWN_INTERNAL_ERROR"}, status=400)
 
-    @action(detail=False, methods=['GET'], url_path='v1/products/<uuid:product_id>', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    @action(detail=True, methods=['GET'], url_path='v1/products/<uuid:product_id>', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def get_product_detail(self, request, product_id):
         """
         This method is used to get the detail of a product
