@@ -3,8 +3,7 @@ import base64
 from datetime import datetime, timedelta
 
 # settings
-from config import settings
-from config.settings import JWT_SECRET_KEY
+from django.conf import settings
 
 
 # Cryptogrphay imports
@@ -46,8 +45,7 @@ def generate_jwt_token(registred_claims: dict,
         "private_claims": private_claims,
         "public_claims": public_claims
     }
-    secret = JWT_SECRET_KEY
-
+    secret = settings.JWT_SECRET_KEY
     signature = hmac.new(secret.encode("utf-8"), 
                          msg=(base64url_encode(json.dumps(header)) + "." + base64url_encode(json.dumps(payload))).encode("utf-8"), 
                          digestmod=hashlib.sha3_512).digest()
@@ -58,7 +56,7 @@ def generate_jwt_token(registred_claims: dict,
 def verify_jwt_token(token: str):
     """This method verifies a jwt token"""
     header, payload, signature = token.split(".")
-    secret = JWT_SECRET_KEY
+    secret = settings.JWT_SECRET_KEY
     expected_signature = hmac.new(secret.encode("utf-8"), 
                                   msg=(header + "." + payload).encode("utf-8"), 
                                   digestmod=hashlib.sha3_512).digest()
