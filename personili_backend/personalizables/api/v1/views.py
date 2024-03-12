@@ -61,7 +61,7 @@ class PersonalizationTypeViewSet(viewsets.ModelViewSet):
     
 
     # Get all personalization types
-    @action(detail=False, methods=['GET'], url_path='v1/personalization-types')
+    @action(detail=False, methods=['GET'], url_path='personalization-types')
     def get_all_personalization_types(self, request):
         """This method returns all personalization types"""
         response = Response()
@@ -72,7 +72,7 @@ class PersonalizationTypeViewSet(viewsets.ModelViewSet):
     
 
     # Get all personalization types and their methods
-    @action(detail=False, methods=['GET'], url_path='v1/personalization-types-and-methods')
+    @action(detail=False, methods=['GET'], url_path='personalization-types-and-methods')
     def get_all_personalization_types_and_methods(self, request):
         """This method returns all personalization types and methods"""
         response = Response()
@@ -83,7 +83,7 @@ class PersonalizationTypeViewSet(viewsets.ModelViewSet):
 
     
     # Get all personalizables and their zones based on the personalization type
-    @action(detail=False, methods=['GET'], url_path='v1/get-personalizables-with-zones-based-on-personalization-type', permission_classes=[permissions.IsAuthenticated])
+    @action(detail=False, methods=['GET'], url_path='get-personalizables-with-zones-based-on-personalization-type', permission_classes=[permissions.IsAuthenticated])
     def get_all_personizables_and_their_zones_based_on_personalization_type(self, request):
         """
         This method gets all personalizables and their zones based on the personalization type
