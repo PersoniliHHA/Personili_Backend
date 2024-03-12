@@ -164,7 +164,7 @@ class DesignsViewSet(viewsets.ViewSet):
                                                     free=free)
         except Exception as e:
             logging.error(f"get_popular_designs_light action method error :{e.args} ")
-            return Response({"error": "UNKNOWN INTERNAL ERROR"}, status=400)
+            return Response({"error": "UNKNOWN_ERROR"}, status=400)
             
         response = Response(popular_designs, status=status.HTTP_200_OK)
 
