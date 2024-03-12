@@ -738,8 +738,33 @@ def insert_static_data(db):
     db.commit()
 
     # Design likes
-    # prepare data : id, design_id, account_profile_id,
+    # prepare data : id, design_id, account_profile_id, created_at, updated_at
+    design_like_data = [
+        ("8f7932ce-91d4-4c24-b16c-f6fa06626bee", "e8be8bc6-4ae8-4264-9907-0fe4ca590018", "7a9ea5d6-f892-461b-bf4b-004f7ab19e27", faker.date_time(), faker.date_time()),
+        ("c3de7db4-ed88-48eb-9a5e-80f07aa84206", "e00f0078-fc7e-41fc-a00d-1c8439387b0d", "7a9ea5d6-f892-461b-bf4b-004f7ab19e27", faker.date_time(), faker.date_time()),
+        ("8d32dbca-3bb8-4c80-a366-e5465b4d0071", "1030c335-8329-418e-ac7c-5e2eefec01b4", "7a9ea5d6-f892-461b-bf4b-004f7ab19e27", faker.date_time(), faker.date_time()),
+      
+        ("ec44b266-9d2c-4f7e-ad77-7569a1d95454", "e8be8bc6-4ae8-4264-9907-0fe4ca590018", "9184675c-b235-4da2-a63d-b2443f61f9cc", faker.date_time(), faker.date_time()),
+        ("6435b302-7830-4aa4-800a-a7ccad14de76", "e00f0078-fc7e-41fc-a00d-1c8439387b0d", "9184675c-b235-4da2-a63d-b2443f61f9cc", faker.date_time(), faker.date_time()),
+        ("ff463ad9-1c78-4f83-bca3-a1d8a7e793d0", "1030c335-8329-418e-ac7c-5e2eefec01b4", "9184675c-b235-4da2-a63d-b2443f61f9cc", faker.date_time(), faker.date_time()),
+        ("ffd4b54b-c0d1-48b8-96b0-b9d21ad70a18", "0eac82cc-975e-485b-998b-08bc148befed", "9184675c-b235-4da2-a63d-b2443f61f9cc", faker.date_time(), faker.date_time()),
+        ("23848755-ae8a-4f99-94cf-8b99f3e0c178", "dd568de2-6890-4e6b-8f77-69136edd13e7", "9184675c-b235-4da2-a63d-b2443f61f9cc", faker.date_time(), faker.date_time()),
+        
+        ("14b3216d-402f-4e1e-833e-57b5db510cbf", "e8be8bc6-4ae8-4264-9907-0fe4ca590018", "4d57ec73-e6e9-4d6a-971e-ffcbefdeecbf", faker.date_time(), faker.date_time()),
+        ("ed737f19-89b5-4f9f-9fb7-c2c0e26a3402", "e00f0078-fc7e-41fc-a00d-1c8439387b0d", "4d57ec73-e6e9-4d6a-971e-ffcbefdeecbf", faker.date_time(), faker.date_time()),
+        ("252aa8cb-a500-47b4-8878-c6fa8919225a", "0eac82cc-975e-485b-998b-08bc148befed", "4d57ec73-e6e9-4d6a-971e-ffcbefdeecbf", faker.date_time(), faker.date_time()),
+        ("0d4168a4-f925-4888-ab76-87c1f3eff5ce", "dd568de2-6890-4e6b-8f77-69136edd13e7", "4d57ec73-e6e9-4d6a-971e-ffcbefdeecbf", faker.date_time(), faker.date_time()),
+        
+        ("afbb5b0d-d925-4fda-8e42-c5216b5527e1", "e8be8bc6-4ae8-4264-9907-0fe4ca590018", "59dedb05-5dbd-465f-af80-f90b1e9fe22c", faker.date_time(), faker.date_time()),
+        ("ffe6bc7a-9564-4ae0-b8e8-a16c7d8be259", "e00f0078-fc7e-41fc-a00d-1c8439387b0d", "59dedb05-5dbd-465f-af80-f90b1e9fe22c", faker.date_time(), faker.date_time()),
+        ("7b3ed65d-30cd-40ce-9dca-d33b117a1f63", "1030c335-8329-418e-ac7c-5e2eefec01b4", "59dedb05-5dbd-465f-af80-f90b1e9fe22c", faker.date_time(), faker.date_time()),
+        
+    ]
 
+    cursor = db.cursor()
+    sql_query = "INSERT INTO design_likes (id, design_id, account_profile_id, created_at, updated_at) VAlUES (%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING"
+    cursor.executemany(sql_query, design_like_data)
+    db.commit()
 
     # Close the cursor and database connection
     cursor.close()
