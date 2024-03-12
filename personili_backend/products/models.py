@@ -52,13 +52,13 @@ class Product(TimeStampedModel):
         return self.title + ' - ' + str(self.id)
 
     @classmethod
-    def get_products(cls,
-                           offset: int,
+    def get_products(cls,  offset: int,
                            limit: int,
                            max_price: float=None,
                            min_price: float=None,
                            category_ids: list[str]=None,
                            organization_ids: list[str]=None,
+                           workshop_ids :list[str]=None,
                            personalization_method_ids: list[str]=None,
                            design_ids: list[str]=None,
                            theme_ids: list[str]=None,
@@ -79,6 +79,7 @@ class Product(TimeStampedModel):
         filters used :
         - category
         - organization
+        - workshop
         - personalization type
         - theme of the designs used
         - title and description of the product
@@ -96,6 +97,10 @@ class Product(TimeStampedModel):
         if organization_ids:
             products = (products.filter(organization_id__in=organization_ids)
                         .select_related('organization'))
+        if workshop_ids:
+            products = (products.filter(workshop_id__in=workshop_ids)
+                        .select_related('workshop'))
+
         if personalization_method_ids:
             products = (products.filter(personalization_method_id__in=personalization_method_ids)
                         .select_related('personalization_method'))
