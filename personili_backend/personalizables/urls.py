@@ -7,9 +7,9 @@ from django.urls import path, include
 from personalizables.api.v1.views import CategoryViewSet, PersonalizationTypeViewSet, PersonalizableViewSet
 
 router = DefaultRouter()
-router.register('personalizables', CategoryViewSet, basename='categories')
-router.register('personalizables', PersonalizationTypeViewSet, basename='personalization-types')
-router.register('personalizables', PersonalizableViewSet, basename='personalizables')
+router.register('v1/personalizables', CategoryViewSet, basename='categories')
+router.register('v1/personalizables', PersonalizationTypeViewSet, basename='personalization-types')
+router.register('v1/personalizables', PersonalizableViewSet, basename='personalizables')
 
 urlpatterns = [
  path('', include(router.urls)),

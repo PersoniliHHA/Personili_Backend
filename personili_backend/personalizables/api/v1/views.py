@@ -28,31 +28,17 @@ class CategoryViewSet(viewsets.ViewSet):
     queryset = Category.objects.all()
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    @action(detail=False, methods=['GET'], url_path='v1/personalizable-categories', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    @action(detail=False, methods=['GET'], url_path='categories', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def get_all_categories(self, request):
         """Method that returns all categories and their subcategories"""
-        response_data: List = Category.get_category_tree()
-        return Response(response_data, status=status.HTTP_200_OK)
+        try:
+            response_data: List = Category.get_category_tree()
+            return Response(response_data, status=status.HTTP_200_OK)
+        except Exception as e:
+            logging.error(f"UNKNOWN_ERROR : {e}")
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+            
 
-
-#################################
-#     Personalizable ViewSet    #
-#################################
-class PersonalizableViewSet(viewsets.ViewSet):
-    """
-    Viewset for the Personalizable class, in this class we define
-    """
-    queryset = Personalizable.objects.all()
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-    def get_user_profile(self):
-        """
-        This method returns the user profile of the user who made the request
-        """
-        user_profile = get_object_or_404(AccountProfile, user=self.request.user)
-        return user_profile
-
-   
 
 
 #################################
