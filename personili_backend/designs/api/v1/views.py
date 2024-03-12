@@ -201,11 +201,14 @@ class DesignsViewSet(viewsets.ViewSet):
         """
         self.permission_classes = [permissions.IsAuthenticatedOrReadOnly]
         self.authentication_classes = []
+        try:
 
-        themes = Theme.objects.all()
-        serializer = ThemeSerializerGet(themes, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
+            themes = Theme.objects.all()
+            serializer = ThemeSerializerGet(themes, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            logging.error(f"get_themes action method error :{e.args} ")
+            return Response({"error": "UNKNOWN_ERROR"}, status=400)
 
     ################################### POST APIS, PRIVATE #####################################
     ##### Like a design
