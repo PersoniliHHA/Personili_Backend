@@ -206,6 +206,8 @@ class DesignsViewSet(viewsets.ViewSet):
         serializer = ThemeSerializerGet(themes, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
+
+    ################################### POST APIS, PRIVATE #####################################
     ##### Like a design
     @action(detail=True, methods=['POST'], url_path='like')
     def like_design(self, request, pk=None):
@@ -261,6 +263,30 @@ class DesignsViewSet(viewsets.ViewSet):
         except Exception as e:
             logging.error(f"unlike_design action method error :{e.args} ")
             return Response({"error": "UNKNOWN_ERROR"}, status=400)
+    
+    ##### Is the design liked by the user
+    @action(detail=True, methods=['GET'], url_path='is-liked-by', permission_classes=[permissions.IsAuthenticated])
+    def is_liked_by(self, request, pk=None):
+        """
+        Check if the design is liked by the user
+        """
+        self.authentication_classes = [JWTAuthentication]
+        self.permission_classes = [permissions.IsAuthenticated]
+        
+        account = request.user
+        account_profile = AccountProfile.objects.get(account=account)
+        
+        # Check the design exists
+        design = get_object_or_404(Design, pk=pk)
+        if not design:
+            return Response({"error": "NOT_FOUND"}, status=404)
+        
+        # Check if the user has already liked the design
+        if design.is_liked_by(account_profile):
+            return Response({"message": "LIKED"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"message": "NOT_LIKED"}, status=status.HTTP_200_OK)
+    
     ################################### GET APIS, PUBLIC #####################################
    
     
