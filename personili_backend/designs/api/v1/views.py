@@ -234,6 +234,33 @@ class DesignsViewSet(viewsets.ViewSet):
             logging.error(f"like_design action method error :{e.args} ")
             return Response({"error": "UNKNOWN_ERROR"}, status=400)
         
+    ##### Unlike a design
+    @action(detail=True, methods=['POST'], url_path='unlike')
+    def unlike_design(self, request, pk=None):
+        """
+        Unlike a design
+        """
+        self.authentication_classes = [JWTAuthentication]
+        self.permission_classes = [permissions.IsAuthenticated]
+        
+        account = request.user
+        account_profile = AccountProfile.objects.get(account=account)
+        
+        # Check the design exists
+        design = get_object_or_404(Design, pk=pk)
+        if not design:
+            return Response({"error": "NOT_FOUND"}, status=404)
+        
+        # Check if the user has already liked the design
+        if not design.is_liked_by(account_profile):
+            return Response({"error": "NOT_LIKED"}, status=400)
+        
+        try:
+            design.unlike(account_profile)
+            return Response({"message": "UNLIKED"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            logging.error(f"unlike_design action method error :{e.args} ")
+            return Response({"error": "UNKNOWN_ERROR"}, status=400)
     ################################### GET APIS, PUBLIC #####################################
    
     
