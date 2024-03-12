@@ -36,7 +36,9 @@ class CategoryViewSet(viewsets.ViewSet):
             return Response(response_data, status=status.HTTP_200_OK)
         except Exception as e:
             logging.error(f"UNKNOWN_ERROR : {e}")
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response({
+                "error": "UNKNOWN_ERROR"
+            },status=status.HTTP_400_BAD_REQUEST)
             
 
 
