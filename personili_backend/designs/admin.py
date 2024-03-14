@@ -23,7 +23,10 @@ class CollectionAdmin(admin.ModelAdmin):
 
 admin.site.register(Store)
 admin.site.register(StoreProfile)
-admin.site.register(Design, DesignAdmin, DesignInline)
+
+admin.site.register(Design, DesignAdmin)
+admin.site.register(DesignInline)
+
 admin.site.register(Collection, CollectionAdmin)
 admin.site.register(Theme)
 admin.site.register(DesignLike)
