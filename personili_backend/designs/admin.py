@@ -22,5 +22,5 @@ admin.site.register(Collection)
 admin.site.register(Theme)
 admin.site.register(DesignLike)
 admin.site.register(DesignPreview)
-admin.site.register(DesignMemberInline)
+admin.site.register(DesignAdmin, PersonalizableVariantAdmin)
 
