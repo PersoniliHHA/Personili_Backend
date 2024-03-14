@@ -14,14 +14,21 @@ class DesignAdmin(admin.ModelAdmin):
 
 # Customize the collection table
 class DesignInline(admin.TabularInline):
+    """
+    Only the id and the name of the design will be displayed in the collection table
+    """
     model = Design
+    fields = ['id', 'title', 'status', 'created_at', 'updated_at']
+
 
 class CollectionAdmin(admin.ModelAdmin):
     inlines = [DesignInline, ]
+    extra = 0
 
 # Customize the store table
 class CollectionInline(admin.TabularInline):
     model = Collection
+
 class StoreAdmin(admin.ModelAdmin):
     inlines = [CollectionInline, ]
 
