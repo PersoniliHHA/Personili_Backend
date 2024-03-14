@@ -766,6 +766,34 @@ def insert_static_data(db):
     cursor.executemany(sql_query, design_like_data)
     db.commit()
 
+    # Products 
+    # prepare the data : id, category_id, personalization_method_id, organization_id, workshop_id, self_made, to_be_published, title, description, starting_price, created_at, updated_at
+    product_data = [
+        # Tshirt
+        ("c0a7f294-0eb1-43c2-adfb-aec15dea7b3c", "bf97280e-cbc3-49ec-ad08-79618a01371b", "655cfd12-e6e2-47be-a576-d3fa4e85406f", "517292a1-75b6-4688-a052-364d93ecc9b7", "e1e2cd6a-aaf2-4407-91dd-e87ec880e341", True, False, faker.last_name(), faker.paragraph(), faker.pydecimal(left_digits=1, right_digits=0, positive=True), faker.date_time(), faker.date_time()),
+        ("12a9a715-d64b-4fe9-a14f-8c059fc32dbd", "bf97280e-cbc3-49ec-ad08-79618a01371b", "655cfd12-e6e2-47be-a576-d3fa4e85406f", "517292a1-75b6-4688-a052-364d93ecc9b7", "e1e2cd6a-aaf2-4407-91dd-e87ec880e341", True, False, faker.last_name(), faker.paragraph(), faker.pydecimal(left_digits=1, right_digits=0, positive=True), faker.date_time(), faker.date_time()),
+        ("44785574-d584-4e97-9a38-87a10b69891d", "bf97280e-cbc3-49ec-ad08-79618a01371b", "655cfd12-e6e2-47be-a576-d3fa4e85406f", "517292a1-75b6-4688-a052-364d93ecc9b7", "e1e2cd6a-aaf2-4407-91dd-e87ec880e341", True, False, faker.last_name(), faker.paragraph(), faker.pydecimal(left_digits=1, right_digits=0, positive=True), faker.date_time(), faker.date_time()),
+        
+        # Boxers
+        ("cc52fdfa-771a-4980-bec8-772ce9a44636", "e2f98d5b-9679-4db5-a7d2-1f71dd1bb441", "e4926e08-a551-4d1c-a0ec-9f54c45ca0bf", "440b3a20-16a3-4e44-bcec-8c3b60c57b47", "753c4f48-0e9d-4062-9795-25f43ed40232", False, True, faker.last_name(), faker.paragraph(), faker.pydecimal(left_digits=1, right_digits=0, positive=True), faker.date_time(), faker.date_time()),
+        ("ebbb4f3c-1a1c-46fa-8623-3bf3641f6000", "e2f98d5b-9679-4db5-a7d2-1f71dd1bb441", "e4926e08-a551-4d1c-a0ec-9f54c45ca0bf", "440b3a20-16a3-4e44-bcec-8c3b60c57b47", "753c4f48-0e9d-4062-9795-25f43ed40232", False, True, faker.last_name(), faker.paragraph(), faker.pydecimal(left_digits=1, right_digits=0, positive=True), faker.date_time(), faker.date_time()),
+        ("fa725f8b-7698-4145-907c-19c609262bbe", "e2f98d5b-9679-4db5-a7d2-1f71dd1bb441", "e4926e08-a551-4d1c-a0ec-9f54c45ca0bf", "440b3a20-16a3-4e44-bcec-8c3b60c57b47", "753c4f48-0e9d-4062-9795-25f43ed40232", False, True, faker.last_name(), faker.paragraph(), faker.pydecimal(left_digits=1, right_digits=0, positive=True), faker.date_time(), faker.date_time()),
+        
+        # Pillows
+        ("2592bce6-6118-4ee7-a2e3-e5e74aea4100", "5ff408e7-60b7-4ff5-b9a2-cc012f3ae65c", "b1f59f7d-8ad2-4e02-92de-d3f0d879b821", "f4f3a0f5-2d1e-4f4b-8c7a-4d0c4e4e5f3d", "2f42a7e6-25a9-4039-8c6c-62dcac1601bc", False, True, faker.last_name(), faker.paragraph(), faker.pydecimal(left_digits=1, right_digits=0, positive=True), faker.date_time(), faker.date_time()),
+        ("38f0fb69-c097-4e5a-b57a-4591be764a57", "ed215c51-ef3f-40a6-ba25-61969efefff2", "afff6767-ab17-48c7-b0a6-a84f6ded9ff5", "f4f3a0f5-2d1e-4f4b-8c7a-4d0c4e4e5f3d", "2f42a7e6-25a9-4039-8c6c-62dcac1601bc", False, True, faker.last_name(), faker.paragraph(), faker.pydecimal(left_digits=1, right_digits=0, positive=True), faker.date_time(), faker.date_time()),
+        ("7f7f4609-64e5-4c2c-87ab-2fabb437176c", "456310ce-0414-42cd-aeaa-9d89f024fd00", "d5623fd9-b017-4ff7-9e15-2f228e22b7e2", "f4f3a0f5-2d1e-4f4b-8c7a-4d0c4e4e5f3d", "2f42a7e6-25a9-4039-8c6c-62dcac1601bc", False, True, faker.last_name(), faker.paragraph(), faker.pydecimal(left_digits=1, right_digits=0, positive=True), faker.date_time(), faker.date_time()),
+        
+        # Phone cases
+        ("e4230989-afec-4cba-abdf-e9e5fea73f8a", "2a887af1-e4df-4b43-98d4-57fdd34cc427", "ec48f796-78cb-4c80-966f-b778bc85a2cc", "f4f3a0f5-2d1e-4f4b-8c7a-4d0c4e4e5f3d", "2f42a7e6-25a9-4039-8c6c-62dcac1601bc", False, True, faker.last_name(), faker.paragraph(), faker.pydecimal(left_digits=1, right_digits=0, positive=True), faker.date_time(), faker.date_time()),
+        ("d791ff28-cba2-4156-bcdc-f9eb6a76ef66", "2c714c80-4f83-4e7d-beed-6ceed76c8d18", "14a70128-56f1-4881-a63d-e09636e812bd", "f4f3a0f5-2d1e-4f4b-8c7a-4d0c4e4e5f3d", "2f42a7e6-25a9-4039-8c6c-62dcac1601bc", False, True, faker.last_name(), faker.paragraph(), faker.pydecimal(left_digits=1, right_digits=0, positive=True), faker.date_time(), faker.date_time()),
+        ("abd8bbbf-d8c4-4ab4-a3f7-38c4fb2f43da", "f2f21290-55c1-48f9-9dd8-bd68f4ec145a", "74745f05-fb8b-4217-a3c8-d00aa72d415d", "f4f3a0f5-2d1e-4f4b-8c7a-4d0c4e4e5f3d", "2f42a7e6-25a9-4039-8c6c-62dcac1601bc", False, True, faker.last_name(), faker.paragraph(), faker.pydecimal(left_digits=1, right_digits=0, positive=True), faker.date_time(), faker.date_time()),  
+    ]
+
+    # Designed personalizable variants
+
+
+
     # Close the cursor and database connection
     cursor.close()
     db.close()

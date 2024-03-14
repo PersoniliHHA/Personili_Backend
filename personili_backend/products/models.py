@@ -43,7 +43,7 @@ class Product(TimeStampedModel):
     title = models.CharField(max_length=255)
     description = models.TextField(max_length=1000)
 
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    starting_price = models.DecimalField(max_digits=10, decimal_places=2)
 
     class Meta:
         db_table = 'products'
@@ -220,6 +220,12 @@ class Product(TimeStampedModel):
             }
         return response
     
+
+class ProductVariant(TimeStampedModel):
+    """
+    Each product has one or more variants
+    Each product variant
+    """
 class ProductPreview(TimeStampedModel):
     """
     This table is used to store the product preview
