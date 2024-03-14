@@ -9,7 +9,6 @@ from designs.admin import DesignMemberInline
 
 class PersonalizableVariantAdmin(admin.ModelAdmin):
     inlines = [DesignMemberInline, ]
-    exclude = ['personalizable_variants']
 
 admin.site.register(Category)
 admin.site.register(Option)
