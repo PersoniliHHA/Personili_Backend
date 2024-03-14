@@ -11,16 +11,14 @@ class DesignMemberInline(admin.TabularInline):
 class DesignAdmin(admin.ModelAdmin):
     inlines = [DesignMemberInline, ]
 
-class PersonalizableVariantAdmin(admin.ModelAdmin):
-    inlines = [DesignMemberInline, ]
-    exclude = ['personalizable_variants']
 
 admin.site.register(Store)
 admin.site.register(StoreProfile)
-admin.site.register(Design)
+admin.site.register(Design, DesignAdmin)
 admin.site.register(Collection)
 admin.site.register(Theme)
 admin.site.register(DesignLike)
 admin.site.register(DesignPreview)
-admin.site.register(DesignAdmin, PersonalizableVariantAdmin)
+
+
 
