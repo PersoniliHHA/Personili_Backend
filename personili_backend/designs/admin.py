@@ -3,7 +3,10 @@ from django.contrib import admin
 # add all designs app models to admin site
 from designs.models import Store, Design, Theme, StoreProfile, Collection, DesignLike, DesignPreview
 
-
+# Add filter vertical to many to many field in the design table
+class DesignAdmin(admin.ModelAdmin):
+    filter_vertical = ('personalizable_variant')
+    
 admin.site.register(Store)
 admin.site.register(StoreProfile)
 admin.site.register(Design)
