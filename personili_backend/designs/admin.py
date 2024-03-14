@@ -13,13 +13,14 @@ class DesignAdmin(admin.ModelAdmin):
     exclude = ['personalizable_variants']
 
 # Customize the collection table
+# for each collection, display the designs in the collection
 class DesignInline(admin.StackedInline):
     """
     Only the id and the name of the design will be displayed in the collection table
     """
     model = Design
     readonly_fields = ['id']
-    extra = 1
+    extra = 0
 
 
 class CollectionAdmin(admin.ModelAdmin):
@@ -28,13 +29,14 @@ class CollectionAdmin(admin.ModelAdmin):
 # Customize the store table
 class CollectionInline(admin.StackedInline):
     model = Collection
-    extra = 1
+    readonly_fields = ['id']
+    extra = 0
 
 class StoreAdmin(admin.ModelAdmin):
     inlines = [CollectionInline, ]
 
 
-admin.site.register(Store)
+admin.site.register(Store, StoreAdmin)
 admin.site.register(StoreProfile)
 
 admin.site.register(Design, DesignAdmin)
