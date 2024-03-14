@@ -19,6 +19,12 @@ class DesignInline(admin.TabularInline):
 class CollectionAdmin(admin.ModelAdmin):
     inlines = [DesignInline, ]
 
+# Customize the store table
+class CollectionInline(admin.TabularInline):
+    model = Collection
+class StoreAdmin(admin.ModelAdmin):
+    inlines = [CollectionInline, ]
+
 
 admin.site.register(Store)
 admin.site.register(StoreProfile)
