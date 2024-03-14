@@ -15,7 +15,6 @@ class DesignAdmin(admin.ModelAdmin):
 # Customize the collection table
 class DesignInline(admin.TabularInline):
     model = Design
-    extra = 1
 
 class CollectionAdmin(admin.ModelAdmin):
     inlines = [DesignInline, ]
