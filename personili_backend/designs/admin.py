@@ -12,11 +12,19 @@ class DesignAdmin(admin.ModelAdmin):
     inlines = [DesignMemberInline, ]
     exclude = ['personalizable_variants']
 
+# Customize the collection table
+class DesignInline(admin.TabularInline):
+    model = Design
+    extra = 1
+
+class CollectionAdmin(admin.ModelAdmin):
+    inlines = [DesignInline, ]
+
 
 admin.site.register(Store)
 admin.site.register(StoreProfile)
-admin.site.register(Design, DesignAdmin)
-admin.site.register(Collection)
+admin.site.register(Design, DesignAdmin, DesignInline)
+admin.site.register(Collection, CollectionAdmin)
 admin.site.register(Theme)
 admin.site.register(DesignLike)
 admin.site.register(DesignPreview)
