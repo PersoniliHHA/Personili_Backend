@@ -4,9 +4,13 @@ from django.contrib import admin
 from designs.models import Store, Design, Theme, StoreProfile, Collection, DesignLike, DesignPreview
 
 # Add filter vertical to many to many field in the design table
+class DesignMemberInline(admin.TabularInline):
+    model = Design.personalizable_variants.through
+
+
 class DesignAdmin(admin.ModelAdmin):
-    filter_vertical = ('personalizable_variant')
-    
+    inlines = [DesignMemberInline, ]
+
 admin.site.register(Store)
 admin.site.register(StoreProfile)
 admin.site.register(Design)

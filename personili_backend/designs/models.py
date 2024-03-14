@@ -185,7 +185,7 @@ class Design(TimeStampedModel):
     collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name='design')
     theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='design')
     title = models.CharField(max_length=255)
-    personalizable_variant = models.ManyToManyField(PersonalizableVariant, related_name='designs')
+    personalizable_variants = models.ManyToManyField(PersonalizableVariant, related_name='designs')
     description = models.TextField(null=True, blank=True)
     image_path = models.CharField(max_length=255, null=True, blank=True)
     tags = models.CharField(max_length=255, null=True, blank=True)
