@@ -4,11 +4,7 @@ from personalizables.models import PersonalizationType, PersonalizationMethod
 from personalizables.models import PersonalizableZone, Personalizable, PersonalizableVariant, PersonalizableOption
 from personalizables.models import PersonalizableVariantValue, DesignedPersonalizableVariant, DesignedPersonalizableZone 
 from personalizables.models import AllowedVariantPersonalizationMethod
-from designs.admin import DesignMemberInline
 
-class PersonalizableVariantAdmin(admin.ModelAdmin):
-    inlines = [DesignMemberInline, ]
-    exclude = ['personalizable_variants']
 
 
 
