@@ -1,11 +1,14 @@
 from django.contrib import admin
 
 # Register your models here.
-from products.models import Product, ProductReview, DiscountPromotion, AmountPromotion, CodePromotion
+from products.models import Product, ProductVariant, ProductVariantReview, ProductVariantPreview, DiscountPromotion, AmountPromotion, CodePromotion
 
 
 admin.site.register(Product)
-admin.site.register(ProductReview)
+admin.site.register(ProductVariant)
+admin.site.register(ProductVariantReview)
+admin.site.register(ProductVariantPreview)
+
 admin.site.register(DiscountPromotion)
 admin.site.register(AmountPromotion)
 admin.site.register(CodePromotion)

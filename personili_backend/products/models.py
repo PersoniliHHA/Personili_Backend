@@ -5,9 +5,9 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 # Create your models here.
 from accounts.models import TimeStampedModel
-from accounts.models import Account
+from accounts.models import AccountProfile
 from organizations.models import Organization, Workshop
-from personalizables.models import Category, PersonalizationMethod
+from personalizables.models import Category, PersonalizationMethod, DesignedPersonalizableVariant
 
 from django.db.models import Count
 from django.forms.models import model_to_dict
@@ -15,7 +15,7 @@ from django.forms.models import model_to_dict
 
 
 #########################################
-#             Product model             #
+#            Products models            #
 #########################################
 class Product(TimeStampedModel):
     """
@@ -28,8 +28,6 @@ class Product(TimeStampedModel):
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    personalization_method = models.ForeignKey(PersonalizationMethod, on_delete=models.CASCADE, null=True)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     # what does this mean? the workshop owner of the design or the workshop that will handle the 
     workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE, related_name='workshop', null=True)
@@ -43,13 +41,15 @@ class Product(TimeStampedModel):
     title = models.CharField(max_length=255)
     description = models.TextField(max_length=1000)
 
-    starting_price = models.DecimalField(max_digits=10, decimal_places=2)
-
     class Meta:
         db_table = 'products'
 
     def __str__(self):
         return self.title + ' - ' + str(self.id)
+    
+    @property
+    def default_variant(self):
+        return self.productvariants.first()
 
     @classmethod
     def get_products(cls,  offset: int,
@@ -224,35 +224,60 @@ class Product(TimeStampedModel):
 class ProductVariant(TimeStampedModel):
     """
     Each product has one or more variants
-    Each product variant
+    Each product variant is linked to a single designed personalizable variant
+    A product variant has the following fields :
+    - id
+    - designed_personalizable_variant (foreign key)
+    - name 
+    - description
+    - price
     """
-class ProductPreview(TimeStampedModel):
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='productvariants')
+    designed_personalizable_variant = models.OneToOneField(DesignedPersonalizableVariant, on_delete=models.CASCADE)
+    category = models.UUIDField(null=True, blank=True)
+
+    name = models.CharField(max_length=255)
+    description = models.TextField(max_length=1000, null=True, blank=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.IntegerField(default=0) 
+    # the workshop owner can set the quantity of the product variant
+    # the workshop owner receives a notification when the quantity of the product variant is low, also provide tools for them to automate the process of restocking
+    
+    class Meta:
+        db_table = 'product_variants'
+
+
+    def __str__(self):
+        return self.product.title + " " + self.name + " " + self.id
+    
+class ProductVariantPreview(TimeStampedModel):
     """
     This table is used to store the product preview
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='productpreview')
+    product_variant = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='productvariantpreviews')
     image_path = models.CharField(max_length=255)
 
     class Meta:
-        db_table = 'product_previews'
+        db_table = 'product_variant_previews'
 
     def __str__(self):
         return self.product.title + " " + self.id
 
 
-class ProductReview(TimeStampedModel):
+class ProductVariantReview(TimeStampedModel):
     """
     This table is used to store the product reviews
     the fields are : 
-    - product
+    - product variant
     - account
     - rating
     - comment
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='productreview')
-    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    product_variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE, related_name='productreview')
+    account_profile = models.ForeignKey(AccountProfile, on_delete=models.CASCADE)
     rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     comment = models.TextField(max_length=1000)
 
@@ -288,19 +313,6 @@ class DiscountPromotion(Promotion):
     def __str__(self):
         return self.product.title + " " + self.start_date + " " + self.end_date + " " + self.is_active + " " + self.id + " " + self.percentage
 
-class ProductDiscountPromotion(models.Model):
-    """
-    This is for percentage based discounts
-    """
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    discount_promotion = models.ForeignKey(DiscountPromotion, on_delete=models.CASCADE)
-    class Meta:
-        db_table = 'product_discount_promotions'
-        unique_together = ['product', 'discount_promotion']
-
-    def __str__(self):
-        return self.product.title + " " + self.start_date + " " + self.end_date + " " + self.is_active + " " + self.id + " " + self.percentage
 class AmountPromotion(Promotion):
     """
     This is for amount based discounts
@@ -344,7 +356,6 @@ class LoyaltyPromotion(Promotion):
 
     def __str__(self):
         return self.product.title + " " + self.start_date + " " + self.end_date + " " + self.is_active + " " + self.id
-
 
 class ReferralPromotion(Promotion):
     """

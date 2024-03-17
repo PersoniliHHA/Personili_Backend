@@ -3,12 +3,13 @@ from personalizables.models import Category, Option, OptionValue
 from personalizables.models import PersonalizationType, PersonalizationMethod
 from personalizables.models import PersonalizableZone, Personalizable, PersonalizableVariant, PersonalizableOption
 from personalizables.models import PersonalizableVariantValue, DesignedPersonalizableVariant, DesignedPersonalizableZone 
-from personalizables.models import AllowedVariantPersonalizationMethod
 from designs.admin import DesignMemberInline
 
 
 class PersonalizableVariantAdmin(admin.ModelAdmin):
     inlines = [DesignMemberInline, ]
+
+# Customize option
 
 admin.site.register(Category)
 admin.site.register(Option)
@@ -22,6 +23,4 @@ admin.site.register(PersonalizableOption)
 admin.site.register(PersonalizableVariantValue)
 admin.site.register(DesignedPersonalizableVariant)
 admin.site.register(DesignedPersonalizableZone)
-admin.site.register(AllowedVariantPersonalizationMethod)
-
 

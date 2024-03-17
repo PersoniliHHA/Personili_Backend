@@ -10,6 +10,14 @@ from django.forms.models import model_to_dict
 from accounts.models import TimeStampedModel
 from organizations.models import InventoryItem
 
+#########################################
+#             Department model          #
+#########################################
+class Department(TimeStampedModel):
+    """
+    
+    """
+
 
 #########################################
 #             Category model            #
@@ -334,23 +342,6 @@ class PersonalizableVariantValue(TimeStampedModel):
     def __str__(self):
         return self.personalizable_variant.personalizable.name + " - " + self.option_value.value + " - " + str(self.id)
 
-########################################################
-#  Allowed personalizable/personalization methd model  #
-########################################################
-class AllowedVariantPersonalizationMethod(TimeStampedModel):
-    """
-    Associates the id of the personalizable and the id of the allowed personalization type
-    """
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    personalizable = models.ForeignKey(Personalizable, on_delete=models.CASCADE, related_name='allowed_personalizables')
-    personalization_method = models.ForeignKey(PersonalizationMethod, on_delete=models.CASCADE, related_name='allowed_personalizables')
-    
-    class Meta:
-        db_table = 'allowed_variant_personalization_methods'
-        unique_together = ('personalizable', 'personalization_method')
-
-    def __str__(self):
-        return self.personalizable.name + " - " + str(self.id)
 
 ########################################################
 #                Designed variant model                #
@@ -364,7 +355,6 @@ class DesignedPersonalizableVariant(TimeStampedModel):
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     personalizable_variant = models.ForeignKey(PersonalizableVariant, on_delete=models.CASCADE, related_name='designed_personalizable_variant')
-    product = models.ForeignKey('products.Product', on_delete=models.CASCADE, related_name='product_designed_personalizable_variant')
     name = models.CharField(max_length=255, null=True)
 
     class Meta:
