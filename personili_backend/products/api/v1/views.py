@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
 
 # Local imports
-from products.models import Product, ProductReview, Promotion
+from products.models import Product, Promotion
 from accounts.models import AccountProfile
 from personalizables.models import Category
 

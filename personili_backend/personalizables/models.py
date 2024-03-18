@@ -101,6 +101,8 @@ class Category(TimeStampedModel):
                 leaf_categories.extend(cls.get_leaf_categories_from_list([subcategory.id for subcategory in subcategories]))
         
         return leaf_categories
+
+
 ########################################################
 #                Options and values                    #
 ########################################################
@@ -153,36 +155,6 @@ class PersonalizationType(TimeStampedModel):
         Returns the name of the personalization type
         """
         return self.name + " - " + str(self.id)
-    
-    @classmethod
-    def get_allowed_personalizables_and_their_zones_for_personalization_type(cls, personalization_type_id):
-        """
-        This method returns a list of ids of personalizables that are allowed for this personalization type
-        """
-        response: List[dict]= []
-        # Get the list of allowed personalizables ids for this personalization type
-        personalizables_ids: List[str] = []
-        allowed_personalizables = AllowedPersonalizablesPersonalization.objects.filter(personalization_type=personalization_type_id)
-        personalizables_ids = [allowed_personalizable.personalizable.id for allowed_personalizable in allowed_personalizables]
-
-        # Get the list of personalizable zones and variants (colors, sizes, materials) for each personalizable
-        for personalizable_id in personalizables_ids:
-            
-            # get the personalizable object
-            personalizable = Personalizable.objects.get(pk=personalizable_id)
-            if personalizable.availability:
-                # first get the personalizable and its attributes
-                response.append({
-                    "id": personalizable_id,
-                    "name": personalizable.name,
-                    "description": personalizable.description,
-                    "category_id": personalizable.category.id,
-                    "category_name": Category.objects.get(pk=personalizable.category.id).name,
-                    "variants": personalizable.get_variants_of_a_personalizable(),
-                    "zones": personalizable.get_personalizable_zones_of_a_personalizable()
-                })
-            
-        return response
         
 
 #########################################
@@ -235,22 +207,6 @@ class Personalizable(TimeStampedModel):
 
     def __str__(self):
         return self.name + " - " + self.category.name + " - " + str(self.id)
-    
-    def get_variants_of_a_personalizable(self):
-        """
-        This method takes the id of a personalizable and returns a list of colors, sizes and materials available for this personalizable
-        - It first gets the personalizable variants lines in the personalizable variant table, then retrieves all the colors, sizes and materials using their ids
-        and returns them in a list of dictionaries
-        """
-        response = []
-        personalizable_variants = self.variants.all()
-        
-        for variant in personalizable_variants:
-            response.append({
-                'variant_id': variant.id,
-                'stock_quantity': variant.stock_quantity
-            })
-        return response
     
 
 #########################################
