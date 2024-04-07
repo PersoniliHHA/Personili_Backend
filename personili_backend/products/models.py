@@ -299,6 +299,8 @@ class Promotion(TimeStampedModel):
     end_date = models.DateTimeField()
     is_active = models.BooleanField(default=True)
 
+    code = models.CharField(max_length=255, null=True, blank=True)
+
     class Meta:
         abstract = True
 
@@ -324,22 +326,12 @@ class AmountPromotion(Promotion):
     def __str__(self):
         return self.product.title + " " + self.start_date + " " + self.end_date + " " + self.is_active + " " + self.id + " " + self.amount
 
-class CodePromotion(Promotion):
-    """
-    This is for code based discounts
-    """
-    code = models.CharField(max_length=255)
-    class Meta:
-        db_table = 'code_promotions'
-
-    def __str__(self):
-        return self.product.title + " " + self.start_date + " " + self.end_date + " " + self.is_active + " " + self.id + " " + self.code
-
 class FirstTimePurchasePromotion(Promotion):
     """
     This is for first time purchase discounts
     """
-    discount_percentage = models.DecimalField(max_digits=5, decimal_places=2)
+    discount_percentage = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     class Meta:
         db_table = 'first_time_purchase_promotions'
 

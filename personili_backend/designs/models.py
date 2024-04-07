@@ -168,9 +168,10 @@ class Design(TimeStampedModel):
     Every Design belong to one and only one collection, it has one theme as well
     it has a title,
     a description,
-    a picture,
+    an image path,
     a status,
-    list of tags
+    list of tags,
+    a price,
     """
     ## Status choices
     PENDING = "pending"
@@ -182,26 +183,63 @@ class Design(TimeStampedModel):
         (REJECTED, 'Rejected'),
     ]
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name='design')
+    collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name='design', null=True, blank=True)
     theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='design')
     title = models.CharField(max_length=255)
-    personalizable_variants = models.ManyToManyField(PersonalizableVariant, related_name='designs')
     description = models.TextField(null=True, blank=True)
     image_path = models.CharField(max_length=255, null=True, blank=True)
     tags = models.CharField(max_length=255, null=True, blank=True)
     status = models.CharField(max_length=255,
                               choices=STATUS,
-                              default=PENDING)
-    price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
+                              default=PENDING
+                              )
     
+    base_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
+    
+    # free design
+    free = models.BooleanField(default=False)
+
     # This field is used to determine if the design should be published or not on our website
-    to_be_published = models.BooleanField(default=True)
+    self_upload = models.BooleanField(default=True)
 
-    # Can the design be used with other designs from other designers
-    exclusive_usage = models.BooleanField(default=True)
 
-    # Is the design limited to a certain number of personalizables
-    limited_personalizables = models.BooleanField(default=False)
+    ###### Usage and exclusivity parameters #######
+    ## the following two parameters are mutually exclusive, if one is true the other should be false
+
+    # 1- Free usage with other designs, this is valid by default for designs uploaded by the designer
+    free_usage = models.BooleanField(default=False) # This parameter cancels the other parameters
+    # 2- Exclusive usage, the design can only be used alone on any personalizable 
+    exclusive_usage = models.BooleanField(default=False) # this parameter cancels the other parameters
+
+    ## The following parameters are only valid if the exclusive_usage is set to False
+    ## If all of these parameters are set to True, then that's the equiviliant of free usage
+    free_usage_with_same_collection = models.BooleanField(default=False)
+    free_usage_with_same_workshop = models.BooleanField(default=False)
+    free_usage_with_same_organization = models.BooleanField(default=False)
+    free_usage_with_designer_uploads = models.BooleanField(default=False)
+    free_usage_with_user_uploads = models.BooleanField(default=False)
+
+    # override the save method to check for parameter consistency
+    def save(self, *args, **kwargs):
+        if self.exclusive_usage:
+            self.free_usage = False
+            self.free_usage_with_same_collection = False
+            self.free_usage_with_same_workshop = False
+            self.free_usage_with_same_organization = False
+            self.free_usage_with_designer_uploads = False
+            self.free_usage_with_user_uploads = False
+        if self.free_usage:
+            self.exclusive_usage = False
+            self.free_usage_with_same_collection = False
+            self.free_usage_with_same_workshop = False
+            self.free_usage_with_same_organization = False
+            self.free_usage_with_designer_uploads = False
+            self.free_usage_with_user_uploads = False
+        if self.free :
+            self.base_price = 0.0
+
+
+        super(Design, self).save(*args, **kwargs)
 
     class Meta:
         db_table = 'designs'
@@ -374,6 +412,7 @@ class Design(TimeStampedModel):
         """
         return DesignLike.objects.filter(design=self, account_profile=account_profile).exists()
 
+    #  
 #########################################
 #        Design likes model             #
 #########################################
