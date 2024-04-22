@@ -132,16 +132,40 @@ class AccountProfile(TimeStampedModel):
     def __str__(self):
         return str(self.id) + " - " + self.account.email
 
+
+#########################################
+#             Permission model          #
+#########################################
+class Permission(TimeStampedModel):
+    """
+    Permission model, each role can have multiple permissions. These permissions are linked to one and only one role.
+    A single permission is composed of the following fields:
+    - Permission id as a primary key
+    - Role id as a foreign key
+    - Permission name
+    - Permission description
+    """
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    permission_name = models.CharField(max_length=255, null=True)
+    permission_description = models.TextField(null=True)
+
+    class Meta:
+        db_table = 'permissions'
+
+    def __str__(self) -> str:
+        return self.permission_name
+    
 #########################################
 #             Role model                #
 #########################################
 class Role(TimeStampedModel):
     """
-    Every role has a name and a description
+    Every role has a name and a description, and each role can have multiple permissions.
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     name = models.CharField(max_length=255, null=True)
     description = models.TextField(null=True)
+    permissions = models.ManyToManyField(Permission, related_name='roles')
 
     class Meta:
         db_table = 'roles'
@@ -149,7 +173,6 @@ class Role(TimeStampedModel):
     def __str__(self) -> str:
         return self.name
     
-
 #########################################
 #          Delivery address model       #
 #########################################

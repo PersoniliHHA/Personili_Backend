@@ -15,6 +15,7 @@ from organizations.models import Workshop
 
 # Utils
 from utils.constants import DESIGNER_UPLOADED_IMAGES_PATH_TEMPLATES
+from utils.utilities import add_to_dict
 
 
 #########################################
@@ -183,25 +184,34 @@ class Design(TimeStampedModel):
         (REJECTED, 'Rejected'),
     ]
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name='design', null=True, blank=True)
+   
+    # General attributes 
     theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='design')
     title = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
     image_path = models.CharField(max_length=255, null=True, blank=True)
     tags = models.CharField(max_length=255, null=True, blank=True)
-    status = models.CharField(max_length=255,
-                              choices=STATUS,
-                              default=PENDING
-                              )
+    
+    status = models.CharField(max_length=255, choices=STATUS, default=PENDING)
+    to_be_published = models.BooleanField(default=False)
+    latest_publication_date = models.DateTimeField(null=True, blank=True)
+    
+    # Optionally the design can be linked to a collection
+    collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name='designs')
+
+
+    # a design can only be linked either a workshop or a store or a regular user
+    workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE, related_name='designs', null=True, blank=True)
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='designs', null=True, blank=True)
+    regular_user = models.ForeignKey(AccountProfile, on_delete=models.CASCADE, related_name='designs', null=True, blank=True)
     
     base_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     
     # free design
     free = models.BooleanField(default=False)
 
-    # This field is used to determine if the design should be published or not on our website
-    self_upload = models.BooleanField(default=True)
-
+    # sponsored design
+    sponsored = models.BooleanField(default=False)
 
     ###### Usage and exclusivity parameters #######
     ## the following two parameters are mutually exclusive, if one is true the other should be false
@@ -218,25 +228,50 @@ class Design(TimeStampedModel):
     free_usage_with_same_organization = models.BooleanField(default=False)
     free_usage_with_designer_uploads = models.BooleanField(default=False)
     free_usage_with_user_uploads = models.BooleanField(default=False)
+    free_usage_with_other_workshops = models.BooleanField(default=False)
+    free_usage_with_other_organizations = models.BooleanField(default=False)
 
-    # override the save method to check for parameter consistency
+    # override the save method to check for attributes consistency
     def save(self, *args, **kwargs):
-        if self.exclusive_usage:
+        # Check the exclusivity and usage parameters
+        # if the uploader is a designer then the design is free by default
+        if self.regular_user:
+            self.workshop = None
+            self.store = False
             self.free_usage = False
-            self.free_usage_with_same_collection = False
-            self.free_usage_with_same_workshop = False
-            self.free_usage_with_same_organization = False
-            self.free_usage_with_designer_uploads = False
-            self.free_usage_with_user_uploads = False
-        if self.free_usage:
-            self.exclusive_usage = False
-            self.free_usage_with_same_collection = False
-            self.free_usage_with_same_workshop = False
-            self.free_usage_with_same_organization = False
-            self.free_usage_with_designer_uploads = False
-            self.free_usage_with_user_uploads = False
-        if self.free :
-            self.base_price = 0.0
+            self.exclusive_usage = True
+
+        elif self.store:
+            self.free_usage = True
+            self.workshop = None
+            self.regular_user = None
+        elif self.workshop:
+            self.store = None
+            self.regular_user = None
+
+            if self.exclusive_usage:
+                self.free_usage = False
+                self.free_usage_with_same_collection = False
+                self.free_usage_with_same_workshop = False
+                self.free_usage_with_same_organization = False
+                self.free_usage_with_designer_uploads = False
+                self.free_usage_with_user_uploads = False
+                self.free_usage_with_other_organizations = False
+                self.free_usage_with_other_workshops = False
+            if self.free_usage:
+                self.exclusive_usage = False
+                self.free_usage_with_same_collection = True
+                self.free_usage_with_same_workshop = True
+                self.free_usage_with_same_organization = True
+                self.free_usage_with_designer_uploads = True
+                self.free_usage_with_user_uploads = True
+                self.free_usage_with_other_organizations = True
+                self.free_usage_with_other_workshops = True
+            if self.free :
+                self.base_price = 0.0
+        
+        if self.base_price == 0.0:
+            self.free = True
 
 
         super(Design, self).save(*args, **kwargs)
@@ -249,30 +284,66 @@ class Design(TimeStampedModel):
     
     @classmethod
     def get_designs(cls, 
-                                  theme_ids= None,
-                                  store_ids=None,
-                                  workshop_ids=None,
-                                  organization_ids=None,
-                                  sponsored_stores=False,
-                                  sponsored_organizations=False,
-                                  search_term=None,
-                                  limit=20, 
-                                  offset=0,
-                                  free = None):
+                        theme_ids= None,
+                        store_ids=None,
+                        workshop_ids=None,
+                        organization_ids=None,
+                        sponsored_designs=False,
+                        search_term=None,
+                        tags=None,
+                        promotion_ids=None,
+                        free = None,
+                        price_min=None,
+                        price_max=None,
+                        latest_publication_date_min=None,
+                        latest_publication_date_max=None,
+                        offset=0,
+                        limit=20): 
         """
-        This method returns the most popular designs (the ones that were approved)
+        This method returns the most popular designs (the ones that were approved and not uploaded by a regular user)
         compute the number of likes per design and return the top "limit" designs
         for each design we get :
         - id
         - title
+        - theme name
         - image_path
         - store name or workshop name and its organization name depending on which one is not null
         - number of likes
         - design preview objects
+
+
+        Filters used : 
+        - theme_ids : list of theme ids
+        - store_ids : list of store ids
+        - workshop_ids : list of workshop ids
+        - organization_ids : list of organization ids
+        - sponsored_designs : boolean
+        - search_term : string
+        - tags : list of tags
+        - promotion_ids : list of promotion ids
+        - free : boolean
+        - price_min : float
+        - price_max : float
+        - latest_publication_date_min : datetime
+        - latest_publication_date_max : datetime
+        - offset : int
+        - limit : int
         """
         q_objects = Q()
+        # First filter the designs which are approved and to be published
+        q_objects.add(Q(status=cls.APPROVED, to_be_published=True), Q.AND)
+        # Filter the designs which don't belong to a regular user
+        q_objects.add(Q(regular_user=None), Q.AND)
+
+        # price filters
         if free:
             q_objects.add(Q(price=0.0), Q.AND)
+        if price_min:
+            q_objects.add(Q(base_price__gte=price_min), Q.AND)
+        if price_max:
+            q_objects.add(Q(base_price__lte=price_max), Q.AND)
+
+        # filter by theme, store, workshop, organization, sponsored stores, sponsored organizations
         if theme_ids:
             q_objects.add(Q(theme_id__in=theme_ids), Q.AND)
         if store_ids:
@@ -281,14 +352,16 @@ class Design(TimeStampedModel):
             q_objects.add(Q(collection__workshop_id__in=workshop_ids), Q.AND)
         if organization_ids:
             q_objects.add(Q(collection__workshop__organization_id__in=organization_ids), Q.AND)
-        if sponsored_stores and sponsored_organizations:
-            q_objects.add(Q(collection__store__storeprofile__is_sponsored=True) |
-                          Q(collection__workshop__organization__orgprofile__is_sponsored=True), Q.AND)
-        else:
-            if sponsored_organizations and not sponsored_stores:
-                q_objects.add(Q(collection__workshop__organization__orgprofile__is_sponsored=True), Q.AND)
-            if sponsored_stores and not sponsored_organizations:
-                q_objects.add(Q(collection__store__storeprofile__is_sponsored=True), Q.AND)
+
+        # Date filters
+        if latest_publication_date_min:
+            q_objects.add(Q(latest_publication_date__gte=latest_publication_date_min), Q.AND)
+        if latest_publication_date_max:
+            q_objects.add(Q(latest_publication_date__lte=latest_publication_date_max), Q.AND)
+
+        # filter sponsored designs
+        if sponsored_designs:
+            q_objects.add(Q(sponsored=True), Q.AND)
 
         # search for the search term in the title, the description, the tags of the design, also the theme name and description, the store name and organization name
         if search_term:
@@ -297,41 +370,78 @@ class Design(TimeStampedModel):
                           Q(tags__icontains=search_term) | 
                           Q(theme__name__icontains=search_term) | 
                           Q(theme__description__icontains=search_term) | 
-                          Q(collection__store__name__icontains=search_term) |
-                          Q(collection__store__storeprofile__biography__icontains=search_term) |
-                          Q(collection__workshop__organization__name__icontains=search_term) |
-                          Q(collection__workshop__organization__orgprofile__biography__icontains=search_term) |
-                          Q(collection__workshop__name__icontains=search_term), Q.AND)
+                          Q(store__name__icontains=search_term) |
+                          Q(store__storeprofile__biography__icontains=search_term) |
+                          Q(workshop__organization__name__icontains=search_term) |
+                          Q(workshop__organization__orgprofile__biography__icontains=search_term) |
+                          Q(workshop__name__icontains=search_term), Q.AND)
             
-        designs = (cls.objects.filter(status=cls.APPROVED, to_be_published=True)
-                           .filter(q_objects)
+        designs = (cls.objects.filter(q_objects)
                            .annotate(num_likes=models.Count('design_likes')) 
-                           .select_related('collection__store', 'collection__workshop__organization', 'theme')
+                           .select_related('store', 'workshop__organization', 'theme', 'collection', 'design_previews')
                            .prefetch_related('design_previews')
                            .order_by('-num_likes')[offset:offset+limit])
         result = {"designs_list":[]}
         for design in designs:
+            # Root dict to contain design data
             design_data = {
-                'design_id': design.id,
-                'design_title': design.title,
-                'design_theme': design.theme.name,
-                'theme_id': design.theme.id,
-                'design_description': design.description,
-                'design_image_path': design.image_path,
-                'store_name': design.collection.store.name if design.collection.store else None,
-                'store_id': design.collection.store.id if design.collection.store else None,
-                'store_verified': design.collection.store.storeprofile.is_verified if design.collection.store else None,
-                'store_sponsored': design.collection.store.storeprofile.is_sponsored if design.collection.store else None,
-                'workshop_name': design.collection.workshop.name if design.collection.workshop else None,
-                'workshop_id': design.collection.workshop.id if design.collection.workshop else None,
-                'organization_name': design.collection.workshop.organization.name if design.collection.workshop else None,
-                'organization_id': design.collection.workshop.organization.id if design.collection.workshop else None,
-                'organization_sponsored': design.collection.workshop.organization.orgprofile.is_sponsored if design.collection.workshop else None,
-                'design_nb_likes': design.num_likes,
-                'design_previews': list(design.design_previews.values('id', 'image_path'))
+                "design_id": design.id,
             }
-            # remove None values from the dictionary
-            design_data = {k: v for k, v in design_data.items() if v is not None}
+            # Design details
+            design_details = {
+                'design_title': design.title,
+                'design_description': design.description,
+                'design_theme_id': design.theme.id,
+                'design_theme_name': design.theme.name,
+                'design_image_path': design.image_path,
+                'design_nb_likes': design.num_likes,
+                'design_previews': list(design.design_previews.values('id', 'image_path')),
+                'design_tags': design.tags,
+                'design_price': design.base_price,
+                'latest_publication_date': design.latest_publication_date,
+            }
+            design_data['design_details'] = design_details
+            
+            # Design owner
+            design_owner = {}
+            if design.store:
+                design_owner = {
+                    'store_name': design.store.name,
+                    'store_id': design.store.id,
+                    'store_verified': design.store.storeprofile.is_verified,
+                    'store_sponsored': design.store.storeprofile.is_sponsored,
+                }
+            elif design.workshop:
+                design_owner = {
+                    'workshop_name': design.workshop.name,
+                    'workshop_id': design.workshop.id,
+                    'organization_name': design.workshop.organization.name,
+                    'organization_id': design.workshop.organization.id,
+                    'organization_sponsored': design.workshop.organization.orgprofile.is_sponsored,
+                }
+            design_data['design_owner'] = design_owner
+
+            # Design usage parameters
+            design_usage_parameters = {}
+            if design.exclusive_usage:
+                design_usage_parameters = {
+                    'exclusive_usage': design.exclusive_usage,
+                }
+            elif design.free_usage:
+                design_usage_parameters = {
+                    'free_usage': design.free_usage,
+                }
+            else:
+                design_usage_parameters = {
+                    'free_usage_with_same_collection': design.free_usage_with_same_collection,
+                    'free_usage_with_same_workshop': design.free_usage_with_same_workshop,
+                    'free_usage_with_same_organization': design.free_usage_with_same_organization,
+                    'free_usage_with_designer_uploads': design.free_usage_with_designer_uploads,
+                    'free_usage_with_user_uploads': design.free_usage_with_user_uploads,
+                    'free_usage_with_other_workshops': design.free_usage_with_other_workshops,
+                    'free_usage_with_other_organizations': design.free_usage_with_other_organizations,
+                }
+            design_data['design_usage_parameters'] = design_usage_parameters
             result['designs_list'].append(design_data)
 
         result["count"] = designs.count()
@@ -353,45 +463,14 @@ class Design(TimeStampedModel):
         - design store id and name and logo or workshop id and name and organization name and logo
         """
         
-        design = (cls.objects.filter(id=design_id, status=cls.APPROVED, to_be_published=True)
-                                    .select_related('collection__store', 'collection__workshop__organization', 'theme')
+        design = (cls.objects.filter(id=design_id, status=cls.APPROVED, to_be_published=True, regular_user=None)
+                                    .select_related('store__store_profile', 'workshop__organization', 'theme')
                                     .prefetch_related('design_previews')
                                     .annotate(num_likes=models.Count('design_likes'))
-                                    .values('id', 
-                                    'title', 'description', 'image_path', 'tags', 
-                                    'price', 'exclusive_usage', 'theme_id', 'theme__name', 
-                                    'collection__store_id', 'collection__store__name', 
-                                    'collection__store__storeprofile__store_logo_path', 
-                                    'collection__workshop_id', 'collection__workshop__name', 
-                                    'collection__workshop__organization__name', 
-                                    'collection__workshop__organization__orgprofile__logo_path')
                                     .first())
         
-        design_details: dict = {
-            'design_id': design.get('id'),
-            'design_title': design.get('title'),
-            'design_description':design.get('description'),
-            'design_image_path': design.get('image_path'),
-            'design_tags': design.get('tags'),
-            'design_price': design.get('price'),
-            'design_exclusive': design.get('exclusive_usage'),
-            'design_nb_likes': design.get('num_likes'),
-            'theme_id': design.get('theme_id'),
-            'theme_name': design.get('theme__name'),
-            'store_id': design.get('collection__store_id'),
-            'store_name': design.get('collection__store__name'),
-            'store_logo_path': design.get('collection__store__storeprofile__store_logo_path'),
-            'workshop_id': design.get('collection__workshop_id'),
-            'workshop_name': design.get('collection__workshop__name'),
-            'organization_name': design.get('collection__workshop__organization__name'),
-            'organization_logo_path': design.get('collection__workshop__organization__orgprofile__logo_path'),
-            'design_previews': [
-                {
-                    'id': preview.get('id'),
-                    'image_path': preview.get('image_path')
-                } for preview in design.get('design_previews', [])
-            ]
-        }
+        design_details: dict = {}
+        
         return design_details
     
     def like(self, account_profile: AccountProfile):

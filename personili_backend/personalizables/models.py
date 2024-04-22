@@ -15,8 +15,18 @@ from organizations.models import InventoryItem
 #########################################
 class Department(TimeStampedModel):
     """
-    
+    Department model has a name, a description and a picture
     """
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    name = models.CharField(max_length=255, null=True)
+    description = models.TextField(null=True, blank=True)
+    image_path = models.CharField(max_length=255, null=True, blank=True)
+
+    class Meta:
+        db_table = 'departments'
+
+    def __str__(self):
+        return self.name + " - " + str(self.id)
 
 
 #########################################
@@ -188,19 +198,32 @@ class PersonalizationMethod(TimeStampedModel):
 #########################################
 class Personalizable(TimeStampedModel):
     """
-    A printable model has a name, 
-    a type, 
-    a description, 
-    an image path,
+    A personalizable has a name, description, brand, model, category, department
+    Each
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category')
     name = models.CharField(max_length=255, null=True)
     description = models.TextField(null=True, blank=True)
-    image_path = models.CharField(max_length=255, null=True, blank=True)
+    
     brand = models.CharField(max_length=255, null=True, default="Generic Brand")
     model = models.CharField(max_length=255, null=True, default="Generic Model")
 
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category')
+    Department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='department')
+
+    # Designs that can be used on this personalizable
+    designs = models.ManyToManyField('designs.Design', related_name='personalizables')
+
+    # Usage and design constraints
+    # An open personalizable means any design can be used on it by the users
+    is_open = models.BooleanField(default=False)
+
+    is_limited_specific = models.BooleanField(default=False)
+
+
+
+
+    
     class Meta:
         db_table = 'personalizables'
 
@@ -208,6 +231,29 @@ class Personalizable(TimeStampedModel):
     def __str__(self):
         return self.name + " - " + self.category.name + " - " + str(self.id)
     
+#########################################
+#      PersonalizableVariant model      #
+#########################################
+class PersonalizableVariant(TimeStampedModel):
+    """
+    A personalizable variant is linked to a sku in the inventory item table and to a personalizable
+    """
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    personalizable = models.ForeignKey(Personalizable, on_delete=models.CASCADE, related_name='variants')
+    sku = models.ForeignKey(InventoryItem, on_delete=models.CASCADE, related_name='personalizable_variants')
+    quantity = models.IntegerField(null=True, default=1)
+    
+    def __str__(self):
+        return "variant of : " + self.personalizable.name + " - " + str(self.id)
+    
+    class Meta:
+        db_table = 'personalizable_variants'
+
+    def get_the_variant_values(self):
+        """
+        This method returns the option values of this personalizable variant
+        """
+        pass
 
 #########################################
 #     PersonalizableOption model        #
@@ -253,28 +299,6 @@ class PersonalizableZone(TimeStampedModel):
     def __str__(self):
         return self.personalizable.name + " - " + self.name + " - " + str(self.id)
 
-#########################################
-#      PersonalizableVariant model      #
-#########################################
-class PersonalizableVariant(TimeStampedModel):
-    """
-    A personalizable variant is linked to a sku in the inventory item table and to a personalizable
-    """
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    personalizable = models.ForeignKey(Personalizable, on_delete=models.CASCADE, related_name='variants')
-    sku = models.ForeignKey(InventoryItem, on_delete=models.CASCADE, related_name='personalizable_variants')
-
-    def __str__(self):
-        return "variant of : " + self.personalizable.name + " - " + str(self.id)
-    
-    class Meta:
-        db_table = 'personalizable_variants'
-
-    def get_the_variant_values(self):
-        """
-        This method returns the option values of this personalizable variant
-        """
-        pass
 
 
 #########################################

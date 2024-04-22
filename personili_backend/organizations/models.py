@@ -4,7 +4,7 @@ from uuid import uuid4
 
 # Models
 from accounts.models import TimeStampedModel
-from accounts.models import Account
+from accounts.models import Account, Role
 
 class Organization(TimeStampedModel):
     """
@@ -39,7 +39,7 @@ class OrganizationMembership(TimeStampedModel):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
-    role = models.CharField(max_length=100)
+    role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True)
 
     class Meta:
         unique_together = ['organization', 'account']

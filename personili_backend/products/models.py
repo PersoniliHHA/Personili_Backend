@@ -28,18 +28,22 @@ class Product(TimeStampedModel):
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
-    # what does this mean? the workshop owner of the design or the workshop that will handle the 
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name='organization', null=True)
     workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE, related_name='workshop', null=True)
 
-    # if it's self made it won't be published on the store (made by the buyer himself)
-    self_made = models.BooleanField(default=False)
+    # if not null then this means the product is self made by a user
+    user = models.ForeignKey(AccountProfile, on_delete=models.CASCADE, related_name='user', null=True)
 
     # to be published or not (products are created but not published until the organization decides to publish them)
     to_be_published = models.BooleanField(default=False)
+    
+    # editable : this means the user can personalize the product 
+    editable = models.BooleanField(default=True)
 
     title = models.CharField(max_length=255)
     description = models.TextField(max_length=1000)
+
+    starting_price = models.DecimalField(max_digits=10, decimal_places=2)
 
     class Meta:
         db_table = 'products'
@@ -52,18 +56,19 @@ class Product(TimeStampedModel):
         return self.productvariants.first()
 
     @classmethod
-    def get_products(cls,  offset: int,
-                           limit: int,
-                           max_price: float=None,
-                           min_price: float=None,
-                           category_ids: list[str]=None,
-                           organization_ids: list[str]=None,
-                           workshop_ids :list[str]=None,
-                           personalization_method_ids: list[str]=None,
-                           design_ids: list[str]=None,
-                           theme_ids: list[str]=None,
-                           sponsored_organizations =None,
-                           search_term: str=None):
+    def get_products(cls,  
+                    offset: int,
+                    limit: int,
+                    max_price: float=None,
+                    min_price: float=None,
+                    category_ids: list[str]=None,
+                    organization_ids: list[str]=None,
+                    workshop_ids :list[str]=None,
+                    personalization_method_ids: list[str]=None,
+                    design_ids: list[str]=None,
+                    theme_ids: list[str]=None,
+                    sponsored_organizations =None,
+                    search_term: str=None):
         
         """
         This method returns a list of products ordered by the number of sales with the following infos :
@@ -220,7 +225,16 @@ class Product(TimeStampedModel):
             }
         return response
     
+    def get_minimum_price(self):
+        """
+        This method returns the minimum price of the product
+        """
+        return self.productvariants.aggregate(models.Min('price'))['price__min']
 
+    # Override the save method 
+    def save(self, *args, **kwargs):
+        pass
+    
 class ProductVariant(TimeStampedModel):
     """
     Each product has one or more variants
@@ -243,6 +257,7 @@ class ProductVariant(TimeStampedModel):
     quantity = models.IntegerField(default=0) 
     # the workshop owner can set the quantity of the product variant
     # the workshop owner receives a notification when the quantity of the product variant is low, also provide tools for them to automate the process of restocking
+    sku = models.CharField(max_length=255, null=True, blank=True)
     
     class Meta:
         db_table = 'product_variants'
