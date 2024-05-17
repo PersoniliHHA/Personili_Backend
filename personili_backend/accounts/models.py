@@ -172,7 +172,29 @@ class Role(TimeStampedModel):
 
     def __str__(self) -> str:
         return self.name
-    
+
+#########################################
+#             Role-permission model     #
+#########################################
+class RolePermission(TimeStampedModel):
+    """
+    Role-permission model, each role can have multiple permissions. These permissions are linked to one and only one role.
+    A single role-permission is composed of the following fields:
+    - Role permission id as a primary key
+    - Role id as a foreign key
+    - Permission id as a foreign key
+    """
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    role = models.ForeignKey(Role, on_delete=models.CASCADE, related_name='role_permissions')
+    permission = models.ForeignKey(Permission, on_delete=models.CASCADE, related_name='role_permissions')
+
+    class Meta:
+        db_table = 'role_permissions'
+
+    def __str__(self) -> str:
+        return self.role.name + ' - ' + self.permission.permission_name
+
+
 #########################################
 #          Delivery address model       #
 #########################################
