@@ -287,7 +287,6 @@ class OrderItem(TimeStampedModel):
         return f'{self.order} - {self.product.title} - {self.quantity} - {self.sub_total}'
     
 
-
 #########################################
 #             Bill model                #
 #########################################
@@ -321,7 +320,6 @@ class Bill(TimeStampedModel):
 
     def __str__(self):
         return f'{self.order} - {self.total_amount} - {self.payment_status}'
-
 
 
 #########################################

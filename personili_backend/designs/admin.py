@@ -3,13 +3,11 @@ from django.contrib import admin
 # add all designs app models to admin site
 from designs.models import Store, Design, Theme, StoreProfile, Collection, DesignLike, DesignPreview
 
+"""
 
 # Customize the collection table
 # for each collection, display the designs in the collection
 class DesignInline(admin.StackedInline):
-    """
-    Only the id and the name of the design will be displayed in the collection table
-    """
     model = Design
     readonly_fields = ['id']
     extra = 0
@@ -27,11 +25,11 @@ class CollectionInline(admin.StackedInline):
 class StoreAdmin(admin.ModelAdmin):
     inlines = [CollectionInline, ]
 
-
-admin.site.register(Store, StoreAdmin)
+"""
+admin.site.register(Store)
 admin.site.register(StoreProfile)
 
-admin.site.register(Collection, CollectionAdmin)
+admin.site.register(Collection)
 admin.site.register(Theme)
 admin.site.register(DesignLike)
 admin.site.register(DesignPreview)
