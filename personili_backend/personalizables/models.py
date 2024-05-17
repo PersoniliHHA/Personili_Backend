@@ -15,7 +15,13 @@ from organizations.models import InventoryItem
 #########################################
 class Department(TimeStampedModel):
     """
-    Department model has a name, a description and a picture
+    Department model has a name, a description and a picture.
+    List of departments :
+    - Women 
+    - Men
+    - Children
+    - Babies
+    - Unisex
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     name = models.CharField(max_length=255, null=True)
