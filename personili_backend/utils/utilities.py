@@ -5,3 +5,15 @@ def add_to_dict(dictionary, key, value):
     """
     if value is not None:
         dictionary[key] = value
+
+
+###############################################################
+################Pricing utilities##############################
+def charm_price(price: float):
+    """
+    This method converts a price to (price-1).99
+    """
+    return price - 1 + 0.99
+
+###############################################################
+###############################################################

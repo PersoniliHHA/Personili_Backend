@@ -122,8 +122,8 @@ class Product(TimeStampedModel):
             products = products.filter(Q(title__icontains=search_term) | 
                                        Q(description__icontains=search_term))
         
-        # Now get the products and their previews ordered by the number of sales and average rating
-        products = (products.prefetch_related('productpreview', 'organization', 'category', 'product_designed_personalizable_variant__designed_personalizable_variant_zone__design__theme')
+        # Now get the products, their variants and their previews ordered by the number of sales and average rating
+        products = (products.prefetch_related('productpreview', 'organization', 'category', 'product__product_variant__designed_personalizable_variant__designed_personalizable_variant_zone__design__theme')
                     .annotate(num_reviews=Count('productreview'))
                     .annotate(avg_rating=Avg('productreview__rating'))
                     .annotate(num_sales=Count('orderitem'))

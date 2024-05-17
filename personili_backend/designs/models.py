@@ -183,6 +183,14 @@ class Design(TimeStampedModel):
         (APPROVED, 'Approved'),
         (REJECTED, 'Rejected'),
     ]
+
+    _3D = "3d"
+    _2D = "2d"
+    DESIGN_TYPES = [
+        (_3D, '3D'),
+        (_2D, '2D'),
+    ]
+
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
    
     # General attributes 
@@ -191,9 +199,13 @@ class Design(TimeStampedModel):
     description = models.TextField(null=True, blank=True)
     image_path = models.CharField(max_length=255, null=True, blank=True)
     tags = models.CharField(max_length=255, null=True, blank=True)
+    design_type = models.CharField(max_length=255, choices=DESIGN_TYPES, default=_2D)
     
+    # Design initial status is PENDING, eventually it becomes either APPROVED or REJECTED
     status = models.CharField(max_length=255, choices=STATUS, default=PENDING)
+    # Designs uploaded by the user are not to be published, designers or workshops can choose to or not to publish them
     to_be_published = models.BooleanField(default=False)
+    
     latest_publication_date = models.DateTimeField(null=True, blank=True)
     
     # Optionally the design can be linked to a collection
