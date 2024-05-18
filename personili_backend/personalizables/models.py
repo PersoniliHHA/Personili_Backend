@@ -9,6 +9,7 @@ from django.forms.models import model_to_dict
 # Models
 from accounts.models import TimeStampedModel
 from organizations.models import InventoryItem
+from designs.models import Design
 
 #########################################
 #             Department model          #
@@ -218,18 +219,24 @@ class Personalizable(TimeStampedModel):
     Department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='department')
 
     # Designs that can be used on this personalizable
-    designs = models.ManyToManyField('designs.Design', related_name='personalizables')
+    designs = models.ManyToManyField(Design, related_name='personalizables')
 
     # Usage and design constraints
     # An open personalizable means any design can be used on it by the users
-    is_open = models.BooleanField(default=False)
+    is_open_for_personalization = models.BooleanField(default=False)
 
-    is_limited_specific = models.BooleanField(default=False)
+    # A personalizable can be a template, meaning that it can be used as a template for creating an editable product by designers
+    can_be_template = models.BooleanField(default=False)
 
+    # Parameters for personalizable usage with other designs
+    used_with_specific_designs = models.BooleanField(default=False)
+    used_with_specific_workshops = models.BooleanField(default=False)
 
-
-
+    used_with_designers_designs = models.BooleanField(default=False)
+    userd_with_user_uploaded_designs = models.BooleanField(default=False)
+    used_with_platform_designs = models.BooleanField(default=False)
     
+
     class Meta:
         db_table = 'personalizables'
 

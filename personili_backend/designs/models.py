@@ -10,7 +10,6 @@ from django.db.models import Q
 # Models
 from accounts.models import AccountProfile
 from accounts.models import TimeStampedModel
-from personalizables.models import PersonalizableVariant
 from organizations.models import Workshop
 
 # Utils
@@ -230,7 +229,7 @@ class Design(TimeStampedModel):
 
     # 1- Free usage with other designs, this is valid by default for designs uploaded by the designer
     free_usage = models.BooleanField(default=False) # This parameter cancels the other parameters
-    # 2- Exclusive usage, the design can only be used alone on any personalizable 
+    # 2- Exclusive usage, the design can only be used alone 
     exclusive_usage = models.BooleanField(default=False) # this parameter cancels the other parameters
 
     ## The following parameters are only valid if the exclusive_usage is set to False
