@@ -1,4 +1,5 @@
 # Standard libraries
+from typing import Iterable
 from uuid import uuid4
 
 # Django
@@ -173,7 +174,6 @@ class PersonalizationType(TimeStampedModel):
         """
         return self.name + " - " + str(self.id)
         
-
 #########################################
 #         PersonalizationMethod model   #
 #########################################
@@ -219,7 +219,7 @@ class Personalizable(TimeStampedModel):
     Department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='department')
 
     # Designs that can be used on this personalizable
-    designs = models.ManyToManyField(Design, related_name='personalizables')
+    allowed_designs = models.ManyToManyField(Design, related_name='personalizables')
 
     # Usage and design constraints
     # An open personalizable means any design can be used on it by the users
@@ -243,6 +243,22 @@ class Personalizable(TimeStampedModel):
 
     def __str__(self):
         return self.name + " - " + self.category.name + " - " + str(self.id)
+
+    def save(self):
+        """
+        This method saves the personalizable object
+        """
+        # Validate the usage parameters of the personalizable
+        if self.is_open_for_personalization :
+            self.used_with_specific_designs = False
+            self.used_with_specific_workshops = False
+            self.used_with_designers_designs = False
+            self.userd_with_user_uploaded_designs = False
+            self.used_with_platform_designs = False
+        elif any([self.used_with_specific_designs, self.used_with_specific_workshops, self.used_with_designers_designs, self.userd_with_user_uploaded_designs, self.used_with_platform_designs]):
+            self.is_open_for_personalization = False
+
+        super().save()
     
 #########################################
 #      PersonalizableVariant model      #
@@ -311,7 +327,6 @@ class PersonalizableZone(TimeStampedModel):
 
     def __str__(self):
         return self.personalizable.name + " - " + self.name + " - " + str(self.id)
-
 
 
 #########################################
