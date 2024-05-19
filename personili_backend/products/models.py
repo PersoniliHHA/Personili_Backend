@@ -62,6 +62,7 @@ class Product(TimeStampedModel):
                     max_price: float=None,
                     min_price: float=None,
                     category_ids: list[str]=None,
+                    department_ids: list[str]=None,
                     organization_ids: list[str]=None,
                     workshop_ids :list[str]=None,
                     personalization_method_ids: list[str]=None,
