@@ -320,7 +320,7 @@ CORS_URLS_REGEX = r"^/api/.*$"
 # See more configuration options at https://drf-spectacular.readthedocs.io/en/latest/settings.html#settings
 SPECTACULAR_SETTINGS = {
     "TITLE": "Personili API",
-    "DESCRIPTION": "Documentation of API endpoints of Hih Pod Platform",
+    "DESCRIPTION": "Documentation of API endpoints of Personili",
     "VERSION": "1.0.0",
     #"SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
 }

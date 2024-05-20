@@ -7,7 +7,7 @@ from datetime import datetime
 # Model imports
 from accounts.models import AccountProfile, DeliveryAddress, PaymentMethod
 from accounts.models import TimeStampedModel
-from products.models import Product
+from products.models import ProductVariant
 
 
 
@@ -276,7 +276,7 @@ class OrderItem(TimeStampedModel):
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='orderitem')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='orderitem')
+    product_variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE, related_name='orderitem')
     quantity = models.IntegerField(default=1)
     sub_total = models.DecimalField(max_digits=10, decimal_places=2)
 

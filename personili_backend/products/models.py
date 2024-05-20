@@ -7,7 +7,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from accounts.models import TimeStampedModel
 from accounts.models import AccountProfile
 from organizations.models import Organization, Workshop
-from personalizables.models import Category, PersonalizationMethod, DesignedPersonalizableVariant
+from personalizables.models import Category, Department, PersonalizationMethod, DesignedPersonalizableVariant
 
 from django.db.models import Count
 from django.forms.models import model_to_dict
@@ -30,6 +30,9 @@ class Product(TimeStampedModel):
     
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name='organization', null=True)
     workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE, related_name='workshop', null=True)
+
+    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, null=True, blank=True)
+    department = models.ForeignKey(Department, on_delete=models.DO_NOTHING, null=True, blank=True)
 
     # if not null then this means the product is self made by a user
     user = models.ForeignKey(AccountProfile, on_delete=models.CASCADE, related_name='user', null=True)
@@ -76,11 +79,9 @@ class Product(TimeStampedModel):
         - product id
         - product name
         - product description
-        - product reviews
-        - product preview
         - category id
-        - theme ids attached to each design used in the product
         - workshop and organization which created the designs
+        - all the product variants and their reviews, designs, themes
         
         filters used :
         - category
@@ -98,8 +99,13 @@ class Product(TimeStampedModel):
             products = products.filter(price__lte=max_price, price__gte=min_price)
         
         # Add filters incrementally
+        # Category and department filters
         if category_ids:
             products = products.filter(category_id__in=category_ids)
+        if department_ids:
+            products = products.filter(department_id__in=department_ids)
+        
+        # Organization and workshop filters
         if organization_ids:
             products = (products.filter(organization_id__in=organization_ids)
                         .select_related('organization'))
@@ -107,28 +113,37 @@ class Product(TimeStampedModel):
             products = (products.filter(workshop_id__in=workshop_ids)
                         .select_related('workshop'))
 
+        # Personalization method, theme and design filters
         if personalization_method_ids:
             products = (products.filter(personalization_method_id__in=personalization_method_ids)
                         .select_related('personalization_method'))
         if theme_ids:
-            products = (products.filter(product_designed_personalizable_variant__designed_personalizable_variant_zone__design__theme_id__in=theme_ids)
-                        .prefetch_related('product_designed_personalizable_variant__designed_personalizable_variant_zone__design__theme'))
+            products = (products.filter(productvariants__designed_personalizable_variant__designed_personalizable_variant_zone__design__theme_id__in=theme_ids))
         if design_ids:
-            products = (products.filter(product_designed_personalizable_variant__designed_personalizable_variant_zone__design_id__in=design_ids)
-                        .prefetch_related('product_designed_personalizable_variant__designed_personalizable_variant_zone__design'))
+            products = (products.filter(productvariants__designed_personalizable_variant__designed_personalizable_variant_zone__design_id__in=design_ids))
+        
+        # Sponsored organizations filter
         if sponsored_organizations:
             products = (products.filter(organization__orgprofile__is_sponsored=True)
                         .select_related('organization'))
-        if search_term:
-            products = products.filter(Q(title__icontains=search_term) | 
-                                       Q(description__icontains=search_term))
         
-        # Now get the products, their variants and their previews ordered by the number of sales and average rating
-        products = (products.prefetch_related('productpreview', 'organization', 'category', 'product__product_variant__designed_personalizable_variant__designed_personalizable_variant_zone__design__theme')
-                    .annotate(num_reviews=Count('productreview'))
-                    .annotate(avg_rating=Avg('productreview__rating'))
-                    .annotate(num_sales=Count('orderitem'))
+        # Search term filter : search in the product title and description, the product variant title and description, the organization name
+        if search_term:
+            products = products.filter(
+                Q(title__icontains=search_term) |
+                Q(description__icontains=search_term) |
+                Q(productvariants__name__icontains=search_term) |
+                Q(productvariants__description__icontains=search_term) |
+                Q(organization__name__icontains=search_term)
+            )
+        
+        # Now get the products, their variants and their reviews, the organization info, the category, the department, the personalization method, the designs and the themes
+        products = (products.prefetch_related('productpreview', 'organization', 'category', 'productvariants__designed_personalizable_variant__designed_personalizable_variant_zone__design__theme')
+                    .annotate(num_reviews=Count('productvariants__productreview'))
+                    .annotate(avg_rating=Avg('productvariants__productreview__rating'))
+                    .annotate(num_sales=Count('productvariants__orderitem'))
                     .order_by('-num_sales','-num_reviews', '-avg_rating')[offset:offset+limit])
+        
         
         # Now prepare the json response
         response = {"products_list": []}
@@ -141,6 +156,7 @@ class Product(TimeStampedModel):
                 "product_num_reviews": product.num_reviews,
                 "product_num_sales": product.num_sales,
                 "product_category_id": product.category.id,
+                "product_departement_id": product.department.id,
                 "product_organization_id": product.organization.id,
                 "product_organization_name": product.organization.name,
                 "product_workshop_id": product.workshop.id if product.workshop else None,
@@ -148,15 +164,26 @@ class Product(TimeStampedModel):
                 "product_price": product.price,
                 "product_designs": [{"design_id": zone.design.id, 
                                      "theme_id": zone.design.theme.id, 
-                                     "design_image_path": zone.design.image_path} for variant in product.product_designed_personalizable_variant.all() for zone in variant.designed_personalizable_variant_zone.all()],
+                                     "design_image_path": zone.design.image_path} for variant in product.productvariants.all() for zone in variant.designed_personalizable_variant_zone.all()],
+                "product_variants": [{"variant_id": variant.id,
+                                        "variant_name": variant.name,
+                                        "variant_description": variant.description,
+                                        "variant_price": variant.price,
+                                        "variant_quantity": variant.quantity,
+                                        "variant_sku": variant.sku,
+                                        "variant_reviews": [{"account_id": review.account.id, 
+                                                            "account_email": review.account.email, 
+                                                            "rating": review.rating, 
+                                                            "comment": review.comment} for review in variant.productreview.all()],
+                                        "variant_previews": [preview.image_path for preview in variant.productvariantpreviews.all()],
+                                        "variant_theme_ids": [zone.design.theme.id for zone in variant.designed_personalizable_variant_zone.all()] if theme_ids else None,
+                                        } for variant in product.productvariants.all()],
                 "product_preview": [preview.image_path for preview in product.productpreview.all()],
-                "product_theme_ids": [zone.design.theme.id for variant in product.product_designed_personalizable_variant.all() for zone in variant.designed_personalizable_variant_zone.all()] if theme_ids else None,
                   }
             # Remove the null key values
             product_data = {k: v for k, v in product_data.items() if v is not None}
             
             response["products_list"].append(product_data)
-        
         
         # Add the count of the products
         response["count"] = len(response["products_list"])
@@ -250,8 +277,7 @@ class ProductVariant(TimeStampedModel):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='productvariants')
     designed_personalizable_variant = models.OneToOneField(DesignedPersonalizableVariant, on_delete=models.CASCADE)
-    category = models.UUIDField(null=True, blank=True)
-
+    
     name = models.CharField(max_length=255)
     description = models.TextField(max_length=1000, null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
