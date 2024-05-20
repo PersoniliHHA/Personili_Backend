@@ -39,6 +39,8 @@ class Product(TimeStampedModel):
 
     # to be published or not (products are created but not published until the organization decides to publish them)
     to_be_published = models.BooleanField(default=False)
+    # self made or not, if true this mean the product was created by a regular user
+    self_made = models.BooleanField(default=False)
     
     # editable : this means the user can personalize the product 
     editable = models.BooleanField(default=True)
