@@ -35,6 +35,7 @@ class ProductViewSet(viewsets.ViewSet):
         """
         This method is used to get the list of products with minimal information and based on criterias :
         - category_ids
+        - department_ids
         - personalization_type_ids
         - personalization_method_ids
         - theme_ids
@@ -56,6 +57,7 @@ class ProductViewSet(viewsets.ViewSet):
         offset = request.query_params.get('offset', None)
         limit = request.query_params.get('limit', None)
         category_ids = request.query_params.get('categories', None)
+        department_ids = request.query_params.get('departments', None)
         personalization_method_ids = request.query_params.get('personalization_methods', None)
         theme_ids = request.query_params.get('themes', None)
         design_ids = request.query_params.get('designs', None)
@@ -100,6 +102,14 @@ class ProductViewSet(viewsets.ViewSet):
             
             # Get all the leaf categories
             category_ids = Category.get_leaf_categories_from_list(category_ids)
+        
+        if department_ids:
+            # remove the white spaces
+            department_ids = department_ids.replace(" ", "")
+            # split the string into a list
+            department_ids = department_ids.split(",")
+            if not is_all_valid_uuid4(department_ids):
+                return Response({"error": "BAD_REQUEST"}, status=400)
             
         if personalization_method_ids:
             # remove the white spaces

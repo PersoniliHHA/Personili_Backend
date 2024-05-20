@@ -61,7 +61,7 @@ class Cart(TimeStampedModel):
             cart = cls.objects.create(account_profile=account_profile, open=True)
         return cart
 
-    def add_items_to_cart(self, products:list[Product]):
+    def add_items_to_cart(self, products:list[ProductVariant]):
         """
         This method takes a list of products, for each product it creates a new cart item
         """
