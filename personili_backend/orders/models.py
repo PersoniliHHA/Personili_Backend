@@ -141,7 +141,7 @@ class CartItem(TimeStampedModel):
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='cart_items_of_a_cart')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='cart_items_of_a_product')
+    product = models.ForeignKey(ProductVariant, on_delete=models.CASCADE, related_name='cart_items_of_a_product')
     quantity = models.IntegerField(default=1)
     sub_total = models.DecimalField(max_digits=10, decimal_places=2)
 
