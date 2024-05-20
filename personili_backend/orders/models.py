@@ -129,16 +129,8 @@ class Cart(TimeStampedModel):
         This method returns the cart items of a cart, for each cart item it returns its details
         as well as the product details associated to it
         """
-        cart_items = []
-        for cart_item in self.cart_items_of_a_cart.all():
-            cart_items.append({
-                'cart_item_id': cart_item.id,
-                'quantity': cart_item.quantity,
-                'sub_total': cart_item.sub_total,
-                'product_details': Product.objects.get(id=cart_item.product.id).get_full_product_description()
-            })
-            
-        return cart_items
+
+        return 
 
 #########################################
 #         Cart Item model               #
