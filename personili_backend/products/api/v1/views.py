@@ -167,6 +167,7 @@ class ProductViewSet(viewsets.ViewSet):
                                                 max_price=max_price,
                                                 min_price=min_price,
                                                 category_ids=category_ids, 
+                                                department_ids=department_ids,
                                                 organization_ids=organization_ids, 
                                                 personalization_method_ids=personalization_method_ids, 
                                                 design_ids=design_ids, 
@@ -179,7 +180,7 @@ class ProductViewSet(viewsets.ViewSet):
             return response
         except Exception as e:
             logging.error(f"get_products_light action method error :{e.args} ")
-            return Response({"error": "UNKNOWN_INTERNAL_ERROR"}, status=400)
+            return Response({"error": "UNKNOWN_ERROR"}, status=400)
 
     @action(detail=True, methods=['GET'], url_path='details', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def get_product_detail(self, request, pk=None):
