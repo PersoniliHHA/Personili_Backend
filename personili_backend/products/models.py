@@ -96,14 +96,12 @@ class Product(TimeStampedModel):
         # Start with the base query (only non self made products) and their previews
         products = cls.objects.filter(self_made=False, to_be_published=True)
         
-        # Filter the price, if at least one variant's price meets the criteria the entire product and its variants are returned
+        # Filter the price, if at least one variant's price meets the criteria the product and its variants are returned
         if max_price and min_price:
-            products = products.filter(
-                products = products.filter(
+            products =  products.filter(
                     Q(productvariants__price__lte=max_price) &
                     Q(productvariants__price__gte=min_price)
                 )
-            )
             
         # Add filters incrementally
         # Category and department filters
