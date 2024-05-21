@@ -208,7 +208,7 @@ class Design(TimeStampedModel):
     latest_publication_date = models.DateTimeField(null=True, blank=True)
     
     # Optionally the design can be linked to a collection
-    collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name='designs')
+    collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name='designs', null=True, blank=True)
 
 
     # a design can only be linked either a workshop or a store or a regular user
@@ -244,6 +244,10 @@ class Design(TimeStampedModel):
 
     # override the save method to check for attributes consistency
     def save(self, *args, **kwargs):
+        # Check that the design is linked to either a store or a workshop or a regular user
+        if not self.store and not self.workshop and not self.regular_user:
+            raise ValueError('A design should be linked to either a store or a workshop or a regular user')
+        
         # Check the exclusivity and usage parameters
         # if the uploader is a designer then the design is free by default
         if self.regular_user:

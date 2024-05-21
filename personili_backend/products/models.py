@@ -158,8 +158,8 @@ class Product(TimeStampedModel):
                 "product_title": product.title,
                 "product_description": product.description,
                 "product_rating": product.avg_rating,
-                "product_num_reviews": product.num_reviews,
-                "product_num_sales": product.num_sales,
+                "product_nb_reviews": product.num_reviews,
+                "product_nb_sales": product.num_sales,
                 "product_category_id": product.category.id,
                 "product_departement_id": product.department.id,
                 "product_organization_id": product.organization.id,
@@ -203,17 +203,16 @@ class Product(TimeStampedModel):
         - Product id
         - Product title
         - Product description
-        - Product price
-        - Product category
+        - Product variants ids, names, descriptions, prices, quantities, skus, reviews, previews, promotions
+        - Product category, departement id
         - Product organization and workshop name
-        - Product reviews
         - Product previews ids and images
         - Product designs ids and images
         - Product themes
         """
-        product_details = (cls.objects.filter(id=product_id)
-                              .select_related('organization__orgprofile', 'workshop', 'category', 'personalization_method__personalization_type')
-                              .prefetch_related('productpreview', 'productreview', 'product_designed_personalizable_variant__designed_personalizable_variant_zone__design__theme')      
+        product_details = (cls.objects.filter(id=product_id, self_made=False, to_be_published=True)
+                              .select_related('organization__orgprofile', 'workshop', 'category', 'department', 'personalization_method__personalization_type')
+                              .prefetch_related('productpreview', 'productvariants__productreview', 'product_designed_personalizable_variant__designed_personalizable_variant_zone__design__theme')      
                               .annotate(num_reviews=Count('productreview'))
                               .annotate(avg_rating=Avg('productreview__rating'))
                               .annotate(num_sales=Count('orderitem'))
