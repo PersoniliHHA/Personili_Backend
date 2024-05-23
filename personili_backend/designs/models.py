@@ -460,7 +460,6 @@ class Design(TimeStampedModel):
             else:
                 design_usage_parameters = {
                     'limited_usage_with_same_collection':     design.limited_usage_with_same_collection,
-                    'limited_usage_with_same_workshop':       design.limited_usage_with_same_workshop,
                     'limited_usage_with_same_organization':   design.limited_usage_with_same_organization,
                     'limited_usage_with_designer_uploads':    design.limited_usage_with_designer_uploads,
                     'limited_usage_with_user_uploads':        design.limited_usage_with_user_uploads,
