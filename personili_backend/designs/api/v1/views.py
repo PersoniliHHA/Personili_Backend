@@ -24,20 +24,6 @@ import logging
 # set the logging on the debug level
 logging.basicConfig(level=logging.DEBUG)
 
-#################################
-#                               #
-#   Public Stores ViewSet       #
-#                               #
-#################################
-
-class PublicStoresViewSet_GetStores(viewsets.ModelViewSet):
-    """
-       - ViewSet for the Store model and StoreSerializer_GetStores serializer
-       - Connected to the API that fetches a list of all stores
-       -
-    """
-    pass
-
 
 #################################
 #                               #
@@ -54,10 +40,10 @@ class DesignsViewSet(viewsets.ViewSet):
         user_profile = get_object_or_404(AccountProfile, user=self.request.user)
         return user_profile
 
-    ################################### GET APIS, PUBLIC #####################################
+    ################################### GET/POST APIS, PUBLIC #####################################
     
     ##### Get the designs based on criteria : theme, store, workshop, nb of likes, sponsored stores, sponsored workshops
-    @action(detail=False, methods=['GET'], url_path='catalog', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    @action(detail=False, methods=['POST'], url_path='catalog', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def get_designs(self, request):
         """
         Get the designs based on different criterias : 
@@ -77,14 +63,23 @@ class DesignsViewSet(viewsets.ViewSet):
         # Get the query parameters from the request
         offset = request.query_params.get('offset', None)
         limit = request.query_params.get('limit', None)
+
         theme_ids = request.query_params.get('themes', None)
         store_ids = request.query_params.get('stores', None)
         workshop_ids = request.query_params.get('workshops', None)
         organization_ids = request.query_params.get('organizations', None)
+        promotion_ids = request.query_params.get('promotions', None)
+        events_ids = request.query_params.get('events', None)
+        
         sponsored_stores = request.query_params.get('sponsored_stores', None)
         sponsored_organizations = request.query_params.get('sponsored_organizations', None)
+        sponsored_designs = request.query_params.get('sponsored_designs', None)
+
         search_term = request.query_params.get('search_term', None)
         free = request.query_params.get('free', None)
+        tags = request.query_params.get('tags', None)
+
+        
         
         ####################### Query parameters validation ########################
         if offset and limit:
@@ -127,6 +122,22 @@ class DesignsViewSet(viewsets.ViewSet):
             store_ids = store_ids.split(",")
             if not is_all_valid_uuid4(store_ids):
                 return Response({"error": "BAD_REQUEST"}, status=400)
+        
+        if promotion_ids :
+            # remove the white spaces
+            promotion_ids = promotion_ids.replace(" ", "")
+            # split the string into a list
+            promotion_ids = promotion_ids.split(",")
+            if not is_all_valid_uuid4(promotion_ids):
+                return Response({"error": "BAD_REQUEST"}, status=400)
+        
+        if events_ids :
+            # remove the white spaces
+            events_ids = events_ids.replace(" ", "")
+            # split the string into a list
+            events_ids = events_ids.split(",")
+            if not is_all_valid_uuid4(events_ids):
+                return Response({"error": "BAD_REQUEST"}, status=400)
             
         if sponsored_organizations:
             # sponsored_organizations should ba valid boolean value
@@ -136,6 +147,11 @@ class DesignsViewSet(viewsets.ViewSet):
         if sponsored_stores:
             # sponsored_stores should ba valid boolean value
             if sponsored_stores not in ["true","True"]:
+                return Response({"error": "BAD_REQUEST"}, status=400)
+        
+        if sponsored_designs:
+            # sponsored_designs should ba valid boolean value
+            if sponsored_designs not in ["true","True"]:
                 return Response({"error": "BAD_REQUEST"}, status=400)
         
         if workshop_ids:
@@ -150,18 +166,29 @@ class DesignsViewSet(viewsets.ViewSet):
             # search term has to be a string and not longer than 100 characters
             if not isinstance(search_term, str) or len(search_term) > 100:
                 return Response({"error": "BAD_REQUEST"}, status=400)
+            
+        if tags:
+            # tags should be a string
+            if not isinstance(tags, str):
+                return Response({"error": "BAD_REQUEST"}, status=400)
         try :
 
-            popular_designs = Design.get_designs(offset=offset, 
+            popular_designs = Design.get_designs(   
+                                                    offset=offset, 
                                                     limit=limit,
+
                                                     theme_ids=theme_ids,
                                                     store_ids=store_ids,
                                                     workshop_ids=workshop_ids,
                                                     organization_ids=organization_ids,
+                                                    promotion_ids=promotion_ids,
+
                                                     sponsored_stores=sponsored_stores,
                                                     sponsored_organizations=sponsored_organizations,
                                                     search_term=search_term,
-                                                    free=free)
+                                                    tags=tags,
+                                                    free=free
+                                                )
         except Exception as e:
             logging.error(f"get_popular_designs_light action method error :{e.args} ")
             return Response({"error": "UNKNOWN_ERROR"}, status=400)

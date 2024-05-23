@@ -234,13 +234,13 @@ class Design(TimeStampedModel):
 
     ## The following parameters are only valid if the exclusive_usage is set to False
     ## If all of these parameters are set to True, then that's the equiviliant of free usage
-    free_usage_with_same_collection = models.BooleanField(default=False)
-    free_usage_with_same_workshop = models.BooleanField(default=False)
-    free_usage_with_same_organization = models.BooleanField(default=False)
-    free_usage_with_designer_uploads = models.BooleanField(default=False)
-    free_usage_with_user_uploads = models.BooleanField(default=False)
-    free_usage_with_other_workshops = models.BooleanField(default=False)
-    free_usage_with_other_organizations = models.BooleanField(default=False)
+    limited_usage_with_same_collection = models.BooleanField(default=False)
+    limited_usage_with_same_workshop = models.BooleanField(default=False)
+    limited_usage_with_same_organization = models.BooleanField(default=False)
+    limited_usage_with_designer_uploads = models.BooleanField(default=False)
+    limited_usage_with_user_uploads = models.BooleanField(default=False)
+    limited_usage_with_other_workshops = models.BooleanField(default=False)
+    limited_usage_with_other_organizations = models.BooleanField(default=False)
 
     # override the save method to check for attributes consistency
     def save(self, *args, **kwargs):
@@ -304,6 +304,7 @@ class Design(TimeStampedModel):
                         workshop_ids=None,
                         organization_ids=None,
                         sponsored_designs=False,
+                        sponsored_stores=False,
                         search_term=None,
                         tags=None,
                         promotion_ids=None,
@@ -374,6 +375,11 @@ class Design(TimeStampedModel):
         if latest_publication_date_max:
             q_objects.add(Q(latest_publication_date__lte=latest_publication_date_max), Q.AND)
 
+        # Tags filter
+        if tags:
+            for tag in tags:
+                q_objects.add(Q(tags__icontains=tag), Q.AND)
+
         # filter sponsored designs
         if sponsored_designs:
             q_objects.add(Q(sponsored=True), Q.AND)
@@ -393,7 +399,7 @@ class Design(TimeStampedModel):
             
         designs = (cls.objects.filter(q_objects)
                            .annotate(num_likes=models.Count('design_likes')) 
-                           .select_related('store__storeprofile', 'workshop__organization', 'theme')
+                           .select_related('store__storeprofile', 'workshop__organization__orgprofile', 'theme')
                            .prefetch_related('design_previews')
                            .order_by('-num_likes')[offset:offset+limit])
         result = {"designs_list":[]}
