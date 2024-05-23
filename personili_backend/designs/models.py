@@ -307,6 +307,9 @@ class Design(TimeStampedModel):
 
                         sponsored_designs=False,
                         sponsored_stores=False,
+                        sponsored_workshops=False,
+                        sponsored_organizations=False,
+
                         search_term=None,
                         tags=None,
                         
@@ -315,7 +318,7 @@ class Design(TimeStampedModel):
                         price_max=None,
                         latest_publication_date_min=None,
                         latest_publication_date_max=None,
-                        
+
                         offset=0,
                         limit=20): 
         """
