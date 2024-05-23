@@ -43,7 +43,7 @@ class DesignsViewSet(viewsets.ViewSet):
     ################################### GET/POST APIS, PUBLIC #####################################
     
     ##### Get the designs based on criteria : theme, store, workshop, nb of likes, sponsored stores, sponsored workshops
-    @action(detail=False, methods=['POST'], url_path='catalog', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    @action(detail=False, methods=['POST'], url_path='catalog', permission_classes=[permissions.AllowAny])
     def get_designs(self, request):
         """
         Get the designs based on different criterias : 
@@ -57,12 +57,16 @@ class DesignsViewSet(viewsets.ViewSet):
         - limit
         - 
         """
-        self.permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+        self.permission_classes = [permissions.AllowAny]
         self.authentication_classes = []
         
         # Get the query parameters from the request
         offset = request.query_params.get('offset', None)
         limit = request.query_params.get('limit', None)
+
+        # Latest publication date
+        latest_publication_date_max = request.query_params.get('latest_publication_date_max', None)
+        latest_publication_date_min = request.query_params.get('latest_publication_date_min', None)
 
         theme_ids = request.query_params.get('themes', None)
         store_ids = request.query_params.get('stores', None)
@@ -186,6 +190,7 @@ class DesignsViewSet(viewsets.ViewSet):
                                                     sponsored_stores=sponsored_stores,
                                                     sponsored_organizations=sponsored_organizations,
                                                     search_term=search_term,
+                                                    
                                                     tags=tags,
                                                     free=free
                                                 )
