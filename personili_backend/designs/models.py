@@ -266,22 +266,21 @@ class Design(TimeStampedModel):
 
             if self.exclusive_usage:
                 self.free_usage = False
-                self.free_usage_with_same_collection = False
-                self.free_usage_with_same_workshop = False
-                self.free_usage_with_same_organization = False
-                self.free_usage_with_designer_uploads = False
-                self.free_usage_with_user_uploads = False
-                self.free_usage_with_other_organizations = False
-                self.free_usage_with_other_workshops = False
+                self.limited_usage_with_same_collection = False
+                self.limited_usage_with_same_workshop = False
+                self.limited_usage_with_same_organization = False
+                self.limited_usage_with_designer_uploads = False
+                self.limited_usage_with_user_uploads = False
+                self.limited_usage_with_other_workshops = False
             if self.free_usage:
                 self.exclusive_usage = False
-                self.free_usage_with_same_collection = True
-                self.free_usage_with_same_workshop = True
-                self.free_usage_with_same_organization = True
-                self.free_usage_with_designer_uploads = True
-                self.free_usage_with_user_uploads = True
-                self.free_usage_with_other_organizations = True
-                self.free_usage_with_other_workshops = True
+                self.limited_usage_with_same_collection = True
+                self.limited_usage_with_same_workshop = True
+                self.limited_usage_with_same_organization = True
+                self.limited_usage_with_designer_uploads = True
+                self.limited_usage_with_user_uploads = True
+                self.limited_usage_with_other_organizations = True
+                self.limited_usage_with_other_workshops = True
             if self.free :
                 self.base_price = 0.0
         
@@ -460,13 +459,12 @@ class Design(TimeStampedModel):
                 }
             else:
                 design_usage_parameters = {
-                    'free_usage_with_same_collection': design.free_usage_with_same_collection,
-                    'free_usage_with_same_workshop': design.free_usage_with_same_workshop,
-                    'free_usage_with_same_organization': design.free_usage_with_same_organization,
-                    'free_usage_with_designer_uploads': design.free_usage_with_designer_uploads,
-                    'free_usage_with_user_uploads': design.free_usage_with_user_uploads,
-                    'free_usage_with_other_workshops': design.free_usage_with_other_workshops,
-                    'free_usage_with_other_organizations': design.free_usage_with_other_organizations,
+                    'limited_usage_with_same_collection':     design.limited_usage_with_same_collection,
+                    'limited_usage_with_same_workshop':       design.limited_usage_with_same_workshop,
+                    'limited_usage_with_same_organization':   design.limited_usage_with_same_organization,
+                    'limited_usage_with_designer_uploads':    design.limited_usage_with_designer_uploads,
+                    'limited_usage_with_user_uploads':        design.limited_usage_with_user_uploads,
+                    'limited_usage_with_other_workshops':     design.limited_usage_with_other_workshops,
                 }
             design_data['design_usage_parameters'] = design_usage_parameters
             result['designs_list'].append(design_data)
