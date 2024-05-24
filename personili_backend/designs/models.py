@@ -257,32 +257,32 @@ class Design(TimeStampedModel):
             self.exclusive_usage = True
 
         elif self.store:
-            self.free_usage = True
             self.workshop = None
             self.regular_user = None
         elif self.workshop:
             self.store = None
             self.regular_user = None
 
-            if self.exclusive_usage:
-                self.free_usage = False
-                self.limited_usage_with_same_collection = False
-                self.limited_usage_with_same_workshop = False
-                self.limited_usage_with_same_organization = False
-                self.limited_usage_with_designer_uploads = False
-                self.limited_usage_with_user_uploads = False
-                self.limited_usage_with_other_workshops = False
-            if self.free_usage:
-                self.exclusive_usage = False
-                self.limited_usage_with_same_collection = True
-                self.limited_usage_with_same_workshop = True
-                self.limited_usage_with_same_organization = True
-                self.limited_usage_with_designer_uploads = True
-                self.limited_usage_with_user_uploads = True
-                self.limited_usage_with_other_organizations = True
-                self.limited_usage_with_other_workshops = True
-            if self.free :
-                self.base_price = 0.0
+        if self.exclusive_usage:
+            self.free_usage = False
+            self.limited_usage_with_same_collection = False
+            self.limited_usage_with_same_workshop = False
+            self.limited_usage_with_same_organization = False
+            self.limited_usage_with_designer_uploads = False
+            self.limited_usage_with_user_uploads = False
+            self.limited_usage_with_other_workshops = False
+        if self.free_usage:
+            self.exclusive_usage = False
+            self.limited_usage_with_same_collection = True
+            self.limited_usage_with_same_workshop = True
+            self.limited_usage_with_same_organization = True
+            self.limited_usage_with_designer_uploads = True
+            self.limited_usage_with_user_uploads = True
+            self.limited_usage_with_other_organizations = True
+            self.limited_usage_with_other_workshops = True
+        
+        if self.free :
+            self.base_price = 0.0
         
         if self.base_price == 0.0:
             self.free = True
