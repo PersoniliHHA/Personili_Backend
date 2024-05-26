@@ -45,7 +45,7 @@ class IamEngine:
         os.environ["TEMP_AWS_ACCESS_KEY_ID"] = credentials.get("AccessKeyId")
         os.environ["TEMP_AWS_SECRET"] = credentials.get("SecretAccessKey")
         os.environ["TEMP_AWS_SESSION_TOKEN"] = credentials.get("SessionToken")
-        os.environ["STS_SESSION_EXPIRATION_TIME"] = datetime.now() + timedelta(seconds=self.sts_session_validity_duration)
+        os.environ["STS_SESSION_EXPIRATION_TIME"] = datetime.strftime(datetime.now() + timedelta(seconds=self.sts_session_validity_duration), "%Y-%m-%d %H:%M:%S.%f")
 
         return response['Credentials']
     
@@ -59,6 +59,7 @@ class IamEngine:
         else:
             # Check if the temporary credentials haven't expired
             expiration_time = os.environ.get("TEMP_AWS_EXPIRATION_TIME")
+            expiration_time = datetime.strptime(expiration_time, "%Y-%m-%d %H:%M:%S.%f")
             if expiration_time < datetime.now():
                 credentials: dict = self.assume_iam_role()
             else:
