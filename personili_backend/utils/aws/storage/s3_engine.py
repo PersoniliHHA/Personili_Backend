@@ -1,6 +1,6 @@
 import boto3
 from utils.aws.iam.iam_engine import IamEngine
-from typing import List
+from typing import List, Any, Optional
 from django.core.files import File
 
 
@@ -79,21 +79,46 @@ class S3Engine:
         self.base_prefix = "images"
         self.s3_client_session = IamEngine(environment=self.environment).get_sts_session().client('s3')
 
+    def refresh_sts_session(self):
+        """
+        Refresh the STS session
+        """
+        self.s3_client_session = IamEngine(environment=self.environment).get_sts_session().client('s3')
     
-    def upload_file_to_s3(self, files : List[dict[str, File]]) -> str:
+    def upload_file_to_s3(self, file : File, template_name: str, placeholder_values:dict[str, Any]) -> str:
         """
         Upload a list of files to the S3 bucket, for each file return the presigned
         """
+        # First construct the path
+        s3_path: str = self.build_s3_path(template_name, placeholder_values)
+
+        try:
+            # Upload the file
+            self.s3_client_session.upload_fileobj(file, self.bucket_name, s3_path)
+            # Return the presigned URL
+            return self.generate_presigned_s3_url(s3_path)
+        except Exception as e:
+            raise e(f"Error uploading file to S3: {e}")
         
-    def build_s3_path(self, template_name:str = None,  placeholders: dict[str, str]=None) -> str:
+    def build_s3_path(self, template_name:str = None,  placeholder_values: dict[str, Any]=None) -> str:
         """
-        Build a path based on the template name and placeholders
+        Build a path based on the template name and placeholder_values
         """
         if not template_name:
             raise ValueError("Template name is required")
-        if not placeholders:
+        if not placeholder_values:
             raise ValueError("Placeholders are required")
         template = self.TEMPLATES.get(template_name)
         if not template:
             raise ValueError("Template name is invalid")
-        return template.format(**placeholders)
+        return template.format(**placeholder_values)
+    
+    def generate_presigned_s3_url(self, s3_path: str, expiration: int = 60) -> str:
+        """
+        Generate a presigned URL for the S3 path
+        """
+        try:
+            return self.s3_client_session.generate_presigned_url('get_object', Params={'Bucket': self.bucket_name, 'Key': s3_path}, ExpiresIn=expiration)
+        except Exception as e:
+            raise e(f"Error generating presigned URL: {e}")    
+    
