@@ -11,6 +11,9 @@ from django.contrib.auth import get_user_model
 # Local imports
 from accounts.models import AccountProfile, DeliveryAddress, PaymentMethod, Feedback, Wallet, Transaction
 
+# aws
+from utils.aws.storage.s3_engine import s3_engine
+
 # get the user model
 Account = get_user_model()
 
@@ -41,6 +44,7 @@ class MainAccountSignUpserializer(serializers.Serializer):
     date_of_birth = serializers.CharField(required=False, allow_null=True, allow_blank=True, validators=[validate_date_of_birth])
     age = serializers.CharField(required=False, allow_null=True, allow_blank=True, validators=[validate_age])
     gender = serializers.CharField(required=False, allow_blank=True, allow_null=True, validators=[validate_gender])
+    profile_picture = serializers.ImageField(required=False, allow_null=True, allow_empty_file=True)
 
     def validate(self, data):
         # Check that the two password entries match
@@ -53,6 +57,7 @@ class MainAccountSignUpserializer(serializers.Serializer):
         # Remove the password_confirm field. we don't need it anymore
         validated_data.pop('password_confirm')
         password = validated_data.pop('password')
+
         account = Account(
             email=validated_data.get('email'),
         )
@@ -70,6 +75,15 @@ class MainAccountSignUpserializer(serializers.Serializer):
             gender=validated_data.get("gender")
         )
         account_profile.save()
+
+        # Check if there is a profile picture so we can store it in S3
+        if validated_data.get('profile_picture'):
+            s3_path = s3_engine.upload_file_to_s3(validated_data.get('profile_picture'), 'regular_user_profile', {
+                'user_profile_id': account_profile.id,
+                'user_email': account.email
+            })
+            account_profile.profile_picture = s3_path
+            account_profile.save()
 
         return account, account_profile
 

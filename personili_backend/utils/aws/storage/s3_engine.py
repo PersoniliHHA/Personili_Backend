@@ -31,10 +31,10 @@ class S3Engine:
     base_regular_users_path = base_path + '/regular_users'
     
     # profile
-    regular_user_profile_path_template = base_regular_users_path + '/{user_id}-{user_email}/profile'
+    regular_user_profile_path_template = base_regular_users_path + '/{user_profile_id}-{user_email}/profile'
     
     # designs
-    regular_user_designs_path_template = base_regular_users_path + '/{user_id}-{user_email}/designs/{design_id}-{design_title}'
+    regular_user_designs_path_template = base_regular_users_path + '/{user_profile_id}-{user_email}/designs/{design_id}-{design_title}'
 
 
     # Designers S3 paths
@@ -76,7 +76,6 @@ class S3Engine:
 
     def __init__(self, environment: str= "dev"):
         self.environment = environment
-        self.base_prefix = "images"
         self.s3_client_session = IamEngine(environment=self.environment).get_sts_session().client('s3')
 
     def refresh_sts_session(self):
@@ -96,7 +95,7 @@ class S3Engine:
             # Upload the file
             self.s3_client_session.upload_fileobj(file, self.bucket_name, s3_path)
             # Return the presigned URL
-            return self.generate_presigned_s3_url(s3_path)
+            return s3_path
         except Exception as e:
             raise e(f"Error uploading file to S3: {e}")
         
@@ -121,4 +120,7 @@ class S3Engine:
             return self.s3_client_session.generate_presigned_url('get_object', Params={'Bucket': self.bucket_name, 'Key': s3_path}, ExpiresIn=expiration)
         except Exception as e:
             raise e(f"Error generating presigned URL: {e}")    
-    
+
+
+# Instantiate the class
+s3_engine = S3Engine()
