@@ -45,7 +45,7 @@ AWS_S3_REGION_NAME=eu-west-3
 AWS_S3_BUCKET_NAME=personili-image-storage-prod
 
 # Roles
-AWS_DEV_BACK_ROLE_ARN=arn:aws:iam::123456789012:role/role-name
+AWS_DEV_BACK_ROLE_ARN=arn:aws:iam::078534730785:role/LocalBackendDeveloper
 
 # Temporary credentials
 TEMP_AWS_ACCESS_KEY_ID=
