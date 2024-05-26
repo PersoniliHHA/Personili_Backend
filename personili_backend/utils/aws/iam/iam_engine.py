@@ -40,6 +40,9 @@ class IamEngine:
         )
         # Get the credentials
         credentials = response.get("Credentials")
+        print("££££££££££££££££££££££")
+        print(credentials)
+        print("££££££££££££££££££££££")
         # Update the temporary credentials env variables
         os.environ["TEMP_AWS_ACCESS_KEY_ID"] = credentials.get("AccessKeyId")
         os.environ["TEMP_AWS_SECRET"] = credentials.get("SecretAccessKey")
