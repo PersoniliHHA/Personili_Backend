@@ -1,6 +1,6 @@
 # validators
 from django.contrib.auth.password_validation import validate_password
-from utils.validators import validate_age, validate_email, custom_validate_password, validate_username, validate_phone_number, validate_date_of_birth, validate_gender
+from utils.validators import validate_age, validate_email, custom_validate_password, validate_profile_image, validate_username, validate_phone_number, validate_date_of_birth, validate_gender
 
 # Rest Framework imports
 from rest_framework import serializers
@@ -44,7 +44,7 @@ class MainAccountSignUpserializer(serializers.Serializer):
     date_of_birth = serializers.CharField(required=False, allow_null=True, allow_blank=True, validators=[validate_date_of_birth])
     age = serializers.CharField(required=False, allow_null=True, allow_blank=True, validators=[validate_age])
     gender = serializers.CharField(required=False, allow_blank=True, allow_null=True, validators=[validate_gender])
-    profile_picture = serializers.ImageField(required=False, allow_null=True, allow_empty_file=True)
+    profile_picture = serializers.ImageField(required=False, allow_null=True, allow_empty_file=True, validators=[validate_profile_image])
 
     def validate(self, data):
         # Check that the two password entries match
@@ -82,7 +82,7 @@ class MainAccountSignUpserializer(serializers.Serializer):
                 'user_profile_id': account_profile.id,
                 'user_email': account.email
             })
-            account_profile.profile_picture = s3_path
+            account_profile.profile_picture_path = s3_path
             account_profile.save()
 
         return account, account_profile

@@ -54,6 +54,17 @@ def validate_gender(value):
             raise ValidationError("INVALID_GENDER")
     return value
 
+def validate_profile_image(value):
+    """
+    The profile image should be a valid type and size
+    """
+    if value:
+        if value.size > 5242880:
+            raise ValidationError("INVALID_IMAGE_SIZE")
+        if not value.name.endswith((".png", ".jpg", ".jpeg")):
+            raise ValidationError("INVALID_IMAGE_TYPE")
+    return value
+
 def validate_phone_number(value):
     """
     Validate the phone number, must be at least 10 digits long and no more than 15 digits
