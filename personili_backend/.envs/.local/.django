@@ -5,12 +5,21 @@ IPYTHONDIR=/app/.ipython
 
 # AWS
 # ------------------------------------------------------------------------------
-AWS_ACCESS_KEY_ID=AKIARESII4QQTY5VOSNO
-AWS_SECRET_ACCESS_KEY=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
+# IAM user credentials
+AWS_ACCESS_KEY_ID=AKIARESII4QQVZXOM55M
+AWS_SECRET_ACCESS_KEY=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
 AWS_S3_SIGNATURE_VERSION=s3v4
 AWS_S3_REGION_NAME=eu-west-3
-AWS_S3_BUCKET_NAME=personili-image-storage
+AWS_S3_BUCKET_NAME=personili-image-storage-dev
 
+# Roles
+AWS_DEV_BACK_ROLE_ARN=arn:aws:iam::123456789012:role/role-name
+
+# Temporary credentials
+TEMP_AWS_ACCESS_KEY_ID=
+TEMP_AWS_SECRET_ACCESS_KEY=
+TEMP_AWS_SESSION_TOKEN=
+TEMP_AWS_STS_SESSION_EXPIRATION=600
 
 # JWT
 # ----------------------------------------------------------------------------

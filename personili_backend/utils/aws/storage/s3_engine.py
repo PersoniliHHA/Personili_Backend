@@ -1,0 +1,99 @@
+import boto3
+from utils.aws.iam.iam_engine import IamEngine
+from typing import List
+from django.core.files import File
+
+
+class S3Engine:
+    """
+    Class to generate S3 paths for different settings
+    """
+    base_path = "images"
+
+    # Admin S3 paths
+    # events
+    # designs
+    # stores
+    # organizations
+    # stores
+
+    # Platfrom S3 paths
+    base_platform_path = base_path + '/platform'
+    # events
+    platform_events_path_template = base_platform_path + '/events/{event_id}-{event_title}'
+    # categories
+    platform_categories_path_template = base_platform_path + '/categories/{category_id}-{category_name}'
+    # departments
+    platform_departments_path_template = base_platform_path + '/departments/{department_id}-{department_name}'
+
+
+    # Regular user S3 paths
+    base_regular_users_path = base_path + '/regular_users'
+    
+    # profile
+    regular_user_profile_path_template = base_regular_users_path + '/{user_id}-{user_email}/profile'
+    
+    # designs
+    regular_user_designs_path_template = base_regular_users_path + '/{user_id}-{user_email}/designs/{design_id}-{design_title}'
+
+
+    # Designers S3 paths
+    base_designers_path = base_path + '/designers'
+    # store profile
+    store_profile_path_template = base_designers_path + '/{designer_id}-{designer_email}/stores/{store_id}/store_profile'
+    # design
+    store_designs_path_template = base_designers_path + '/{designer_id}-{designer_email}/stores/{store_id}/designs/{design_id}-{design_title}'
+    # store events
+    store_events_path_template =  base_designers_path + '/{designer_id}-{designer_email}/stores/{store_id}/events/{event_id}-{event_title}'
+
+
+    # Organizatioins S3 paths
+    base_organizations_path = base_path + '/organizations'
+    # organization profile
+    organization_profile_path_template = base_organizations_path + '/{organization_id}-{organization_name}/organization_profile'
+    # workshop profile
+    workshop_profile_path_template = base_organizations_path + '/{organization_id}-{organization_name}/workshops/{workshop_id}-{workshop_title}/workshop_profile'
+    # workshop events
+    workshop_events_path_template = base_organizations_path + '/{organization_id}-{organization_name}/workshops/{workshop_id}-{workshop_title}/events/{event_id}-{event_title}'
+    # workshop designs
+    workshop_designs_path_template = base_organizations_path + '/{organization_id}-{organization_name}/workshops/{workshop_id}-{workshop_title}/designs/{design_id}-{design_title}'
+    # workshop personalizables
+    workshop_personalizables_path_template = base_organizations_path + '/{organization_id}-{organization_name}/workshops/{workshop_id}-{workshop_title}/personalizables/{personalizable_id}-{personalizable_name}'
+
+    # ALL templates organized
+    TEMPLATES: dict = {
+        'regular_user_profile': regular_user_profile_path_template,
+        'regular_user_designs': regular_user_designs_path_template,
+        'store_profile': store_profile_path_template,
+        'store_designs': store_designs_path_template,
+        'store_events': store_events_path_template,
+        'organization_profile': organization_profile_path_template,
+        'workshop_profile': workshop_profile_path_template,
+        'workshop_events': workshop_events_path_template,
+        'workshop_designs': workshop_designs_path_template,
+        'workshop_personalizables': workshop_personalizables_path_template
+    }
+
+    def __init__(self, environment: str= "dev"):
+        self.environment = environment
+        self.base_prefix = "images"
+        self.s3_client_session = IamEngine(environment=self.environment).get_sts_session().client('s3')
+
+    
+    def upload_file_to_s3(self, files : List[dict[str, File]]) -> str:
+        """
+        Upload a list of files to the S3 bucket, for each file return the presigned
+        """
+        
+    def build_s3_path(self, template_name:str = None,  placeholders: dict[str, str]=None) -> str:
+        """
+        Build a path based on the template name and placeholders
+        """
+        if not template_name:
+            raise ValueError("Template name is required")
+        if not placeholders:
+            raise ValueError("Placeholders are required")
+        template = self.TEMPLATES.get(template_name)
+        if not template:
+            raise ValueError("Template name is invalid")
+        return template.format(**placeholders)

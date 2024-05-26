@@ -419,8 +419,10 @@ class Design(TimeStampedModel):
             design_details = {
                 'design_title': design.title,
                 'design_description': design.description,
+                
                 'design_theme_id': design.theme.id,
                 'design_theme_name': design.theme.name,
+                
                 'design_image_path': design.image_path,
                 'design_nb_likes': design.num_likes,
                 'design_previews': list(design.design_previews.values('id', 'image_path')),
@@ -434,6 +436,7 @@ class Design(TimeStampedModel):
             design_owner = {}
             if design.store:
                 design_owner = {
+                    'type': 'store' if design.store else 'workshop',
                     'store_name': design.store.name,
                     'store_id': design.store.id,
                     'store_verified': design.store.storeprofile.is_verified,
