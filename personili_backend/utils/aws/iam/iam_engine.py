@@ -49,7 +49,7 @@ class IamEngine:
         os.environ["TEMP_AWS_SESSION_TOKEN"] = credentials.get("SessionToken")
         os.environ["STS_SESSION_EXPIRATION_TIME"] = datetime.strftime(datetime.now() + timedelta(seconds=self.sts_session_validity_duration), "%Y-%m-%d %H:%M:%S.%f")
 
-        return response['Credentials']
+        return credentials
     
     def get_sts_session(self) -> boto3.Session:
         """
@@ -70,7 +70,9 @@ class IamEngine:
                     "SecretAccessKey": os.environ.get("TEMP_AWS_SECRET"),
                     "SessionToken": os.environ.get("TEMP_AWS_SESSION_TOKEN")
                 }
-        
+        print("inside the sts sessio method £££££££££££££")
+        print(credentials)
+        print("inside the sts sessio method£££££££££££££")
         # Generate the sts session using the temporary credentials
         return boto3.Session(
             aws_access_key_id = credentials.get('AccessKeyId'),
