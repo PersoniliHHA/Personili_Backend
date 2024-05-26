@@ -19,7 +19,7 @@ AWS_DEV_BACK_ROLE_ARN=arn:aws:iam::078534730785:role/LocalBackendDeveloper
 TEMP_AWS_ACCESS_KEY_ID=
 TEMP_AWS_SECRET_ACCESS_KEY=
 TEMP_AWS_SESSION_TOKEN=
-TEMP_AWS_STS_SESSION_EXPIRATION=600
+STS_SESSION_EXPIRATION_TIME=600
 
 # JWT
 # ----------------------------------------------------------------------------
