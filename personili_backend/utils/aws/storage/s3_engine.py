@@ -2,6 +2,7 @@ import boto3
 from utils.aws.iam.iam_engine import IamEngine
 from typing import List, Any, Optional
 from django.core.files import File
+import os
 
 
 class S3Engine:
@@ -77,6 +78,7 @@ class S3Engine:
     def __init__(self, environment: str= "dev"):
         self.environment = environment
         self.s3_client_session = IamEngine(environment=self.environment).get_sts_session().client('s3')
+        self.bucket_name = os.environ.get("AWS_S3_BUCKET_NAME")
 
     def refresh_sts_session(self):
         """
