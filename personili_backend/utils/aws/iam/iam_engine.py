@@ -13,7 +13,7 @@ class IamEngine:
         
         self.session_name = session_name
         self.environment = environment
-        self.sts_session_expiration_time = os.environ.get("STS_SESSION_EXPIRATION_TIME")
+        self.sts_session_validity_duration = os.environ.get("STS_SESSION_VALIDITY_DURATION")
 
         self.role_name = role_name
         self.role_arn = os.environ.get(self.role_name)
@@ -36,7 +36,8 @@ class IamEngine:
         sts_client = self.get_iam_user_client()
         response = sts_client.assume_role(
             RoleArn = self.role_arn,
-            RoleSessionName = self.session_name
+            RoleSessionName = self.session_name,
+            DurationSeconds = self.sts_session_validity_duration
         )
         # Get the credentials
         credentials = response.get("Credentials")
@@ -44,7 +45,7 @@ class IamEngine:
         os.environ["TEMP_AWS_ACCESS_KEY_ID"] = credentials.get("AccessKeyId")
         os.environ["TEMP_AWS_SECRET"] = credentials.get("SecretAccessKey")
         os.environ["TEMP_AWS_SESSION_TOKEN"] = credentials.get("SessionToken")
-        os.environ["TEMP_AWS_EXPIRATION_TIME"] = datetime.now() + timedelta(seconds=int(self.sts_session_expiration_time))
+        os.environ["STS_SESSION_EXPIRATION_TIME"] = datetime.now() + timedelta(seconds=int(self.sts_session_validity_duration))
 
         return response['Credentials']
     
