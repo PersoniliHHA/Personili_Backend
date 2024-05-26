@@ -93,6 +93,9 @@ class S3Engine:
         # First construct the path
         s3_path: str = self.build_s3_path(template_name, placeholder_values)
 
+        # add the file name to the path
+        s3_path = s3_path + '/' + file.name
+
         try:
             # Upload the file
             self.s3_client_session.upload_fileobj(file, self.bucket_name, s3_path)
