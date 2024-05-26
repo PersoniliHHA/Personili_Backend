@@ -99,7 +99,7 @@ class S3Engine:
             # Return the presigned URL
             return s3_path
         except Exception as e:
-            raise e(f"Error uploading file to S3: {e}")
+            raise Exception(f"Error uploading file to S3: {e}")
         
     def build_s3_path(self, template_name:str = None,  placeholder_values: dict[str, Any]=None) -> str:
         """
