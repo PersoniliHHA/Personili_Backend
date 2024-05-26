@@ -84,7 +84,7 @@ class S3Engine:
         """
         Refresh the STS session
         """
-        self.s3_client_session = IamEngine(environment=self.environment).get_sts_session().client('s3')
+        self.s3_client_session = IamEngine(environment=self.environment).get_sts_session().client('s3', region_name=os.environ.get("AWS_S3_REGION_NAME"))
     
     def upload_file_to_s3(self, file : File, template_name: str, placeholder_values:dict[str, Any]) -> str:
         """
