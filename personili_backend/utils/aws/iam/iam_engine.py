@@ -44,7 +44,7 @@ class IamEngine:
         os.environ["TEMP_AWS_ACCESS_KEY_ID"] = credentials.get("AccessKeyId")
         os.environ["TEMP_AWS_SECRET"] = credentials.get("SecretAccessKey")
         os.environ["TEMP_AWS_SESSION_TOKEN"] = credentials.get("SessionToken")
-        os.environ["TEMP_AWS_EXPIRATION_TIME"] = datetime.now() + timedelta(seconds=self.sts_session_expiration_time)
+        os.environ["TEMP_AWS_EXPIRATION_TIME"] = datetime.now() + timedelta(seconds=int(self.sts_session_expiration_time))
 
         return response['Credentials']
     
