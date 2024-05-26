@@ -14,8 +14,8 @@ class IamEngine:
         self.session_name = session_name
         self.environment = environment
         self.sts_session_validity_duration = int(os.environ.get("STS_SESSION_VALIDITY_DURATION"))
-
-        self.role_arn = os.environ.get(self.role_name)
+        self.role_name = role_name
+        self.role_arn = os.environ.get(role_name)
         
 
     def get_iam_user_client(self):
