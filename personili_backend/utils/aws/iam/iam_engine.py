@@ -15,7 +15,6 @@ class IamEngine:
         self.environment = environment
         self.sts_session_validity_duration = int(os.environ.get("STS_SESSION_VALIDITY_DURATION"))
 
-        self.role_name = role_name
         self.role_arn = os.environ.get(self.role_name)
         
 
@@ -54,7 +53,7 @@ class IamEngine:
         This method is used to get an STS session
         """
         # First check if the temporary credentials already exists
-        if (not os.environ.get("TEMP_AWS_ACCESS_KEY_ID") or not os.environ.get("TEMP_AWS_SECRET") or not os.environ.get("TEMP_AWS_SESSION_TOKEN")):
+        if not os.environ.get("TEMP_AWS_ACCESS_KEY_ID") or not os.environ.get("TEMP_AWS_SECRET_ACCESS_KEY") or not os.environ.get("TEMP_AWS_SESSION_TOKEN"):
             credentials: dict = self.assume_iam_role()
         else:
             # Check if the temporary credentials haven't expired
