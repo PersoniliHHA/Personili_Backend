@@ -21,7 +21,7 @@ from accounts.models import AccountProfile, DeliveryAddress, Wallet, Transaction
 from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample, OpenApiTypes
 
 # Utilities
-from emails.email_utils import send_email_activation_link
+from personili_backend.emails.account_creation import send_email_activation_link
 
 # Services 
 from accounts.services.user_sign_up import create_main_account_sign_up_response
@@ -139,13 +139,15 @@ class AccountAuthViewSet(viewsets.ViewSet):
                 # Create both the account and the account profile
                 account, account_profile = serializer.create(serializer.validated_data)
 
+                # Create api response 
+                respose: dict = create_main_account_sign_up_response(account, account_profile)
+
                 # Send activation email
                 send_email_activation_link()
 
-                
                 return Response({"message": "ACCOUNT_CREATED",
                                  "details": {
-                                    **create_main_account_sign_up_response(account, account_profile)
+                                    **respose
                                  }}, status=status.HTTP_201_CREATED)
 
         except (IntegrityError, DatabaseError, Error) as e:
