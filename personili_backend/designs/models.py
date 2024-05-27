@@ -16,6 +16,8 @@ from organizations.models import Workshop
 from utils.constants import DESIGNER_UPLOADED_IMAGES_PATH_TEMPLATES
 from utils.utilities import add_to_dict
 
+# AWS utilities
+from utils.aws.storage.s3_engine import s3_engine
 
 #########################################
 #             Store model               #
@@ -423,9 +425,9 @@ class Design(TimeStampedModel):
                 'design_theme_id': design.theme.id,
                 'design_theme_name': design.theme.name,
                 
-                'design_image_path': design.image_path,
+                'design_image_url': s3_engine.generate_presigned_s3_url(design.image_path),
                 'design_nb_likes': design.num_likes,
-                'design_previews': list(design.design_previews.values('id', 'image_path')),
+                'design_previews': [s3_engine.generate_presigned_s3_url(preview.image_path) for preview in design.design_previews.all()],
                 'design_tags': design.tags,
                 'design_price': design.base_price,
                 'latest_publication_date': design.latest_publication_date,

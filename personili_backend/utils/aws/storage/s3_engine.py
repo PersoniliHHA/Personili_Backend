@@ -104,6 +104,15 @@ class S3Engine:
         except Exception as e:
             raise Exception(f"Error uploading file to S3: {e}")
     
+    def delete_file_from_s3(self, s3_path: str):
+        """
+        Delete a file from S3
+        """
+        try:
+            self.s3_client_session.delete_object(Bucket=self.bucket_name, Key=s3_path)
+        except Exception as e:
+            raise Exception(f"Error deleting file from S3: {e}")
+    
     def build_s3_path(self, template_name:str = None,  placeholder_values: dict[str, Any]=None) -> str:
         """
         Build a path based on the template name and placeholder_values
