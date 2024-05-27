@@ -21,7 +21,7 @@ from accounts.models import AccountProfile, DeliveryAddress, Wallet, Transaction
 from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample, OpenApiTypes
 
 # Utilities
-from personili_backend.emails.account_creation import send_email_activation_link
+from emails.account_creation import send_email_activation_link
 
 # Services 
 from accounts.services.user_sign_up import create_main_account_sign_up_response
