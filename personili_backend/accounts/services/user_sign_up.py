@@ -16,7 +16,6 @@ def create_main_account_sign_up_response(account: Account, AccountProfile: Accou
          'email': account.email,
          'first_name': AccountProfile.first_name,
          'last_name': AccountProfile.last_name,
-         'profile_picture': AccountProfile.profile_picture,
          'phone_number': AccountProfile.phone_number,
          'age': AccountProfile.age,
          'gender': AccountProfile.gender,
