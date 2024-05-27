@@ -23,13 +23,16 @@ from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample
 # Utilities
 from emails.email_utils import send_email_activation_link
 
+# Services 
+from accounts.services.user_sign_up import create_main_account_sign_up_response
+
 
 # Standard imports
 import logging as logger
 from typing import Optional
 
 # Security
-from security.jwt import create_access_token, create_refresh_token, verify_access_token, verify_refresh_token
+from security.jwt import create_access_token, create_refresh_token
 
 logger.basicConfig(level=logger.DEBUG)
 
@@ -138,23 +141,11 @@ class AccountAuthViewSet(viewsets.ViewSet):
 
                 # Send activation email
                 send_email_activation_link()
-                
-                # Generate the access and refresh tokens
-                access_token = create_access_token(str(account.id))
-                refresh_token = create_refresh_token(str(account.id))
 
                 
                 return Response({"message": "ACCOUNT_CREATED",
                                  "details": {
-                                        "email": account.email,
-                                        "first_name": account_profile.first_name,
-                                        "last_name": account_profile.last_name,
-                                        "phone_number": account_profile.phone_number,
-                                        "age": account_profile.age,
-                                        "gender": account_profile.gender,
-                                        "date_of_birth": account_profile.date_of_birth,
-                                        "access_token": access_token,
-                                        "refresh_token": refresh_token,
+                                    **create_main_account_sign_up_response(account, account_profile)
                                  }}, status=status.HTTP_201_CREATED)
 
         except (IntegrityError, DatabaseError, Error) as e:

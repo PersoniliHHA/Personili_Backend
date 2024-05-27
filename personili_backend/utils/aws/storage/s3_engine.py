@@ -103,7 +103,7 @@ class S3Engine:
             return s3_path
         except Exception as e:
             raise Exception(f"Error uploading file to S3: {e}")
-        
+    
     def build_s3_path(self, template_name:str = None,  placeholder_values: dict[str, Any]=None) -> str:
         """
         Build a path based on the template name and placeholder_values

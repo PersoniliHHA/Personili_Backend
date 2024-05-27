@@ -107,15 +107,7 @@ class MainAccountSignInserializer(serializers.Serializer):
         if len(data) > 2:
             raise serializers.ValidationError("INVALID_FIELDS")
         return data
-
-#############################################
-#                                           #
-#   Main Account Social sign up serializer  #
-#                                           #
-#############################################
     
-
-
 
 #############################################
 #                                           #
