@@ -184,6 +184,19 @@ class AccountAuthViewSet(viewsets.ViewSet):
         if account is None:
             return Response({"error": "INVALID_EMAIL_OR_PASSWORD"}, status=status.HTTP_401_UNAUTHORIZED)
 
+        # Check if the account is active
+        if not account.is_active:
+            return Response({"error": "ACCOUNT_NOT_ACTIVATED"}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        # Check if the account is suspended or banned (in the blacklist)
+        blacklist_entry = AccountBlacklist.objects.filter(email=account.email).first()
+        if blacklist_entry.banned or (blacklist_entry.suspended and blacklist_entry.suspension_end_date < timezone.now()):
+            return Response({"error": "ACCOUNT_SUSPENDED_OR_BANNED"}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        # Check if the email is verified
+        if not account.email_verified:
+            return Response({"error": "EMAIL_NOT_VERIFIED"}, status=status.HTTP_401_UNAUTHORIZED)
+
         # Generate the access and refresh tokens
         access_token = create_access_token(str(account.id))
         refresh_token = create_refresh_token(str(account.id))
