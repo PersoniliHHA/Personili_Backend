@@ -29,6 +29,8 @@ JWT_ACCESS_TOKEN_LIFETIME=1  # days
 JWT_REFRESH_TOKEN_LIFETIME=5  # days
 JWT_SIGNING_ALGORITHM=HS512
 
+# Email backend 
+BREVO_API_KEY=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 
 
 # DJANGO
 # ----------------------------------------------------------------------------

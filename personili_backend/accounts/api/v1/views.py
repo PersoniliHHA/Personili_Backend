@@ -221,8 +221,6 @@ class AccountAuthViewSet(viewsets.ViewSet):
         return None
     
     
-
-
 #################################
 #                               #
 #     Refresh Token ViewSet     #
@@ -238,7 +236,7 @@ class AccountAuthViewSet(viewsets.ViewSet):
 #################################
 
 
-class PrivateProfileViewSet(viewsets.ModelViewSet):
+class AccountProfileViewSet(viewsets.ModelViewSet):
     """
     Viewset for the Profile API,
     only authenticated users can access this api and only their profile
@@ -247,28 +245,6 @@ class PrivateProfileViewSet(viewsets.ModelViewSet):
     serializer_class = UserProfileSerializer
     # Set the permission, only authenticated users can access this api and only their profile
     permission_classes = [ProfileApiPermission]
-
-    def get_queryset(self):
-        return AccountProfile.objects.filter(user=self.request.user)
-
-    def retrieve(self, request, *args, **kwargs):
-        profile = get_object_or_404(self.get_queryset())
-        serializer = UserProfileSerializer(profile)
-        return Response({"profile": serializer.data})
-
-    def update(self, request, *args, **kwargs):
-        """
-        This method is used to update the user profile, delivery address and payment method.
-        A user profile can be updated partially, not all fields are required, but if a field is present it will be updated.
-        The delivery address and payment method will only be updated if all fields are present.
-        """
-
-        # Get the user profile
-        profile: AccountProfile = self.get_queryset().first()
-        # Instantiate a storage
-       
-        return None
-
 
 #################################
 #                               #

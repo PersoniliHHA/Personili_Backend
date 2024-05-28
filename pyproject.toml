@@ -33,6 +33,7 @@ django-webpack-loader="1.8.1"  # https://github.com/django-webpack/django-webpac
 boto3 = ">=1.26.151"
 faker = "^23.2.1"
 drf-spectacular = "^0.27.2"
+sib-api-v3-sdk = "^7.6.0"
 
 
 [tool.poetry.group.local]
