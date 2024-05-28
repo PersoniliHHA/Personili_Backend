@@ -25,6 +25,7 @@ from emails.account_creation import send_email_activation_link
 
 # Services 
 from accounts.services.user_sign_up import create_main_account_sign_up_response
+from accounts.api.v1.services import generate_email_activation_link
 
 
 # Standard imports
@@ -139,9 +140,17 @@ class AccountAuthViewSet(viewsets.ViewSet):
                 # Create both the account and the account profile
                 account, account_profile = serializer.create(serializer.validated_data)
 
+                # Generate the activate link
+                activation_link = generate_email_activation_link(email)
                 
                 # Send activation email
-                send_email_activation_link()
+                send_email_activation_link(
+                    email_to_activate=account.email,
+                    activation_link=activation_link,
+                    template_name="email_verification_en",
+                    first_name=account_profile.first_name,
+                    last_name=account_profile.last_name
+                )
 
                 return Response({"message": "Account created, check email for account activation",}, status=status.HTTP_201_CREATED)
 
