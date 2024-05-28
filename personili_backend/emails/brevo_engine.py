@@ -12,7 +12,7 @@ class BrevoService:
     def send_email(self, to_email: str=None, subject: str =None, template_name=None, placeholders=None, from_email='contact@personili.com', from_name='Personili support team'):
         
         # The templates folder
-        template_folder = os.path.join(os.getcwd(), "templates")
+        template_folder = os.path.join(os.getcwd(), "emails/templates")
         # The template file
         template_file = os.path.join(template_folder, f"{template_name}.html")
 
