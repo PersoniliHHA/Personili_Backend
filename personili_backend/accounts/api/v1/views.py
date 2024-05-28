@@ -145,10 +145,7 @@ class AccountAuthViewSet(viewsets.ViewSet):
                 # Send activation email
                 send_email_activation_link()
 
-                return Response({"message": "ACCOUNT_CREATED",
-                                 "details": {
-                                    **respose
-                                 }}, status=status.HTTP_201_CREATED)
+                return Response({"message": "Account created, check email for account activation",}, status=status.HTTP_201_CREATED)
 
         except (IntegrityError, DatabaseError, Error) as e:
             return Response({"ERROR": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
