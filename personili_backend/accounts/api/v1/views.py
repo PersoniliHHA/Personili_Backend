@@ -1,9 +1,11 @@
 # rest framework imports
+from datetime import timezone
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+
 
 # Django imports
 from django.contrib.auth import get_user_model, authenticate
@@ -190,7 +192,7 @@ class AccountAuthViewSet(viewsets.ViewSet):
         
         # Check if the account is suspended or banned (in the blacklist)
         blacklist_entry = AccountBlacklist.objects.filter(email=account.email).first()
-        if blacklist_entry.banned or (blacklist_entry.suspended and blacklist_entry.suspension_end_date < timezone.now()):
+        if blacklist_entry and (blacklist_entry.banned or (blacklist_entry.suspended and blacklist_entry.suspension_end_date < timezone.now())):
             return Response({"error": "ACCOUNT_SUSPENDED_OR_BANNED"}, status=status.HTTP_401_UNAUTHORIZED)
         
         # Check if the email is verified
