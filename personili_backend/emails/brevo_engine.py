@@ -9,7 +9,7 @@ class BrevoService:
         self.configuration.api_key['api-key'] = settings.BREVO_API_KEY
         self.api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(self.configuration))
    
-    def send_email(self, to_email: str=None, subject: str =None, template_name=None, from_email='contact@personili.com', from_name='Personili support team'):
+    def send_email(self, to_email: str=None, subject: str =None, template_name=None, placeholders=None, from_email='contact@personili.com', from_name='Personili support team'):
         
         # The templates folder
         template_folder = os.path.join(os.getcwd(), "templates")
@@ -24,6 +24,11 @@ class BrevoService:
         # Read the content of template
         with open(template_file, "r") as f:
             html_content = f.read()
+        
+        # Replace the placeholders
+        #if placeholders:
+         #   for key, value in placeholders.items():
+          #      html_content = html_content.replace(f"{{{{{key}}}}}", value)
 
         # Send the actual email
         send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
