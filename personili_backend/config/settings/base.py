@@ -244,6 +244,8 @@ EMAIL_BACKEND = env(
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-timeout
 EMAIL_TIMEOUT = 5
 
+BREVO_API_KEY = env.str("BREVO_API_KEY")
+
 # ADMIN
 # ------------------------------------------------------------------------------
 # Django Admin URL.

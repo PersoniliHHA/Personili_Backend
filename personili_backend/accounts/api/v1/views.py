@@ -139,9 +139,7 @@ class AccountAuthViewSet(viewsets.ViewSet):
                 # Create both the account and the account profile
                 account, account_profile = serializer.create(serializer.validated_data)
 
-                # Create api response 
-                respose: dict = create_main_account_sign_up_response(account, account_profile)
-
+                
                 # Send activation email
                 send_email_activation_link()
 

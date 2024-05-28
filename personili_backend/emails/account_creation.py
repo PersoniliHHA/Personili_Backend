@@ -1,11 +1,5 @@
 from django.core.mail import send_mail
+from emails.brevo_engine import brevo_engine
 
 def send_email_activation_link():
-    # Registration logic...
-    send_mail(
-        'Activate your account',
-        'Click the link below to activate your account.',
-        'from@example.com',
-        ['to@example.com'],
-        fail_silently=False,
-    )
+    brevo_engine.send_email()

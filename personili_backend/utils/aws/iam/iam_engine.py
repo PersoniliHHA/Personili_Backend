@@ -40,9 +40,7 @@ class IamEngine:
         )
         # Get the credentials
         credentials = response.get("Credentials")
-        print("££££££££££££££££££££££")
-        print(credentials)
-        print("££££££££££££££££££££££")
+
         # Update the temporary credentials env variables
         os.environ["TEMP_AWS_ACCESS_KEY_ID"] = credentials.get("AccessKeyId")
         os.environ["TEMP_AWS_SECRET"] = credentials.get("SecretAccessKey")
@@ -70,9 +68,6 @@ class IamEngine:
                     "SecretAccessKey": os.environ.get("TEMP_AWS_SECRET"),
                     "SessionToken": os.environ.get("TEMP_AWS_SESSION_TOKEN")
                 }
-        print("inside the sts sessio method £££££££££££££")
-        print(credentials)
-        print("inside the sts sessio method£££££££££££££")
         # Generate the sts session using the temporary credentials
         return boto3.Session(
             aws_access_key_id = credentials.get('AccessKeyId'),
