@@ -1,10 +1,14 @@
-# rest framework imports
+# Standard imports
 from datetime import timezone
+import dns.resolver
+
+# rest framework imports
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+
 
 
 # Django imports
