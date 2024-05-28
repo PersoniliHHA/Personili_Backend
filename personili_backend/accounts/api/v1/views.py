@@ -1,6 +1,5 @@
 # Standard imports
 from datetime import timezone
-import dns.resolver
 
 # rest framework imports
 from django.shortcuts import get_object_or_404
