@@ -8,7 +8,7 @@ class BrevoService:
         self.configuration.api_key['api-key'] = settings.BREVO_API_KEY
         self.api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(self.configuration))
    
-    def send_email(self, to_email="heytem.boumaza@gmail.com", subject=None, html_content=None, from_email='contact@personili.com', from_name='Personili support team'):
+    def send_email(self, to_email="heytem.boumaza.dev@gmail.com", subject=None, html_content=None, from_email='contact@personili.com', from_name='Personili support team'):
         
         subject = 'Email Confirmation'
         html_content = '<p>Please confirm your email address by clicking the link below:</p>'
