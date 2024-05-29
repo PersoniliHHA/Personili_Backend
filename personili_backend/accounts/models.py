@@ -187,7 +187,19 @@ class ActionToken(TimeStampedModel):
 
     def __str__(self) -> str:
         return self.token + ' - ' + self.token_type + ' - ' + self.account.email
-
+    
+    @classmethod
+    def create_new_token(cls, account_id :str, token_type: str, expiry_date: timezone) -> str:
+        """
+        This method creates a new token for the account and returns the token
+        """
+        token = cls.objects.create(
+            account_id=account_id,
+            token_type=token_type,
+            expiry_date=expiry_date
+        )
+        return token.token
+        
 #########################################
 #             Permission model          #
 #########################################

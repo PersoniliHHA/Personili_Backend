@@ -3,6 +3,7 @@ from security.secure_tokens import generate_random_token
 from emails.brevo_engine import brevo_engine
 from config import settings
 import os
+from datetime import datetime, timedelta
 from accounts.models import ActionToken, Account
 
 
@@ -13,17 +14,24 @@ def verify_email_verification_token(token: str, type: str) -> bool:
     return ActionToken.verify_token(token)
 
 
-def generate_email_activation_link(domain: str, token_size: int, api_version: str = "v1") -> str:
+def generate_email_activation_link(account_id: str, domain: str, token_size: int, api_version: str = "v1") -> str:
     """
     Generate an email activation link.
     :param domain: The domain of the link.
     :return: The generated email activation link.
     """
-    token = generate_random_token(size=token_size , signed=False)
+    # Generate the token
+    token: str = generate_random_token(size=token_size , signed=False)
+
+    # Save the token
+    expiry_date = datetime.now() + timedelta(days=1)
+    ActionToken.create_new_token(account_id=account_id, token_type = "email_verification", expiry_date=expiry_date)
+    
     return f"{domain}/api/accounts/{api_version}/accounts/verify-email/{token}/"
 
 
 def send_email_activation_link(email_to_activate: str,
+                               account_id: str,
                                token_size: int = 32,
                                api_version: str = "v1", 
                                template_name: str= "email_verification_en", 
@@ -35,6 +43,7 @@ def send_email_activation_link(email_to_activate: str,
 
     # Generate the activation link
     activation_link: str = generate_email_activation_link(
+        account_id = account_id,
         domain=domain,
         api_version=api_version,
         token_size=token_size)

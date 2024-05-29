@@ -150,6 +150,7 @@ class AccountAuthViewSet(viewsets.ViewSet):
                 # Send activation email
                 send_email_activation_link(
                     email_to_activate=account.email,
+                    account_id=str(account.id),
                     first_name=account_profile.first_name,
                     last_name=account_profile.last_name
                 )
@@ -219,7 +220,7 @@ class AccountAuthViewSet(viewsets.ViewSet):
         token = request.data.get("token")
         
         # Verify the token
-        is_token_valid, account_id = verify_email_verification_token(token)
+        is_token_valid, account_id = verify_email_verification_token(token, "EMAIL_VERIFICATION")
         if not is_token_valid:
             return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
         
