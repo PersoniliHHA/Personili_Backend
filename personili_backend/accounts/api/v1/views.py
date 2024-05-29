@@ -28,8 +28,7 @@ from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample
 
 
 # Services 
-from accounts.api.v1.services.main_account_creation import create_main_account_sign_up_response
-from accounts.api.v1.services.email_activation import send_email_activation_link, verify_email_verification_token
+from accounts.api.v1.services.email_activation import send_email_activation_link, verify_email_verification_token, verify_account_email
 
 
 # Standard imports
@@ -225,10 +224,11 @@ class AccountAuthViewSet(viewsets.ViewSet):
             return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
         
         # Mark the user email as verified
-        account = Account.objects.get(id=account_id)
-        account.email_verified = True
-        account.save()
+        verify_account_email(account_id)
 
+        return Response({"message": "EMAIL_VERIFIED"}, status=status.HTTP_200_OK)
+
+    
     @action(detail=False, methods=["POST"], url_path="v1/main-account-update-password", permission_classes=[permissions.IsAuthenticated])
     def main_account_update_password(self, request, *args, **kwargs):
         """This method is used to update the user password"""

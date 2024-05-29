@@ -3,10 +3,10 @@ from security.secure_tokens import generate_random_token
 from emails.brevo_engine import brevo_engine
 from config import settings
 import os
-from accounts.models import ActionToken
+from accounts.models import ActionToken, Account
 
 
-def verify_email_verification_token(token: str) -> bool:
+def verify_email_verification_token(token: str, type: str) -> bool:
     """
     Verify that the token is valid
     """
@@ -20,7 +20,7 @@ def generate_email_activation_link(domain: str, token_size: int, api_version: st
     :return: The generated email activation link.
     """
     token = generate_random_token(size=token_size , signed=False)
-    return f"{domain}/api/accounts/{api_version}/accounts/verify-email/{token}"
+    return f"{domain}/api/accounts/{api_version}/accounts/verify-email/{token}/"
 
 
 def send_email_activation_link(email_to_activate: str,
@@ -55,3 +55,9 @@ def send_email_activation_link(email_to_activate: str,
         placeholders=placeholders
     )
 
+
+def verify_account_email(account_id: str) -> None:
+    """
+    Verify the email of an account
+    """
+    Account.verify_email(account_id)
