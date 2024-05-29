@@ -29,7 +29,7 @@ from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample
 
 # Services 
 from accounts.api.v1.services.main_account_creation import create_main_account_sign_up_response
-from accounts.api.v1.services.email_activation import generate_email_activation_link, verify_email_verification_token
+from accounts.api.v1.services.email_activation import send_email_activation_link
 
 
 # Standard imports
@@ -147,15 +147,10 @@ class AccountAuthViewSet(viewsets.ViewSet):
             with transaction.atomic():
                 # Create both the account and the account profile
                 account, account_profile = serializer.create(serializer.validated_data)
-
-                # Generate the activate link
-                activation_link = generate_email_activation_link(email)
                 
                 # Send activation email
                 send_email_activation_link(
                     email_to_activate=account.email,
-                    activation_link=activation_link,
-                    template_name="email_verification_en",
                     first_name=account_profile.first_name,
                     last_name=account_profile.last_name
                 )
