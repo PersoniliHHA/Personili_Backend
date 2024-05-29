@@ -25,12 +25,11 @@ from accounts.models import AccountProfile, DeliveryAddress, Wallet, Transaction
 # drf spectacular imports
 from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample, OpenApiTypes
 
-# Utilities
-from emails.account_creation import send_email_activation_link
+
 
 # Services 
-from accounts.services.user_sign_up import create_main_account_sign_up_response
-from accounts.api.v1.services import generate_email_activation_link
+from accounts.api.v1.services.main_account_creation import create_main_account_sign_up_response
+from accounts.api.v1.services.email_activation import generate_email_activation_link, verify_email_verification_token
 
 
 # Standard imports
@@ -150,7 +149,7 @@ class AccountAuthViewSet(viewsets.ViewSet):
                 account, account_profile = serializer.create(serializer.validated_data)
 
                 # Generate the activate link
-                activation_link = send_email_activation_link(email)
+                activation_link = generate_email_activation_link(email)
                 
                 # Send activation email
                 send_email_activation_link(
@@ -217,12 +216,23 @@ class AccountAuthViewSet(viewsets.ViewSet):
                          }},status=status.HTTP_200_OK)
 
     # Main account email verification api
-    @action(detail=False, methods=["POST"], url_path="v1/accounts/verify-email", permission_classes=[permissions.AllowAny])
+    @action(detail=False, methods=["POST"], url_path="v1/accounts/verify-email/(?P<token>[^/.]+)", permission_classes=[permissions.AllowAny])
     def main_account_verify_email(self, request, *args, **kwargs):
         """
         This api will be used to verify the email of the user, it extracts the token from the path parameters and checks its existence and validity
         """
-
+        # First extract the token from the path parameters
+        token = request.data.get("token")
+        
+        # Verify the token
+        is_token_valid, account_id = verify_email_verification_token(token)
+        if not is_token_valid:
+            return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Mark the user email as verified
+        account = Account.objects.get(id=account_id)
+        account.email_verified = True
+        account.save()
 
     @action(detail=False, methods=["POST"], url_path="v1/main-account-update-password", permission_classes=[permissions.IsAuthenticated])
     def main_account_update_password(self, request, *args, **kwargs):

@@ -1,4 +1,5 @@
-from typing import Set
+from datetime import timezone
+from typing import Set, Tuple
 from django.db import models
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from uuid import uuid4
@@ -91,6 +92,16 @@ class Account(AbstractBaseUser, TimeStampedModel):
     def has_module_perms(self, app_label):
         return self.is_admin and self.is_active
     
+    @classmethod
+    def verify_email(cls, account_id: str):
+        """
+        Verify the email of the account
+        """
+        account = cls.objects.get(id=account_id)
+        account.email_verified = True
+        account.save()
+        return account
+    
     def __str__(self) -> str:
         return str(self.id) + " - " + self.email 
     
@@ -136,16 +147,43 @@ class AccountProfile(TimeStampedModel):
 class ActionToken(TimeStampedModel):
     """
     This model will store tokens that are used for password reset, email verification, etc.
-    Each token has the following attributes
+    Each token has a type, these are the allowed types :
+    - EMAIL_VERIFICATION
+    - PASSWORD_RESET
+    - ACCOUNT_ACTIVATION
+    - ACCOUNT_SUSPENSION
     """
+    EMAIL_VERIFICATION = 'email_verification'
+    PASSWORD_RESET = 'password_reset'
+    ACCOUNT_SUSPENSION = 'account_suspension'
+    TOKEN_TYPES = [
+        (EMAIL_VERIFICATION, 'Email verification'),
+        (PASSWORD_RESET, 'Password reset'),
+        (ACCOUNT_SUSPENSION, 'Account suspension'),
+    ]
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    token = models.CharField(max_length=255, null=True)
-    token_type = models.CharField(max_length=255, null=True)
+    token = models.CharField(max_length=255, null=True, unique=True)
+    token_type = models.CharField(max_length=255, choices=TOKEN_TYPES, default=EMAIL_VERIFICATION)
     expiry_date = models.DateTimeField(null=True)
     account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='action_tokens')
 
     class Meta:
         db_table = 'action_tokens'
+    
+    @classmethod
+    def verify_token(cls, token: str, type: str) -> Tuple[bool, str]:
+        """
+        This method check if the token is exists and that it's not expired and of the correct type. If it's valid
+        it returns True and deletes the token, otherwise it returns False
+        """
+        try:
+            token = cls.objects.get(token=token, token_type=type)
+            if token.expiry_date > timezone.now():
+                token.delete()
+                return True, token.account.id
+            return False, None
+        except cls.DoesNotExist:
+            return False, None
 
     def __str__(self) -> str:
         return self.token + ' - ' + self.token_type + ' - ' + self.account.email
