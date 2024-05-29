@@ -20,7 +20,7 @@ def generate_email_activation_link(domain: str, token_size: int, api_version: st
     :return: The generated email activation link.
     """
     token = generate_random_token(size=token_size , signed=False)
-    return f"{domain}/api/accounts/{api_version}/accounts/activate/{token}"
+    return f"{domain}/api/accounts/{api_version}/accounts/verify-email/{token}"
 
 
 def send_email_activation_link(email_to_activate: str,
@@ -31,7 +31,7 @@ def send_email_activation_link(email_to_activate: str,
                                last_name: str = None):
     
     # Get the domain name from env variables
-    domain: str = os.getenv("DOMAIN_NAME", "localhost")
+    domain: str = os.getenv("DOMAIN_NAME", "http://localhost:8000")
 
     # Generate the activation link
     activation_link: str = generate_email_activation_link(

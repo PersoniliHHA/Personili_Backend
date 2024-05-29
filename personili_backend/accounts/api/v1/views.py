@@ -29,7 +29,7 @@ from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample
 
 # Services 
 from accounts.api.v1.services.main_account_creation import create_main_account_sign_up_response
-from accounts.api.v1.services.email_activation import send_email_activation_link
+from accounts.api.v1.services.email_activation import send_email_activation_link, verify_email_verification_token
 
 
 # Standard imports
