@@ -1,4 +1,4 @@
-from datetime import timezone, datetime
+from datetime import timezone, datetime, timedelta
 from typing import Set, Tuple
 from django.db import models
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
@@ -162,9 +162,9 @@ class ActionToken(TimeStampedModel):
         (ACCOUNT_SUSPENSION, 'Account suspension'),
     ]
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    token = models.CharField(max_length=255, null=True, unique=True)
+    token = models.CharField(max_length=255, unique=True)
     token_type = models.CharField(max_length=255, choices=TOKEN_TYPES, default=EMAIL_VERIFICATION)
-    expiry_date = models.DateTimeField(null=True)
+    expiry_date = models.DateTimeField(default=datetime.now() + timedelta(days=1))
     account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='action_tokens')
 
     class Meta:
