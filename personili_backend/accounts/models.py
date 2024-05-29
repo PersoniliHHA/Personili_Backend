@@ -133,6 +133,23 @@ class AccountProfile(TimeStampedModel):
         return str(self.id) + " - " + self.account.email
 
 
+class ActionToken(TimeStampedModel):
+    """
+    This model will store tokens that are used for password reset, email verification, etc.
+    Each token has the following attributes
+    """
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    token = models.CharField(max_length=255, null=True)
+    token_type = models.CharField(max_length=255, null=True)
+    expiry_date = models.DateTimeField(null=True)
+    account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='action_tokens')
+
+    class Meta:
+        db_table = 'action_tokens'
+
+    def __str__(self) -> str:
+        return self.token + ' - ' + self.token_type + ' - ' + self.account.email
+
 #########################################
 #             Permission model          #
 #########################################

@@ -1,7 +1,17 @@
-from django.core.mail import send_mail
-from emails.brevo_engine import brevo_engine
+# Rest framework
+from rest_framework.authentication import BaseAuthentication
+
+import logging as logger
+
+from security.secure_tokens import generate_random_token
+
+
+logger.basicConfig(level=logger.DEBUG)
+
+
 
 def send_email_activation_link( email_to_activate, activation_link, template_name= "email_verification_en", first_name = None, last_name = None):
+    
     placeholders: dict[str, str] = {
         "first_name": first_name,
         "last_name": last_name,
@@ -14,3 +24,4 @@ def send_email_activation_link( email_to_activate, activation_link, template_nam
         template_name=template_name,
         placeholders=placeholders
     )
+

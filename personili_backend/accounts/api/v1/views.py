@@ -57,6 +57,10 @@ class AccountAuthViewSet(viewsets.ViewSet):
     queryset = Account.objects.all()
     serializer_class = MainAccountSignUpserializer
 
+    ######################################################################################
+    ###################### Main Acount APIS (login, signup, verify email, reset password)#
+    ######################################################################################
+    # Main account sign up api
     @action(detail=False, methods=["POST"], url_path="v1/accounts/sign-up", permission_classes=[permissions.AllowAny])
     @extend_schema(
         summary="Sign up a new user",
@@ -146,7 +150,7 @@ class AccountAuthViewSet(viewsets.ViewSet):
                 account, account_profile = serializer.create(serializer.validated_data)
 
                 # Generate the activate link
-                activation_link = generate_email_activation_link(email)
+                activation_link = send_email_activation_link(email)
                 
                 # Send activation email
                 send_email_activation_link(
@@ -162,7 +166,7 @@ class AccountAuthViewSet(viewsets.ViewSet):
         except (IntegrityError, DatabaseError, Error) as e:
             return Response({"ERROR": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
-
+    # Main account sign in api
     @action(detail=False, methods=["POST"], url_path="v1/accounts/sign-in", permission_classes=[permissions.AllowAny])
     def main_account_sign_in(self, request, *args, **kwargs):
         """This method is used to sign in a user"""
@@ -211,6 +215,14 @@ class AccountAuthViewSet(viewsets.ViewSet):
                             "access_token": access_token,
                             "refresh_token": refresh_token,
                          }},status=status.HTTP_200_OK)
+
+    # Main account email verification api
+    @action(detail=False, methods=["POST"], url_path="v1/accounts/verify-email", permission_classes=[permissions.AllowAny])
+    def main_account_verify_email(self, request, *args, **kwargs):
+        """
+        This api will be used to verify the email of the user, it extracts the token from the path parameters and checks its existence and validity
+        """
+
 
     @action(detail=False, methods=["POST"], url_path="v1/main-account-update-password", permission_classes=[permissions.IsAuthenticated])
     def main_account_update_password(self, request, *args, **kwargs):
