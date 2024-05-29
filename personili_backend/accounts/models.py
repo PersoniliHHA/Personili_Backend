@@ -1,4 +1,4 @@
-from datetime import timezone
+from datetime import timezone, datetime
 from typing import Set, Tuple
 from django.db import models
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
@@ -178,7 +178,7 @@ class ActionToken(TimeStampedModel):
         """
         try:
             token = cls.objects.get(token=token, token_type=type)
-            if token.expiry_date > timezone.now():
+            if token.expiry_date > datetime.now():
                 token.delete()
                 return True, token.account.id
             return False, None
