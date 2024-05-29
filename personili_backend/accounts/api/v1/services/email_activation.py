@@ -44,6 +44,9 @@ def send_email_activation_link(email_to_activate: str,
         "last_name": last_name,
         "activation_link": activation_link
     }
+    print("£££££££££££££££££££")
+    print(placeholders)
+    print("££££££££££££££££££££")
 
     brevo_engine.send_email(
         to_email=email_to_activate,
