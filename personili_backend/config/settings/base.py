@@ -9,6 +9,7 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # personili_backend/
 APPS_DIR = BASE_DIR 
 
+
 env = environ.Env()
 
 READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=False) # type: ignore
@@ -244,7 +245,7 @@ EMAIL_BACKEND = env(
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-timeout
 EMAIL_TIMEOUT = 5
 
-BREVO_API_KEY = env.str("BREVO_API_KEY")
+BREVO_API_KEY = env.str("BREVO_API_KEY", default="")
 
 # ADMIN
 # ------------------------------------------------------------------------------
