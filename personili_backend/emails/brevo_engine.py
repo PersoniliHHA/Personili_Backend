@@ -26,9 +26,9 @@ class BrevoService:
             html_content = f.read()
         
         # Replace the placeholders
-        #if placeholders:
-         #   for key, value in placeholders.items():
-          #      html_content = html_content.replace(f"{{{{{key}}}}}", value)
+        if placeholders:
+            for key, value in placeholders.items():
+                html_content = html_content.replace(f"{{{{{key}}}}}", value)
 
         # Send the actual email
         send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
