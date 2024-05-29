@@ -11,7 +11,7 @@ def verify_email_verification_token(token: str, type: str) -> bool:
     """
     Verify that the token is valid
     """
-    return ActionToken.verify_token(token)
+    return ActionToken.verify_token(token, type)
 
 
 def generate_email_activation_link(account_id: str, domain: str, token_size: int, api_version: str = "v1") -> str:
