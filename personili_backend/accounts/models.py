@@ -189,11 +189,12 @@ class ActionToken(TimeStampedModel):
         return self.token + ' - ' + self.token_type  + ' - ' + self.account.email
     
     @classmethod
-    def create_new_token(cls, account_id :str, token_type: str, expiry_date: datetime) -> str:
+    def create_new_token(cls, token:str, account_id :str, token_type: str, expiry_date: datetime) -> str:
         """
         This method creates a new token for the account and returns the token
         """
         token = cls.objects.create(
+            token=token,
             account_id=account_id,
             token_type=token_type,
             expiry_date=expiry_date
