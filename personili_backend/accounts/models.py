@@ -186,7 +186,7 @@ class ActionToken(TimeStampedModel):
             return False, None
 
     def __str__(self) -> str:
-        return self.token + ' - ' + self.token_type + ' - ' + self.account.email
+        return self.token + ' - ' + self.token_type 
     
     @classmethod
     def create_new_token(cls, account_id :str, token_type: str, expiry_date: datetime) -> str:
