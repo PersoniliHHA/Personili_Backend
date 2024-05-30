@@ -24,18 +24,14 @@ class BrevoService:
         # Read the content of template
         with open(template_file, "r") as f:
             html_content = f.read()
-        
-        # Replace the placeholders
-        if placeholders:
-            for key, value in placeholders.items():
-                html_content = html_content.replace(f"{{ {key} }}", value)
 
         # Send the actual email
         send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
             to=[{"email": to_email}],
             sender={"email": from_email, "name": from_name},
             subject=subject,
-            html_content=html_content
+            html_content=html_content,
+            params=placeholders
         )
         try:
             api_response = self.api_instance.send_transac_email(send_smtp_email)
