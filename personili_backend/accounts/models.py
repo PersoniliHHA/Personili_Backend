@@ -1,4 +1,4 @@
-from datetime import timezone, datetime, timedelta
+from datetime import UTC, datetime, timedelta
 from typing import Set, Tuple
 from django.db import models
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
@@ -164,7 +164,7 @@ class ActionToken(TimeStampedModel):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     token = models.CharField(max_length=255, unique=True)
     token_type = models.CharField(max_length=255, choices=TOKEN_TYPES, default=EMAIL_VERIFICATION)
-    expiry_date = models.DateTimeField(default=datetime.now() + timedelta(days=1))
+    expiry_date = models.DateTimeField(default=datetime.now(UTC) + timedelta(days=1))
     account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='action_tokens')
 
     class Meta:
@@ -178,7 +178,7 @@ class ActionToken(TimeStampedModel):
         """
         try:
             token = cls.objects.get(token=token, token_type=type)
-            if token.expiry_date > datetime.now():
+            if token.expiry_date > datetime.now(UTC):
                 print("token is valid")
                 token.delete()
                 return True, token.account.id
