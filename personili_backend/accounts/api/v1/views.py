@@ -25,11 +25,11 @@ from accounts.models import AccountProfile, DeliveryAddress, Wallet, Transaction
 # drf spectacular imports
 from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample, OpenApiTypes
 
-
-
 # Services 
 from accounts.api.v1.services.email_activation import send_email_activation_link, verify_email_verification_token, verify_account_email
 
+# Validators
+from utils.validators import validate_email
 
 # Standard imports
 import logging as logger
@@ -232,13 +232,13 @@ class AccountAuthViewSet(viewsets.ViewSet):
     @action(detail=False, methods=["POST"], url_path="v1/accounts/resend-activation-email", permission_classes=[permissions.AllowAny])
     def main_account_resend_activation_email(self, request, *args, **kwargs):
         """
-        This api will be used to resend the activation email to the user, it extracts the email from the request data and checks its existence
+        This api will be used to resend the activation email to the user, it extracts the email from the request data
         """
         email: str = request.data.get('email')
-        if not email:
+        if not email or not validate_email(email):
             return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
         
-        # Check if the email is blacklisted
+        # Check if the email is blacklisted or suspended
         if AccountBlacklist.objects.filter(email=email).exists():
             return Response({"error": "UNAUTHORIZED"}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -288,14 +288,6 @@ class AccountAuthViewSet(viewsets.ViewSet):
         return None
     
     
-#################################
-#                               #
-#     Refresh Token ViewSet     #
-#                               #
-#################################
-
-
-
 #################################
 #                               #
 #        Profile ViewSet        #

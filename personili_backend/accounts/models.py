@@ -427,7 +427,7 @@ class AccountBlacklist(TimeStampedModel):
     Blacklist contains an email, a reason and a date of blacklisting.
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    email = models.EmailField(null=True)
+    email = models.EmailField(null=True, unique=True)
     ip_address = models.GenericIPAddressField(null=True)
     reason = models.TextField(null=True)
     suspended = models.BooleanField(default=True)
@@ -438,6 +438,10 @@ class AccountBlacklist(TimeStampedModel):
 
     class Meta:
         db_table = 'blacklist_accounts'
+
+    @classmethod
+    def is_suspended_or_banned(cls,) -> bool:
+        return self.suspended or self.banned
 
     def __str__(self) -> str:
         return self.email + ' - ' + self.reason
