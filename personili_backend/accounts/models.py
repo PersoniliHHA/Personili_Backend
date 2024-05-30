@@ -179,10 +179,13 @@ class ActionToken(TimeStampedModel):
         try:
             token = cls.objects.get(token=token, token_type=type)
             if token.expiry_date > datetime.now():
+                print("token is valid")
                 token.delete()
                 return True, token.account.id
+            print("token expired")
             return False, None
         except cls.DoesNotExist:
+            print("token does not exist")
             return False, None
 
     def __str__(self) -> str:
