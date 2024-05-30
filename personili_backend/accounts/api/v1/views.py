@@ -59,7 +59,7 @@ class AccountAuthViewSet(viewsets.ViewSet):
     ###################### Main Acount APIS (login, signup, verify email, reset password)#
     ######################################################################################
     # Main account sign up api
-    @action(detail=False, methods=["POST"], url_path="v1/accounts/sign-up", permission_classes=[permissions.AllowAny])
+    @action(detail=True, methods=["POST"], url_path="v1/accounts/sign-up", permission_classes=[permissions.AllowAny])
     @extend_schema(
         summary="Sign up a new user",
         description="This method is used to create a new account for a user, it creates a blank account profile in the process as well.",
@@ -161,7 +161,7 @@ class AccountAuthViewSet(viewsets.ViewSet):
             return Response({"ERROR": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     # Main account sign in api
-    @action(detail=False, methods=["POST"], url_path="v1/accounts/sign-in", permission_classes=[permissions.AllowAny])
+    @action(detail=True, methods=["POST"], url_path="v1/accounts/sign-in", permission_classes=[permissions.AllowAny])
     def main_account_sign_in(self, request, *args, **kwargs):
         """This method is used to sign in a user"""
 
@@ -211,7 +211,7 @@ class AccountAuthViewSet(viewsets.ViewSet):
                          }},status=status.HTTP_200_OK)
 
     # Main account email verification api
-    @action(detail=False, methods=["POST"], url_path="v1/accounts/verify-email/(?P<token>[^/.]+)", permission_classes=[permissions.AllowAny])
+    @action(detail=True, methods=["GET"], url_path="v1/accounts/verify-email/(?P<token>[^/.]+)", permission_classes=[permissions.AllowAny])
     def main_account_verify_email(self, request, token:str, *args, **kwargs):
         """
         This api will be used to verify the email of the user, it extracts the token from the path parameters and checks its existence and validity
@@ -228,6 +228,34 @@ class AccountAuthViewSet(viewsets.ViewSet):
 
         return Response({"message": "EMAIL_VERIFIED"}, status=status.HTTP_200_OK)
 
+    # Resend activation email api
+    @action(detail=True, methods=["POST"], url_path="v1/accounts/resend-activation-email", permission_classes=[permissions.AllowAny])
+    def main_account_resend_activation_email(self, request, *args, **kwargs):
+        """
+        This api will be used to resend the activation email to the user, it extracts the email from the request data and checks its existence
+        """
+        email = request.data.get('email')
+        if not email:
+            return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Check if the email is blacklisted
+        if AccountBlacklist.objects.filter(email=email).exists():
+            return Response({"error": "EMAIL_BLACKLISTED"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Check if an account with this email already exists
+        if not Account.objects.filter(email=email).exists():
+            return Response({"error": "EMAIL_DOES_NOT_EXIST"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Get the account id
+        account_id = Account.objects.filter(email=email).first().id
+
+        # Send activation email
+        send_email_activation_link(
+            email_to_activate=email,
+            account_id=str(account_id)
+        )
+
+        return Response({"message": "ACTIVATION_EMAIL_RESENT"}, status=status.HTTP_200_OK)
     
     @action(detail=False, methods=["POST"], url_path="v1/main-account-update-password", permission_classes=[permissions.IsAuthenticated])
     def main_account_update_password(self, request, *args, **kwargs):
