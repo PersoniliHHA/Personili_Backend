@@ -212,12 +212,10 @@ class AccountAuthViewSet(viewsets.ViewSet):
 
     # Main account email verification api
     @action(detail=False, methods=["POST"], url_path="v1/accounts/verify-email/(?P<token>[^/.]+)", permission_classes=[permissions.AllowAny])
-    def main_account_verify_email(self, request, *args, **kwargs):
+    def main_account_verify_email(self, request, token:str, *args, **kwargs):
         """
         This api will be used to verify the email of the user, it extracts the token from the path parameters and checks its existence and validity
         """
-        # First extract the token from the path parameters
-        token = request.data.get("token")
         print("token: ", token)
         
         # Verify the token
