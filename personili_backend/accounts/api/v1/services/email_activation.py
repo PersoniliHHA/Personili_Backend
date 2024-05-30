@@ -54,6 +54,8 @@ def send_email_activation_link(email_to_activate: str,
         "activation_link": activation_link
     }
 
+    print("activation link: ", activation_link)
+
     # Send the email
     brevo_engine.send_email(
         to_email=email_to_activate,
