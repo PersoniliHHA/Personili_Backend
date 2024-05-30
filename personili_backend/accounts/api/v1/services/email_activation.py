@@ -24,7 +24,7 @@ def generate_email_activation_link(account_id: str, domain: str, token_size: int
     token: str = generate_random_token(size=token_size , signed=False)
 
     # Save the token
-    expiry_date = datetime.now() + timedelta(days=1)
+    expiry_date = datetime.now(datetime.UTC) + timedelta(days=1)
     ActionToken.create_new_token(token=token, account_id=account_id, token_type = "Email verification", expiry_date=expiry_date)
     
     return f"{domain}/api/accounts/{api_version}/accounts/verify-email/{token}/"
