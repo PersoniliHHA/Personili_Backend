@@ -219,7 +219,7 @@ class AccountAuthViewSet(viewsets.ViewSet):
         print("token: ", token)
         
         # Verify the token
-        is_token_valid, account_id = verify_email_verification_token(token, "email_verification")
+        is_token_valid, account_id = verify_email_verification_token(token, "EMAIL_VERIFICATION")
         if not is_token_valid:
             return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
         
