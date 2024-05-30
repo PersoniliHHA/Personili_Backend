@@ -218,6 +218,7 @@ class AccountAuthViewSet(viewsets.ViewSet):
         """
         # First extract the token from the path parameters
         token = request.data.get("token")
+        print("token: ", token)
         
         # Verify the token
         is_token_valid, account_id = verify_email_verification_token(token, "email_verification")
