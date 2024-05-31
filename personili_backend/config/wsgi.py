@@ -20,7 +20,7 @@ from pathlib import Path
 from django.core.wsgi import get_wsgi_application
 
 # This allows easy placement of apps within the interior
-# hih_pod_platform directory.
+# personili directory.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 sys.path.append(str(BASE_DIR / "personili_backend"))
 # We defer to a DJANGO_SETTINGS_MODULE already in the environment. This breaks

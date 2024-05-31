@@ -1,7 +1,7 @@
 # PostgreSQL
 # ------------------------------------------------------------------------------
-POSTGRES_HOST=postgres
-POSTGRES_PORT=5432
-POSTGRES_DB=personili_db
+POSTGRES_HOST=viaduct.proxy.rlwy.net
+POSTGRES_PORT=39774
+POSTGRES_DB=railway
 POSTGRES_USER=rQkgHsQNXmsqrMBQflJjZFJMmrADmZnF
-POSTGRES_PASSWORD=0ZJOrbl9tLk9nDdoHKDLmwduh5k8AhUG6lp2ENf8e4qj1o9silbmTRHiJBMkI78q
+POSTGRES_PASSWORD=UiTcWqIQJjDDjYAYDCyBoGlqxNDzGyYQ
