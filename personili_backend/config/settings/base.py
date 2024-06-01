@@ -1,5 +1,5 @@
 """
-Base settings to build other settings files upon.
+Base settings to build other settings files upon meaningless change
 """
 from datetime import timedelta
 from pathlib import Path
