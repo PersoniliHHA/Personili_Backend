@@ -88,17 +88,17 @@ ADMIN_URL = env("DJANGO_ADMIN_URL")
 # Anymail
 # ------------------------------------------------------------------------------
 # https://anymail.readthedocs.io/en/stable/installation/#installing-anymail
-INSTALLED_APPS += ["anymail"]  # noqa F405
-# https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
-# https://anymail.readthedocs.io/en/stable/installation/#anymail-settings-reference
-# https://anymail.readthedocs.io/en/stable/esps/sendinblue/
-EMAIL_BACKEND = "anymail.backends.sendinblue.EmailBackend"
-ANYMAIL = {
-    "SENDINBLUE_API_KEY": env("SENDINBLUE_API_KEY"),
-    "SENDINBLUE_API_URL": env(
-        "SENDINBLUE_API_URL", default="https://api.sendinblue.com/v3/"
-    ),
-}
+#INSTALLED_APPS += ["anymail"]  # noqa F405
+## https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
+## https://anymail.readthedocs.io/en/stable/installation/#anymail-settings-reference
+## https://anymail.readthedocs.io/en/stable/esps/sendinblue/
+#EMAIL_BACKEND = "anymail.backends.sendinblue.EmailBackend"
+#ANYMAIL = {
+#    "SENDINBLUE_API_KEY": env("SENDINBLUE_API_KEY"),
+#    "SENDINBLUE_API_URL": env(
+#        "SENDINBLUE_API_URL", default="https://api.sendinblue.com/v3/"
+#    ),
+#}
 
 
 # LOGGING
