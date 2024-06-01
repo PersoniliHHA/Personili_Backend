@@ -246,6 +246,8 @@ class AccountAuthViewSet(viewsets.ViewSet):
         if not Account.objects.filter(email=email).exists():
             return Response({"error": "UNAUTHORIZED"}, status=status.HTTP_401_UNAUTHORIZED)
         
+        # Now check if there is a token
+        
         # Get the account id
         account_id = Account.objects.filter(email=email).first().id
 

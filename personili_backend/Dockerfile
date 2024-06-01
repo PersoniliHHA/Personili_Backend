@@ -57,18 +57,8 @@ COPY --from=python-build-stage /usr/src/app/wheels  /wheels/
 RUN pip install --no-cache-dir --no-index --find-links=/wheels/ /wheels/* \
   && rm -rf /wheels/
 
-
-  COPY --chown=django:django entrypoint /entrypoint
-  RUN sed -i 's/\r$//g' /entrypoint
-  RUN chmod +x /entrypoint
-  
-  COPY --chown=django:django start /start
-  RUN sed -i 's/\r$//g' /start
-  RUN chmod +x /start
-  
-
 # Copy the application code to the WORKDIR
-COPY . ${APP_HOME}
+COPY --chown=django:django . ${APP_HOME}
 
 
 # copy application code to WORKDIR
@@ -78,6 +68,14 @@ COPY . ${APP_HOME}
 # make django owner of the WORKDIR directory as well.
 RUN chown django:django ${APP_HOME}
 
+#COPY --chown=django:django ./entrypoint.sh .
+RUN sed -i 's/\r$//g' entrypoint.sh
+RUN chmod u+x entrypoint.sh
+
 USER django
 
-ENTRYPOINT ["/entrypoint"]
+ # COPY --chown=django:django ./start.sh .
+ # RUN sed -i 's/\r$//g' ./start.sh
+ # RUN chmod +x ./start.sh
+
+ENTRYPOINT ["/app/entrypoint.sh"]
