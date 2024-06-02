@@ -17,11 +17,11 @@ AWS_S3_BUCKET_NAME=personili-image-storage-dev
 AWS_DEV_BACK_ROLE_ARN=arn:aws:iam::078534730785:role/LocalBackendDeveloper
 
 # Temporary credentials
-TEMP_AWS_ACCESS_KEY_ID=""
-TEMP_AWS_SECRET_ACCESS_KEY=
-TEMP_AWS_SESSION_TOKEN=
+TEMP_AWS_ACCESS_KEY_ID=empty
+TEMP_AWS_SECRET_ACCESS_KEY=empty
+TEMP_AWS_SESSION_TOKEN=empty
 STS_SESSION_VALIDITY_DURATION=3600
-STS_SESSION_EXPIRATION_TIME=
+STS_SESSION_EXPIRATION_TIME=empty
 
 # JWT
 # ----------------------------------------------------------------------------
