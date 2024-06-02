@@ -54,7 +54,7 @@ class IamEngine:
         This method is used to get an STS session
         """
         # First check if the temporary credentials already exists
-        if not os.environ.get("TEMP_AWS_ACCESS_KEY_ID") or not os.environ.get("TEMP_AWS_SECRET_ACCESS_KEY") or not os.environ.get("TEMP_AWS_SESSION_TOKEN"):
+        if os.environ.get("TEMP_AWS_ACCESS_KEY_ID") == "empty" or os.environ.get("TEMP_AWS_SECRET_ACCESS_KEY") == "empty" or os.environ.get("TEMP_AWS_SESSION_TOKEN") == "empty":
             credentials: dict = self.assume_iam_role()
         else:
             # Check if the temporary credentials haven't expired
