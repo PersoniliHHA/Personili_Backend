@@ -235,6 +235,7 @@ class AccountAuthViewSet(viewsets.ViewSet):
         This api will be used to resend the activation email to the user, it extracts the email from the request data
         """
         email: str = request.data.get('email')
+        
         # check if the email is valid and not null
         if not email or not validate_email(email):
             return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
@@ -254,6 +255,8 @@ class AccountAuthViewSet(viewsets.ViewSet):
         # Now check if there is already an action token for this email, if there delete it
         if ActionToken.objects.filter(email=email, action="EMAIL_VERIFICATION").exists():
             ActionToken.objects.filter(email=email, action="EMAIL_VERIFICATION").delete()
+        else:
+            return Response({"error": "UNAUTHORIZED"}, status=status.HTTP_400_BAD_REQUEST)
         
         # Get the account id
         account_id = Account.objects.filter(email=email).first().id
