@@ -218,7 +218,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="action_tokens",
-                        to=settings.AUTH_USER_MODEL,
+                        to="accounts.account",
                     ),
                 ),
             ],
