@@ -49,7 +49,12 @@ END
 
 >&2 echo 'PostgreSQL is available'
 
-# Run the migrate command
+# Run Django migrations
+echo "Running Django migrations"
 python manage.py migrate
+
+# Start Django development server (or gunicorn for production)
+echo "Starting Django"
+python manage.py runserver 0.0.0.0:5000
 
 exec "$@"
