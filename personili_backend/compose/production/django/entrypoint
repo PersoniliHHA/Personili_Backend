@@ -22,7 +22,7 @@ import sys
 import time
 
 import psycopg2
-
+print("im here inside the entrypoint bitch")
 suggest_unrecoverable_after = 30
 start = time.time()
 
