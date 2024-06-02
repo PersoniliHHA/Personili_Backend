@@ -427,7 +427,7 @@ class AccountBlacklist(TimeStampedModel):
     Blacklist contains an email, a reason and a date of blacklisting.
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    email = models.EmailField(null=True, unique=True)
+    email = models.EmailField(null=True)
     ip_address = models.GenericIPAddressField(null=True)
     reason = models.TextField(null=True)
     suspended = models.BooleanField(default=True)
@@ -440,8 +440,21 @@ class AccountBlacklist(TimeStampedModel):
         db_table = 'blacklist_accounts'
 
     @classmethod
-    def is_suspended_or_banned(cls,) -> bool:
-        return self.suspended or self.banned
+    def is_email_blacklisted(cls, email: str) -> bool:
+        """
+        Check if an email is suspended or blacklisted, if it is return True
+        A suspended email is an email that is temporarily banned, meaning 
+        there is at least a single entry where the email is either banned or
+        suspended with a end date that hasn't expired
+        """
+        account = cls.objects.filter(email=email)
+        if account:
+            for entry in account:
+                if entry.suspended and entry.end_date_blacklisted > datetime.now(UTC):
+                    return True
+                if entry.banned:
+                    return True
+        return False
 
     def __str__(self) -> str:
         return self.email + ' - ' + self.reason

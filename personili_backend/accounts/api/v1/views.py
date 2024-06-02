@@ -20,7 +20,7 @@ from accounts.api.v1.serializers import DeliveryAddressCreateSerializer, Deliver
 from accounts.api.v1.permissions import ProfileApiPermission, PrivateDeliveryAddressApiPermission
 
 # Models
-from accounts.models import AccountProfile, DeliveryAddress, Wallet, Transaction, Feedback, AccountBlacklist
+from accounts.models import AccountProfile, ActionToken, DeliveryAddress, Wallet, Transaction, Feedback, AccountBlacklist
 
 # drf spectacular imports
 from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample, OpenApiTypes
@@ -235,18 +235,25 @@ class AccountAuthViewSet(viewsets.ViewSet):
         This api will be used to resend the activation email to the user, it extracts the email from the request data
         """
         email: str = request.data.get('email')
+        # check if the email is valid and not null
         if not email or not validate_email(email):
             return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
         
-        # Check if the email is blacklisted or suspended
-        if AccountBlacklist.objects.filter(email=email).exists():
-            return Response({"error": "UNAUTHORIZED"}, status=status.HTTP_401_UNAUTHORIZED)
-
         # Check if an account with this email already exists
         if not Account.objects.filter(email=email).exists():
             return Response({"error": "UNAUTHORIZED"}, status=status.HTTP_401_UNAUTHORIZED)
         
-        # Now check if there is a token
+        # Check if the email is blacklisted or suspended
+        if AccountBlacklist.is_email_blacklisted(email):
+            return Response({"error": "UNAUTHORIZED"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        # Check if the email isn't already active
+        if Account.objects.filter(email=email).first().email_verified:
+            return Response({"error": "EMAIL_ALREADY_VERIFIED"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Now check if there is already an action token for this email, if there delete it
+        if ActionToken.objects.filter(email=email, action="EMAIL_VERIFICATION").exists():
+            ActionToken.objects.filter(email=email, action="EMAIL_VERIFICATION").delete()
         
         # Get the account id
         account_id = Account.objects.filter(email=email).first().id
