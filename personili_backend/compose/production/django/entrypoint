@@ -49,4 +49,7 @@ END
 
 >&2 echo 'PostgreSQL is available'
 
+# Run the migrate command
+python manage.py migrate
+
 exec "$@"
