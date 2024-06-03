@@ -1,5 +1,5 @@
 from rest_framework.permissions import BasePermission
-from rest_framework_jwt.authentication import BaseJSONWebTokenAuthentication
+from security.authentication.jwt_authentication import jwt_authentication
 
 
 class IsAuthenticatedWithJWT(BasePermission):
@@ -13,7 +13,7 @@ class IsAuthenticatedWithJWT(BasePermission):
         token = auth_header.split(' ')[1] if len(auth_header.split(' ')) == 2 else None
 
         # Check if the JWT token is valid and authenticated
-        jwt_authentication = BaseJSONWebTokenAuthentication()
+        jwt_authentication = ()
         user, token = jwt_authentication.authenticate_credentials(token)
 
         # Return True if the token is authenticated, False otherwise

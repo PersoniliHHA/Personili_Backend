@@ -296,6 +296,7 @@ class AccountAuthViewSet(viewsets.ViewSet):
     @action(detail=False, methods=["POST"], url_path="v1/refresh", permission_classes=[permissions.IsAuthenticated])
     def main_account_refresh(self, request, *args, **kwargs):
         """This method is used to refresh the user token"""
+        
 
         return None
     
@@ -315,7 +316,7 @@ class AccountProfileViewSet(viewsets.ModelViewSet):
 
     serializer_class = UserProfileSerializer
     # Set the permission, only authenticated users can access this api and only their profile
-    permission_classes = [ProfileApiPermission]
+    
 
 #################################
 #                               #

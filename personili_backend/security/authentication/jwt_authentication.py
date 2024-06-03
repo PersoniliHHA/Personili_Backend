@@ -35,7 +35,7 @@ class JWTAuthentication(BaseAuthentication):
         print(token_components)
 
         # Check the signature 
-        if not token_components.get('is_valid_signature'):
+        if not token_components.get('is_valid_token'):
             return None
         
         # Check the header
@@ -43,11 +43,13 @@ class JWTAuthentication(BaseAuthentication):
         header = json.loads(header)
         if not header or header.get('alg') != settings.JWT_SIGNING_ALGORITHM or header.get('typ') != 'JWT':
             return None
+        
         # Check the payload
         payload = token_components.get('payload')
         payload = json.loads(payload)
         if not payload:
             return None
+        
         # Check the registered claims
         registered_claims = payload.get('registered_claims')
         if not registered_claims:
@@ -59,11 +61,6 @@ class JWTAuthentication(BaseAuthentication):
         # check the private claims
         private_claims = payload.get('private_claims')
         if not private_claims:
-            return None
-        
-        # get the token type
-        token_type = private_claims.get('tk')
-        if not token_type or token_type != 'acc':
             return None
         
         # get the account profile
@@ -81,3 +78,4 @@ class JWTAuthentication(BaseAuthentication):
 
     
 
+jwt_authentication = JWTAuthentication()

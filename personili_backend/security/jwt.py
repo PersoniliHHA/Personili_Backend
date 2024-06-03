@@ -53,7 +53,7 @@ def generate_jwt_token(registred_claims: dict,
     
     return f"{base64url_encode(json.dumps(header))}.{base64url_encode(json.dumps(payload))}.{signature}"
 
-def verify_jwt_token(token: str):
+def verify_jwt_token(token: str, type: str):
     """This method verifies a jwt token"""
     header, payload, signature = token.split(".")
     secret = settings.JWT_SECRET_KEY
@@ -63,22 +63,29 @@ def verify_jwt_token(token: str):
     expected_signature = base64url_encode(expected_signature)
     if signature != expected_signature:
         return {
-            "is_valid_signature": False
+            "is_valid_token": False
         }
     
     else:
         # Decode the payload
         payload_decoded = json.loads(base64url_decode(payload))
 
+        # Check if the token is of the right type
+        if payload_decoded.get('private_claims').get('tk') != type:
+            return {
+                "is_valid_token": False,
+                "error": "Token is not of the right type"
+            }
+
         # Check if the token is expired
         if 'exp' in payload_decoded.get('registered_claims') and datetime.now() > datetime.fromtimestamp(payload_decoded.get('registered_claims').get('exp')):
             return {
-                "is_valid_signature": False,
+                "is_valid_token": False,
                 "error": "Token is expired"
             }
         
         return {
-            "is_valid_signature": True,
+            "is_valid_token": True,
             "header": base64url_decode(header),
             "payload": base64url_decode(payload)
         }
@@ -117,8 +124,8 @@ def create_refresh_token(account_id: str):
 
 def verify_access_token(token: str):
     """This method verifies an access token"""
-    return verify_jwt_token(token)
+    return verify_jwt_token(token, "acc")
 
 def verify_refresh_token(token :str):
     """This method verifies a refresh token"""
-    return verify_jwt_token(token)
+    return verify_jwt_token(token, "ref")
