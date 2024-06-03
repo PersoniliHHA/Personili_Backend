@@ -322,17 +322,7 @@ class DesignsViewSet(viewsets.ViewSet):
         else:
             return Response({"message": "NOT_LIKED"}, status=status.HTTP_200_OK)
     
-    ################################### GET APIS, PUBLIC #####################################
-   
-    
-    ###########################################################################################
-    
-    ################################### GET APIS, PRIVATE #####################################
 
-
-    ###########################################################################################
-
-class CollectionViewSet(viewsets.ModelViewSet):
     """
     ViewSet for the Collection class
     """

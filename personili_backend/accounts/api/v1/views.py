@@ -17,7 +17,7 @@ from django.db import transaction, IntegrityError, DatabaseError, Error
 # Serializer imports
 from accounts.api.v1.serializers import MainAccountSignUpserializer, MainAccountSignInserializer, UserProfileSerializer, WalletSerializer, TransactionSerializer, FeedbackCreateSerializer
 from accounts.api.v1.serializers import DeliveryAddressCreateSerializer, DeliveryAddressUpdateSerializer, DeliveryAddressDeleteSerializer, DeliveryAddressGetSerializer, BaseDeliveryAddressSerializer
-from accounts.api.v1.permissions import ProfileApiPermission, PrivateDeliveryAddressApiPermission
+from security.permissions.is_authenticated import IsAuthenticatedWithJWT
 
 # Models
 from accounts.models import AccountProfile, ActionToken, DeliveryAddress, Wallet, Transaction, Feedback, AccountBlacklist
@@ -319,138 +319,6 @@ class AccountProfileViewSet(viewsets.ModelViewSet):
 
 #################################
 #                               #
-#   Delivery Address ViewSet    #
-#                               #
-#################################
-class DeliveryAddressViewSet(viewsets.ModelViewSet):
-    """
-    Model viewset for the Delivery Address API, only authenticated users can access this api.
-    The viewset implements the CRUD methods for the Delivery Address model
-    """
-    serializer_class = BaseDeliveryAddressSerializer
-
-    # Set the permission, only authenticated users can access this api
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        return DeliveryAddress.objects.filter(user_profile=UserProfile.objects.filter(user=self.request.user).first())
-
-    def get_user_profile(self):
-        return AccountProfile.objects.filter(user=self.request.user).first()
-
-    def get_serializer_class(self):
-        if self.action == "create-delivery-address":
-            return DeliveryAddressCreateSerializer
-        elif self.action == "update-delivery-address":
-            return DeliveryAddressUpdateSerializer
-        elif self.action == "get-all-delivery-addresses":
-            return DeliveryAddressGetSerializer
-        elif self.action == "delete-delivery-address":
-            return DeliveryAddressDeleteSerializer
-
-        return BaseDeliveryAddressSerializer
-
-    @action(detail=False, methods=["GET"], url_path="get-all-delivery-addresses",)
-    def get_all_delivery_addresses(self, request, *args, **kwargs):
-        """
-        get all delivery addresses of the user
-        """
-        # Get the delivery addresses associated with the user profile
-        delivery_addresses = self.get_queryset()
-
-        # Create the response
-        response = Response()
-        response.data = {
-            "delivery_addresses": DeliveryAddressGetSerializer(delivery_addresses, many=True).data,
-        }
-        response.status_code = status.HTTP_200_OK
-
-        return response
-
-    @action(detail=True, methods=["PUT"], url_path="update-delivery-address",)
-    def update_delivery_address(self, request, *args, **kwargs):
-        """
-        Update a single delivery address
-        """
-        # Prepare the response
-        response = Response()
-
-        # Verify that the id of the delivery address is present in the request data
-        if "id" not in request.data:
-            response.status_code = status.HTTP_302_FOUND
-            return response
-
-        # Get the delivery address using the id
-        delivery_address = get_object_or_404(DeliveryAddress, id=request.data.get("id"))
-
-        # Create the serializer
-        serializer = DeliveryAddressUpdateSerializer(delivery_address, data=request.data, partial=True)
-
-        # Check if the serializer is valid
-        serializer.is_valid(raise_exception=True)
-
-        # Save the delivery address
-        serializer.save()
-
-        response.data = serializer.data
-        response.status_code = status.HTTP_200_OK
-
-        return response
-
-    @action(detail=False, methods=["POST"], url_path="create-delivery-address",)
-    def create_delivery_address(self, request, *args, **kwargs):
-        """
-        Create a new delivery address
-        """
-        # Check that the user doesn't have already 3 delivery addresses
-        if self.get_queryset().count() >= 3:
-            response = Response()
-            response.status_code = status.HTTP_400_BAD_REQUEST
-            response.data = {"error": "You can't have more than 3 delivery addresses"}
-            return response
-
-        # Create the serializer
-        serializer = DeliveryAddressCreateSerializer(data=request.data)
-
-        # Check if the serializer is valid
-        serializer.is_valid(raise_exception=True)
-
-        # Save the delivery address
-        serializer.save(user_profile=self.get_user_profile())
-
-        # Create the response
-        response = Response()
-        response.data = serializer.data
-        response.status = status.HTTP_201_CREATED
-
-        return response
-
-    @action(detail=True, methods=["DELETE"], url_path="delete-delivery-address",)
-    def delete_delivery_address(self, request, *args, **kwargs):
-        """
-        Delete a delivery address
-        """
-        # Prepare the response
-        response = Response()
-
-        # Verify that the id of the delivery address is present in the request data
-        if "id" not in request.data:
-            response.status_code = status.HTTP_400_BAD_REQUEST
-            return response
-
-        # Get the delivery address
-        delivery_address = get_object_or_404(DeliveryAddress, id=request.data.get("id"))
-        delivery_address.delete()
-
-        # Create the response
-        response = Response()
-        response.status_code = status.HTTP_204_NO_CONTENT
-
-        return response
-
-
-#################################
-#                               #
 #        Feedback ViewSet       #
 #                               #
 #################################
@@ -485,61 +353,5 @@ class PublicFeedbackViewSet(viewsets.ModelViewSet):
         response = Response()
         response.data = serializer.data
         response.status = status.HTTP_201_CREATED
-
-        return response
-
-
-
-#################################
-#                               #
-#        Wallet ViewSet         #
-#                               #
-#################################
-class PrivateWalletViewSet(viewsets.ModelViewSet):
-    """
-    Viewset for the Wallet API, only authenticated users can access this api.
-    Users can get wallet details and edit them.
-    """
-
-    serializer_class = WalletSerializer
-    # Set the permission, only authenticated users can access this api
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        return Wallet.objects.filter(user_profile=AccountProfile.objects.filter(user=self.request.user).first())
-
-    def list(self, request, *args, **kwargs):
-        """
-        Return all the wallet details of the user
-        """
-        # Get the wallet details associated with the user profile
-        wallet = self.get_queryset().first()
-
-        # Create the response
-        response = Response()
-        response.data = {
-            "wallet": WalletSerializer(wallet).data,
-        }
-        response.status_code = status.HTTP_200_OK
-
-        return response
-
-    def update(self, request, *args, **kwargs):
-        # Get the wallet details
-        wallet = self.get_queryset().first()
-
-        # Create the serializer
-        serializer = WalletSerializer(wallet, data=request.data, partial=True)
-
-        # Check if the serializer is valid
-        serializer.is_valid(raise_exception=True)
-
-        # Save the wallet details
-        serializer.save()
-
-        # Create the response
-        response = Response()
-        response.data = serializer.data
-        response.status_code = status.HTTP_200_OK
 
         return response
