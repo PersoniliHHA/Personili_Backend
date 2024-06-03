@@ -59,7 +59,7 @@ class AccountAuthViewSet(viewsets.ViewSet):
     ###################### Main Acount APIS (login, signup, verify email, reset password)#
     ######################################################################################
     # Main account sign up api
-    @action(detail=False, methods=["POST"], url_path="v1/accounts/sign-up", permission_classes=[permissions.AllowAny])
+    @action(detail=False, methods=["POST"], url_path="v1/accounts/sign-up", permission_classes=[permissions.IsAuthenticated])
     @extend_schema(
         summary="Sign up a new user",
         description="This method is used to create a new account for a user, it creates a blank account profile in the process as well.",
