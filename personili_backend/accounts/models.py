@@ -167,7 +167,7 @@ class ActionToken(TimeStampedModel):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     token = models.CharField(max_length=255, unique=True)
     token_type = models.CharField(max_length=255, choices=TOKEN_TYPES, default=EMAIL_VERIFICATION)
-    expiry_date = models.DateTimeField(default=datetime.now(UTC) + timedelta(days=1))
+    expiry_date = models.DateTimeField()
     account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='action_tokens')
 
     class Meta:
@@ -203,7 +203,7 @@ class ActionToken(TimeStampedModel):
             token=token,
             account_id=account_id,
             token_type=token_type,
-            expiry_date=expiry_date
+            expiry_date=expiry_date if expiry_date else datetime.now(UTC) + timedelta(days=1)
         )
         return token.token
         
