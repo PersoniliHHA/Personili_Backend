@@ -5,7 +5,7 @@ from accounts.models import Account, AccountProfile
 from utils.aws.storage.s3_engine import s3_engine
 
 # Security
-from security.jwt import create_access_token, create_refresh_token
+from personili_backend.security.jwt_utils import create_access_token, create_refresh_token
 
 def create_main_account_sign_up_response(account: Account, AccountProfile: AccountProfile) -> dict:
     """

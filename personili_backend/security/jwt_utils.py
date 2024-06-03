@@ -5,6 +5,8 @@ from datetime import datetime, timedelta
 # settings
 from django.conf import settings
 
+from accounts.models import Account
+
 
 # Cryptogrphay imports
 import hmac
@@ -129,3 +131,51 @@ def verify_access_token(token: str):
 def verify_refresh_token(token :str):
     """This method verifies a refresh token"""
     return verify_jwt_token(token, "ref")
+
+def verify_token_components(token_components: dict):
+    """
+    Verify the payload and header components of a token
+    """
+     # Check the signature 
+    if not token_components.get('is_valid_token'):
+        return None
+    
+    # Check the header
+    header = token_components.get('header')
+    header = json.loads(header)
+    if not header or header.get('alg') != settings.JWT_SIGNING_ALGORITHM or header.get('typ') != 'JWT':
+        return None
+    
+    # Check the payload
+    payload = token_components.get('payload')
+    payload = json.loads(payload)
+    if not payload:
+        return None
+    
+    # Check the registered claims
+    registered_claims = payload.get('registered_claims')
+    if not registered_claims:
+        return None
+    if registered_claims.get("iss") != "personili":
+        return None
+    if registered_claims.get("sub") != "personili_api":
+        return None
+    
+    # check the private claims
+    private_claims = payload.get('private_claims')
+    if not private_claims:
+        return None
+    
+    # get the account profile
+    account_id = private_claims.get('aid')
+    if not account_id:
+        return None
+    
+    # check if the account profile exists
+    try:
+        account = Account.objects.get(id=account_id)
+        return account
+    except Account.DoesNotExist:
+        return None
+    
+    return None

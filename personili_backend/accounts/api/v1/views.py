@@ -35,7 +35,7 @@ import logging as logger
 from typing import Optional
 
 # Security
-from security.jwt import create_access_token, create_refresh_token
+from personili_backend.security.jwt_utils import create_access_token, create_refresh_token, verify_refresh_token, verify_token_components
 
 logger.basicConfig(level=logger.DEBUG)
 
@@ -58,7 +58,7 @@ class AccountAuthViewSet(viewsets.ViewSet):
     ###################### Main Acount APIS (login, signup, verify email, reset password)#
     ######################################################################################
     # Main account sign up api
-    @action(detail=False, methods=["POST"], url_path="v1/accounts/sign-up", permission_classes=[permissions.IsAuthenticated])
+    @action(detail=False, methods=["POST"], url_path="v1/accounts/sign-up", permission_classes=[permissions.AllowAny])
     @extend_schema(
         summary="Sign up a new user",
         description="This method is used to create a new account for a user, it creates a blank account profile in the process as well.",
@@ -292,10 +292,22 @@ class AccountAuthViewSet(viewsets.ViewSet):
 
         return None
     
-    @action(detail=False, methods=["POST"], url_path="v1/refresh", permission_classes=[permissions.IsAuthenticated])
+    @action(detail=False, methods=["POST"], url_path="v1/refresh", permission_classes=[permissions.AllowAny])
     def main_account_refresh(self, request, *args, **kwargs):
         """This method is used to refresh the user token"""
+        
+        # Extract the refresh token from the request body
+        refresh_token: str = request.data.get('refresh_token')
 
+        # Check the validity of the refresh token
+        token_components = verify_refresh_token(refresh_token)
+        if token_components.get('is_valid_token') is False:
+            return Response({"error": "UNAUTHORIZED"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        # Check the token components
+        account = verify_token_components(token_components)
+        if account is None:
+            return Response({"error": "UNAUTHORIZED"}, status=status.HTTP_401_UNAUTHORIZED)
 
         return None
     
