@@ -40,11 +40,12 @@ class MainAccountSignUpserializer(serializers.Serializer):
     # Fields to create the account profile
     first_name = serializers.CharField(required=False, allow_blank=True, allow_null=True, validators=[validate_username])
     last_name = serializers.CharField(required=False, allow_blank=True, allow_null=True, validators=[validate_username])
+    username = serializers.CharField(required=False, allow_blank=True, allow_null=True, validators=[validate_username])
     phone_number = serializers.CharField(required=False, allow_blank=True, allow_null=True,validators=[validate_phone_number])
     date_of_birth = serializers.CharField(required=False, allow_null=True, allow_blank=True, validators=[validate_date_of_birth])
-    age = serializers.CharField(required=False, allow_null=True, allow_blank=True, validators=[validate_age])
     gender = serializers.CharField(required=False, allow_blank=True, allow_null=True, validators=[validate_gender])
     profile_picture = serializers.ImageField(required=False, allow_null=True, allow_empty_file=True, validators=[validate_profile_image])
+    social_media_links = serializers.JSONField(required=False, allow_null=True, allow_empty=True)
 
     def validate(self, data):
         # Check that the two password entries match
@@ -69,10 +70,11 @@ class MainAccountSignUpserializer(serializers.Serializer):
             account=account,
             first_name=validated_data.get('first_name'),
             last_name=validated_data.get('last_name'),
+            username=validated_data.get('username'),
             phone_number=validated_data.get('phone_number'),
-            age=validated_data.get('age'),
             date_of_birth=validated_data.get('date_of_birth'),
-            gender=validated_data.get("gender")
+            gender=validated_data.get("gender"),
+            social_media_links=validated_data.get('social_media_links')
         )
         account_profile.save()
 
