@@ -134,10 +134,11 @@ class AccountProfile(TimeStampedModel):
     user_name = models.CharField(max_length=255, null=True, blank=True)
     profile_picture_path = models.CharField(max_length=255, null=True, blank=True)
     phone_number = models.CharField(max_length=255, null=True, blank=True)
-    age = models.CharField(null=True, blank=True)
     gender = models.CharField(max_length=15, choices=GENDER_CHOICES, default='not specified', null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
+    
     social_media_links = models.JSONField(null=True, blank=True)
+    biography = models.TextField(null=True, blank=True)
 
     class Meta:
         db_table = 'account_profiles'
@@ -290,6 +291,8 @@ class DeliveryAddress(TimeStampedModel):
     zip_code = models.CharField(max_length=255, null=True)
     state = models.CharField(max_length=255, null=True)
     country = models.CharField(max_length=255, null=True)
+
+    default_delivery_address = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'delivery_addresses'
