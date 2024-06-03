@@ -3,7 +3,7 @@ from rest_framework.authentication import BaseAuthentication
 
 from django.conf import settings
 
-from personili_backend.security.jwt_utils import verify_access_token, verify_refresh_token
+from security.jwt_utils import verify_access_token, verify_refresh_token
 
 from accounts.models import Account
 
