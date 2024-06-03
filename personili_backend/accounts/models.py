@@ -131,11 +131,13 @@ class AccountProfile(TimeStampedModel):
     account = models.OneToOneField(Account, on_delete=models.CASCADE, related_name='profile', db_index=True)
     first_name = models.CharField(max_length=255, null=True, blank=True)
     last_name = models.CharField(max_length=255, null=True, blank=True)
+    user_name = models.CharField(max_length=255, null=True, blank=True)
     profile_picture_path = models.CharField(max_length=255, null=True, blank=True)
     phone_number = models.CharField(max_length=255, null=True, blank=True)
     age = models.CharField(null=True, blank=True)
     gender = models.CharField(max_length=15, choices=GENDER_CHOICES, default='not specified', null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
+    social_media_links = models.JSONField(null=True, blank=True)
 
     class Meta:
         db_table = 'account_profiles'

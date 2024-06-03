@@ -242,7 +242,7 @@ class AccountAuthViewSet(viewsets.ViewSet):
         
         # Check if an account with this email already exists
         if not Account.objects.filter(email=email).exists():
-            return Response({"error": "UNAUTHORIZED"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
         
         # Check if the email is blacklisted or suspended
         if AccountBlacklist.is_email_blacklisted(email):
