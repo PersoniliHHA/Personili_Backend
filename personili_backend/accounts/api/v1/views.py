@@ -17,7 +17,6 @@ from django.db import transaction, IntegrityError, DatabaseError, Error
 # Serializer imports
 from accounts.api.v1.serializers import MainAccountSignUpserializer, MainAccountSignInserializer, UserProfileSerializer, WalletSerializer, TransactionSerializer, FeedbackCreateSerializer
 from accounts.api.v1.serializers import DeliveryAddressCreateSerializer, DeliveryAddressUpdateSerializer, DeliveryAddressDeleteSerializer, DeliveryAddressGetSerializer, BaseDeliveryAddressSerializer
-from security.permissions.is_authenticated import IsAuthenticatedWithJWT
 
 # Models
 from accounts.models import AccountProfile, ActionToken, DeliveryAddress, Wallet, Transaction, Feedback, AccountBlacklist
@@ -296,7 +295,7 @@ class AccountAuthViewSet(viewsets.ViewSet):
     @action(detail=False, methods=["POST"], url_path="v1/refresh", permission_classes=[permissions.IsAuthenticated])
     def main_account_refresh(self, request, *args, **kwargs):
         """This method is used to refresh the user token"""
-        
+
 
         return None
     
