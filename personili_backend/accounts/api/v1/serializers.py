@@ -45,7 +45,7 @@ class MainAccountSignUpserializer(serializers.Serializer):
     date_of_birth = serializers.CharField(required=False, allow_null=True, allow_blank=True, validators=[validate_date_of_birth])
     gender = serializers.CharField(required=False, allow_blank=True, allow_null=True, validators=[validate_gender])
     profile_picture = serializers.ImageField(required=False, allow_null=True, allow_empty_file=True, validators=[validate_profile_image])
-    social_media_links = serializers.JSONField(required=False, allow_null=True, allow_empty=True)
+    social_media_links = serializers.JSONField(required=False, allow_null=True)
 
     def validate(self, data):
         # Check that the two password entries match
