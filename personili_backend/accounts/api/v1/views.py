@@ -292,20 +292,30 @@ class AccountAuthViewSet(viewsets.ViewSet):
 
         return None
     
-    @action(detail=False, methods=["POST"], url_path="v1/accounts/refresh", permission_classes=[permissions.AllowAny])
-    def main_account_refresh(self, request, *args, **kwargs):
+    @action(detail=False, methods=["POST"], url_path="v1/accounts/{account_id}/refresh", permission_classes=[permissions.AllowAny])
+    def main_account_refresh(self, request, account_id, *args, **kwargs):
         """This method is used to refresh the user token"""
         
         # Extract the refresh token from the request body
         refresh_token: str = request.data.get('refresh_token')
 
+        # Check if the account exists using the id
+        if account_id:
+            account = Account.objects.filter(id=account_id).first()
+            if account is None:
+                return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
+        else:  
+            return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
+            
         # Check the validity of the refresh token
         token_components = verify_refresh_token(refresh_token)
         if token_components.get('is_valid_token') is False:
+            print(token_components.get("is_valid_token"))
             return Response({"error": "UNAUTHORIZED"}, status=status.HTTP_401_UNAUTHORIZED)
 
         # Check the token components
         account = verify_token_components(token_components)
+        print(account)
         if account is None:
             return Response({"error": "UNAUTHORIZED"}, status=status.HTTP_401_UNAUTHORIZED)
 
