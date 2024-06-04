@@ -1,6 +1,6 @@
 # Standard Library Imports
 import base64
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 
 # settings
 from django.conf import settings
@@ -95,7 +95,7 @@ def verify_jwt_token(token: str, type: str):
 def create_access_token(account_id: str):
     """This method creates an access token"""
     nb_days = settings.JWT_ACCESS_TOKEN_EXPIRATION 
-    future_exp_time = datetime.utcnow() + timedelta(days=nb_days)
+    future_exp_time = datetime.now(UTC) + timedelta(days=nb_days)
     registred_claims = {
         "iss": "personili",
         "sub": "personili_api",
@@ -159,6 +159,10 @@ def verify_token_components(token_components: dict):
     if registered_claims.get("iss") != "personili":
         return None
     if registered_claims.get("sub") != "personili_api":
+        return None
+    
+    # Check that the token is not expired
+    if 'exp' in registered_claims and datetime.now(UTC) > datetime.fromtimestamp(registered_claims.get('exp')):
         return None
     
     # check the private claims
