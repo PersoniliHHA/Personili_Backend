@@ -162,7 +162,7 @@ def verify_token_components(token_components: dict):
         return None
     
     # Check that the token is not expired
-    if 'exp' in registered_claims and datetime.now(UTC).timestamp() > registered_claims.get('exp'):
+    if not 'exp' in registered_claims or datetime.now(UTC).timestamp() > registered_claims.get('exp'):
         return None
     
     # check the private claims
