@@ -298,6 +298,8 @@ class AccountAuthViewSet(viewsets.ViewSet):
         
         # Extract the refresh token from the request body
         refresh_token: str = request.data.get('refresh_token')
+        if not refresh_token :
+            return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
 
         # Check if the account exists using the id
         if account_id:
@@ -309,8 +311,8 @@ class AccountAuthViewSet(viewsets.ViewSet):
             
         # Check the validity of the refresh token
         token_components = verify_refresh_token(refresh_token)
-        if token_components.get('is_valid_token') is False:
-            print(token_components.get("is_valid_token"))
+        print(token_components)
+        if not token_components.get('is_valid_token'):
             return Response({"error": "UNAUTHORIZED"}, status=status.HTTP_401_UNAUTHORIZED)
 
         # Check the token components
