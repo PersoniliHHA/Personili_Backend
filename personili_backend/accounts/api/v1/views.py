@@ -321,7 +321,16 @@ class AccountAuthViewSet(viewsets.ViewSet):
         if account is None:
             return Response({"error": "UNAUTHORIZED"}, status=status.HTTP_401_UNAUTHORIZED)
 
-        return None
+        # Generate a new access and refresh tokens
+        access_token: str = create_access_token(str(account.id))
+        refresh_token: str = create_refresh_token(str(account.id))
+
+        return Response({"message":
+                         {
+                            "access_token": access_token,
+                            "refresh_token": refresh_token
+                        }
+                    }, status=status.HTTP_200_OK)
     
     
 #################################
