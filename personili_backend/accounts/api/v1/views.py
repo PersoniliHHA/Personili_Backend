@@ -292,7 +292,7 @@ class AccountAuthViewSet(viewsets.ViewSet):
 
         return None
     
-    @action(detail=False, methods=["POST"], url_path="v1/refresh", permission_classes=[permissions.AllowAny])
+    @action(detail=False, methods=["POST"], url_path="v1/accounts/refresh", permission_classes=[permissions.AllowAny])
     def main_account_refresh(self, request, *args, **kwargs):
         """This method is used to refresh the user token"""
         
