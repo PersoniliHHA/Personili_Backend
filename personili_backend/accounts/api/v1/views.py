@@ -126,7 +126,7 @@ class AccountAuthViewSet(viewsets.ViewSet):
         serializer = MainAccountSignUpserializer(data=request.data)
         if not serializer.is_valid():
             return Response({
-                                "ERROR": "INIVALID_REQUEST_DATA",
+                                "ERROR": "BAD_REQUEST",
                                 "DETAILS": serializer.errors,
                             }, 
                             status=status.HTTP_400_BAD_REQUEST)
@@ -135,7 +135,7 @@ class AccountAuthViewSet(viewsets.ViewSet):
 
         #2 - Check if the email is blacklisted
         if AccountBlacklist.objects.filter(email=email).exists():
-            return Response({"ERROR": "EMAIL_BLACKLISTED"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"ERROR": "EMAIL_BLACKLISTED"}, status=status.HTTP_401_UNAUTHORIZED)
 
         # 3 - Check if an account with this email already exists
         if Account.objects.filter(email=email).exists():
@@ -157,7 +157,7 @@ class AccountAuthViewSet(viewsets.ViewSet):
                 return Response({"message": "Account created, check email for account activation",}, status=status.HTTP_201_CREATED)
 
         except (IntegrityError, DatabaseError, Error) as e:
-            return Response({"ERROR": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"ERROR": "UNKNOWN_ERROR"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     # Main account sign in api
     @action(detail=False, methods=["POST"], url_path="v1/accounts/sign-in", permission_classes=[permissions.AllowAny])
@@ -203,7 +203,7 @@ class AccountAuthViewSet(viewsets.ViewSet):
         access_token = create_access_token(str(account.id))
         refresh_token = create_refresh_token(str(account.id))
 
-        return Response({"message": "SUCCESSFUL LOGIN",
+        return Response({"message": "SUCCESSFUL_LOGIN",
                          "details": {
                             "access_token": access_token,
                             "refresh_token": refresh_token,
@@ -325,19 +325,18 @@ class AccountAuthViewSet(viewsets.ViewSet):
         access_token: str = create_access_token(str(account.id))
         refresh_token: str = create_refresh_token(str(account.id))
 
-        return Response({"message":
-                         {
+        return Response({"message":{
                             "access_token": access_token,
                             "refresh_token": refresh_token
                         }
                     }, status=status.HTTP_200_OK)
     
     
-#################################
-#                               #
-#        Profile ViewSet        #
-#                               #
-#################################
+##############################################
+#                               
+#        Main account Profile ViewSet        #
+#                               
+##############################################
 
 
 class AccountProfileViewSet(viewsets.ModelViewSet):
