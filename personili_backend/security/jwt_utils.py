@@ -118,7 +118,7 @@ def create_refresh_token(account_id: str):
         "exp": future_exp_time.timestamp()
     }
     private_claims = {
-        "ar": account_id,
+        "aid": account_id,
         "tk": "ref"
     }
     refresh_token: str = generate_jwt_token(registred_claims, private_claims)
@@ -132,47 +132,63 @@ def verify_refresh_token(token :str):
     """This method verifies a refresh token"""
     return verify_jwt_token(token, "ref")
 
-def verify_token_components(token_components: dict):
+def verify_token_components(token_components: dict, token_type: str):
     """
     Verify the payload and header components of a token
     """
      # Check the signature 
     if not token_components.get('is_valid_token'):
+        print("not a valid token")
         return None
     
     # Check the header
     header = token_components.get('header')
     header = json.loads(header)
     if not header or header.get('alg') != settings.JWT_SIGNING_ALGORITHM or header.get('typ') != 'JWT':
+        print("not a valid header")
         return None
     
     # Check the payload
     payload = token_components.get('payload')
     payload = json.loads(payload)
     if not payload:
+        print("not valid payload")
         return None
     
     # Check the registered claims
     registered_claims = payload.get('registered_claims')
     if not registered_claims:
+        print("not a vlid reg claims")
         return None
     if registered_claims.get("iss") != "personili":
+        print("not a valid iss")
         return None
     if registered_claims.get("sub") != "personili_api":
+        print("not a valid sub")
         return None
     
     # Check that the token is not expired
     if not 'exp' in registered_claims or datetime.now(UTC).timestamp() > registered_claims.get('exp'):
+        print("not a valid exp")
         return None
     
     # check the private claims
     private_claims = payload.get('private_claims')
     if not private_claims:
+        print("not valid private claims")
+        return None
+    
+    if not private_claims.get('tk'):
+        print("not a valid tk")
+        return None
+    if private_claims.get('tk') != token_type:
+        print("not a valid tk")
         return None
     
     # get the account profile
     account_id = private_claims.get('aid')
     if not account_id:
+        print("not a valid")
         return None
     
     # check if the account profile exists

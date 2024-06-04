@@ -316,7 +316,7 @@ class AccountAuthViewSet(viewsets.ViewSet):
             return Response({"error": "UNAUTHORIZED"}, status=status.HTTP_401_UNAUTHORIZED)
 
         # Check the token components
-        account = verify_token_components(token_components)
+        account = verify_token_components(token_components, "ref")
         print(account)
         if account is None:
             return Response({"error": "UNAUTHORIZED"}, status=status.HTTP_401_UNAUTHORIZED)
