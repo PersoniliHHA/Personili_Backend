@@ -25,7 +25,7 @@ from accounts.models import ActionToken, Feedback, AccountBlacklist
 from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample, OpenApiTypes
 
 # Services 
-from personili_backend.accounts.api.v1.services.email_activation_usecases import send_email_activation_link, verify_email_verification_token, verify_account_email
+from accounts.api.v1.services.email_activation_usecases import send_email_activation_link, verify_email_verification_token, verify_account_email
 
 # Validators
 from utils.validators import validate_email
