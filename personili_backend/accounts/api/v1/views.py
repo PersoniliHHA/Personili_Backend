@@ -203,8 +203,12 @@ class AccountAuthViewSet(viewsets.ViewSet):
         access_token = create_access_token(str(account.id))
         refresh_token = create_refresh_token(str(account.id))
 
+        
+
         return Response({"message": "SUCCESSFUL_LOGIN",
                          "details": {
+                            "account_id": str(account.id),
+                            "profile_id": str(account.profile.id),
                             "access_token": access_token,
                             "refresh_token": refresh_token,
                          }},status=status.HTTP_200_OK)
@@ -268,30 +272,35 @@ class AccountAuthViewSet(viewsets.ViewSet):
 
         return Response({"message": "ACTIVATION_EMAIL_RESENT"}, status=status.HTTP_200_OK)
     
+    # Main account forgot password api
     @action(detail=False, methods=["POST"], url_path="v1/main-account-update-password", permission_classes=[permissions.IsAuthenticated])
     def main_account_update_password(self, request, *args, **kwargs):
         """This method is used to update the user password"""
 
         return None
     
+    # Main account update email api
     @action(detail=False, methods=["POST"], url_path="v1/main-account-update-email", permission_classes=[permissions.IsAuthenticated])
     def main_account_update_email(self, request, *args, **kwargs):
         """This method is used to update the user email"""
 
         return None
     
+    # Main account social sign up api
     @action(detail=False, methods=["POST"], url_path="v1/main-account-social-sign-up", permission_classes=[permissions.AllowAny])
     def main_account_social_sign_up(self, request, *args, **kwargs):
         """This method is used to sign up a user using social media"""
 
         return None
     
+    # Main account social sign in api
     @action(detail=False, methods=["POST"], url_path="v1/main-account-social-sign-in", permission_classes=[permissions.AllowAny])
     def main_account_social_sign_in(self, request, *args, **kwargs):
         """This method is used to sign in a user using social media"""
 
         return None
     
+    # Main account social sign in api
     @action(detail=False, methods=["POST"], url_path="v1/accounts/(?P<account_id>[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})/refresh", permission_classes=[permissions.AllowAny])
     def main_account_refresh(self, request, account_id, *args, **kwargs):
         """This method is used to refresh the user token"""
@@ -348,6 +357,25 @@ class AccountProfileViewSet(viewsets.ModelViewSet):
     serializer_class = UserProfileSerializer
     # Set the permission, only authenticated users can access this api and only their profile
     
+
+    # API to get the user personal information GET
+    @action(detail=False, methods=["GET"], url_path="v1/accounts/(?P<account_id>[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})/profile/(?P<profile_id>[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})", permission_classes=[IsAuthenticated])
+    # API to update the user personal information PUT
+
+
+    # API to get the user delivery addresses GET
+    # API to add a new delivery address POST (user allowed maximum of 3 addresses)
+    # API to update a delivery address PUT
+
+
+    # API to get the users orders GET
+    # API to get the users order details GET
+
+
+    # API to get the user favorites GET
+    # API to add a new favorite POST
+    # API to delete a favorite DELETE
+
 
 #################################
 #                               #
