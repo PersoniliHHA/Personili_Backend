@@ -15,9 +15,7 @@ from django.contrib.auth import get_user_model, authenticate
 from django.db import transaction, IntegrityError, DatabaseError, Error
 
 # Serializer imports
-from accounts.api.v1.serializers import MainAccountSignUpserializer, MainAccountSignInserializer, UserProfileSerializer, WalletSerializer, TransactionSerializer, FeedbackCreateSerializer
-from accounts.api.v1.serializers import DeliveryAddressCreateSerializer, DeliveryAddressUpdateSerializer, DeliveryAddressDeleteSerializer, DeliveryAddressGetSerializer, BaseDeliveryAddressSerializer
-
+from accounts.api.v1.serializers import MainAccountSignUpserializer, MainAccountSignInserializer, UserProfileSerializer, FeedbackCreateSerializer
 # Models
 from accounts.models import ActionToken, Feedback, AccountBlacklist
 
@@ -370,10 +368,9 @@ class AccountProfileViewSet(viewsets.ModelViewSet):
         
         print("account_id: ", account_id)
         print("profile_id: ", profile_id)
+        print(type(request))
         print(request.user)
         print(request.auth)
-        print(request.auth.payload)
-        print(request.auth.payload.get('sub'))
 
         return Response({"message": "GET_USER_PROFILE"}, status=status.HTTP_200_OK)
     # API to get the user delivery addresses GET
