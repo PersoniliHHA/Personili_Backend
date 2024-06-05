@@ -204,7 +204,6 @@ class AccountAuthViewSet(viewsets.ViewSet):
         refresh_token = create_refresh_token(str(account.id))
 
         
-
         return Response({"message": "SUCCESSFUL_LOGIN",
                          "details": {
                             "account_id": str(account.id),
@@ -361,7 +360,14 @@ class AccountProfileViewSet(viewsets.ModelViewSet):
     # API to get the user personal information GET
     @action(detail=False, methods=["GET"], url_path="v1/accounts/(?P<account_id>[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})/profile/(?P<profile_id>[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})", permission_classes=[IsAuthenticated])
     # API to update the user personal information PUT
-
+    def get_user_profile(self, request, account_id, profile_id, *args, **kwargs):
+        """
+        This method is used to get the user profile
+        """
+        # Get the user profile
+        user_profile = get_object_or_404(AccountProfile, id=profile_id)
+        serializer = UserProfileSerializer(user_profile)
+        return Response(serializer.data)
 
     # API to get the user delivery addresses GET
     # API to add a new delivery address POST (user allowed maximum of 3 addresses)
