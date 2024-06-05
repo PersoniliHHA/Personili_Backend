@@ -19,13 +19,13 @@ from accounts.api.v1.serializers import MainAccountSignUpserializer, MainAccount
 from accounts.api.v1.serializers import DeliveryAddressCreateSerializer, DeliveryAddressUpdateSerializer, DeliveryAddressDeleteSerializer, DeliveryAddressGetSerializer, BaseDeliveryAddressSerializer
 
 # Models
-from accounts.models import AccountProfile, ActionToken, DeliveryAddress, Wallet, Transaction, Feedback, AccountBlacklist
+from accounts.models import ActionToken, Feedback, AccountBlacklist
 
 # drf spectacular imports
 from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample, OpenApiTypes
 
 # Services 
-from accounts.api.v1.services.email_activation import send_email_activation_link, verify_email_verification_token, verify_account_email
+from personili_backend.accounts.api.v1.services.email_activation_usecases import send_email_activation_link, verify_email_verification_token, verify_account_email
 
 # Validators
 from utils.validators import validate_email
@@ -36,6 +36,7 @@ from typing import Optional
 
 # Security
 from security.jwt_utils import create_access_token, create_refresh_token, verify_refresh_token, verify_token_components
+from security.authentication.jwt_authentication_class import JWTAuthentication
 
 logger.basicConfig(level=logger.DEBUG)
 
@@ -358,17 +359,18 @@ class AccountProfileViewSet(viewsets.ModelViewSet):
     
 
     # API to get the user personal information GET
-    @action(detail=False, methods=["GET"], url_path="v1/accounts/(?P<account_id>[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})/profile/(?P<profile_id>[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})", permission_classes=[IsAuthenticated])
+    @action(detail=False, methods=["GET"], url_path="v1/accounts/(?P<account_id>[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})/profiles/(?P<profile_id>[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})/personal-infos", authentication_classes=[JWTAuthentication])
     # API to update the user personal information PUT
     def get_user_profile(self, request, account_id, profile_id, *args, **kwargs):
         """
         This method is used to get the user profile
         """
-        # Get the user profile
-        user_profile = get_object_or_404(AccountProfile, id=profile_id)
-        serializer = UserProfileSerializer(user_profile)
-        return Response(serializer.data)
+        # First check if the account exists and that it's not banned or suspended
 
+        
+        print("account_id: ", account_id)
+        print("profile_id: ", profile_id)
+        print(request.user)
     # API to get the user delivery addresses GET
     # API to add a new delivery address POST (user allowed maximum of 3 addresses)
     # API to update a delivery address PUT

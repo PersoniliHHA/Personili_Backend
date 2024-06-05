@@ -461,5 +461,21 @@ class AccountBlacklist(TimeStampedModel):
                     return True
         return False
 
+    @classmethod
+    def is_ip_blacklisted(cls, ip_address: str) -> bool:
+        """
+        Check if an ip address is suspended or blacklisted, if it is return True
+        A suspended ip address is an ip address that is temporarily banned, meaning 
+        there is at least a single entry where the ip address is either banned or
+        suspended with a end date that hasn't expired
+        """
+        account = cls.objects.filter(ip_address=ip_address)
+        if account:
+            for entry in account:
+                if entry.suspended and entry.end_date_blacklisted > datetime.now(UTC):
+                    return True
+                if entry.banned:
+                    return True
+        return False
     def __str__(self) -> str:
         return self.email + ' - ' + self.reason

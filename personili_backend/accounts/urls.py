@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 # Django imports
 from django.urls import path, include
 
-from .api.v1.views import AccountAuthViewSet
+from .api.v1.views import AccountAuthViewSet, AccountProfileViewSet
 
 ############################## Router for User Management API ##############################
 
@@ -12,6 +12,7 @@ router = DefaultRouter()
 # Account management APIs
 ## Public user management APIs
 router.register('accounts', AccountAuthViewSet, basename='accounts')
+router.register('profiles', AccountProfileViewSet, basename='profiles')
 #router.register('signin', PublicUserSignInViewSet, basename='signin')
 #router.register('feedback', PublicFeedbackViewSet, basename='feedback')
 
