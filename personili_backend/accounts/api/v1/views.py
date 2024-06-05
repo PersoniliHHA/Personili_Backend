@@ -371,6 +371,9 @@ class AccountProfileViewSet(viewsets.ModelViewSet):
         print("account_id: ", account_id)
         print("profile_id: ", profile_id)
         print(request.user)
+        print(request.auth)
+        print(request.auth.payload)
+        print(request.auth.payload.get('sub'))
     # API to get the user delivery addresses GET
     # API to add a new delivery address POST (user allowed maximum of 3 addresses)
     # API to update a delivery address PUT
