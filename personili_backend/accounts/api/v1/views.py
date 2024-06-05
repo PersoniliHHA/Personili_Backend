@@ -374,6 +374,8 @@ class AccountProfileViewSet(viewsets.ModelViewSet):
         print(request.auth)
         print(request.auth.payload)
         print(request.auth.payload.get('sub'))
+
+        return Response({"message": "GET_USER_PROFILE"}, status=status.HTTP_200_OK)
     # API to get the user delivery addresses GET
     # API to add a new delivery address POST (user allowed maximum of 3 addresses)
     # API to update a delivery address PUT
