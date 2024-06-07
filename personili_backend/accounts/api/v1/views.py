@@ -7,6 +7,7 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.request import Request
 
 
 
@@ -30,7 +31,6 @@ from utils.validators import validate_email
 
 # Standard imports
 import logging as logger
-from typing import Optional
 
 # Security
 from security.jwt_utils import create_access_token, create_refresh_token, verify_refresh_token, verify_token_components
@@ -369,8 +369,7 @@ class AccountProfileViewSet(viewsets.ModelViewSet):
         print("account_id: ", account_id)
         print("profile_id: ", profile_id)
         print(type(request))
-        print(request.user)
-        print(request.auth)
+        print(request.user.id)
 
         return Response({"message": "GET_USER_PROFILE"}, status=status.HTTP_200_OK)
     # API to get the user delivery addresses GET
