@@ -40,6 +40,7 @@ def get_main_account_personal_information(account_id: str, account_profile_id: s
     # Check if the account profile belongs to the account
     if account_profile.account != account:
         print("condition 7")
+        print(account_profile.account, account)
         return Response({"error": "FORBIDDEN"}, status=status.HTTP_403_FORBIDDEN)
     
     # Return the account profile information
