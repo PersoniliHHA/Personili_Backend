@@ -373,6 +373,10 @@ class AccountProfileViewSet(viewsets.ModelViewSet):
             print("condition 2")
             print(request.user.id != account_id)
             print(request.user.profile.id != profile_id)
+            print(type(request.user.id))
+            print(type(account_id))
+            print(type(request.user.profile.id))
+            print(type(profile_id))
             print("condition 2")
             return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
         
