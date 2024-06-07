@@ -37,6 +37,8 @@ def get_main_account_personal_information(account_id: str, account_profile_id: s
         print("condition 6")
         return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
     
+    print("account_profile.account", account_profile.account)
+    print("account", account)
     # Check if the account profile belongs to the account
     if account_profile.account != account:
         print("condition 7")
