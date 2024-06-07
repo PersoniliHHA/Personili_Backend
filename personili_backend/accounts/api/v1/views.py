@@ -369,7 +369,7 @@ class AccountProfileViewSet(viewsets.ModelViewSet):
             return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
         
         # Check that the path parameters are the same as the authenticated user
-        if request.user.id != account_id or request.user.profile.id != profile_id:
+        if str(request.user.id) != account_id or str(request.user.profile.id) != profile_id:
             print("condition 2")
             print(request.user.id != account_id)
             print(request.user.profile.id != profile_id)
@@ -380,7 +380,7 @@ class AccountProfileViewSet(viewsets.ModelViewSet):
             print("condition 2")
             return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
         
-        return get_main_account_personal_information(account_id, profile_id)
+        return get_main_account_personal_information(str(account_id), str(profile_id))
     
     # API to get the user delivery addresses GET
     # API to add a new delivery address POST (user allowed maximum of 3 addresses)
