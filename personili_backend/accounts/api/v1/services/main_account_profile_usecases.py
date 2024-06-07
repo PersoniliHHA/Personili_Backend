@@ -16,25 +16,30 @@ def get_main_account_personal_information(account_id: str, account_profile_id: s
     """
     # Validate the parameters
     if not account_id or not account_profile_id:
+        print("condition 3")
         return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
     
     # Check if the account exists
     account = Account.objects.filter(id=account_id).first()
     if not account:
+        print("condition 4")
         return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
     
     # First check that the account is not blacklisted
     account_blacklist = AccountBlacklist.is_email_blacklisted(account.email)
     if account_blacklist:
+        print("condition 5")
         return Response({"error": "UNAUTHORIZED"}, status=status.HTTP_401_UNAUTHORIZED)
     
     # Check if the account profile exists
     account_profile = AccountProfile.objects.filter(id=account_profile_id).first()
     if not account_profile:
+        print("condition 6")
         return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
     
     # Check if the account profile belongs to the account
     if account_profile.account != account:
+        print("condition 7")
         return Response({"error": "FORBIDDEN"}, status=status.HTTP_403_FORBIDDEN)
     
     # Return the account profile information
