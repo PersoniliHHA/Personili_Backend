@@ -50,7 +50,7 @@ def get_main_account_personal_information(account_id: str, account_profile_id: s
         "phone_number": account_profile.phone_number,
         "date_of_birth": account_profile.date_of_birth,
         "username": account_profile.username,
-        "gender": account_profile,
+        "gender": account_profile.gender,
         "social_media_links": account_profile.social_media_links,
         "biography": account_profile.biography,
         "profile_picture": s3_engine.generate_presigned_s3_url(account_profile.profile_picture_path) if account_profile.profile_picture_path else None,
