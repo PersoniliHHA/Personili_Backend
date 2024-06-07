@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from utils.aws.storage.s3_engine import s3_engine
 
 ###################### GET, LIST ###################################################
-def get_main_account_personal_information(request_account_id: str, account_profile_id: str) -> Response:
+def get_main_account_personal_information(account_id: str, account_profile_id: str) -> Response:
     """
     Get the personal information of the main account
     """
