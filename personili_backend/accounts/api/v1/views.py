@@ -370,14 +370,6 @@ class AccountProfileViewSet(viewsets.ModelViewSet):
         
         # Check that the path parameters are the same as the authenticated user
         if str(request.user.id) != account_id or str(request.user.profile.id) != profile_id:
-            print("condition 2")
-            print(request.user.id != account_id)
-            print(request.user.profile.id != profile_id)
-            print(type(request.user.id))
-            print(type(account_id))
-            print(type(request.user.profile.id))
-            print(type(profile_id))
-            print("condition 2")
             return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
         
         return get_main_account_personal_information(str(account_id), str(profile_id))
