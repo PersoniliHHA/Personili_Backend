@@ -49,7 +49,7 @@ def get_main_account_personal_information(account_id: str, account_profile_id: s
         "email": account.email,
         "phone_number": account_profile.phone_number,
         "date_of_birth": account_profile.date_of_birth,
-        "username": account.username,
+        "username": account_profile.username,
         "gender": account_profile,
         "social_media_links": account_profile.social_media_links,
         "biography": account_profile.biography,
