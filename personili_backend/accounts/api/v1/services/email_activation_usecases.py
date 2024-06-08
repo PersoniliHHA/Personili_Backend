@@ -39,7 +39,7 @@ def send_email_activation_link(email_to_activate: str,
                                last_name: str = None):
     
     # Get the domain name from env variables
-    domain: str = os.getenv("DOMAIN_NAME", "http://localhost:8000")
+    domain: str = os.getenv("DOMAIN_NAME", "http://localhost:5000")
 
     # Generate the activation link
     activation_link: str = generate_email_activation_link(
