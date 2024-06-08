@@ -376,7 +376,7 @@ class AccountProfileViewSet(viewsets.ModelViewSet):
         return get_main_account_personal_information(str(account_id), str(profile_id))
     
     # API to get the user delivery addresses GET
-    @action(detail=False, methods=["GET"], url_path="v1/profiles/accounts/<str:account_id>/profiles/<str:profile_id>/delivery-addresses", authentication_classes=[JWTAuthentication])
+    @action(detail=False, methods=["GET"], url_path="v1/profiles/accounts/(?P<account_id>[^/]+)/profiles/(?P<profile_id>[^/]+)/delivery-addresses", authentication_classes=[JWTAuthentication])
     def get_user_delivery_addresses(self, request, account_id, profile_id, *args, **kwargs):
         """
         This method is used to get the user delivery addresses
