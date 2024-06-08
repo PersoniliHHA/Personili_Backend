@@ -1,5 +1,5 @@
 from datetime import UTC, datetime, timedelta
-from typing import Set, Tuple
+from typing import Set, Tuple, List
 from django.db import models
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from uuid import uuid4
@@ -293,6 +293,26 @@ class DeliveryAddress(TimeStampedModel):
 
     class Meta:
         db_table = 'delivery_addresses'
+
+    @classmethod
+    def get_delivery_addresses_by_account_profile(cls, account_profile_id: str) -> Set[DeliveryAddress]:
+        """
+        This method returns a list of delivery addresses related to an account profile
+        """
+        delivery_addresses = cls.objects.filter(account_profile_id=account_profile_id)
+        response : List[dict] = []
+        for delivery_address in delivery_addresses:
+            response.append({
+                "id": delivery_address.id,
+                "street": delivery_address.street,
+                "city": delivery_address.city,
+                "zip_code": delivery_address.zip_code,
+                "state": delivery_address.state,
+                "country": delivery_address.country,
+                "default_delivery_address": delivery_address.default_delivery_address
+            })
+
+        return response
 
     def __str__(self):
         return str(self.id) + " - " + self.user_profile.user.email

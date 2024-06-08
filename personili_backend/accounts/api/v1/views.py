@@ -26,6 +26,7 @@ from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample
 # Services 
 from accounts.api.v1.services.email_activation_usecases import send_email_activation_link, verify_email_verification_token, verify_account_email
 from accounts.api.v1.services.main_account_profile_usecases import get_main_account_personal_information, get_main_account_delivery_addresses
+
 # Validators
 from utils.validators import validate_email
 
@@ -375,6 +376,21 @@ class AccountProfileViewSet(viewsets.ModelViewSet):
         return get_main_account_personal_information(str(account_id), str(profile_id))
     
     # API to get the user delivery addresses GET
+    @action(detail=False, methods=["GET"], url_path="v1/profiles/accounts/(?P<account_id>[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})/profiles/(?P<profile_id>[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})/delivery-addresses", authentication_classes=[JWTAuthentication])
+    def get_user_delivery_addresses(self, request, account_id, profile_id, *args, **kwargs):
+        """
+        This method is used to get the user delivery addresses
+        """
+        # Check if the account_id and profile_id are not empty
+        if not account_id or not profile_id:
+            return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Check that the path parameters are the same as the authenticated user
+        if str(request.user.id) != account_id or str(request.user.profile.id) != profile_id:
+            return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        return get_main_account_delivery_addresses(str(account_id), str(profile_id))
+
     # API to add a new delivery address POST (user allowed maximum of 3 addresses)
     # API to update a delivery address PUT
 
