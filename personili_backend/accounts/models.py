@@ -315,7 +315,7 @@ class DeliveryAddress(TimeStampedModel):
         return response
 
     def __str__(self):
-        return str(self.id) + " - " + self.user_profile.user.email
+        return str(self.id) + " - " + self.account_profile.account.email
 
 
 #########################################
