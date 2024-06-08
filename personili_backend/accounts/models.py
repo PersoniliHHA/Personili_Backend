@@ -314,6 +314,13 @@ class DeliveryAddress(TimeStampedModel):
 
         return response
 
+    @classmethod
+    def is_owner_of_delivery_address(cls, account_profile_id: str, delivery_address_id: str) -> bool:
+        """
+        Check if a given account profile is the owner of a given delivery address
+        """
+        return cls.objects.filter(account_profile_id=account_profile_id, id=delivery_address_id).exists()
+    
     def __str__(self):
         return str(self.id) + " - " + self.account_profile.account.email
 

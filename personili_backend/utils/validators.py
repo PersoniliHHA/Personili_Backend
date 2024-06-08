@@ -105,3 +105,33 @@ def is_all_valid_uuid4(list_of_uuids: list[str]):
         except ValueError:
             return False
     return True
+
+def validate_social_media_links(value):
+    """
+    Validate the social media links, they should be a valid url
+    """
+    if value:
+        for key, link in value.items():
+            if not re.match(r"^http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+$", link):
+                raise ValidationError("INVALID_SOCIAL_MEDIA_LINKS")
+    return value
+
+def validate_zip_code(value):
+    """
+    Validate the zip code, it should be a valid zip code, no more than 10 digits
+    """
+    if value:
+        if len(value) > 10:
+            raise ValidationError("INVALID_ZIP_CODE")
+        if not re.match(r"^[0-9]*$", value):
+            raise ValidationError("INVALID_ZIP_CODE")
+    return value
+
+def validate_delivery_address_text(value):
+    """
+    Validate the text, it should not be empty or more than 500 characters
+    """
+    if value:
+        if len(value) > 100 or len(value) == 0:
+            raise ValidationError("INVALID_DELIVERY_ADDRESS_TEXT")
+    return value

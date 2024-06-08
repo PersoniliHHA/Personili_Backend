@@ -1,6 +1,6 @@
 # validators
 from django.contrib.auth.password_validation import validate_password
-from utils.validators import validate_age, validate_email, custom_validate_password, validate_profile_image, validate_username, validate_phone_number, validate_date_of_birth, validate_gender
+from utils.validators import validate_delivery_address_text, validate_zip_code, validate_email, custom_validate_password, validate_profile_image, validate_username, validate_phone_number, validate_date_of_birth, validate_gender
 
 # Rest Framework imports
 from rest_framework import serializers
@@ -131,18 +131,6 @@ class MainAccountProfileSerializer(serializers.ModelSerializer):
 # Delivery address serializers  #
 #                               #
 #################################
-# Serializer for GET requests
-class DeliveryAddressGetSerializer(serializers.ModelSerializer):
-    """
-    Serializer for Delivery Address
-    """
-
-    # Mark all fields as required
-
-    class Meta:
-        model = DeliveryAddress
-        exclude = ('created_at', 'updated_at')
-
 
 # Serializer for POST requests
 class DeliveryAddressCreateSerializer(serializers.ModelSerializer):
@@ -150,16 +138,16 @@ class DeliveryAddressCreateSerializer(serializers.ModelSerializer):
     Serializer for Delivery Address
     """
     # Mark all fields as required
-    street = serializers.CharField(required=True)
-    city = serializers.CharField(required=True)
-    zip_code = serializers.CharField(required=True)
-    state = serializers.CharField(required=True)
-    country = serializers.CharField(required=True)
+    street = serializers.CharField(required=True, validators=[validate_delivery_address_text])
+    city = serializers.CharField(required=True, validators=[validate_delivery_address_text])
+    zip_code = serializers.CharField(required=True, validators=[validate_zip_code])
+    state = serializers.CharField(required=True, validators=[validate_delivery_address_text])
+    country = serializers.CharField(required=True, validators=[validate_delivery_address_text])
 
     class Meta:
         model = DeliveryAddress
         exclude = ('created_at', 'updated_at')
-        read_only_fields = ('id', 'user_profile')
+        read_only_fields = ('id', 'account_profile')
 
 
 # Serializer for PUT requests
@@ -167,26 +155,17 @@ class DeliveryAddressUpdateSerializer(serializers.ModelSerializer):
     """
     Serializer for Delivery Address
     """
+    # Mark all the optional fields that are allowed to be updated
+    street = serializers.CharField(required=False, validators=[validate_delivery_address_text])
+    city = serializers.CharField(required=False, validators=[validate_delivery_address_text])
+    zip_code = serializers.CharField(required=False, validators=[validate_zip_code])
+    state = serializers.CharField(required=False, validators=[validate_delivery_address_text])
+    country = serializers.CharField(required=False, validators=[validate_delivery_address_text])
+
     class Meta:
         model = DeliveryAddress
-        exclude = ('created_at', 'updated_at', 'user_profile')
-        read_only_fields = ('id',)
-
-
-# Serializer for DELETE requests
-class DeliveryAddressDeleteSerializer(serializers.ModelSerializer):
-    """
-    Serializer for Delivery Address
-    """
-    class Meta:
-        model = DeliveryAddress
-        fields = ('id',)
-        read_only_fields = ('id',)
-
-
-class BaseDeliveryAddressSerializer(serializers.ModelSerializer):
-    pass
-
+        exclude = ('created_at', 'updated_at', 'account_profile')
+        read_only_fields = ('id','account_profile', 'created_at')
 
 #################################
 #                               #

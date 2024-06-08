@@ -17,6 +17,7 @@ from django.db import transaction, IntegrityError, DatabaseError, Error
 
 # Serializer imports
 from accounts.api.v1.serializers import MainAccountSignUpserializer, MainAccountSignInserializer, UserProfileSerializer, FeedbackCreateSerializer
+from accounts.api.v1.serializers import DeliveryAddressCreateSerializer, DeliveryAddressUpdateSerializer
 # Models
 from accounts.models import ActionToken, Feedback, AccountBlacklist
 
@@ -25,7 +26,7 @@ from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample
 
 # Services 
 from accounts.api.v1.services.email_activation_usecases import send_email_activation_link, verify_email_verification_token, verify_account_email
-from accounts.api.v1.services.main_account_profile_usecases import get_main_account_personal_information, get_main_account_delivery_addresses
+from accounts.api.v1.services.main_account_profile_usecases import get_main_account_personal_information, get_main_account_delivery_addresses, create_new_delivery_address, update_existing_delivery_address
 
 # Validators
 from utils.validators import validate_email
@@ -392,7 +393,44 @@ class AccountProfileViewSet(viewsets.ModelViewSet):
         return get_main_account_delivery_addresses(str(account_id), str(profile_id))
 
     # API to add a new delivery address POST (user allowed maximum of 3 addresses)
+    @action(detail=False, methods=["POST"], url_path="v1/profiles/accounts/(?P<account_id>[^/]+)/profiles/(?P<profile_id>[^/]+)/delivery-addresses", authentication_classes=[JWTAuthentication])
+    def create_new_delivery_address(self, request, account_id, profile_id, *args, **kwargs):
+        """
+        This method is used to create a new delivery address
+        """
+        if not account_id or not profile_id:
+            return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Check that the path parameters are the same as the authenticated user
+        if str(request.user.id) != account_id or str(request.user.profile.id) != profile_id:
+            return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Validate the request data
+        serializer = DeliveryAddressCreateSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        return create_new_delivery_address(request.data, str(account_id), str(profile_id))
+    
     # API to update a delivery address PUT
+    @action(detail=False, methods=["PUT"], url_path="v1/profiles/accounts/(?P<account_id>[^/]+)/profiles/(?P<profile_id>[^/]+)/delivery-addresses/(?P<delivery_address_id>[^/])", authentication_classes=[JWTAuthentication])
+    def update_existing_delivery_address(self, request, account_id, profile_id, delivery_address_id, *args, **kwargs):
+        """
+        This method is used to update an existing delivery address
+        """
+        if not account_id or not profile_id or not delivery_address_id:
+            return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Check that the path parameters are the same as the authenticated user
+        if str(request.user.id) != account_id or str(request.user.profile.id) != profile_id:
+            return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Validate the request data
+        serializer = DeliveryAddressUpdateSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        return update_existing_delivery_address(str(account_id), str(profile_id), str(delivery_address_id), request.data)
 
 
     # API to get the users orders GET
