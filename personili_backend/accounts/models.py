@@ -295,7 +295,7 @@ class DeliveryAddress(TimeStampedModel):
         db_table = 'delivery_addresses'
 
     @classmethod
-    def get_delivery_addresses_by_account_profile(cls, account_profile_id: str) -> Set[DeliveryAddress]:
+    def get_delivery_addresses_by_account_profile(cls, account_profile_id: str) -> list[dict]:
         """
         This method returns a list of delivery addresses related to an account profile
         """
