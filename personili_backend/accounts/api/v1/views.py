@@ -356,6 +356,11 @@ class AccountProfileViewSet(viewsets.ModelViewSet):
 
     serializer_class = UserProfileSerializer 
      
+     ##############################################
+    #                               
+    #       Profile personal information          #
+    #                               
+    ###############################################
     # API to get the user personal information GET
     @action(detail=False, methods=["GET"], url_path="v1/profiles/accounts/(?P<account_id>[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})/profiles/(?P<profile_id>[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})/personal-infos", authentication_classes=[JWTAuthentication])
     def get_user_profile(self, request, account_id, profile_id, *args, **kwargs):
@@ -372,6 +377,8 @@ class AccountProfileViewSet(viewsets.ModelViewSet):
             return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
         
         return get_main_account_personal_information(str(account_id), str(profile_id))
+    
+    # 
     
     # API to get the user delivery addresses GET
     @action(detail=False, methods=["GET"], url_path="v1/profiles/accounts/(?P<account_id>[^/]+)/profiles/(?P<profile_id>[^/]+)/delivery-addresses", authentication_classes=[JWTAuthentication])

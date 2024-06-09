@@ -31,11 +31,11 @@ class S3Engine:
     # Regular user S3 paths
     base_regular_users_path = base_path + '/regular_users'
     
-    # profile
-    regular_user_profile_path_template = base_regular_users_path + '/{user_profile_id}-{user_email}/profile'
+    # main account profile
+    regular_user_profile_path_template = base_regular_users_path + '/{regular_user_profile_id}-{regular_user_email}/profile'
     
     # designs
-    regular_user_designs_path_template = base_regular_users_path + '/{user_profile_id}-{user_email}/designs/{design_id}-{design_title}'
+    regular_user_designs_path_template = base_regular_users_path + '/{regular_user_profile_id}-{regular_user_email}/designs/{design_id}-{design_title}'
 
 
     # Designers S3 paths

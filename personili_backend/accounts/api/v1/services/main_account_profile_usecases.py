@@ -62,7 +62,7 @@ def verify_delivery_address_and_profile(account_profile: AccountProfile, deliver
         # Check if the account profile has reached the maximum limit of delivery addresses
         delivery_addresses_count = DeliveryAddress.objects.filter(account_profile=account_profile).count()
         if delivery_addresses_count >= 3:
-            return (Response({"error": "MAXIMUM_"}, status=status.HTTP_400_BAD_REQUEST), False)
+            return (Response({"error": "MAXIMUM_NUMBER_REACHED"}, status=status.HTTP_400_BAD_REQUEST), False)
         
         return (None, True)
     elif action == "delete" or action == "update":
@@ -76,6 +76,8 @@ def verify_delivery_address_and_profile(account_profile: AccountProfile, deliver
             return (Response({"error": "FORBIDDEN"}, status=status.HTTP_403_FORBIDDEN), False)
         
         return (delivery_address, True)
+    
+
 ###################### Personal infos ###################################################
 ########## Personal infos GET
 def get_main_account_personal_information(account_id: str, account_profile_id: str) -> Response:
@@ -108,6 +110,36 @@ def get_main_account_personal_information(account_id: str, account_profile_id: s
     return Response(personal_info, status=status.HTTP_200_OK)
 
 ########## Personal infos UPDATE
+
+def update_main_account_personal_information(account_id: str, account_profile_id: str, updated_personal_info: dict) -> Response:
+    """
+    This allows the user to update their personal info, including :
+    - the profile picture
+    - the biography
+    - the social media links
+    - the phone number
+    """
+    # Verify the account and account profile
+    response, success = verify_account_and_account_profile(account_id, account_profile_id)
+    if not success:
+        return response
+    
+    account_profile = response[1]
+    account = response[0]
+
+    # Update the personal information
+    account_profile.biography = updated_personal_info.get("biography")
+    account_profile.social_media_links = updated_personal_info.get("social_media_links")
+    account_profile.phone_number = updated_personal_info.get("phone_number")
+    # First delete the old profile picture
+    if account_profile.profile_picture_path:
+        s3_engine.delete_file_from_s3(account_profile.profile_picture_path)
+    # Upload the new profile picture
+    if updated_personal_info.get("profile_picture"):
+        account_profile.profile_picture_path = s3_engine.upload_file_to_s3(updated_personal_info.get("profile_picture"), "regular_user_profile", {"regular_user_profile_id": account.id, "regular_user_email": account_profile.id})
+    account_profile.save()
+
+    return Response({"message": "Personal information updated successfully"}, status=status.HTTP_200_OK)
 
 
 ################################## Delivery addresses ########################################
