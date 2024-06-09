@@ -92,6 +92,7 @@ def get_main_account_personal_information(account_id: str, account_profile_id: s
     
     # Return the account profile information
     personal_info: dict = {
+        "profile_id": account_profile.id,
         "first_name": account_profile.first_name,
         "last_name": account_profile.last_name,
         "email": account.email,

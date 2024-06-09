@@ -354,13 +354,10 @@ class AccountProfileViewSet(viewsets.ModelViewSet):
     only authenticated users can access this api and only their profile
     """
 
-    serializer_class = UserProfileSerializer
-    # Set the permission, only authenticated users can access this api and only their profile
-    
+    serializer_class = UserProfileSerializer 
      
     # API to get the user personal information GET
     @action(detail=False, methods=["GET"], url_path="v1/profiles/accounts/(?P<account_id>[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})/profiles/(?P<profile_id>[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})/personal-infos", authentication_classes=[JWTAuthentication])
-    # API to update the user personal information PUT
     def get_user_profile(self, request, account_id, profile_id, *args, **kwargs):
         """
         This method is used to get the user profile
