@@ -54,7 +54,7 @@ def verify_delivery_address_and_profile(account_profile: AccountProfile, deliver
             city=delivery_address_id["city"],
             zip_code=delivery_address_id["zip_code"],
             country=delivery_address_id["country"],
-            phone_number=delivery_address_id["phone_number"]
+            state=delivery_address_id["state"]
         ).first()
         if delivery_address:
             return (Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST), False)
