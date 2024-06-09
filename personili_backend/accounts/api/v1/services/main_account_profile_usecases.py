@@ -50,9 +50,9 @@ def verify_delivery_address_and_profile(account_profile: AccountProfile, deliver
         # Check if the delivery address already exists
         delivery_address = DeliveryAddress.objects.filter(
             account_profile=account_profile,
-            street_address=delivery_address_id["street_address"],
+            street=delivery_address_id["street"],
             city=delivery_address_id["city"],
-            postal_code=delivery_address_id["postal_code"],
+            zip_code=delivery_address_id["zip_code"],
             country=delivery_address_id["country"],
             phone_number=delivery_address_id["phone_number"]
         ).first()
@@ -211,7 +211,7 @@ def update_existing_delivery_address(account_id: str, account_profile_id: str, d
     delivery_address = response
 
     # Update the delivery address
-    delivery_address.street_address = address.get("street_address")
+    delivery_address.street = address.get("street")
     delivery_address.city = address.get("city")
     delivery_address.postal_code = address.get("postal_code")
     delivery_address.state = address.get("state")
