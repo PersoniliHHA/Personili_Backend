@@ -414,7 +414,7 @@ class AccountProfileViewSet(viewsets.ModelViewSet):
         if not serializer.is_valid():
             return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
         
-        return create_new_delivery_address(request.data, str(account_id), str(profile_id))
+        return create_new_delivery_address(address=request.data, account_id=str(account_id), account_profile_id=str(profile_id))
     
     # API to update a delivery address PUT
     @action(detail=False, methods=["PUT"], url_path="v1/profiles/accounts/(?P<account_id>[^/]+)/profiles/(?P<profile_id>[^/]+)/delivery-addresses/(?P<delivery_address_id>[^/])", authentication_classes=[JWTAuthentication])
