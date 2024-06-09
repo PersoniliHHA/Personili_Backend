@@ -181,11 +181,11 @@ def create_new_delivery_address(account_id: str, account_profile_id: str, addres
     # Create the delivery address
     new_delivery_address = DeliveryAddress(
         account_profile=account_profile,
-        street_address=address["street_address"],
-        city=address["city"],
-        postal_code=address["postal_code"],
-        state=address["state"],
-        country=address["country"],
+        street=address.get("street"),
+        city=address.get("city"),
+        zip_code=address.get("zip_code"),
+        state=address.get("state"),
+        country=address.get("country"),
     )
     new_delivery_address.save()
 
