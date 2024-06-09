@@ -362,7 +362,7 @@ class AccountProfileViewSet(viewsets.ModelViewSet):
     #                               
     ###############################################
     # API to get the user personal information GET
-    @action(detail=False, methods=["GET"], url_path="v1/profiles/accounts/(?P<account_id>[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})/profiles/(?P<profile_id>[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})/personal-infos", authentication_classes=[JWTAuthentication])
+    @action(detail=False, methods=["GET"], url_path="v1/profiles/accounts/(?P<account_id>[^/]+)/profiles/(?P<profile_id>[^/]+)/personal-infos", authentication_classes=[JWTAuthentication])
     def get_user_profile(self, request, account_id, profile_id, *args, **kwargs):
         """
         This method is used to get the user profile
@@ -381,7 +381,7 @@ class AccountProfileViewSet(viewsets.ModelViewSet):
     # 
     
     # API to get the user delivery addresses GET
-    @action(detail=False, methods=["GET"], url_path="v1/profiles/accounts/(?P<account_id>[^/]+)/profiles/(?P<profile_id>[^/]+)/delivery", authentication_classes=[JWTAuthentication])
+    @action(detail=False, methods=["GET"], url_path="v1/profiles/accounts/(?P<account_id>[^/]+)/profiles/(?P<profile_id>[^/]+)/delivery-addresses/list", authentication_classes=[JWTAuthentication])
     def get_user_delivery_addresses(self, request, account_id, profile_id, *args, **kwargs):
         """
         This method is used to get the user delivery addresses
