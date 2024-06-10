@@ -351,3 +351,6 @@ WEBPACK_LOADER = {
 }
 
 
+APPEND_SLASH=False
+
+
