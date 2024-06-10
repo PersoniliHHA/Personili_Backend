@@ -265,6 +265,26 @@ class RolePermission(TimeStampedModel):
     def __str__(self) -> str:
         return self.role.name + ' - ' + self.permission.permission_name
 
+#########################################
+#             Account Role model        #
+#########################################
+class RoleAccount(TimeStampedModel):
+    """
+    Role-account model, each account can have multiple roles. These roles are linked to one and only one account.
+    A single role-account is composed of the following fields:
+    - Role account id as a primary key
+    - Role id as a foreign key
+    - Account id as a foreign key
+    """
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    role = models.ForeignKey(Role, on_delete=models.CASCADE, related_name='role_accounts')
+    account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='role_accounts')
+
+    class Meta:
+        db_table = 'role_accounts'
+
+    def __str__(self) -> str:
+        return self.role.name + ' - ' + self.account.email
 
 #########################################
 #          Delivery address model       #
