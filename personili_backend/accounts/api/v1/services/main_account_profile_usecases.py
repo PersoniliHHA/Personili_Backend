@@ -210,15 +210,25 @@ def update_existing_delivery_address(account_id: str, account_profile_id: str, d
     
     delivery_address = response
 
-    # Update the delivery address
-    delivery_address.street = address.get("street")
-    delivery_address.city = address.get("city")
-    delivery_address.postal_code = address.get("postal_code")
-    delivery_address.state = address.get("state")
-    delivery_address.country = address.get("country")
+    # Update the delivery address only if the new date is not null
+    delivery_address.street = address.get("street") if address.get("street") else delivery_address.street
+    delivery_address.city = address.get("city") if address.get("city") else delivery_address.city
+    delivery_address.zip_code = address.get("zip_code") if address.get("zip_code") else delivery_address.zip_code
+    delivery_address.state = address.get("state") if address.get("state") else delivery_address.state
+    delivery_address.country = address.get("country") if address.get("country") else delivery_address.country
     delivery_address.save()
 
-    return Response({"message": "Delivery address updated successfully"}, status=status.HTTP_200_OK)
+    # Return the newly updated delivery address
+    updated_delivery_address: dict = {
+        "delivery_address_id": delivery_address.id,
+        "street": delivery_address.street,
+        "city": delivery_address.city,
+        "zip_code": delivery_address.zip_code,
+        "state": delivery_address.state,
+        "country": delivery_address.country,
+    }
+
+    return Response(updated_delivery_address, status=status.HTTP_200_OK)
 
 
 def delete_existing_delivery_address(account_id: str, account_profile_id: str, delivery_address_id: str) -> Response:
