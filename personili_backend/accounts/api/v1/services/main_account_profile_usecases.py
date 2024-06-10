@@ -216,6 +216,7 @@ def update_existing_delivery_address(account_id: str, account_profile_id: str, d
     delivery_address.zip_code = address.get("zip_code") if address.get("zip_code") else delivery_address.zip_code
     delivery_address.state = address.get("state") if address.get("state") else delivery_address.state
     delivery_address.country = address.get("country") if address.get("country") else delivery_address.country
+    delivery_address.default_delivery_address = address.get("default_delivery_address") if address.get("default_delivery_address") else delivery_address.default_delivery_address
     delivery_address.save()
 
     # Return the newly updated delivery address
