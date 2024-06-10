@@ -303,7 +303,7 @@ class DeliveryAddress(TimeStampedModel):
         response : List[dict] = []
         for delivery_address in delivery_addresses:
             response.append({
-                "id": delivery_address.id,
+                "delivery_address_id": delivery_address.id,
                 "street": delivery_address.street,
                 "city": delivery_address.city,
                 "zip_code": delivery_address.zip_code,
