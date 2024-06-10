@@ -417,7 +417,7 @@ class AccountProfileViewSet(viewsets.ModelViewSet):
         return create_new_delivery_address(address=request.data, account_id=str(account_id), account_profile_id=str(profile_id))
     
     # API to update a delivery address PUT
-    @action(detail=True, methods=["PUT"], url_path="v1/profiles/accounts/(?P<account_id>[^/]+)/profiles/(?P<profile_id>[^/]+)/delivery-addresses/(?P<delivery_address_id>[^/])", authentication_classes=[JWTAuthentication])
+    @action(detail=False, methods=["PUT"], url_path="v1/profiles/accounts/(?P<account_id>[^/]+)/profiles/(?P<profile_id>[^/]+)/delivery-addresses/(?P<delivery_address_id>[^/])/update", authentication_classes=[JWTAuthentication])
     def update_existing_delivery_address(self, request, account_id, profile_id, delivery_address_id, *args, **kwargs):
         """
         This method is used to update an existing delivery address
