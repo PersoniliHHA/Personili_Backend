@@ -396,7 +396,7 @@ class AccountProfileViewSet(viewsets.ModelViewSet):
         return get_main_account_delivery_addresses(str(account_id), str(profile_id))
 
     # API to add a new delivery address POST (user allowed maximum of 3 addresses)
-    @action(detail=False, methods=["POST"], url_path="v1/profiles/accounts/(?P<account_id>[^/]+)/profiles/(?P<profile_id>[^/]+)/delivery-addresses/", authentication_classes=[JWTAuthentication])
+    @action(detail=False, methods=["POST"], url_path="v1/profiles/accounts/(?P<account_id>[^/]+)/profiles/(?P<profile_id>[^/]+)/delivery-addresses", authentication_classes=[JWTAuthentication])
     def create_new_delivery_address(self, request, account_id, profile_id, *args, **kwargs):
         """
         This method is used to create a new delivery address
