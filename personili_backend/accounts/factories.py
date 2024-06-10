@@ -24,7 +24,7 @@ class AccountProfileFactory(DjangoModelFactory):
     account = factory.SubFactory(AccountFactory)
     first_name = Faker('first_name')
     last_name = Faker('last_name')
-    username = Faker('username')
+    username = Faker('user_name')
     phone_number = Faker('phone_number')
     profile_picture_path = Faker('file_path')
     date_of_birth = Faker('date')
