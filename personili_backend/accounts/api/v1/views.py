@@ -396,7 +396,7 @@ class AccountProfileViewSet(viewsets.ModelViewSet):
         return get_main_account_delivery_addresses(str(account_id), str(profile_id))
 
     # API to add a new delivery address POST (user allowed maximum of 3 addresses)
-    @action(detail=False, methods=["POST"], url_path="v1/profiles/accounts/(?P<account_id>[^/]+)/profiles/(?P<profile_id>[^/]+)/delivery-addresses", authentication_classes=[JWTAuthentication])
+    @action(detail=False, methods=["POST"], url_path="v1/profiles/accounts/(?P<account_id>[^/]+)/profiles/(?P<profile_id>[^/]+)/delivery-addresses/create", authentication_classes=[JWTAuthentication])
     def create_new_delivery_address(self, request, account_id, profile_id, *args, **kwargs):
         """
         This method is used to create a new delivery address
@@ -416,7 +416,7 @@ class AccountProfileViewSet(viewsets.ModelViewSet):
         return create_new_delivery_address(address=request.data, account_id=str(account_id), account_profile_id=str(profile_id))
     
     # API to update a delivery address PUT
-    @action(detail=False, methods=["PUT"],  url_path="v1/profiles/accounts/(?P<account_id>[^/]+)/profiles/(?P<profile_id>[^/]+)/delivery-addresses/(?P<delivery_address_id>[^/]+)", authentication_classes=[JWTAuthentication])
+    @action(detail=False, methods=["PUT"],  url_path="v1/profiles/accounts/(?P<account_id>[^/]+)/profiles/(?P<profile_id>[^/]+)/delivery-addresses/(?P<delivery_address_id>[^/]+)/update", authentication_classes=[JWTAuthentication])
     def update_existing_delivery_address(self, request, account_id, profile_id, delivery_address_id, *args, **kwargs):
         """
         This method is used to update an existing delivery address
@@ -436,7 +436,7 @@ class AccountProfileViewSet(viewsets.ModelViewSet):
         return update_existing_delivery_address(str(account_id), str(profile_id), str(delivery_address_id), request.data)
 
     # API to delete a delivery address DELETE
-    @action(detail=False, methods=["DELETE"], url_path="v1/profiles/accounts/(?P<account_id>[^/]+)/profiles/(?P<profile_id>[^/]+)/delivery-addresses/(?P<delivery_address_id>[^/]+)", authentication_classes=[JWTAuthentication])
+    @action(detail=False, methods=["DELETE"], url_path="v1/profiles/accounts/(?P<account_id>[^/]+)/profiles/(?P<profile_id>[^/]+)/delivery-addresses/(?P<delivery_address_id>[^/]+)/delete", authentication_classes=[JWTAuthentication])
     def delete_delivery_address(self, request, account_id, profile_id, delivery_address_id, *args, **kwargs):
         """
         This method is used to delete a delivery address
