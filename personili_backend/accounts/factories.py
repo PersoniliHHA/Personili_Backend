@@ -41,4 +41,4 @@ class AccountProfileFactory(DjangoModelFactory):
     date_of_birth = Faker('date')
     gender = Faker('random_element', elements=('Male', 'Female', 'Not specified'))
     biography = Faker('text')
-    social_media_links = factory.LazyFunction(lambda: json.dumps(generate_social_media_links))
+    social_media_links = factory.LazyFunction(lambda: json.dumps(generate_social_media_links()))
