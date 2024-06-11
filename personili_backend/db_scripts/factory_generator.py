@@ -1,4 +1,4 @@
-from personili_backend.accounts.factories import AccountFactory, AccountProfileFactory
+from accounts.factories import AccountFactory, AccountProfileFactory
 
 
 
