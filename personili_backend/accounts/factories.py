@@ -2,8 +2,9 @@ from accounts.models import Account, AccountProfile, AccountBlacklist, DeliveryA
 import factory
 from factory import Faker
 from factory.django import DjangoModelFactory
+import json
 
-################## Account Factory ##################
+################## Account Factory #########################
 class AccountFactory(DjangoModelFactory):
     class Meta:
         model = Account
@@ -17,6 +18,16 @@ class AccountFactory(DjangoModelFactory):
 
 
 ################## Account Profile Factory ##################
+def generate_social_media_links():
+    return {
+        'facebook': Faker('url'),
+        'twitter': Faker('url'),
+        'instagram': Faker('url'),
+        'linkedin': Faker('url'),
+        'pinterest': Faker('url'),
+        'youtube': Faker('url'),
+        'tiktok': Faker('url'),
+    }
 class AccountProfileFactory(DjangoModelFactory):
     class Meta:
         model = AccountProfile
@@ -26,16 +37,8 @@ class AccountProfileFactory(DjangoModelFactory):
     last_name = Faker('last_name')
     username = Faker('user_name')
     phone_number = Faker('phone_number')
-    profile_picture_path = Faker('file_path')
+    profile_picture_path = Faker('file_path', depth=3, category="image")
     date_of_birth = Faker('date')
     gender = Faker('random_element', elements=('Male', 'Female', 'Not specified'))
     biography = Faker('text')
-    social_media_links = {
-        'facebook': Faker('url'),
-        'twitter': Faker('url'),
-        'instagram': Faker('url'),
-        'linkedin': Faker('url'),
-        'pinterest': Faker('url'),
-        'youtube': Faker('url'),
-        'tiktok': Faker('url'),
-    }
+    social_media_links = factory.LazyFunction(lambda: json.dumps(generate_social_media_links))
