@@ -1,5 +1,5 @@
 from organizations.models import Organization, Workshop, OrganizationProfile, OrganizationMembership, WorkshopMembership
-from accounts.models import Account, AccountProfile
+from accounts.models import Account, AccountProfile, Role
 
 # factory boy imports
 import factory
@@ -43,3 +43,9 @@ class OrganizationProfileFactory(DjangoModelFactory):
 
     address = Faker('address')
     social_media_links = factory.LazyFunction(lambda: (generate_social_media_links()))
+
+# Organization Membership Factory
+class OrganizationMembershipFactory(DjangoModelFactory):
+    class Meta:
+        model = OrganizationMembership
+        
