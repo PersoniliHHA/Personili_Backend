@@ -17,6 +17,7 @@ class S3Engine:
     # stores
     # organizations
     # stores
+    # designer profile
 
     # Platfrom S3 paths
     base_platform_path = base_path + '/platform'
@@ -39,7 +40,7 @@ class S3Engine:
 
 
     # Designers S3 paths
-    base_designers_path = base_path + '/designers'
+    base_designers_path = base_path + '/designers/'
     # store profile
     store_profile_path_template = base_designers_path + '/{designer_id}-{designer_email}/stores/{store_id}/store_profile'
     # design

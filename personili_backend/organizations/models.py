@@ -70,13 +70,7 @@ class OrganizationProfile(TimeStampedModel):
     is_sponsored = models.BooleanField(default=False)
     
     address = models.TextField()
-    
-    facebook_link = models.URLField(null=True, blank=True)
-    instagram_link = models.URLField(null=True, blank=True)
-    x_link = models.URLField(null=True, blank=True)
-    linkedin_link = models.URLField(null=True, blank=True)
-    youtube_link = models.URLField(null=True, blank=True)
-    
+    social_media_links = models.JSONField(null=True, blank=True)
     
     class Meta:
         db_table = 'organization_profiles'

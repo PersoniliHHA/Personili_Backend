@@ -20,18 +20,62 @@ from utils.utilities import add_to_dict
 from utils.aws.storage.s3_engine import s3_engine
 
 #########################################
+#          Designer model               #
+#########################################
+class DesignerProfile(TimeStampedModel):
+    """
+    A designer a profile is linked to an account
+    A designer profile has the following attributes :
+    - id
+    - account
+    - biography
+    - designer_profile_picture_path
+    - social_media_links
+    - designer_logo_path
+    - designer_banner_path
+    - designer_verified
+    - designer_sponsored
+
+    """
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    account = models.OneToOneField(AccountProfile, on_delete=models.CASCADE, related_name='designer_profile')
+    biography = models.TextField(null=True, blank=True)
+    designer_profile_picture_path = models.CharField(max_length=255, null=True, blank=True)
+    social_media_links = models.JSONField(null=True, blank=True)
+    designer_logo_path = models.CharField(max_length=255, null=True, blank=True)
+    designer_banner_path = models.CharField(max_length=255, null=True, blank=True)
+    designer_verified = models.BooleanField(default=False)
+    designer_website = models.CharField(max_length=255, null=True, blank=True)
+
+    # Administration information
+    tax_number = models.CharField(max_length=255, null=True, blank=True)
+    registration_number = models.CharField(max_length=255, null=True, blank=True)
+    registration_date = models.DateField(null=True, blank=True)
+    registration_location = models.CharField(max_length=255, null=True, blank=True)
+    registration_country = models.CharField(max_length=255, null=True, blank=True)
+    registration_certificate_path = models.CharField(max_length=255, null=True, blank=True)
+
+    class Meta:
+        db_table = 'designer_profiles'
+
+    def __str__(self):
+        return self.account.account.email + " - " + self.account.account.username
+
+
+
+#########################################
 #             Store model               #
 #########################################
 class Store(TimeStampedModel):
     """
     Model for a store, it has an id, a name, 
-    a biography and is linked to one and only one user profile
+    a biography and is linked to one and only one designer profile
     """
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     name = models.CharField(max_length=255)
     # user can can have many stores linked to its profile
-    account_profile = models.ForeignKey(AccountProfile, on_delete=models.DO_NOTHING, related_name='store')
+    designer_profile = models.ForeignKey(DesignerProfile, on_delete=models.CASCADE, related_name='stores')
 
     class Meta:
         db_table = 'stores'
@@ -49,24 +93,6 @@ class Store(TimeStampedModel):
             'collections': self.get_related_collections(),
             'collections_and_designs': self.get_collections_and_their_designs(),
         }
-
-
-    def get_related_collections(self):
-        """Get the collections related to this store"""
-        return self.collection_set.all()
-
-    def get_collections_and_their_designs(self):
-        """
-        Returns a list of collections related to this store and the designs of each collection
-        """
-        collections = self.get_related_collections()
-        collections_and_designs = []
-        for collection in collections:
-            collections_and_designs.append({
-                'collection': collection,
-                'designs': collection.get_designs()
-            })
-        return collections_and_designs
     
 
 #########################################
@@ -90,7 +116,6 @@ class StoreProfile(TimeStampedModel):
     biography = models.TextField(null=True, blank=True)
     store_logo_path = models.CharField(max_length=255, null=True, blank=True)
     store_banner_path = models.CharField(max_length=255, null=True, blank=True)
-    is_verified = models.BooleanField(default=False)
     is_sponsored = models.BooleanField(default=False)
 
 
@@ -99,12 +124,6 @@ class StoreProfile(TimeStampedModel):
 
     def __str__(self):
         return self.store.account_profile.account.email + " - " + self.store.name
-    
-    def get_store_products(self):
-        """
-        This method searches for all the products that belong to the store, it returns a list of products
-        Each product is linked to a store
-        """
 
 
 #########################################
@@ -148,7 +167,7 @@ class Theme(TimeStampedModel):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     name = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
-    logo_path = models.CharField(max_length=255, null=True, blank=True)
+    icon_path = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
         db_table = 'themes'

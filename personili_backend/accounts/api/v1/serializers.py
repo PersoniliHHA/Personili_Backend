@@ -80,7 +80,7 @@ class MainAccountSignUpserializer(serializers.Serializer):
 
         # Check if there is a profile picture so we can store it in S3
         if validated_data.get('profile_picture'):
-            s3_path = s3_engine.upload_file_to_s3(validated_data.get('profile_picture'), 'regular_user_profile', {
+            s3_path = s3_engine.upload_file_to_s3(validated_data.get('profile_picture'), 'regular_user_profile_id', {
                 'user_profile_id': account_profile.id,
                 'user_email': account.email
             })

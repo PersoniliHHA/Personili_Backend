@@ -1,10 +1,10 @@
 # PostgreSQL
 # ------------------------------------------------------------------------------
-POSTGRES_HOST=postgres
-POSTGRES_PORT=5432
-POSTGRES_DB=personili_db
-POSTGRES_USER=rQkgHsQNXmsqrMBQflJjZFJMmrADmZnF
-POSTGRES_PASSWORD=U498XKcfBNORHk3Vjgk0UcFJaSdSyYN2BzYDGFsZg3BZP0Fg38g7Gacsn3SpEx8L
+#POSTGRES_HOST=postgres
+#POSTGRES_PORT=5432
+#POSTGRES_DB=personili_db
+#POSTGRES_USER=rQkgHsQNXmsqrMBQflJjZFJMmrADmZnF
+#POSTGRES_PASSWORD=U498XKcfBNORHk3Vjgk0UcFJaSdSyYN2BzYDGFsZg3BZP0Fg38g7Gacsn3SpEx8L
 
 # PostgreSQL RDS AWS
 # ------------------------------------------------------------------------------
@@ -12,4 +12,4 @@ POSTGRES_HOST=personilihha.cpgyyqom0ps4.eu-west-1.rds.amazonaws.com
 POSTGRES_PORT=5432
 POSTGRES_DB=personilihha
 POSTGRES_USER=persoDbRootUser
-POSTGRES_PASSWORD=swPcowJ7MA5azc7tgEio7J51rR6XFPRodB3uyj4F9gFD6dyi9IQvxRdUrCVDWGIWF0c7hRdtDLM2vTphN0CLa0zDnA9z8uiEuIz
+POSTGRES_PASSWORD=KCkqc7GQEo1cp1hCV96koiaIPw8P7mmdXpboYMy6ehcWub47PklLGYCNz80rhsLxGgDyTLyb97YThA52bhHnXX0cjhIEdv4VU4a
