@@ -1,6 +1,8 @@
 # Factories
 from designs.models import Design, DesignerProfile, Theme, Store, StoreProfile, Collection, DesignLike, DesignPreview
-from accounts.factories import AccountFactory, generate_social_media_links
+from accounts.factories import AccountFactory, AccountProfileFactory, generate_social_media_links
+from organizations.factories import WorkshopFactory
+
 
 # factory boy imports
 import factory
@@ -58,10 +60,65 @@ class ThemeFactory(DjangoModelFactory):
     description = Faker('text')
     icon_path = Faker('file_path', depth=5, category="image")
 
-# DesignLike
-class DesignLikeFactory(DjangoModelFactory):
+# Collection Factory
+class CollectionFactory(DjangoModelFactory):
+    class Meta:
+        model = Collection
+    name = Faker('word')
+    store = factory.SubFactory(StoreFactory)
+    workshop = factory.SubFactory(WorkshopFactory)
+   
+
+# Design
+class DesignFactory(DjangoModelFactory):
+    class Meta:
+        model = Design
+
+    theme = factory.SubFactory(ThemeFactory)
+    title = Faker('word')
+    description = Faker('text')
+    image_path = Faker('file_path', depth=5, category="image")
+    tags = Faker('words')
+    # Design type can be either '2d' or '3d'
+    design_type = Faker('word', ext_word_list=['2d', '3d'])
+    # Design status can be either 'pending', 'approved', 'rejected'
+    status = Faker('word', ext_word_list=['pending', 'approved', 'rejected'])
+
+    to_be_published = Faker('boolean', chance_of_getting_true=90)
+
+    latest_publication_date = Faker('date')
+
+    collection = factory.SubFactory(CollectionFactory)
+
+    workshop = factory.SubFactory(WorkshopFactory)
+    store = factory.SubFactory(StoreFactory)
+    regular_user = factory.SubFactory(AccountFactory)
+    
+    platform_specific = Faker('boolean', chance_of_getting_true=30)
+    # Random float between 0 and 999999
+    base_price = Faker('random_float', min=0, max=999999) if free else 0.0
+
+    sponsored = Faker('boolean', chance_of_getting_true=30)
+
+    free_usage = Faker('boolean', chance_of_getting_true=50)
+    exclusive = Faker('boolean', chance_of_getting_true=50)
+
+    if exclusive:
+        free_usage = False
+    if not exclusive and not free_usage:
+        limited_usage_with_same_collection = Faker('boolean', chance_of_getting_true=50)
+        limited_usage_with_same_workshop = Faker('boolean', chance_of_getting_true=50)
+        limited_usage_with_same_organization = Faker('boolean', chance_of_getting_true=50)
+        limited_usage_with_designer_uploads = Faker('boolean', chance_of_getting_true=50)
+        limited_usage_with_user_uploads = Faker('boolean', chance_of_getting_true=50)
+        limited_usage_with_other_workshops = Faker('boolean', chance_of_getting_true=50)
+        limited_usage_with_other_organizations = Faker('boolean', chance_of_getting_true=50)
+
+
+
+class DesignLike(DjangoModelFactory):
     class Meta:
         model = DesignLike
 
     design = factory.SubFactory(DesignFactory)
-    account = factory.SubFactory(AccountFactory)
+    account_profile = factory.SubFactory(AccountProfileFactory)

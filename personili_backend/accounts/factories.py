@@ -42,3 +42,16 @@ class AccountProfileFactory(DjangoModelFactory):
     gender = Faker('random_element', elements=('Male', 'Female', 'Not specified'))
     biography = Faker('text')
     social_media_links = factory.LazyFunction(lambda: json.dumps(generate_social_media_links()))
+
+
+class DeliveryAddressFactory(DjangoModelFactory):
+    class Meta:
+        model = DeliveryAddress
+
+    account = factory.SubFactory(AccountFactory)
+    street = Faker('address')
+    city = Faker('city')
+    zip_code = Faker('postcode')
+    state = Faker('state')
+    country = Faker('country')
+    is_default = Faker('boolean', chance_of_getting_true=50)

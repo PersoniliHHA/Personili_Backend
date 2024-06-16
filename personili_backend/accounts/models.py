@@ -309,7 +309,7 @@ class DeliveryAddress(TimeStampedModel):
     state = models.CharField(max_length=255, null=True)
     country = models.CharField(max_length=255, null=True)
 
-    default_delivery_address = models.BooleanField(default=False)
+    is_default = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'delivery_addresses'

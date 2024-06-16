@@ -151,11 +151,6 @@ class Collection(TimeStampedModel):
     def __str__(self):
         return str(self.id) + ' - ' + self.name
 
-    def get_designs(self):
-        """Get the designs related to this collection, the design table has a foreign key to collection"""
-        return Design.objects.filter(collection=self)
-        
-
     
 #########################################
 #             Theme model               #
@@ -174,9 +169,6 @@ class Theme(TimeStampedModel):
 
     def __str__(self):
         return str(self.id) + ' - ' + self.name
-    
-    def get_designs_and_their_stores_related_to_this_theme(self):
-        pass
 
 
 
@@ -239,9 +231,8 @@ class Design(TimeStampedModel):
     
     base_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     
-    # free design
-    free = models.BooleanField(default=False)
-
+    platform_specific = models.BooleanField(default=False)
+    
     # sponsored design
     sponsored = models.BooleanField(default=False)
 
@@ -253,7 +244,7 @@ class Design(TimeStampedModel):
     # 2- Exclusive usage, the design can only be used alone 
     exclusive_usage = models.BooleanField(default=False) # this parameter cancels the other parameters
 
-    ## The following parameters are only valid if the exclusive_usage is set to False
+    ## The following parameters are only valid if the exclusive_usage and free usage is set to False
     ## If all of these parameters are set to True, then that's the equiviliant of free usage
     limited_usage_with_same_collection = models.BooleanField(default=False)
     limited_usage_with_same_workshop = models.BooleanField(default=False)
@@ -283,8 +274,6 @@ class Design(TimeStampedModel):
         elif self.workshop:
             self.store = None
             self.regular_user = None
-        if self.free_usage and any([self.exclusive_usage, self.limited_usage_with_same_collection, self.limited_usage_with_same_workshop, self.limited_usage_with_same_organization, self.limited_usage_with_designer_uploads, self.limited_usage_with_user_uploads, self.limited_usage_with_other_workshops, self.limited_usage_with_other_organizations]):
-            raise ValueError('A design can only have one usage type')
         
         if self.exclusive_usage:
             self.free_usage = False
@@ -294,22 +283,27 @@ class Design(TimeStampedModel):
             self.limited_usage_with_designer_uploads = False
             self.limited_usage_with_user_uploads = False
             self.limited_usage_with_other_workshops = False
-        if self.free_usage:
+            self.limited_usage_with_other_organizations = False
+        elif self.free_usage:
             self.exclusive_usage = False
-            self.limited_usage_with_same_collection = True
-            self.limited_usage_with_same_workshop = True
-            self.limited_usage_with_same_organization = True
-            self.limited_usage_with_designer_uploads = True
-            self.limited_usage_with_user_uploads = True
-            self.limited_usage_with_other_organizations = True
-            self.limited_usage_with_other_workshops = True
-        
-        if self.free :
-            self.base_price = 0.0
-        
-        if self.base_price == 0.0:
-            self.free = True
-
+            self.limited_usage_with_same_collection = False
+            self.limited_usage_with_same_workshop = False
+            self.limited_usage_with_same_organization = False
+            self.limited_usage_with_designer_uploads = False
+            self.limited_usage_with_user_uploads = False
+            self.limited_usage_with_other_workshops = False
+            self.limited_usage_with_other_organizations = False
+        else:
+            self.exclusive_usage = False
+            self.free_usage = False
+            if not any([self.limited_usage_with_same_collection,
+                    self.limited_usage_with_same_workshop,
+                    self.limited_usage_with_same_organization,
+                    self.limited_usage_with_designer_uploads,
+                    self.limited_usage_with_user_uploads,
+                    self.limited_usage_with_other_workshops,
+                    self.limited_usage_with_other_organizations]):
+                raise ValueError('At least one of the limited usage parameters should be set to True')
 
         super(Design, self).save(*args, **kwargs)
 
@@ -541,7 +535,7 @@ class Design(TimeStampedModel):
         """
         return DesignLike.objects.filter(design=self, account_profile=account_profile).exists()
 
-    #  
+
 #########################################
 #        Design likes model             #
 #########################################

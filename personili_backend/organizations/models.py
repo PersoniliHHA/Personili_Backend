@@ -11,12 +11,13 @@ class Organization(TimeStampedModel):
     Every organization has a official name and a description
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
-    name = models.CharField(max_length=100)
+    business_name = models.CharField(max_length=100)
+    legal_name = models.CharField(max_length=100)
     description = models.TextField(null=True)
     is_verified = models.BooleanField(default=False)
     commerce_registry_number = models.CharField(max_length=100, null=True)
-    contact_email = models.EmailField(null=True, unique=True)
-    contact_phone = models.CharField(max_length=15, null=True)
+    organization_contact_email = models.EmailField(null=True, unique=True)
+    organization_contact_phone = models.CharField(max_length=15, null=True)
 
     class Meta:
         db_table = 'organizations'
@@ -32,13 +33,13 @@ class OrganizationMembership(TimeStampedModel):
     - Membership id
     - Organization id
     - Account id
-    - Membership status
+    - Membership status (active or inactive)
     - Membership role
-    """
+    """ 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
-    is_active = models.BooleanField(default=True)
+    is_active_membership = models.BooleanField(default=True)
     role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True)
 
     class Meta:
@@ -52,24 +53,19 @@ class OrganizationProfile(TimeStampedModel):
     """
     Every organization has a profile, which contains the following information:
     - Organization id
-    - Organization name
-    - Organization description
-    - Organization logo
-    - Organization address
-    - Organization phone number
-    - Organization email
-    - Organization website
-    - Organization social media links
-    - Organization created at
-    - Organization updated at
+    - Logo path
+    - Banner path
+    - Sponsored status
+    - Head office address
+    - Social media links
+
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     organization = models.OneToOneField(Organization, on_delete=models.CASCADE, related_name='orgprofile')
     logo_path = models.CharField(max_length=255, null=True, blank=True)
     banner_path = models.CharField(max_length=255, null=True, blank=True)
     is_sponsored = models.BooleanField(default=False)
-    
-    address = models.TextField()
+    head_office_address = models.TextField()
     social_media_links = models.JSONField(null=True, blank=True)
     
     class Meta:
@@ -113,13 +109,12 @@ class WorkshopMembership(TimeStampedModel):
     - organization membership id
     - membership status
     - membership role
-    
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE)
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
     organization_membership = models.ForeignKey(OrganizationMembership, on_delete=models.CASCADE)
-    is_active = models.BooleanField(default=True)
+    status = models.BooleanField(default=True)
     role = models.CharField(max_length=100)
 
     class Meta:
@@ -143,7 +138,7 @@ class Inventory(TimeStampedModel):
     name = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
     address = models.TextField(null=True, blank=True)
-    is_active = models.BooleanField(default=True)
+    status = models.BooleanField(default=True)
 
     class Meta:
         db_table = 'inventories'
@@ -172,7 +167,6 @@ class InventoryItem(TimeStampedModel):
     name = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
     quantity = models.IntegerField()
-    base_price = models.DecimalField(max_digits=10, decimal_places=2)
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default='DA')
     alert_threshold = models.IntegerField(default=10)
 
