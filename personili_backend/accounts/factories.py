@@ -11,10 +11,11 @@ class AccountFactory(DjangoModelFactory):
 
     email = Faker('email')
     password = factory.PostGenerationMethodCall('set_password', 'password')
-    email_verified = Faker('boolean', chance_of_getting_true=50)
-    is_active = Faker('boolean', chance_of_getting_true=50)
-    is_staff = Faker('boolean', chance_of_getting_true=50)
-    is_superuser = Faker('boolean', chance_of_getting_true=50)
+    email_verified = Faker('boolean', chance_of_getting_true=80)
+    is_active = Faker('boolean', chance_of_getting_true=90)
+    is_staff = Faker('boolean', chance_of_getting_true=10)
+    is_superuser = Faker('boolean', chance_of_getting_true=0)
+    is_admin = Faker('boolean', chance_of_getting_true=0)
 
 
 ################## Account Profile Factory ##################
@@ -37,9 +38,11 @@ class AccountProfileFactory(DjangoModelFactory):
     last_name = Faker('last_name')
     username = Faker('user_name')
     phone_number = Faker('phone_number')
+    
     profile_picture_path = Faker('file_path', depth=3, category="image")
     date_of_birth = Faker('date')
     gender = Faker('random_element', elements=('Male', 'Female', 'Not specified'))
+    
     biography = Faker('text')
     social_media_links = factory.LazyFunction(lambda: json.dumps(generate_social_media_links()))
 

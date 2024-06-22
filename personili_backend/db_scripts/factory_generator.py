@@ -3,10 +3,46 @@ import random
 from organizations.factories import OrganizationFactory, OrganizationMembershipFactory, OrganizationProfileFactory, WorkshopFactory, WorkshopMembershipFactory, InventoryFactory, InventoryItemFactory
 from designs.factories import DesignerProfileFactory, DesignFactory, StoreFactory, StoreProfileFactory, CollectionFactory
 
+from django.db import transaction
+from accounts.models import Account, AccountProfile, DeliveryAddress
+from designs.models import DesignerProfile, Design, Store, StoreProfile, Collection
+from organizations.models import OrganizationMembership, OrganizationProfile, Organization, OrganizationProfile, Workshop, WorkshopMembership, Inventory, InventoryItem
+from django.core.management import call_command
 
-def personili_local_db_data(data_scale: int=20):
+@transaction.atomic
+def empty_local_db():
+    # Empty the database for relevant models
+    DeliveryAddress.objects.all().delete()
+    AccountProfile.objects.all().delete()
+    Account.objects.all().delete()
+    # Add deletion for other models as necessary, following dependencies
+    OrganizationMembership.objects.all().delete()
+    OrganizationProfile.objects.all().delete()
+    Organization.objects.all().delete()
+    
+    WorkshopMembership.objects.all().delete()
+    Workshop.objects.all().delete()
+    
+    InventoryItem.objects.all().delete()
+    Inventory.objects.all().delete()
+    
+    DesignerProfile.objects.all().delete()
+    Design.objects.all().delete()
+    
+    StoreProfile.objects.all().delete()
+    Store.objects.all().delete()
+    Collection.objects.all().delete()
 
-    # Loopt through the accounts
+def empty_database():
+    call_command('flush', '--noinput')
+
+
+def init_personili_db(data_scale: int=20):
+
+    # Empty the database
+    empty_database()
+
+    # Create dynamic data
     for _ in range(data_scale):
 
         # Create the account
@@ -35,17 +71,17 @@ def personili_local_db_data(data_scale: int=20):
             is_business_owner = True
         
         if is_regular_user:
-        # Create the organization
-        # Determine if this account can have an organization or not (70% chance it won't have an organization)
-        # Create some designs with the regular user as foreign key
+            continue
 
         elif is_designer:
-            # Create the organization
-            organization = OrganizationFactory()
-            # Create the organization profile
-            organization_profile = OrganizationProfileFactory(organization=organization)
-            # Create the organization membership
-            organization_membership = OrganizationMembershipFactory(account=account, organization=organization)
+            # Create the designer profile
+            designer_profile = DesignerProfileFactory(account=account)
+            # Create the store
+            store = StoreFactory(designer_profile=designer_profile)
+            # Create the store profile
+            store_profile = StoreProfileFactory(store=store)
+            # Create the design
+            design = DesignFactory(collection=collection, designer_profile=designer_profile)
         else:
             # Create the organization
             organization = OrganizationFactory()

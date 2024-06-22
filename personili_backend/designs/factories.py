@@ -3,7 +3,6 @@ from designs.models import Design, DesignerProfile, Theme, Store, StoreProfile, 
 from accounts.factories import AccountFactory, AccountProfileFactory, generate_social_media_links
 from organizations.factories import WorkshopFactory
 
-
 # factory boy imports
 import factory
 from factory import Faker
@@ -19,16 +18,16 @@ class DesignerProfileFactory(DjangoModelFactory):
 
     account = factory.SubFactory(AccountFactory)
     biography = Faker('text')
-    social_media_links = factory.LazyFunction(lambda: json.dumps(generate_social_media_links()))
+    social_media_website_links = factory.LazyFunction(lambda: json.dumps(generate_social_media_links()))
     designer_logo_path = Faker('file_path', depth=5, category="image")
     designer_banner_path = Faker('file_path', depth=5, category="image")
-    designer_website = Faker('url')
-    designer_verified = Faker('boolean', chance_of_getting_true=50)
+    is_verified = Faker('boolean', chance_of_getting_true=50)
 
     tax_number = Faker('random_int', min=1000000000, max=9999999999)
     registration_number = Faker('random_int', min=1000000000, max=9999999999)
     registration_date = Faker('date')
     registration_country = Faker('country')
+    registration_address = Faker('address')
     registration_certificate_path = Faker('file_path', depth=5, category="image")
 
 
@@ -37,7 +36,7 @@ class StoreFactory(DjangoModelFactory):
     class Meta:
         model = Store
 
-    store_name = Faker('company')
+    name = Faker('company')
     designer_profile = factory.SubFactory(DesignerProfileFactory)
 
 # StoreProfile Factory
@@ -79,8 +78,8 @@ class DesignFactory(DjangoModelFactory):
     description = Faker('text')
     image_path = Faker('file_path', depth=5, category="image")
     tags = Faker('words')
-    # Design type can be either '2d' or '3d'
-    design_type = Faker('word', ext_word_list=['2d', '3d'])
+    # Design type can be either '2d' or '3d',80% chance it's 2d
+    design_type = Faker('random_element', elements=('2d', '3d'), chance_of_getting_2d=80)
     # Design status can be either 'pending', 'approved', 'rejected'
     status = Faker('word', ext_word_list=['pending', 'approved', 'rejected'])
 
@@ -94,10 +93,12 @@ class DesignFactory(DjangoModelFactory):
     store = factory.SubFactory(StoreFactory)
     regular_user = factory.SubFactory(AccountFactory)
     
+    if regular_user:
+        to_be_published = False
+    
     platform_specific = Faker('boolean', chance_of_getting_true=30)
     # Random float between 0 and 999999
-    base_price = Faker('random_float', min=0, max=999999) if free else 0.0
-
+    base_price = Faker('random_float', min=0, max=999999)
     sponsored = Faker('boolean', chance_of_getting_true=30)
 
     free_usage = Faker('boolean', chance_of_getting_true=50)
@@ -122,3 +123,11 @@ class DesignLike(DjangoModelFactory):
 
     design = factory.SubFactory(DesignFactory)
     account_profile = factory.SubFactory(AccountProfileFactory)
+
+
+class DesignPreviewFactory(DjangoModelFactory):
+    class Meta:
+        model = DesignPreview
+    
+    design = factory.SubFactory(DesignFactory)
+    image_path = Faker('file_path', depth=5, category="image")

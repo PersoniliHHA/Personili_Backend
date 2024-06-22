@@ -27,7 +27,13 @@ class OrganizationFactory(DjangoModelFactory):
     legal_name = Faker('company')
     description = Faker('text')
     is_verified = Faker('boolean', chance_of_getting_true=50)
-    commerce_registry_number = Faker('random_int', min=1000000000, max=9999999999)
+
+    tax_number = Faker('random_int', min=1000000000, max=9999999999)
+    registration_number = Faker('random_int', min=1000000000, max=9999999999)
+    registratioin_date = Faker('date')
+    registration_country = Faker('country')
+    registration_certificate_path = Faker('file_path', depth=5, category="image")
+
     organization_contact_email = Faker('email')
     organization_contact_phone = Faker('phone_number')
 
@@ -41,6 +47,7 @@ class OrganizationProfileFactory(DjangoModelFactory):
     logo_path = Faker('file_path', depth=5, category="image")
     banner_path = Faker('file_path', depth=5, category="image")
     is_sponsored = Faker('boolean', chance_of_getting_true=50)
+    
     head_office_address = Faker('address')
     social_media_links = factory.LazyFunction(lambda: (generate_social_media_links()))
 
@@ -62,11 +69,11 @@ class WorkshopFactory(DjangoModelFactory):
 
     organization = factory.SubFactory(OrganizationFactory)
     name = Faker('company')
-    description = Faker('text')
-    is_verified = Faker('boolean', chance_of_getting_true=50)
-    commerce_registry_number = Faker('random_int', min=1000000000, max=9999999999)
+    description = Faker('text', max_nb_chars=255)
+    is_active = Faker('boolean', chance_of_getting_true=50)
     contact_email = Faker('email')
     contact_phone = Faker('phone_number')
+    address = Faker('address', max_nb_chars=255)
 
 # Workshop Membership Factory
 class WorkshopMembershipFactory(DjangoModelFactory):
@@ -75,7 +82,7 @@ class WorkshopMembershipFactory(DjangoModelFactory):
 
     workshop = factory.SubFactory(WorkshopFactory)
     account = factory.SubFactory(AccountFactory)
-    status = Faker('boolean', chance_of_getting_true=50)
+    is_active_membership = Faker('boolean', chance_of_getting_true=50)
     role = factory.SubFactory(RoleFactory)
 
 
@@ -87,8 +94,7 @@ class InventoryFactory(DjangoModelFactory):
     workshop = factory.SubFactory(WorkshopFactory)
     name = Faker('company')
     description = Faker('text')
-    address = Faker('address')
-    status = Faker('boolean', chance_of_getting_true=50)
+    status = Faker('random_element', elements=('empty', 'partially_full', 'full'))
 
 
 
@@ -99,9 +105,9 @@ class InventoryItemFactory(DjangoModelFactory):
 
     inventory = factory.SubFactory(InventoryFactory)
     name = Faker('company')
+    sku = Faker('pystr', min_chars=10, max_chars=30)
     description = Faker('text')
     quantity = Faker('random_int', min=1, max=100)
-    price = Faker('random_int', min=1, max=1000)
-    status = Faker('boolean', chance_of_getting_true=50)
+    base_price = Faker('random_int', min=1, max=1000)
     alert_threshold = Faker('random_int', min=1, max=100)
         

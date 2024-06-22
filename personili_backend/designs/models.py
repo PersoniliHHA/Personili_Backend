@@ -40,19 +40,17 @@ class DesignerProfile(TimeStampedModel):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     account = models.OneToOneField(AccountProfile, on_delete=models.CASCADE, related_name='designer_profile')
     biography = models.TextField(null=True, blank=True)
-    designer_profile_picture_path = models.CharField(max_length=255, null=True, blank=True)
-    social_media_links = models.JSONField(null=True, blank=True)
+    social_media_website_links = models.JSONField(null=True, blank=True)
     designer_logo_path = models.CharField(max_length=255, null=True, blank=True)
     designer_banner_path = models.CharField(max_length=255, null=True, blank=True)
-    designer_verified = models.BooleanField(default=False)
-    designer_website = models.CharField(max_length=255, null=True, blank=True)
+    is_verified = models.BooleanField(default=False)
 
     # Administration information
     tax_number = models.CharField(max_length=255, null=True, blank=True)
     registration_number = models.CharField(max_length=255, null=True, blank=True)
     registration_date = models.DateField(null=True, blank=True)
-    registration_location = models.CharField(max_length=255, null=True, blank=True)
     registration_country = models.CharField(max_length=255, null=True, blank=True)
+    registration_address = models.CharField(max_length=255, null=True, blank=True)
     registration_certificate_path = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
@@ -82,17 +80,6 @@ class Store(TimeStampedModel):
 
     def __str__(self):
         return self.account_profile.account.email + " - " + self.name
-    
-    def get_full_store_profile(self):
-        """
-        Returns all the attributes in the store profile related to this store, the store profile has 
-        """
-        full_store_profile = {
-            'store': self,
-            'store_profile': self.store_profile,
-            'collections': self.get_related_collections(),
-            'collections_and_designs': self.get_collections_and_their_designs(),
-        }
     
 
 #########################################
@@ -184,7 +171,7 @@ class Design(TimeStampedModel):
     an image path,
     a status,
     list of tags,
-    a price,
+    a price
     """
     ## Status choices
     PENDING = "pending"
@@ -232,7 +219,7 @@ class Design(TimeStampedModel):
     base_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     
     platform_specific = models.BooleanField(default=False)
-    
+
     # sponsored design
     sponsored = models.BooleanField(default=False)
 

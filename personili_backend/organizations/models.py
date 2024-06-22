@@ -15,7 +15,13 @@ class Organization(TimeStampedModel):
     legal_name = models.CharField(max_length=100)
     description = models.TextField(null=True)
     is_verified = models.BooleanField(default=False)
-    commerce_registry_number = models.CharField(max_length=100, null=True)
+
+    tax_number = models.CharField(max_length=100, null=True)
+    registration_number = models.CharField(max_length=100, null=True)
+    registratioin_date = models.DateField(null=True)
+    registration_country = models.CharField(max_length=100, null=True)
+    registration_certificate_path = models.CharField(max_length=255, null=True)
+    
     organization_contact_email = models.EmailField(null=True, unique=True)
     organization_contact_phone = models.CharField(max_length=15, null=True)
 
@@ -24,6 +30,33 @@ class Organization(TimeStampedModel):
 
     def __str__(self):
         return self.name
+
+class OrganizationProfile(TimeStampedModel):
+    """
+    Every organization has a profile, which contains the following information:
+    - Organization id
+    - Logo path
+    - Banner path
+    - Sponsored status
+    - Head office address
+    - Social media links
+
+    """
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
+    organization = models.OneToOneField(Organization, on_delete=models.CASCADE, related_name='orgprofile')
+    logo_path = models.CharField(max_length=255, null=True, blank=True)
+    banner_path = models.CharField(max_length=255, null=True, blank=True)
+    is_sponsored = models.BooleanField(default=False)
+    
+    head_office_address = models.TextField(max_length=255)
+    social_media_links = models.JSONField(null=True, blank=True)
+    
+    class Meta:
+        db_table = 'organization_profiles'
+
+
+    def __str__(self):
+        return self.organization.name
 
 
 class OrganizationMembership(TimeStampedModel):
@@ -49,32 +82,6 @@ class OrganizationMembership(TimeStampedModel):
     def __str__(self):
         return self.organization.name + " " + self.account.email
 
-class OrganizationProfile(TimeStampedModel):
-    """
-    Every organization has a profile, which contains the following information:
-    - Organization id
-    - Logo path
-    - Banner path
-    - Sponsored status
-    - Head office address
-    - Social media links
-
-    """
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
-    organization = models.OneToOneField(Organization, on_delete=models.CASCADE, related_name='orgprofile')
-    logo_path = models.CharField(max_length=255, null=True, blank=True)
-    banner_path = models.CharField(max_length=255, null=True, blank=True)
-    is_sponsored = models.BooleanField(default=False)
-    head_office_address = models.TextField()
-    social_media_links = models.JSONField(null=True, blank=True)
-    
-    class Meta:
-        db_table = 'organization_profiles'
-
-
-    def __str__(self):
-        return self.organization.name
-
 
 class Workshop(TimeStampedModel):
     """
@@ -87,10 +94,10 @@ class Workshop(TimeStampedModel):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
-    description = models.TextField()
-    address = models.TextField()
-    email = models.EmailField(null=True, unique=True)
-    phone = models.CharField(max_length=25, null=True)
+    description = models.TextField(max_length=255, null=True)
+    address = models.TextField(max_length=255, null=True)
+    contact_email = models.EmailField(null=True, unique=True)
+    contact_phone = models.CharField(max_length=25, null=True)
     is_active = models.BooleanField(default=True)
 
     class Meta:
@@ -113,9 +120,8 @@ class WorkshopMembership(TimeStampedModel):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE)
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
-    organization_membership = models.ForeignKey(OrganizationMembership, on_delete=models.CASCADE)
-    status = models.BooleanField(default=True)
-    role = models.CharField(max_length=100)
+    is_active_membership = models.BooleanField(default=True)
+    role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True)
 
     class Meta:
         unique_together = ['workshop', 'account']
@@ -132,13 +138,20 @@ class Inventory(TimeStampedModel):
     - Inventory name
     - Inventory description
     - Inventory location
+    - Inventory status : empty, partially filled, full
     """
+    STATUS = (
+        ('empty', 'Empty'),
+        ('partially_filled', 'Partially Filled'),
+        ('full', 'Full')
+    )
+
+
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
-    address = models.TextField(null=True, blank=True)
-    status = models.BooleanField(default=True)
+    status = models.CharField(max_length=20, choices=STATUS, default='empty')
 
     class Meta:
         db_table = 'inventories'
@@ -150,24 +163,21 @@ class InventoryItem(TimeStampedModel):
     """
     Every inventory can have multiple items, which contains the following information:
     - Item id
+    - Item sku
     - Item name
     - Item description
     - Item quantity
     - Item price
     - Item location
     """
-    CURRENCY_CHOICES = (
-        ('USD', 'United States Dollar'),
-        ('EUR', 'Euro'),
-        ('DA', 'Algerian Dinar'),
 
-    )
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
+    sku = models.CharField(max_length=30, unique=True)
     inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
     quantity = models.IntegerField()
-    currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default='DA')
+    base_price = models.DecimalField(max_digits=10, decimal_places=2)
     alert_threshold = models.IntegerField(default=10)
 
     class Meta:
