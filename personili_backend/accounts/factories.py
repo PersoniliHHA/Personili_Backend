@@ -58,3 +58,20 @@ class DeliveryAddressFactory(DjangoModelFactory):
     state = Faker('state')
     country = Faker('country')
     is_default = Faker('boolean', chance_of_getting_true=50)
+
+
+class PermissionFactory(DjangoModelFactory):
+    class Meta:
+        model = Permission
+
+    name = Faker('word')
+    description = Faker('text')
+
+
+class RoleFactory(DjangoModelFactory):
+    class Meta:
+        model = Role
+
+    name = Faker('word')
+    description = Faker('text')
+    permissions = factory.SubFactory(PermissionFactory)

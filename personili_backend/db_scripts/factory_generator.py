@@ -1,4 +1,4 @@
-from accounts.factories import AccountFactory, AccountProfileFactory, DeliveryAddressFactory
+from accounts.factories import AccountFactory, AccountProfileFactory, DeliveryAddressFactory, RoleFactory, PermissionFactory
 import random
 from organizations.factories import OrganizationFactory, OrganizationMembershipFactory, OrganizationProfileFactory, WorkshopFactory, WorkshopMembershipFactory, InventoryFactory, InventoryItemFactory
 from designs.factories import DesignerProfileFactory, DesignFactory, StoreFactory, StoreProfileFactory, CollectionFactory
@@ -80,8 +80,6 @@ def init_personili_db(data_scale: int=20):
             store = StoreFactory(designer_profile=designer_profile)
             # Create the store profile
             store_profile = StoreProfileFactory(store=store)
-            # Create the design
-            design = DesignFactory(collection=collection, designer_profile=designer_profile)
         else:
             # Create the organization
             organization = OrganizationFactory()
@@ -105,4 +103,4 @@ def init_personili_db(data_scale: int=20):
 
 
 if __name__ == '__main__':
-    personili_local_db_data()
+    init_personili_db()
