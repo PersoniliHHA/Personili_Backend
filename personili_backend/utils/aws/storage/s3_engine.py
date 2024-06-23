@@ -127,7 +127,7 @@ class S3Engine:
             raise ValueError("Template name is invalid")
         return template.format(**placeholder_values)
     
-    def generate_presigned_s3_url(self, s3_path: str, expiration: int = 60) -> str:
+    def generate_presigned_s3_url(self, s3_path: str, expiration: int = 60000000) -> str:
         """
         Generate a presigned URL for the S3 path
         """
