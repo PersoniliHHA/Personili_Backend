@@ -5,9 +5,9 @@ from accounts.factories import AccountFactory, RoleFactory
 import factory
 from factory import Faker
 from factory.django import DjangoModelFactory
-
+from faker import Faker as fk
 import json
-fake = Faker()
+fake = fk()
 
 def generate_social_media_links():
     return {

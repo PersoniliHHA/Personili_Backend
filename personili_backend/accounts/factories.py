@@ -3,8 +3,9 @@ import factory
 from factory import Faker
 from factory.django import DjangoModelFactory
 import json
+from faker import Faker as fk
 
-fake = Faker()
+fake = fk()
 ################## Account Factory #########################
 class AccountFactory(DjangoModelFactory):
     class Meta:
