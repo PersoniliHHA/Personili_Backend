@@ -98,9 +98,6 @@ def init_personili_db(data_scale: int=20):
                 # Create the inventory item
                 inventory_item = InventoryItemFactory(inventory=inventory)
        
-
-        
-
-
+    
 if __name__ == '__main__':
     init_personili_db()

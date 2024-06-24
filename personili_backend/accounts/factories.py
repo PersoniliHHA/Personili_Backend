@@ -21,13 +21,13 @@ class AccountFactory(DjangoModelFactory):
 ################## Account Profile Factory ##################
 def generate_social_media_links():
     return {
-        'facebook': Faker('url'),
-        'twitter': Faker('url'),
-        'instagram': Faker('url'),
-        'linkedin': Faker('url'),
-        'pinterest': Faker('url'),
-        'youtube': Faker('url'),
-        'tiktok': Faker('url'),
+        'facebook': Faker.url(),
+        'twitter': Faker.url(),
+        'instagram': Faker.url(),
+        'linkedin': Faker.url(),
+        'pinterest': Faker.url(),
+        'youtube': Faker.url(),
+        'tiktok': Faker.url(),
     }
 class AccountProfileFactory(DjangoModelFactory):
     class Meta:

@@ -10,14 +10,14 @@ import json
 
 def generate_social_media_links():
     return {
-        'facebook': Faker('url'),
-        'twitter': Faker('url'),
-        'instagram': Faker('url'),
-        'linkedin': Faker('url'),
-        'pinterest': Faker('url'),
-        'youtube': Faker('url'),
-        'tiktok': Faker('url'),
-        'website': Faker('url'),
+        'facebook': Faker.url(),
+        'twitter': Faker.url(),
+        'instagram': Faker.url(),
+        'linkedin': Faker.url(),
+        'pinterest': Faker.url(),
+        'youtube':Faker.url(),
+        'tiktok':Faker.url(),
+        'website': Faker.url(),
     }
 
 # Organization Factory
