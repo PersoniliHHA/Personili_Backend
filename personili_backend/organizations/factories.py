@@ -26,6 +26,7 @@ class OrganizationFactory(DjangoModelFactory):
     class Meta:
         model = Organization
 
+    account = factory.SubFactory(AccountFactory)
     business_name = Faker('company')
     legal_name = Faker('company')
     description = Faker('text')

@@ -53,7 +53,7 @@ class DeliveryAddressFactory(DjangoModelFactory):
     class Meta:
         model = DeliveryAddress
 
-    account = factory.SubFactory(AccountFactory)
+    account_profile = factory.SubFactory(AccountFactory)
     street = Faker('address')
     city = Faker('city')
     zip_code = Faker('postcode')

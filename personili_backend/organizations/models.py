@@ -11,6 +11,7 @@ class Organization(TimeStampedModel):
     Every organization has a official name and a description
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
     business_name = models.CharField(max_length=100)
     legal_name = models.CharField(max_length=100)
     description = models.TextField(null=True)

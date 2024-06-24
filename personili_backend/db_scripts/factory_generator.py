@@ -82,7 +82,7 @@ def init_personili_db(data_scale: int=20):
             store_profile = StoreProfileFactory(store=store)
         else:
             # Create the organization
-            organization = OrganizationFactory()
+            organization = OrganizationFactory(account=account)
             # Create the organization profile
             organization_profile = OrganizationProfileFactory(organization=organization)
 
