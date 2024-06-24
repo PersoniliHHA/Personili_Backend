@@ -76,6 +76,6 @@ class RoleFactory(DjangoModelFactory):
     class Meta:
         model = Role
 
-    name = Faker('word')
-    description = Faker('text')
+    name = faker_g.word()
+    description = faker_g.text()
     permissions = factory.SubFactory(PermissionFactory)
