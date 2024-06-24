@@ -13,6 +13,13 @@ fake = fk()
 # Create faker object with 3 languages as providers : english, french and arabic
 faker_g = fk(['en_US', 'fr_FR', 'ar_AA'])
 
+emails_set = set()
+def generate_unique_email():
+    email = faker_g.email()
+    while email in emails_set:
+        email = faker_g.email()
+    emails_set.add(email)
+    return email
 
 def generate_social_media_links():
     return {
@@ -43,7 +50,7 @@ class OrganizationFactory(DjangoModelFactory):
     registration_country = Faker('country')
     registration_certificate_path = Faker('file_path', depth=5, category="image")
 
-    organization_contact_email = Faker('email')
+    organization_contact_email = factory.LazyFunction(generate_unique_email)
     organization_contact_phone = Faker('phone_number')
 
 
@@ -80,7 +87,7 @@ class WorkshopFactory(DjangoModelFactory):
     name = faker_g.company()
     description = faker_g.text()
     is_active = faker_g.boolean(chance_of_getting_true=50)
-    contact_email = faker_g.email()
+    contact_email = factory.LazyFunction(generate_unique_email)
     contact_phone = faker_g.phone_number()
     address = faker_g.address()
 
