@@ -4,6 +4,7 @@ from factory import Faker
 from factory.django import DjangoModelFactory
 import json
 
+fake = Faker()
 ################## Account Factory #########################
 class AccountFactory(DjangoModelFactory):
     class Meta:
@@ -21,13 +22,13 @@ class AccountFactory(DjangoModelFactory):
 ################## Account Profile Factory ##################
 def generate_social_media_links():
     return {
-        'facebook': Faker.url(),
-        'twitter': Faker.url(),
-        'instagram': Faker.url(),
-        'linkedin': Faker.url(),
-        'pinterest': Faker.url(),
-        'youtube': Faker.url(),
-        'tiktok': Faker.url(),
+        'facebook': fake.url(),
+        'twitter': fake.url(),
+        'instagram': fake.url(),
+        'linkedin': fake.url(),
+        'pinterest': fake.url(),
+        'youtube': fake.url(),
+        'tiktok': fake.url(),
     }
 class AccountProfileFactory(DjangoModelFactory):
     class Meta:
