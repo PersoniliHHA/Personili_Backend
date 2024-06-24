@@ -37,7 +37,7 @@ def empty_database():
     call_command('flush', '--noinput')
 
 
-def init_personili_db(data_scale: int=20):
+def init_personili_db(data_scale: int=2000):
 
     # Empty the database
     empty_database()
