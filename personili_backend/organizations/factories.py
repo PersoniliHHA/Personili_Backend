@@ -73,11 +73,11 @@ class WorkshopFactory(DjangoModelFactory):
 
     organization = factory.SubFactory(OrganizationFactory)
     name = Faker('company')
-    description = Faker('text', max_nb_chars=255)
+    description = Faker('text', length=255)
     is_active = Faker('boolean', chance_of_getting_true=50)
     contact_email = Faker('email')
     contact_phone = Faker('phone_number')
-    address = Faker('address', max_nb_chars=255)
+    address = Faker('address', length=255)
 
 # Workshop Membership Factory
 class WorkshopMembershipFactory(DjangoModelFactory):
