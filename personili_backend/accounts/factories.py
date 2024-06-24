@@ -17,6 +17,7 @@ def generate_unique_email():
         email = faker_g.email()
     emails_set.add(email)
     return email
+
 ################## Account Factory #########################
 class AccountFactory(DjangoModelFactory):
     class Meta:

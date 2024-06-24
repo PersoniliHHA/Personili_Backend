@@ -24,7 +24,7 @@ class Organization(TimeStampedModel):
     registration_certificate_path = models.CharField(max_length=255, null=True)
     
     organization_contact_email = models.EmailField(null=True, unique=True)
-    organization_contact_phone = models.CharField(max_length=15, null=True)
+    organization_contact_phone = models.CharField(max_length=30, null=True)
 
     class Meta:
         db_table = 'organizations'
