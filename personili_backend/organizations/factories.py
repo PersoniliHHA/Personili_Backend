@@ -6,6 +6,8 @@ import factory
 from factory import Faker
 from factory.django import DjangoModelFactory
 
+import json
+
 def generate_social_media_links():
     return {
         'facebook': Faker('url'),
@@ -49,7 +51,7 @@ class OrganizationProfileFactory(DjangoModelFactory):
     is_sponsored = Faker('boolean', chance_of_getting_true=50)
     
     head_office_address = Faker('address')
-    social_media_links = factory.LazyFunction(lambda: (generate_social_media_links()))
+    social_media_links = factory.LazyFunction(lambda: (json.dumps(generate_social_media_links())))
 
 # Organization Membership Factory
 class OrganizationMembershipFactory(DjangoModelFactory):
