@@ -75,14 +75,14 @@ def init_personili_db(data_scale: int=20):
 
         elif is_designer:
             # Create the designer profile
-            designer_profile = DesignerProfileFactory(account=account)
+            designer_profile = DesignerProfileFactory(account_profile=account_profile)
             # Create the store
             store = StoreFactory(designer_profile=designer_profile)
             # Create the store profile
             store_profile = StoreProfileFactory(store=store)
         else:
             # Create the organization
-            organization = OrganizationFactory(account=account)
+            organization = OrganizationFactory(account_profile=account_profile)
             # Create the organization profile
             organization_profile = OrganizationProfileFactory(organization=organization)
 

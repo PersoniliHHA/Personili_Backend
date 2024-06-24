@@ -44,7 +44,7 @@ class AccountProfileFactory(DjangoModelFactory):
     username = faker_g('user_name')
     phone_number = faker_g('phone_number')
     
-    profile_picture_path = faker_g('file_path', depth=3, category="image")
+    profile_picture_path = faker_g.image_url()
     date_of_birth = faker_g('date')
     gender = faker_g('random_element', elements=('Male', 'Female', 'Not specified'))
     

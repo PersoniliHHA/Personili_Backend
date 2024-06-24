@@ -7,28 +7,31 @@ from organizations.factories import WorkshopFactory
 import factory
 from factory import Faker
 from factory.django import DjangoModelFactory
+from faker import Faker as fk
 
 # python imports
 import json
+
+faker_g = fk(['en_US', 'fr_FR', 'ar_AA'])
 
 # DesignerProfile Factory
 class DesignerProfileFactory(DjangoModelFactory):
     class Meta:
         model = DesignerProfile
 
-    account = factory.SubFactory(AccountFactory)
-    biography = Faker('text')
+    account_profile = factory.SubFactory(AccountProfileFactory)
+    biography = faker_g('text')
     social_media_website_links = factory.LazyFunction(lambda: json.dumps(generate_social_media_links()))
-    designer_logo_path = Faker('file_path', depth=5, category="image")
-    designer_banner_path = Faker('file_path', depth=5, category="image")
-    is_verified = Faker('boolean', chance_of_getting_true=50)
+    designer_logo_path = faker_g('file_path', depth=5, category="image")
+    designer_banner_path = faker_g('file_path', depth=5, category="image")
+    is_verified = faker_g('boolean', chance_of_getting_true=50)
 
-    tax_number = Faker('random_int', min=1000000000, max=9999999999)
-    registration_number = Faker('random_int', min=1000000000, max=9999999999)
-    registration_date = Faker('date')
-    registration_country = Faker('country')
-    registration_address = Faker('address')
-    registration_certificate_path = Faker('file_path', depth=5, category="image")
+    tax_number = faker_g('random_int', min=1000000000, max=9999999999)
+    registration_number = faker_g('random_int', min=1000000000, max=9999999999)
+    registration_date = faker_g('date')
+    registration_country = faker_g('country')
+    registration_address = faker_g('address')
+    registration_certificate_path = faker_g('file_path', depth=5, category="image")
 
 
 # Store model 

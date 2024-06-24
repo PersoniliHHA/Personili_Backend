@@ -1,5 +1,5 @@
 from organizations.models import Organization, Workshop, Inventory, InventoryItem, OrganizationProfile, OrganizationMembership, WorkshopMembership
-from accounts.factories import AccountFactory, RoleFactory
+from accounts.factories import AccountFactory, RoleFactory, AccountProfileFactory
 
 # factory boy imports
 import factory
@@ -7,7 +7,11 @@ from factory import Faker
 from factory.django import DjangoModelFactory
 from faker import Faker as fk
 import json
+
+
 fake = fk()
+# Create faker object with 3 languages as providers : english, french and arabic
+faker_g = fk(['en_US', 'fr_FR', 'ar_AA'])
 
 def generate_social_media_links():
     return {
@@ -26,7 +30,7 @@ class OrganizationFactory(DjangoModelFactory):
     class Meta:
         model = Organization
 
-    account_profile = factory.SubFactory(AccountFactory)
+    account_profile = factory.SubFactory(AccountProfileFactory)
     business_name = Faker('company')
     legal_name = Faker('company')
     description = Faker('text')
@@ -48,8 +52,8 @@ class OrganizationProfileFactory(DjangoModelFactory):
         model = OrganizationProfile
 
     organization = factory.SubFactory(OrganizationFactory)
-    logo_path = Faker('file_path', depth=5, category="image")
-    banner_path = Faker('file_path', depth=5, category="image")
+    logo_path = faker_g.image_url()
+    banner_path = faker_g.image_url()
     is_sponsored = Faker('boolean', chance_of_getting_true=50)
     
     head_office_address = Faker('address')
