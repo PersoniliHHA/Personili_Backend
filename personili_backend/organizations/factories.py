@@ -13,6 +13,7 @@ fake = fk()
 # Create faker object with 3 languages as providers : english, french and arabic
 faker_g = fk(['en_US', 'fr_FR', 'ar_AA'])
 
+
 def generate_social_media_links():
     return {
         'facebook': fake.url(),

@@ -9,12 +9,20 @@ fake = fk()
 # Create faker object with 3 languages as providers : english, french and arabic
 faker_g = fk(['en_US', 'fr_FR', 'ar_AA'])
 
+emails_set = set()
+
+def generate_unique_email():
+    email = faker_g.email()
+    while email in emails_set:
+        email = faker_g.email()
+    emails_set.add(email)
+    return email
 ################## Account Factory #########################
 class AccountFactory(DjangoModelFactory):
     class Meta:
         model = Account
 
-    email = faker_g.email()
+    email = factory.LazyFunction(generate_unique_email)
     password = factory.PostGenerationMethodCall('set_password', 'password')
     email_verified = faker_g.boolean(chance_of_getting_true=50)
     is_active = faker_g.boolean(chance_of_getting_true=50)
