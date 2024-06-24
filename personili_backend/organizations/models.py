@@ -4,14 +4,14 @@ from uuid import uuid4
 
 # Models
 from accounts.models import TimeStampedModel
-from accounts.models import Account, Role
+from accounts.models import Account, Role, AccountProfile
 
 class Organization(TimeStampedModel):
     """
     Every organization has a official name and a description
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
-    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    account_profile = models.ForeignKey(AccountProfile, on_delete=models.CASCADE)
     business_name = models.CharField(max_length=100)
     legal_name = models.CharField(max_length=100)
     description = models.TextField(null=True)

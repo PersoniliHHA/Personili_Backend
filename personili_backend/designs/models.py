@@ -38,7 +38,7 @@ class DesignerProfile(TimeStampedModel):
 
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    account = models.OneToOneField(AccountProfile, on_delete=models.CASCADE, related_name='designer_profile')
+    account_profile = models.ForeignKey(AccountProfile, on_delete=models.CASCADE, related_name='designer_profile')
     biography = models.TextField(null=True, blank=True)
     social_media_website_links = models.JSONField(null=True, blank=True)
     designer_logo_path = models.CharField(max_length=255, null=True, blank=True)

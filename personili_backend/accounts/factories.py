@@ -6,18 +6,21 @@ import json
 from faker import Faker as fk
 
 fake = fk()
+# Create faker object with 3 languages as providers : english, french and arabic
+faker_g = fk(['en_US', 'fr_FR', 'ar_AA'])
+
 ################## Account Factory #########################
 class AccountFactory(DjangoModelFactory):
     class Meta:
         model = Account
 
-    email = Faker('email')
+    email = faker_g.email()
     password = factory.PostGenerationMethodCall('set_password', 'password')
-    email_verified = Faker('boolean', chance_of_getting_true=80)
-    is_active = Faker('boolean', chance_of_getting_true=90)
-    is_staff = Faker('boolean', chance_of_getting_true=10)
-    is_superuser = Faker('boolean', chance_of_getting_true=0)
-    is_admin = Faker('boolean', chance_of_getting_true=0)
+    email_verified = faker_g.boolean(chance_of_getting_true=50)
+    is_active = faker_g.boolean(chance_of_getting_true=50)
+    is_staff = faker_g.boolean(chance_of_getting_true=0)
+    is_superuser = faker_g.boolean(chance_of_getting_true=0)
+    is_admin = faker_g.boolean(chance_of_getting_true=0)
 
 
 ################## Account Profile Factory ##################
@@ -36,16 +39,16 @@ class AccountProfileFactory(DjangoModelFactory):
         model = AccountProfile
 
     account = factory.SubFactory(AccountFactory)
-    first_name = Faker('first_name')
-    last_name = Faker('last_name')
-    username = Faker('user_name')
-    phone_number = Faker('phone_number')
+    first_name = faker_g('first_name')
+    last_name = faker_g('last_name')
+    username = faker_g('user_name')
+    phone_number = faker_g('phone_number')
     
-    profile_picture_path = Faker('file_path', depth=3, category="image")
-    date_of_birth = Faker('date')
-    gender = Faker('random_element', elements=('Male', 'Female', 'Not specified'))
+    profile_picture_path = faker_g('file_path', depth=3, category="image")
+    date_of_birth = faker_g('date')
+    gender = faker_g('random_element', elements=('Male', 'Female', 'Not specified'))
     
-    biography = Faker('text')
+    biography = faker_g('text')
     social_media_links = factory.LazyFunction(lambda: json.dumps(generate_social_media_links()))
 
 
@@ -54,12 +57,12 @@ class DeliveryAddressFactory(DjangoModelFactory):
         model = DeliveryAddress
 
     account_profile = factory.SubFactory(AccountFactory)
-    street = Faker('address')
-    city = Faker('city')
+    street = faker_g('address')
+    city = faker_g('city')
     zip_code = Faker('postcode')
-    state = Faker('state')
-    country = Faker('country')
-    is_default = Faker('boolean', chance_of_getting_true=50)
+    state = faker_g('state')
+    country = faker_g('country')
+    is_default = faker_g('boolean', chance_of_getting_true=50)
 
 
 class PermissionFactory(DjangoModelFactory):
