@@ -103,17 +103,13 @@ def init_personili_db(data_scale: int=20):
         print(f"Created account: {account.email}")
         print(f"Created account profile: {account_profile.username}")
         if is_designer:
-            print(f"Created designer profile: {designer_profile.designer_name}")
+            print(f"Created designer profile: {designer_profile.designer_username}")
             print(f"Created store: {store.name}")
-            print(f"Created store profile: {store_profile.store_name}")
         else:
-            print(f"Created organization: {organization.name}")
-            print(f"Created organization profile: {organization_profile.organization_name}")
+            print(f"Created organization: {organization.legal_name}")
             print(f"Created {workshops_nb} workshops")
-            print(f"Created inventory: {inventory.name}")
-            print(f"Created inventory item: {inventory_item.name}")
         
         print("\n\n")
-        
+
 if __name__ == '__main__':
     init_personili_db()
