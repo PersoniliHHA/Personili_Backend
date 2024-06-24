@@ -91,8 +91,6 @@ def init_personili_db(data_scale: int=20):
             for _ in range(workshops_nb):
                 # Create the workshop
                 workshop = WorkshopFactory(organization=organization)
-                # Create the workshop membership
-                workshop_membership = WorkshopMembershipFactory(account=account, workshop=workshop)
                 # Create the inventory
                 inventory = InventoryFactory(workshop=workshop)
                 # Create the inventory item
