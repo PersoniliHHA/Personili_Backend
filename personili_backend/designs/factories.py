@@ -20,6 +20,7 @@ class DesignerProfileFactory(DjangoModelFactory):
         model = DesignerProfile
 
     account_profile = factory.SubFactory(AccountProfileFactory)
+    designer_username = faker_g.user_name()
     biography = faker_g.text()
     social_media_website_links = factory.LazyFunction(lambda: json.dumps(generate_social_media_links()))
     designer_logo_path = faker_g.image_url()
