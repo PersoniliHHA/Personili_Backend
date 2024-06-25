@@ -13,6 +13,7 @@ from faker import Faker as fk
 import json
 
 faker_g = fk(['en_US', 'fr_FR', 'ar_AA'])
+faker_g.seed_instance(95146)
 
 # DesignerProfile Factory
 class DesignerProfileFactory(DjangoModelFactory):
