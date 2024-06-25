@@ -22,15 +22,15 @@ class DesignerProfileFactory(DjangoModelFactory):
         model = DesignerProfile
 
     account_profile = factory.SubFactory(AccountProfileFactory)
-    designer_username = faker_g.user_name()
-    biography = faker_g.text()
+    designer_username = factory.LazyFunction(lambda: faker_g.user_name())
+    biography = Faker('text')
     social_media_website_links = factory.LazyFunction(lambda: json.dumps(generate_social_media_links()))
     designer_logo_path = faker_g.image_url()
     designer_banner_path = faker_g.image_url()
     is_verified = faker_g.boolean(chance_of_getting_true=50)
 
-    tax_number = faker_g.random_int(min=1000000000, max=9999999999)
-    registration_number = faker_g.random_int(min=1000000000, max=9999999999)
+    tax_number = Faker('random_int', min=1000000000, max=9999999999)
+    registration_number = Faker('random_int', min=1000000000, max=9999999999)
     registration_date = faker_g.date()
     registration_country = faker_g.country()
     registration_address = faker_g.address()

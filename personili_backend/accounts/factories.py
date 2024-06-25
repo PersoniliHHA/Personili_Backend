@@ -50,13 +50,13 @@ class AccountProfileFactory(DjangoModelFactory):
         model = AccountProfile
 
     account = factory.SubFactory(AccountFactory)
-    first_name = factory.LazyFunction(lambda : faker_g.first_name())
-    last_name = factory.LazyFunction(lambda : faker_g.last_name())
-    username = faker_g.user_name()
-    phone_number = faker_g.phone_number()
+    first_name = Faker('first_name')
+    last_name = Faker('last_name')
+    username = Faker('user_name')
+    phone_number = Faker('phone_number')
     
-    profile_picture_path = faker_g.image_url()
-    date_of_birth = faker_g.date_of_birth()
+    profile_picture_path = Faker('image_url')
+    date_of_birth = Faker('date_of_birth')
     gender = faker_g.random_element(elements=('Male', 'Female', 'Not specified'))
     
     biography = faker_g.text()
