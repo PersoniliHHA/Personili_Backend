@@ -4,11 +4,12 @@ from factory import Faker
 from factory.django import DjangoModelFactory
 import json
 from faker import Faker as fk
+from random import randint
 
 fake = fk()
 # Create faker object with 3 languages as providers : english, french and arabic
 faker_g = fk(['en_US', 'fr_FR', 'ar_AA'])
-faker_g.seed_instance(45789)
+faker_g.seed_instance(randint(1, 1000000))
 
 emails_set = set()
 

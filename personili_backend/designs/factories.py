@@ -8,12 +8,13 @@ import factory
 from factory import Faker
 from factory.django import DjangoModelFactory
 from faker import Faker as fk
+from random import randint
 
 # python imports
 import json
 
 faker_g = fk(['en_US', 'fr_FR', 'ar_AA'])
-faker_g.seed_instance(95146)
+faker_g.seed_instance(randint(1, 100000))
 
 # DesignerProfile Factory
 class DesignerProfileFactory(DjangoModelFactory):
