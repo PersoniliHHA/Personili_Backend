@@ -50,8 +50,8 @@ class AccountProfileFactory(DjangoModelFactory):
         model = AccountProfile
 
     account = factory.SubFactory(AccountFactory)
-    first_name = factory.LazyFunction(lambda x: faker_g.first_name())
-    last_name = factory.LazyFunction(lambda x: faker_g.last_name())
+    first_name = factory.LazyFunction(lambda : faker_g.first_name())
+    last_name = factory.LazyFunction(lambda : faker_g.last_name())
     username = faker_g.user_name()
     phone_number = faker_g.phone_number()
     
