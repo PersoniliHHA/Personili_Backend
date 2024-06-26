@@ -217,8 +217,8 @@ class Permission(TimeStampedModel):
     - Permission description
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    permission_name = models.CharField(max_length=255, null=True)
-    permission_description = models.TextField(null=True)
+    name = models.CharField(max_length=255, null=True)
+    description = models.TextField(null=True)
 
     class Meta:
         db_table = 'permissions'
