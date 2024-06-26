@@ -89,4 +89,12 @@ class RoleFactory(DjangoModelFactory):
 
     name = Faker('word')
     description = Faker('text')
-    permissions = factory.SubFactory(PermissionFactory)
+    
+    @factory.post_generation
+    def permissions(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            # A list of permissions were passed in, use them
+            self.permissions.set(extracted)
