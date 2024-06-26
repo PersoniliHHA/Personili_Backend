@@ -40,7 +40,7 @@ def create_roles_and_permissions():
         {
         "name": "Designer",
         "description": "This role is for designers",
-        "permission" :
+        "permissions" :
             [
                 {
                     "name": "CRUD designer profile",
