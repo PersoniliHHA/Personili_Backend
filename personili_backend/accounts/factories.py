@@ -1,4 +1,4 @@
-from accounts.models import Account, AccountProfile, AccountBlacklist, DeliveryAddress, Permission, Role, RoleAccount, RolePermission
+from accounts.models import Account, AccountProfile, AccountBlacklist, DeliveryAddress, Permission, Role, RoleAccount
 import factory
 from factory import Faker
 from factory.django import DjangoModelFactory
