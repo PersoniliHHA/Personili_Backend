@@ -106,7 +106,7 @@ def create_roles_and_permissions():
             for permission in role.get("permissions"):
                 permission_list.append(PermissionFactory(name=permission["name"], description=permission["description"]))
             
-            RoleFactory(name=role["name"], description=role["description"], permissions=permission_list)
+            RoleFactory(name=role["name"], description=role["description"]).permissions.set(permission_list)
         
                 
                 
