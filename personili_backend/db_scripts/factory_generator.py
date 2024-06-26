@@ -148,7 +148,6 @@ def init_personili_db(data_scale: int=2000):
     # Create the roles
     create_roles_and_permissions()
 
-
     # Create dynamic data
     for _ in range(data_scale):
 
