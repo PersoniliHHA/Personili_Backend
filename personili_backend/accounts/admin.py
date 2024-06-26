@@ -1,11 +1,10 @@
 from django.contrib import admin
-from accounts.models import Account, AccountProfile, ActionToken, DeliveryAddress, PaymentMethod, Feedback, AccountBlacklist, Wallet, Transaction, RolePermission, Role, Permission
+from accounts.models import Account, AccountProfile, ActionToken, DeliveryAddress, PaymentMethod, Feedback, AccountBlacklist, Wallet, Transaction, Role, Permission
 
 # Add all usermanagement app models to admin site
 admin.site.register(Account)
 admin.site.register(AccountProfile)
 admin.site.register(ActionToken)
-admin.site.register(RolePermission)
 admin.site.register(Role)
 admin.site.register(Permission)
 admin.site.register(DeliveryAddress)
