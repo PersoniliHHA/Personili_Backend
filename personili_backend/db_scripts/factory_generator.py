@@ -101,12 +101,12 @@ def create_roles_and_permissions():
 
     for role in roles:
         if role.get("name") == "Regular User" or role.get("name") == "Designer":
-            role_instance = RoleFactory(name=role["name"], description=role["description"])
+            
             permission_list = []
             for permission in role.get("permissions"):
                 permission_list.append(PermissionFactory(name=permission["name"], description=permission["description"]))
             
-            role_instance.permissions.set(permission_list)    
+            RoleFactory(name=role["name"], description=role["description"], permissions=permission_list)
         
                 
                 
