@@ -110,8 +110,6 @@ def create_roles_and_permissions():
         
                 
                 
-        
-        
            
 def create_design_themes():
     """

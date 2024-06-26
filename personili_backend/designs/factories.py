@@ -105,6 +105,7 @@ class DesignFactory(DjangoModelFactory):
         to_be_published = False
     
     platform_specific = Faker('boolean', chance_of_getting_true=30)
+    
     # Random float between 0 and 999999
     base_price = Faker('random_float', min=0, max=999999)
     sponsored = Faker('boolean', chance_of_getting_true=30)
