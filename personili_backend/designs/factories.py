@@ -63,7 +63,9 @@ class ThemeFactory(DjangoModelFactory):
 
     name = Faker('word')
     description = Faker('text')
-    icon_path = Faker('file_path', depth=5, category="image")
+    icon_1_path = Faker("image_url")
+    icon_2_path = Faker("image_url")
+    icon_3_path = Faker("image_url")
 
 # Collection Factory
 class CollectionFactory(DjangoModelFactory):

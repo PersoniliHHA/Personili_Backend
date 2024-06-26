@@ -150,8 +150,10 @@ class Theme(TimeStampedModel):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     name = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
-    icon_path = models.CharField(max_length=255, null=True, blank=True)
-
+    icon_1_path = models.CharField(max_length=255, null=True, blank=True)
+    icon_2_path = models.CharField(max_length=255, null=True, blank=True)
+    icon_3_path = models.CharField(max_length=255, null=True, blank=True)
+    
     class Meta:
         db_table = 'themes'
 

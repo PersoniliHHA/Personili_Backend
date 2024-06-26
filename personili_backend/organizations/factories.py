@@ -85,12 +85,12 @@ class WorkshopFactory(DjangoModelFactory):
         model = Workshop
 
     organization = factory.SubFactory(OrganizationFactory)
-    name = faker_g.company()
-    description = faker_g.text()
-    is_active = faker_g.boolean(chance_of_getting_true=50)
+    name = Faker("company")
+    description = Faker("text")
+    is_active = Faker("boolean", chance_of_getting_true=50)
     contact_email = factory.LazyFunction(generate_unique_email)
-    contact_phone = faker_g.phone_number()
-    address = faker_g.address()
+    contact_phone = Faker("phone_number")
+    address = Faker("address")
 
 # Workshop Membership Factory
 class WorkshopMembershipFactory(DjangoModelFactory):
@@ -99,7 +99,7 @@ class WorkshopMembershipFactory(DjangoModelFactory):
 
     workshop = factory.SubFactory(WorkshopFactory)
     account = factory.SubFactory(AccountFactory)
-    is_active_membership = faker_g.boolean(chance_of_getting_true=50)
+    is_active_membership = Faker('boolean', chance_of_getting_true=50)
     role = factory.SubFactory(RoleFactory)
 
 
@@ -109,9 +109,9 @@ class InventoryFactory(DjangoModelFactory):
         model = Inventory
     
     workshop = factory.SubFactory(WorkshopFactory)
-    name = faker_g.company()
-    description = faker_g.text()
-    status = faker_g.random_element(elements=('empty', 'partially full', 'full'))
+    name = Faker('company')
+    description = Faker('text')
+    status = Faker('random_element', elements=('empty', 'partially full', 'full'))
 
 
 

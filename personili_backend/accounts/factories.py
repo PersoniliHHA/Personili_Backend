@@ -27,11 +27,11 @@ class AccountFactory(DjangoModelFactory):
 
     email = factory.LazyFunction(generate_unique_email)
     password = factory.PostGenerationMethodCall('set_password', 'password')
-    email_verified = faker_g.boolean(chance_of_getting_true=50)
-    is_active = faker_g.boolean(chance_of_getting_true=50)
-    is_staff = faker_g.boolean(chance_of_getting_true=0)
-    is_superuser = faker_g.boolean(chance_of_getting_true=0)
-    is_admin = faker_g.boolean(chance_of_getting_true=0)
+    email_verified = Faker('boolean', chance_of_getting_true=90)
+    is_active = Faker('boolean', chance_of_getting_true=90)
+    is_staff = Faker('boolean', chance_of_getting_true=0)
+    is_superuser = Faker('boolean', chance_of_getting_true=0)
+    is_admin = Faker('boolean', chance_of_getting_true=0)
 
 
 ################## Account Profile Factory ##################
@@ -87,6 +87,6 @@ class RoleFactory(DjangoModelFactory):
     class Meta:
         model = Role
 
-    name = faker_g.word()
-    description = faker_g.text()
+    name = Faker('word')
+    description = Faker('text')
     permissions = factory.SubFactory(PermissionFactory)

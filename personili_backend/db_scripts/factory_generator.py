@@ -1,46 +1,153 @@
 from accounts.factories import AccountFactory, AccountProfileFactory, DeliveryAddressFactory, RoleFactory, PermissionFactory
 import random
 from organizations.factories import OrganizationFactory, OrganizationMembershipFactory, OrganizationProfileFactory, WorkshopFactory, WorkshopMembershipFactory, InventoryFactory, InventoryItemFactory
-from designs.factories import DesignerProfileFactory, DesignFactory, StoreFactory, StoreProfileFactory, CollectionFactory
-
-from django.db import transaction
-from accounts.models import Account, AccountProfile, DeliveryAddress
-from designs.models import DesignerProfile, Design, Store, StoreProfile, Collection
-from organizations.models import OrganizationMembership, OrganizationProfile, Organization, OrganizationProfile, Workshop, WorkshopMembership, Inventory, InventoryItem
+from designs.factories import ThemeFactory, DesignerProfileFactory, DesignFactory, StoreFactory, StoreProfileFactory, CollectionFactory
 from django.core.management import call_command
 
-@transaction.atomic
-def empty_local_db():
-    # Empty the database for relevant models
-    DeliveryAddress.objects.all().delete()
-    AccountProfile.objects.all().delete()
-    Account.objects.all().delete()
-    # Add deletion for other models as necessary, following dependencies
-    OrganizationMembership.objects.all().delete()
-    OrganizationProfile.objects.all().delete()
-    Organization.objects.all().delete()
-    
-    WorkshopMembership.objects.all().delete()
-    Workshop.objects.all().delete()
-    
-    InventoryItem.objects.all().delete()
-    Inventory.objects.all().delete()
-    
-    DesignerProfile.objects.all().delete()
-    Design.objects.all().delete()
-    
-    StoreProfile.objects.all().delete()
-    Store.objects.all().delete()
-    Collection.objects.all().delete()
+# factory boy imports
+import factory
+from factory import Faker
+
 
 def empty_database():
     call_command('flush', '--noinput')
 
+def create_roles_and_permissions():
+    """
+    Create the roles
+    """
+    roles = [
+        {
+         "name": "Regular User",
+         "description": "This is the default role for every user",
+        },
+        {
+        "name": "Designer",
+        "description": "This role is for designers",
+        },
+        {
+        "name": "Business Owner",
+        "description": "This role is for business owners",
+        },
+        {
+        "name": "Admin",
+        "description": "This role is for admins",
+        },
+        {
+        "name": "Superuser",
+        "description": "This role is for superusers",
+        },
+        {
+        "name": "Staff",
+        "description": "This role is for staff",
+        },
+        {
+        "name": "Customer Service",
+        "description": "This role is for customer service",
+        },
+        {
+        "name": "Workshop manager",
+        "description": "This role is for workshop managers",
+        },
+        {
+        "name": "Workshop employer",
+        "description": "This role is for workshop employers",
+        },
+        {
+        "name": "Organization manager",
+        "description": "This role is for organization managers",
+
+        }
+    ]
+
+    for role in roles:
+        RoleFactory(**role)
+
+def create_design_themes():
+    """
+    Create the themes
+    """
+    list_of_themes = [
+        {
+            "name": "Modern",
+            "description": "This theme is modern",
+            "icon_1_path": Faker("image_url"),
+            "icon_2_path": Faker("image_url"),
+            "icon_3_path": Faker("image_url"),
+        },
+        {
+            "name": "Classic",
+            "description": "This theme is classic",
+            "icon_1_path": Faker("image_url"),
+            "icon_2_path": Faker("image_url"),
+            "icon_3_path": Faker("image_url"),
+        },
+        {
+            "name": "Vintage",
+            "description": "This theme is vintage",
+            "icon_1_path": Faker("image_url"),
+            "icon_2_path": Faker("image_url"),
+            "icon_3_path": Faker("image_url"),
+        },
+        {
+            "name": "Retro",
+            "description": "This theme is retro",
+            "icon_1_path": Faker("image_url"),
+            "icon_2_path": Faker("image_url"),
+            "icon_3_path": Faker("image_url"),
+        },
+        {
+            "name": "Contemporary",
+            "description": "This theme is contemporary",
+            "icon_1_path": Faker("image_url"),
+            "icon_2_path": Faker("image_url"),
+            "icon_3_path": Faker("image_url"),
+        },
+        {
+            "name": "Minimalist",
+            "description": "This theme is minimalist",
+            "icon_1_path": Faker("image_url"),
+            "icon_2_path": Faker("image_url"),
+            "icon_3_path": Faker("image_url"),
+        },
+        {
+            "name": "Futuristic",
+            "description": "This theme is futuristic",
+            "icon_1_path": Faker("image_url"),
+            "icon_2_path": Faker("image_url"),
+            "icon_3_path": Faker("image_url"),
+        },
+        {
+            "name": "Industrial",
+            "description": "This theme is industrial",
+            "icon_1_path": Faker("image_url"),
+            "icon_2_path": Faker("image_url"),
+            "icon_3_path": Faker("image_url"),
+        },
+        {
+            "name": "Anime",
+            "description": "This theme is Anime",
+            "icon_1_path": Faker("image_url"),
+            "icon_2_path": Faker("image_url"),
+            "icon_3_path": Faker("image_url"),
+        },
+
+    ]
+
+    for theme in list_of_themes:
+        ThemeFactory(**theme)
 
 def init_personili_db(data_scale: int=2000):
 
     # Empty the database
     empty_database()
+
+    # Create static data
+    # Create the themes
+    create_design_themes()
+    # Create the roles
+    create_roles_and_permissions()
+
 
     # Create dynamic data
     for _ in range(data_scale):
@@ -80,6 +187,13 @@ def init_personili_db(data_scale: int=2000):
             store = StoreFactory(designer_profile=designer_profile)
             # Create the store profile
             store_profile = StoreProfileFactory(store=store)
+
+            # Determine how many designs this designer should have (between 1 and 30)
+            designs_nb = random.randint(1, 30)
+            for _ in range(designs_nb):
+                # Create the design
+                design = DesignFactory(store=store)
+
         else:
             # Create the organization
             organization = OrganizationFactory(account_profile=account_profile)
@@ -98,14 +212,8 @@ def init_personili_db(data_scale: int=2000):
        
 
         # Log which objects have been created in this round
-        print(f"Created account: {account.email}")
-        print(f"Created account profile: {account_profile.username}")
-        if is_designer:
-            print(f"Created designer profile: {designer_profile.designer_username}")
-            print(f"Created store: {store.name}")
-        else:
-            print(f"Created organization: {organization.legal_name}")
-            print(f"Created {workshops_nb} workshops")
+        print("created data block number ", _)
+
         
         print("\n\n")
 
