@@ -20,10 +20,49 @@ def create_roles_and_permissions():
         {
          "name": "Regular User",
          "description": "This is the default role for every user",
+         "permissions":
+            [
+                {
+                    "name": "CRUD main account",
+                    "description": "Can view account"
+                },
+                {
+                    "name": "CRUD account profile",
+                    "description": "Can view account profile"
+                },
+                {
+                    "name": "CRUD delivery address",
+                    "description": "Can view delivery address"
+                },
+
+            ]
         },
         {
         "name": "Designer",
         "description": "This role is for designers",
+        "permission" :
+            [
+                {
+                    "name": "CRUD designer profile",
+                    "description": "Can view designer profile"
+                },
+                {
+                    "name": "CRUD store",
+                    "description": "Can view store"
+                },
+                {
+                    "name": "CRUD store profile",
+                    "description": "Can view store profile"
+                },
+                {
+                    "name": "CRUD collection",
+                    "description": "Can view collection"
+                },
+                {
+                    "name": "CRUD design",
+                    "description": "Can view design"
+                },
+            ]
         },
         {
         "name": "Business Owner",
@@ -61,8 +100,16 @@ def create_roles_and_permissions():
     ]
 
     for role in roles:
-        RoleFactory(name=role["name"], description=role["description"])
-
+        if role.get("name") == "Regular User" or role.get("name") == "Designer":
+            role_instance = RoleFactory(name=role["name"], description=role["description"])
+            for permission in role.get("permissions"):
+                permission_instance=PermissionFactory(name=permission["name"], description=permission["description"])
+                role_instance.permissions.add(permission_instance)
+                
+                
+        
+        
+           
 def create_design_themes():
     """
     Create the themes
