@@ -61,7 +61,7 @@ def create_roles_and_permissions():
     ]
 
     for role in roles:
-        RoleFactory(**role)
+        RoleFactory(name=role["name"], description=role["description"])
 
 def create_design_themes():
     """
@@ -135,7 +135,11 @@ def create_design_themes():
     ]
 
     for theme in list_of_themes:
-        ThemeFactory(**theme)
+        ThemeFactory(name=theme["name"], 
+                     description=theme["description"], 
+                     icon_1_path=theme["icon_1_path"], 
+                     icon_2_path=theme["icon_2_path"], 
+                     icon_3_path=theme["icon_3_path"])
 
 def init_personili_db(data_scale: int=2000):
 
