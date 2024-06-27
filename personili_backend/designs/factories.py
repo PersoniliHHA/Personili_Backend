@@ -9,6 +9,7 @@ from factory import Faker
 from factory.django import DjangoModelFactory
 from faker import Faker as fk
 from random import randint
+import random
 
 # python imports
 import json
@@ -88,21 +89,19 @@ class DesignFactory(DjangoModelFactory):
     tags = Faker('words')
     
     # Design type can be either '2d' or '3d',80% chance it's 2d
-    is_2d_ = Faker('boolean', chance_of_getting_true=80)
-    if is_2d_:
-        design_type = '2d'
-    else:
-        design_type = '3d'
+    @factory.lazy_attribute
+    def design_type(self):
+        return random.choices(['2d', '3d'], weights=[0.8, 0.2], k=1)[0]
     
-    status_prob = randint(1, 100)
-    if status_prob <= 80:
-        chosen_status = 'approved'
-    elif status_prob > 80 and status_prob <= 90:
-        chosen_status = 'pending'
-    else:
-        chosen_status = 'rejected'
+    @factory.lazy_attribute
+    def status(self):
+        # Define your choices and their associated probabilities
+        choices = ['approved', 'pending', 'rejected']
+        probabilities = [0.8, 0.1, 0.1]  # 80%, 10%, 10% probabilities
+        # Use random.choices() to select one of the statuses based on the specified probabilities
+        return random.choices(choices, weights=probabilities, k=1)[0]
+
     # Design status can be either 'pending', 'approved', 'rejected'
-    status = chosen_status
 
     workshop = factory.SubFactory(WorkshopFactory)
     store = factory.SubFactory(StoreFactory)
