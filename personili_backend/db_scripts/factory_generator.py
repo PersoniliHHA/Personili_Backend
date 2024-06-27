@@ -189,10 +189,10 @@ def create_design_themes():
                      icon_2_path=theme["icon_2_path"], 
                      icon_3_path=theme["icon_3_path"])
 
-def init_personili_db(data_scale: int=20):
+def init_personili_db(data_scale: int=2):
 
     # Empty the database
-    empty_database()
+    #empty_database()
 
     # Create static data
     # Create the themes
