@@ -243,7 +243,7 @@ def init_personili_db(data_scale: int=2000):
             designs_nb = random.randint(1, 30)
             for _ in range(designs_nb):
                 # Create the design
-                design = DesignFactory(store=store)
+                design = DesignFactory(store=store, collection=None)
 
         else:
             # Create the organization
