@@ -189,7 +189,7 @@ def create_design_themes():
                      icon_2_path=theme["icon_2_path"], 
                      icon_3_path=theme["icon_3_path"])
 
-def init_personili_db(data_scale: int=100):
+def init_personili_db(data_scale: int=20):
 
     # Empty the database
     empty_database()
@@ -276,9 +276,6 @@ def init_personili_db(data_scale: int=100):
 
         # Log which objects have been created in this round
         print("created data block number ", _)
-
-        
-        print("\n\n")
 
 if __name__ == '__main__':
     init_personili_db()
