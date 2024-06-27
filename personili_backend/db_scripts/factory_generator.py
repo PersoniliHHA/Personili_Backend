@@ -189,7 +189,7 @@ def create_design_themes():
                      icon_2_path=theme["icon_2_path"], 
                      icon_3_path=theme["icon_3_path"])
 
-def init_personili_db(data_scale: int=2000):
+def init_personili_db(data_scale: int=100):
 
     # Empty the database
     empty_database()
@@ -197,6 +197,7 @@ def init_personili_db(data_scale: int=2000):
     # Create static data
     # Create the themes
     create_design_themes()
+
     # Create the roles
     create_roles_and_permissions()
 
@@ -229,7 +230,12 @@ def init_personili_db(data_scale: int=2000):
             is_business_owner = True
         
         if is_regular_user:
-            continue
+            # Generate some user uploaded designs for the regular user
+            # Determine how many designs this regular user should have (between 1 and 10)
+            designs_nb = random.randint(1, 10)
+            for _ in range(designs_nb):
+                # Create the design
+                design = DesignFactory(regular_user=account_profile, collection=None)
 
         elif is_designer:
             # Create the designer profile
@@ -256,6 +262,12 @@ def init_personili_db(data_scale: int=2000):
             for _ in range(workshops_nb):
                 # Create the workshop
                 workshop = WorkshopFactory(organization=organization)
+                # For each workshop creates designs
+                designs_nb = random.randint(1, 30)
+                for _ in range(designs_nb):
+                    # Create the design
+                    design = DesignFactory(workshop=workshop, collection=None)
+
                 # Create the inventory
                 inventory = InventoryFactory(workshop=workshop)
                 # Create the inventory item

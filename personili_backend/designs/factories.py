@@ -114,6 +114,9 @@ class DesignFactory(DjangoModelFactory):
     if regular_user:
         to_be_published = False
         latest_publication_date = None
+    else:
+        to_be_published = Faker('boolean', chance_of_getting_true=90)
+        latest_publication_date = Faker('date')
     
     # Random float between 0 and 999999
     if workshop or store:
