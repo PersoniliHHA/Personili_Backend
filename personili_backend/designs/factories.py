@@ -106,7 +106,7 @@ class DesignFactory(DjangoModelFactory):
 
     workshop = factory.SubFactory(WorkshopFactory)
     store = factory.SubFactory(StoreFactory)
-    regular_user = factory.SubFactory(AccountFactory)
+    regular_user = factory.SubFactory(AccountProfileFactory)
     
     if workshop or store:
         to_be_published = Faker('boolean', chance_of_getting_true=90)
