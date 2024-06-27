@@ -202,7 +202,7 @@ def init_personili_db(data_scale: int=20):
     create_roles_and_permissions()
 
     # Create dynamic data
-    for _ in range(data_scale):
+    for i in range(data_scale):
 
         # Create the account
         account = AccountFactory()
@@ -275,7 +275,7 @@ def init_personili_db(data_scale: int=20):
        
 
         # Log which objects have been created in this round
-        print("created data block number ", _)
+        print("created data block number ", i)
 
 if __name__ == '__main__':
     init_personili_db()
