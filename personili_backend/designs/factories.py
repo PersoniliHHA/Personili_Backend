@@ -104,8 +104,6 @@ class DesignFactory(DjangoModelFactory):
     # Design status can be either 'pending', 'approved', 'rejected'
     status = chosen_status
 
-    collection = factory.SubFactory(CollectionFactory)
-
     workshop = factory.SubFactory(WorkshopFactory)
     store = factory.SubFactory(StoreFactory)
     regular_user = factory.SubFactory(AccountFactory)
