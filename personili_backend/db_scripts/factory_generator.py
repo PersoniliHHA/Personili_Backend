@@ -240,10 +240,10 @@ def init_personili_db(data_scale: int=2000):
             store_profile = StoreProfileFactory(store=store)
 
             # Determine how many designs this designer should have (between 1 and 30)
-            #designs_nb = random.randint(1, 30)
-            #for _ in range(designs_nb):
-            #    # Create the design
-            #    design = DesignFactory(store=store)
+            designs_nb = random.randint(1, 30)
+            for _ in range(designs_nb):
+                # Create the design
+                design = DesignFactory(store=store)
 
         else:
             # Create the organization

@@ -153,7 +153,7 @@ class Theme(TimeStampedModel):
     icon_1_path = models.CharField(max_length=255, null=True, blank=True)
     icon_2_path = models.CharField(max_length=255, null=True, blank=True)
     icon_3_path = models.CharField(max_length=255, null=True, blank=True)
-    
+
     class Meta:
         db_table = 'themes'
 
@@ -196,41 +196,44 @@ class Design(TimeStampedModel):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
    
     # General attributes 
-    theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='design')
+    theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='design', null=True, blank=True)
+    
     title = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
     image_path = models.CharField(max_length=255, null=True, blank=True)
     tags = models.CharField(max_length=255, null=True, blank=True)
     design_type = models.CharField(max_length=255, choices=DESIGN_TYPES, default=_2D)
     
-    # Design initial status is PENDING, eventually it becomes either APPROVED or REJECTED
+    # Design initial status is PENDING, eventually it becomes either APPROVED or REJECTED (this status is reserved for designs uploaded by workshops and designers)
     status = models.CharField(max_length=255, choices=STATUS, default=PENDING)
+    
     # Designs uploaded by the user are not to be published, designers or workshops can choose to or not to publish them
     to_be_published = models.BooleanField(default=False)
-    
     latest_publication_date = models.DateTimeField(null=True, blank=True)
     
     # Optionally the design can be linked to a collection
     collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name='designs', null=True, blank=True)
 
 
+    # The design owner
     # a design can only be linked either a workshop or a store or a regular user
     workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE, related_name='designs', null=True, blank=True)
     store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='designs', null=True, blank=True)
     regular_user = models.ForeignKey(AccountProfile, on_delete=models.CASCADE, related_name='designs', null=True, blank=True)
     
+    # Design price (user uploaded designs have a price of 0.0 by default)
     base_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
-    
-    platform_specific = models.BooleanField(default=False)
 
     # sponsored design
     sponsored = models.BooleanField(default=False)
+
 
     ###### Usage and exclusivity parameters #######
     ## the following two parameters are mutually exclusive, if one is true the other should be false
 
     # 1- Free usage with other designs, this is valid by default for designs uploaded by the designer
     free_usage = models.BooleanField(default=False) # This parameter cancels the other parameters
+    
     # 2- Exclusive usage, the design can only be used alone 
     exclusive_usage = models.BooleanField(default=False) # this parameter cancels the other parameters
 
@@ -254,13 +257,15 @@ class Design(TimeStampedModel):
         # if the uploader is a designer then the design is free by default
         if self.regular_user:
             self.workshop = None
-            self.store = False
-            self.free_usage = False
-            self.exclusive_usage = True
-
+            self.store = None
+            self.free_usage = True
+            self.status = self.APPROVED
+            self.to_be_published = False
+            
         elif self.store:
             self.workshop = None
             self.regular_user = None
+
         elif self.workshop:
             self.store = None
             self.regular_user = None
@@ -274,6 +279,7 @@ class Design(TimeStampedModel):
             self.limited_usage_with_user_uploads = False
             self.limited_usage_with_other_workshops = False
             self.limited_usage_with_other_organizations = False
+
         elif self.free_usage:
             self.exclusive_usage = False
             self.limited_usage_with_same_collection = False
@@ -283,6 +289,7 @@ class Design(TimeStampedModel):
             self.limited_usage_with_user_uploads = False
             self.limited_usage_with_other_workshops = False
             self.limited_usage_with_other_organizations = False
+        
         else:
             self.exclusive_usage = False
             self.free_usage = False

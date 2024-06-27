@@ -84,16 +84,25 @@ class DesignFactory(DjangoModelFactory):
     theme = factory.SubFactory(ThemeFactory)
     title = Faker('word')
     description = Faker('text')
-    image_path = Faker('file_path', depth=5, category="image")
+    image_path = Faker("image_url")
     tags = Faker('words')
+    
     # Design type can be either '2d' or '3d',80% chance it's 2d
-    design_type = Faker('random_element', elements=('2d', '3d'), chance_of_getting_2d=80)
+    is_2d_ = Faker('boolean', chance_of_getting_true=80)
+    if is_2d_:
+        design_type = '2d'
+    else:
+        design_type = '3d'
+    
+    status_prob = randint(1, 100)
+    if status_prob <= 80:
+        chosen_status = 'approved'
+    elif status_prob > 80 and status_prob <= 90:
+        chosen_status = 'pending'
+    else:
+        chosen_status = 'rejected'
     # Design status can be either 'pending', 'approved', 'rejected'
-    status = Faker('word', ext_word_list=['pending', 'approved', 'rejected'])
-
-    to_be_published = Faker('boolean', chance_of_getting_true=90)
-
-    latest_publication_date = Faker('date')
+    status = chosen_status
 
     collection = factory.SubFactory(CollectionFactory)
 
@@ -101,28 +110,55 @@ class DesignFactory(DjangoModelFactory):
     store = factory.SubFactory(StoreFactory)
     regular_user = factory.SubFactory(AccountFactory)
     
+    if workshop or store:
+        to_be_published = Faker('boolean', chance_of_getting_true=90)
+        latest_publication_date = Faker('date')
+
     if regular_user:
         to_be_published = False
-    
-    platform_specific = Faker('boolean', chance_of_getting_true=30)
+        latest_publication_date = None
     
     # Random float between 0 and 999999
-    base_price = Faker('random_float', min=0, max=999999)
-    sponsored = Faker('boolean', chance_of_getting_true=30)
+    if workshop or store:
+        base_price = Faker('random_float', min=0, max=999999)
+        sponsored = Faker('boolean', chance_of_getting_true=30)
 
-    free_usage = Faker('boolean', chance_of_getting_true=50)
-    exclusive = Faker('boolean', chance_of_getting_true=50)
+    if regular_user:
+        base_price = 0
+        sponsored = False
+        free_usage = True
+    else:
+        free_usage = Faker('boolean', chance_of_getting_true=50)
+        exclusive_usage = Faker('boolean', chance_of_getting_true=50)
 
-    if exclusive:
-        free_usage = False
-    if not exclusive and not free_usage:
-        limited_usage_with_same_collection = Faker('boolean', chance_of_getting_true=50)
-        limited_usage_with_same_workshop = Faker('boolean', chance_of_getting_true=50)
-        limited_usage_with_same_organization = Faker('boolean', chance_of_getting_true=50)
-        limited_usage_with_designer_uploads = Faker('boolean', chance_of_getting_true=50)
-        limited_usage_with_user_uploads = Faker('boolean', chance_of_getting_true=50)
-        limited_usage_with_other_workshops = Faker('boolean', chance_of_getting_true=50)
-        limited_usage_with_other_organizations = Faker('boolean', chance_of_getting_true=50)
+        if exclusive_usage:
+            free_usage = False
+            limited_usage_with_designer_uploads = False
+            limited_usage_with_user_uploads = False
+            limited_usage_with_other_workshops = False
+            limited_usage_with_other_organizations = False
+            limited_usage_with_same_collection = False
+            limited_usage_with_same_workshop = False
+            limited_usage_with_same_organization = False
+
+        elif free_usage:
+            exclusive_usage = False
+            limited_usage_with_designer_uploads = False
+            limited_usage_with_user_uploads = False
+            limited_usage_with_other_workshops = False
+            limited_usage_with_other_organizations = False
+            limited_usage_with_same_collection = False
+            limited_usage_with_same_workshop = False
+            limited_usage_with_same_organization = False
+
+        else:
+            limited_usage_with_same_collection = Faker('boolean', chance_of_getting_true=50)
+            limited_usage_with_same_workshop = Faker('boolean', chance_of_getting_true=50)
+            limited_usage_with_same_organization = Faker('boolean', chance_of_getting_true=50)
+            limited_usage_with_designer_uploads = Faker('boolean', chance_of_getting_true=50)
+            limited_usage_with_user_uploads = Faker('boolean', chance_of_getting_true=50)
+            limited_usage_with_other_workshops = Faker('boolean', chance_of_getting_true=50)
+            limited_usage_with_other_organizations = Faker('boolean', chance_of_getting_true=50)
 
 
 
