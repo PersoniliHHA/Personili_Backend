@@ -321,4 +321,4 @@ def init_personili_db(data_scale: int=2):
 
 if __name__ == '__main__':
     #init_personili_db()
-     account = AccountFactory()
+    account = AccountFactory()
