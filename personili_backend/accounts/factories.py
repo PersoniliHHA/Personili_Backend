@@ -36,7 +36,7 @@ class AccountFactory(DjangoModelFactory):
     @factory.post_generation
     def log_creation(self, create, extracted, **kwargs):
         if create:
-            print(f"Created AccountProfile for account ID {self.account.id}")
+            print(f"Created AccountProfile for account ID {self.id}")
 
 
 
