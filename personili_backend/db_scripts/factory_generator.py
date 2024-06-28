@@ -210,6 +210,7 @@ def init_personili_db(data_scale: int=2):
     # Create static data
     # Create the themes
     create_design_themes()
+    account = AccountFactory()
 
     # Create the roles
     create_roles_and_permissions()
