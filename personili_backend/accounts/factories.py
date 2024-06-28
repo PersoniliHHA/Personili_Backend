@@ -33,6 +33,12 @@ class AccountFactory(DjangoModelFactory):
     is_superuser = Faker('boolean', chance_of_getting_true=0)
     is_admin = Faker('boolean', chance_of_getting_true=0)
 
+    @factory.post_generation
+    def log_creation(self, create, extracted, **kwargs):
+        if create:
+            print(f"Created AccountProfile for account ID {self.account.id}")
+
+
 
 ################## Account Profile Factory ##################
 def generate_social_media_links():
