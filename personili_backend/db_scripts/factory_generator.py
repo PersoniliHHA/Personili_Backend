@@ -190,6 +190,19 @@ def create_design_themes():
                      icon_3_path=theme["icon_3_path"])
 
 def init_personili_db(data_scale: int=2):
+     # Track the number of created entries
+    account_count = 0
+    account_profile_count = 0
+    delivery_address_count = 0
+    design_count = 0
+    designer_profile_count = 0
+    store_count = 0
+    store_profile_count = 0
+    organization_count = 0
+    organization_profile_count = 0
+    workshop_count = 0
+    inventory_count = 0
+    inventory_item_count = 0
 
     # Empty the database
     #empty_database()
@@ -206,14 +219,16 @@ def init_personili_db(data_scale: int=2):
 
         # Create the account
         account = AccountFactory()
+        account_count += 1
         # Create its profile
         account_profile = AccountProfileFactory(account=account)
+        account_profile_count += 1
         # Create its delivery address
         # determine how many delivery addresses it should has (between 1 and 3 )
         delivery_addresses_nb = random.randint(1, 3)
         for _ in range(delivery_addresses_nb):
             delivery_address = DeliveryAddressFactory(account_profile=account_profile)
-        
+            delivery_address_count += 1
         # Determine if this account is a regular user or a designer or a business owner
         is_regular_user = False
         is_designer = False
@@ -276,6 +291,33 @@ def init_personili_db(data_scale: int=2):
 
         # Log which objects have been created in this round
         print("created data block number ", i)
+        # Final counts
+        print(f"current count of Accounts: {account_count}")
+        print(f"current count of Account Profiles: {account_profile_count}")
+        print(f"current count of Delivery Addresses: {delivery_address_count}")
+        print(f"current count of Designs: {design_count}")
+        print(f"current count of Designer Profiles: {designer_profile_count}")
+        print(f"current count of Stores: {store_count}")
+        print(f"current count of Store Profiles: {store_profile_count}")
+        print(f"current count of Organizations: {organization_count}")
+        print(f"current count of Organization Profiles: {organization_profile_count}")
+        print(f"current count of Workshops: {workshop_count}")
+        print(f"current count of Inventories: {inventory_count}")
+        print(f"current count of Inventory Items: {inventory_item_count}")
+    
+
+    print(f"total count of Accounts: {account_count}")
+    print(f"total count of Account Profiles: {account_profile_count}")
+    print(f"total count of Delivery Addresses: {delivery_address_count}")
+    print(f"total count of Designs: {design_count}")
+    print(f"total count of Designer Profiles: {designer_profile_count}")
+    print(f"total count of Stores: {store_count}")
+    print(f"total count of Store Profiles: {store_profile_count}")
+    print(f"total count of Organizations: {organization_count}")
+    print(f"total count of Organization Profiles: {organization_profile_count}")
+    print(f"total count of Workshops: {workshop_count}")
+    print(f"total count of Inventories: {inventory_count}")
+    print(f"total count of Inventory Items: {inventory_item_count}")
 
 if __name__ == '__main__':
     init_personili_db()
