@@ -213,98 +213,98 @@ def init_personili_db(data_scale: int=2):
 
     # Create the roles
     create_roles_and_permissions()
+    if False:
+        # Create dynamic data
+        for i in range(2):
 
-    # Create dynamic data
-    for i in range(2):
+            # Create the account
+            account = AccountFactory()
+            account_count += 1
+            # Create its profile
+            account_profile = AccountProfileFactory(account=account)
+            account_profile_count += 1
+            # Create its delivery address
+            # determine how many delivery addresses it should has (between 1 and 3 )
+            delivery_addresses_nb = random.randint(1, 3)
+            for _ in range(delivery_addresses_nb):
+                delivery_address = DeliveryAddressFactory(account_profile=account_profile)
+                delivery_address_count += 1
+            # Determine if this account is a regular user or a designer or a business owner
+            is_regular_user = False
+            is_designer = False
+            is_business_owner = False
+            # 50% chance it's a regular user
+            # 30% chance it's a designer
+            # 20% chance it's a business owner
+            which = random.randint(1, 100)
+            if which <= 50:
+                is_regular_user = True
+            elif which > 50 and which <= 80:
+                is_designer = True
+            else:
+                is_business_owner = True
+            
+            if is_regular_user:
+                # Generate some user uploaded designs for the regular user
+                # Determine how many designs this regular user should have (between 1 and 10)
+                designs_nb = random.randint(1, 10)
+                for _ in range(designs_nb):
+                    # Create the design
+                    design = DesignFactory(regular_user=account_profile, collection=None)
 
-        # Create the account
-        account = AccountFactory()
-        account_count += 1
-        # Create its profile
-        account_profile = AccountProfileFactory(account=account)
-        account_profile_count += 1
-        # Create its delivery address
-        # determine how many delivery addresses it should has (between 1 and 3 )
-        delivery_addresses_nb = random.randint(1, 3)
-        for _ in range(delivery_addresses_nb):
-            delivery_address = DeliveryAddressFactory(account_profile=account_profile)
-            delivery_address_count += 1
-        # Determine if this account is a regular user or a designer or a business owner
-        is_regular_user = False
-        is_designer = False
-        is_business_owner = False
-        # 50% chance it's a regular user
-        # 30% chance it's a designer
-        # 20% chance it's a business owner
-        which = random.randint(1, 100)
-        if which <= 50:
-            is_regular_user = True
-        elif which > 50 and which <= 80:
-            is_designer = True
-        else:
-            is_business_owner = True
-        
-        if is_regular_user:
-            # Generate some user uploaded designs for the regular user
-            # Determine how many designs this regular user should have (between 1 and 10)
-            designs_nb = random.randint(1, 10)
-            for _ in range(designs_nb):
-                # Create the design
-                design = DesignFactory(regular_user=account_profile, collection=None)
+            elif is_designer:
+                # Create the designer profile
+                designer_profile = DesignerProfileFactory(account_profile=account_profile)
+                # Create the store
+                store = StoreFactory(designer_profile=designer_profile)
+                # Create the store profile
+                store_profile = StoreProfileFactory(store=store)
 
-        elif is_designer:
-            # Create the designer profile
-            designer_profile = DesignerProfileFactory(account_profile=account_profile)
-            # Create the store
-            store = StoreFactory(designer_profile=designer_profile)
-            # Create the store profile
-            store_profile = StoreProfileFactory(store=store)
-
-            # Determine how many designs this designer should have (between 1 and 30)
-            designs_nb = random.randint(1, 30)
-            for _ in range(designs_nb):
-                # Create the design
-                design = DesignFactory(store=store, collection=None)
-
-        else:
-            # Create the organization
-            organization = OrganizationFactory(account_profile=account_profile)
-            # Create the organization profile
-            organization_profile = OrganizationProfileFactory(organization=organization)
-
-            # Determine how many workshops this organization should have (between 1 and 5)
-            workshops_nb = random.randint(1, 5)
-            for _ in range(workshops_nb):
-                # Create the workshop
-                workshop = WorkshopFactory(organization=organization)
-                # For each workshop creates designs
+                # Determine how many designs this designer should have (between 1 and 30)
                 designs_nb = random.randint(1, 30)
                 for _ in range(designs_nb):
                     # Create the design
-                    design = DesignFactory(workshop=workshop, collection=None)
+                    design = DesignFactory(store=store, collection=None)
 
-                # Create the inventory
-                inventory = InventoryFactory(workshop=workshop)
-                # Create the inventory item
-                inventory_item = InventoryItemFactory(inventory=inventory)
-       
+            else:
+                # Create the organization
+                organization = OrganizationFactory(account_profile=account_profile)
+                # Create the organization profile
+                organization_profile = OrganizationProfileFactory(organization=organization)
 
-        # Log which objects have been created in this round
-        print("created data block number ", i)
-        # Final counts
-        print(f"current count of Accounts: {account_count}")
-        print(f"current count of Account Profiles: {account_profile_count}")
-        print(f"current count of Delivery Addresses: {delivery_address_count}")
-        print(f"current count of Designs: {design_count}")
-        print(f"current count of Designer Profiles: {designer_profile_count}")
-        print(f"current count of Stores: {store_count}")
-        print(f"current count of Store Profiles: {store_profile_count}")
-        print(f"current count of Organizations: {organization_count}")
-        print(f"current count of Organization Profiles: {organization_profile_count}")
-        print(f"current count of Workshops: {workshop_count}")
-        print(f"current count of Inventories: {inventory_count}")
-        print(f"current count of Inventory Items: {inventory_item_count}")
-    
+                # Determine how many workshops this organization should have (between 1 and 5)
+                workshops_nb = random.randint(1, 5)
+                for _ in range(workshops_nb):
+                    # Create the workshop
+                    workshop = WorkshopFactory(organization=organization)
+                    # For each workshop creates designs
+                    designs_nb = random.randint(1, 30)
+                    for _ in range(designs_nb):
+                        # Create the design
+                        design = DesignFactory(workshop=workshop, collection=None)
+
+                    # Create the inventory
+                    inventory = InventoryFactory(workshop=workshop)
+                    # Create the inventory item
+                    inventory_item = InventoryItemFactory(inventory=inventory)
+        
+
+            # Log which objects have been created in this round
+            print("created data block number ", i)
+            # Final counts
+            print(f"current count of Accounts: {account_count}")
+            print(f"current count of Account Profiles: {account_profile_count}")
+            print(f"current count of Delivery Addresses: {delivery_address_count}")
+            print(f"current count of Designs: {design_count}")
+            print(f"current count of Designer Profiles: {designer_profile_count}")
+            print(f"current count of Stores: {store_count}")
+            print(f"current count of Store Profiles: {store_profile_count}")
+            print(f"current count of Organizations: {organization_count}")
+            print(f"current count of Organization Profiles: {organization_profile_count}")
+            print(f"current count of Workshops: {workshop_count}")
+            print(f"current count of Inventories: {inventory_count}")
+            print(f"current count of Inventory Items: {inventory_item_count}")
+        
 
     print(f"total count of Accounts: {account_count}")
     print(f"total count of Account Profiles: {account_profile_count}")
@@ -318,7 +318,3 @@ def init_personili_db(data_scale: int=2):
     print(f"total count of Workshops: {workshop_count}")
     print(f"total count of Inventories: {inventory_count}")
     print(f"total count of Inventory Items: {inventory_item_count}")
-
-if __name__ == '__main__':
-    #init_personili_db()
-    account = AccountFactory()
