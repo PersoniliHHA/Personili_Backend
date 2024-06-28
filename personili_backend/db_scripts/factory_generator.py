@@ -320,4 +320,5 @@ def init_personili_db(data_scale: int=2):
     print(f"total count of Inventory Items: {inventory_item_count}")
 
 if __name__ == '__main__':
-    init_personili_db()
+    #init_personili_db()
+     account = AccountFactory()
