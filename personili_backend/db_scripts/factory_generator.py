@@ -213,9 +213,6 @@ def init_personili_db(data_scale: int=2):
     inventory_count = 0
     inventory_item_count = 0
 
-    # Empty the database
-    #empty_database()
-
     # Create static data
     # Create the themes
     themes_instances = create_design_themes()
@@ -254,6 +251,7 @@ def init_personili_db(data_scale: int=2):
         #    is_business_owner = True
         
         if is_regular_user:
+            print("inside regular user block ")
             # Generate some user uploaded designs for the regular user
             # Determine how many designs this regular user should have (between 1 and 10)
             designs_nb = random.randint(1, 10)
@@ -262,6 +260,7 @@ def init_personili_db(data_scale: int=2):
                 design = DesignFactory(regular_user=account_profile, collection=None, theme=random.choice(themes_instances))
 
         elif is_designer:
+            print("inside designer block ")
             # Create the designer profile
             designer_profile = DesignerProfileFactory(account_profile=account_profile)
             # Create the store
@@ -276,6 +275,7 @@ def init_personili_db(data_scale: int=2):
                 design = DesignFactory(store=store, collection=None, theme=random.choice(themes_instances))
 
         else:
+            print("inside business owner block ")
             # Create business owner profile
             business_owner_profile = BusinessOwnerProfileFactory(account_profile=account_profile)
 
