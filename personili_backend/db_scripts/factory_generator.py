@@ -259,7 +259,7 @@ def init_personili_db(data_scale: int=2):
             designs_nb = random.randint(1, 10)
             for _ in range(designs_nb):
                 # Create the design
-                design = DesignFactory(regular_user=account_profile, collection=None)
+                design = DesignFactory(regular_user=account_profile, collection=None, theme=random.choice(themes_instances))
 
         elif is_designer:
             # Create the designer profile
