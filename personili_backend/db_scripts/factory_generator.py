@@ -1,6 +1,6 @@
 from accounts.factories import AccountFactory, AccountProfileFactory, DeliveryAddressFactory, RoleFactory, PermissionFactory
 import random
-from organizations.factories import OrganizationFactory, OrganizationMembershipFactory, OrganizationProfileFactory, WorkshopFactory, WorkshopMembershipFactory, InventoryFactory, InventoryItemFactory
+from organizations.factories import BusinessOwnerProfileFactory, OrganizationFactory, OrganizationMembershipFactory, OrganizationProfileFactory, WorkshopFactory, WorkshopMembershipFactory, InventoryFactory, InventoryItemFactory
 from designs.factories import ThemeFactory, DesignerProfileFactory, DesignFactory, StoreFactory, StoreProfileFactory, CollectionFactory
 from django.core.management import call_command
 
@@ -276,6 +276,9 @@ def init_personili_db(data_scale: int=2):
                 design = DesignFactory(store=store, collection=None, theme=random.choice(themes_instances))
 
         else:
+            # Create business owner profile
+            business_owner_profile = BusinessOwnerProfileFactory(account_profile=account_profile)
+
             # Create the organization
             organization = OrganizationFactory(account_profile=account_profile)
             # Create the organization profile
