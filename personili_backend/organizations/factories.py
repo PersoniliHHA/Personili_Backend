@@ -54,7 +54,7 @@ class OrganizationFactory(DjangoModelFactory):
     class Meta:
         model = Organization
 
-    account_profile = factory.SubFactory(AccountProfileFactory)
+    business_owner_profile = factory.SubFactory(BusinessOwnerProfileFactory)
     business_name = Faker('company')
     legal_name = Faker('company')
     description = Faker('text')
