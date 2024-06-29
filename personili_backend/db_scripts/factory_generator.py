@@ -218,7 +218,7 @@ def init_personili_db(data_scale: int=2):
     create_roles_and_permissions()
 
     # Create dynamic data
-    for i in range(2):
+    for i in range(10):
 
         # Create the account
         account = AccountFactory()
@@ -239,13 +239,13 @@ def init_personili_db(data_scale: int=2):
         # 50% chance it's a regular user
         # 30% chance it's a designer
         # 20% chance it's a business owner
-        #which = random.randint(1, 100)
-        #if which <= 50:
-        #    is_regular_user = True
-        #elif which > 50 and which <= 80:
-        #    is_designer = True
-        #else:
-        #    is_business_owner = True
+        which = random.randint(1, 100)
+        if which <= 50:
+            is_regular_user = True
+        elif which > 50 and which <= 80:
+            is_designer = True
+        else:
+            is_business_owner = True
         
         if is_regular_user:
             print("inside regular user block ")
