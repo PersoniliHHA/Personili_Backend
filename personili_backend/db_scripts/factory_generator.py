@@ -240,26 +240,26 @@ def init_personili_db(data_scale: int=2):
             delivery_address_count += 1
         # Determine if this account is a regular user or a designer or a business owner
         is_regular_user = False
-        is_designer = False
+        is_designer = True
         is_business_owner = False
         # 50% chance it's a regular user
         # 30% chance it's a designer
         # 20% chance it's a business owner
-        which = random.randint(1, 100)
-        if which <= 50:
-            is_regular_user = True
-        elif which > 50 and which <= 80:
-            is_designer = True
-        else:
-            is_business_owner = True
+        #which = random.randint(1, 100)
+        #if which <= 50:
+        #    is_regular_user = True
+        #elif which > 50 and which <= 80:
+        #    is_designer = True
+        #else:
+        #    is_business_owner = True
         
         if is_regular_user:
             # Generate some user uploaded designs for the regular user
             # Determine how many designs this regular user should have (between 1 and 10)
             designs_nb = random.randint(1, 10)
-            #for _ in range(designs_nb):
-            #    # Create the design
-            #    design = DesignFactory(regular_user=account_profile, collection=None)
+            for _ in range(designs_nb):
+                # Create the design
+                design = DesignFactory(regular_user=account_profile, collection=None)
 
         elif is_designer:
             # Create the designer profile
@@ -318,10 +318,6 @@ def init_personili_db(data_scale: int=2):
         print(f"current count of Inventory Items: {inventory_item_count}")
 
 
-        # reset all boolean flags
-        is_regular_user = False
-        is_designer = False
-        is_business_owner = False
 
 
     print(f"total count of Accounts: {account_count}")
