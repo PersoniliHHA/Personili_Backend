@@ -28,7 +28,11 @@ class Department(TimeStampedModel):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     name = models.CharField(max_length=255, null=True)
     description = models.TextField(null=True, blank=True)
-    image_path = models.CharField(max_length=255, null=True, blank=True)
+    
+    # Icons and images for each department
+    image_path_1 = models.CharField(max_length=255, null=True, blank=True)
+    image_path_2 = models.CharField(max_length=255, null=True, blank=True)
+    image_path_3 = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
         db_table = 'departments'
@@ -56,8 +60,6 @@ class Category(TimeStampedModel):
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     name = models.CharField(max_length=255, null=True)
-    image_path = models.CharField(max_length=255, null=True, blank=True)
-    logo_path = models.CharField(max_length=255, null=True, blank=True)
     parent_category = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='subcategories')
     availability_status = models.CharField(max_length=255, choices=AVAILABILITY_STATUS_CHOICES, default='Available')
 
@@ -229,11 +231,9 @@ class Personalizable(TimeStampedModel):
     can_be_template = models.BooleanField(default=False)
 
     # Parameters for personalizable usage with other designs
-    used_with_specific_designs = models.BooleanField(default=False)
-    used_with_specific_workshops = models.BooleanField(default=False)
-
     used_with_designers_designs = models.BooleanField(default=False)
     userd_with_user_uploaded_designs = models.BooleanField(default=False)
+    used_with_other_workshops_designs = models.BooleanField(default=False)
     used_with_platform_designs = models.BooleanField(default=False)
     
 
@@ -269,7 +269,6 @@ class PersonalizableVariant(TimeStampedModel):
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     personalizable = models.ForeignKey(Personalizable, on_delete=models.CASCADE, related_name='variants')
-    sku = models.ForeignKey(InventoryItem, on_delete=models.CASCADE, related_name='personalizable_variants')
     quantity = models.IntegerField(null=True, default=1)
     
     def __str__(self):

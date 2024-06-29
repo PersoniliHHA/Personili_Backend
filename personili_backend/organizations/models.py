@@ -6,12 +6,43 @@ from uuid import uuid4
 from accounts.models import TimeStampedModel
 from accounts.models import Account, Role, AccountProfile
 
+
+class BusinessOwnerProfile(TimeStampedModel):
+    """
+    A business owner profile contains the following information:
+    - Business owner id
+    - Business owner first name
+    - Business owner last name
+    - Business owner full address
+    - Business owner identification number
+    - Account profile id
+    - Business owner biography
+    - Business owner contact email
+    - Business owner contact phone
+    """
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
+    account_profile = models.OneToOneField(AccountProfile, on_delete=models.CASCADE, related_name='business_owner_profile')
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    full_address = models.TextField(max_length=255)
+    identification_number = models.CharField(max_length=100)
+    
+    biography = models.TextField(null=True)
+    contact_email = models.EmailField(null=True, unique=True)
+    contact_phone = models.CharField(max_length=30, null=True)
+
+    class Meta:
+        db_table = 'business_owner_profiles'
+
+    def __str__(self):
+        return self.full_name
+    
 class Organization(TimeStampedModel):
     """
     Every organization has a official name and a description
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
-    account_profile = models.ForeignKey(AccountProfile, on_delete=models.CASCADE)
+    business_owner_profile = models.ForeignKey(BusinessOwnerProfile, on_delete=models.CASCADE)
     business_name = models.CharField(max_length=100)
     legal_name = models.CharField(max_length=100)
     description = models.TextField(null=True)

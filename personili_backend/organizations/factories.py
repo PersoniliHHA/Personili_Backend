@@ -1,4 +1,4 @@
-from organizations.models import Organization, Workshop, Inventory, InventoryItem, OrganizationProfile, OrganizationMembership, WorkshopMembership
+from organizations.models import BusinessOwnerProfile, Organization, Workshop, Inventory, InventoryItem, OrganizationProfile, OrganizationMembership, WorkshopMembership
 from accounts.factories import AccountFactory, RoleFactory, AccountProfileFactory
 
 # factory boy imports
@@ -33,6 +33,21 @@ def generate_social_media_links():
         'tiktok':fake.url(),
         'website': fake.url(),
     }
+
+# Business Owner profile factory
+class BusinessOwnerProfileFactory(DjangoModelFactory):
+    class Meta:
+        model = BusinessOwnerProfile
+
+    account_profile = factory.SubFactory(AccountProfileFactory)
+    first_name = Faker('first_name')
+    last_name = Faker('last_name')
+    
+    full_address = Faker('address')
+    identification_number = Faker('random_int', min=1000000000, max=9999999999)
+    biography = Faker('text')
+    contact_email = factory.LazyFunction(generate_unique_email)
+    contact_phone = Faker('phone_number')
 
 # Organization Factory
 class OrganizationFactory(DjangoModelFactory):

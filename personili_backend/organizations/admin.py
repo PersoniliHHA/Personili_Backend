@@ -1,9 +1,10 @@
-from organizations.models import Organization, OrganizationProfile,  Workshop, Inventory, InventoryItem, OrganizationMembership, WorkshopMembership
+from organizations.models import BusinessOwnerProfile,Organization, OrganizationProfile,  Workshop, Inventory, InventoryItem, OrganizationMembership, WorkshopMembership
 from django.contrib import admin
 
 
 
 # Add all usermanagement app models to admin site
+admin.site.register(BusinessOwnerProfile)
 admin.site.register(Organization)
 admin.site.register(Workshop)
 admin.site.register(Inventory)

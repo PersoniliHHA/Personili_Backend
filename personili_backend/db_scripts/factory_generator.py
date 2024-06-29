@@ -192,6 +192,12 @@ def create_design_themes():
     
     return theme_instances
 
+def create_categories_and_departments():
+    """
+    create the categories and departments
+    """
+    pass
+
 def init_personili_db(data_scale: int=2):
      # Track the number of created entries
     account_count = 0
@@ -277,19 +283,19 @@ def init_personili_db(data_scale: int=2):
 
             # Determine how many workshops this organization should have (between 1 and 5)
             workshops_nb = random.randint(1, 5)
-            #for _ in range(workshops_nb):
-            #    # Create the workshop
-            #    workshop = WorkshopFactory(organization=organization)
-            #    # For each workshop creates designs
-            #    designs_nb = random.randint(1, 30)
-            #    for _ in range(designs_nb):
-            #        # Create the design
-            #        design = DesignFactory(workshop=workshop, collection=None)
-#
-            #    # Create the inventory
-            #    inventory = InventoryFactory(workshop=workshop)
-            #    # Create the inventory item
-            #    inventory_item = InventoryItemFactory(inventory=inventory)
+            for _ in range(workshops_nb):
+                # Create the workshop
+                workshop = WorkshopFactory(organization=organization)
+                # For each workshop creates designs
+                designs_nb = random.randint(1, 30)
+                for _ in range(designs_nb):
+                    # Create the design
+                    design = DesignFactory(workshop=workshop, collection=None, theme=random.choice(themes_instances))
+
+                # Create the inventory
+                inventory = InventoryFactory(workshop=workshop)
+                # Create the inventory item
+                inventory_item = InventoryItemFactory(inventory=inventory)
     
 
         # Log which objects have been created in this round
@@ -307,7 +313,13 @@ def init_personili_db(data_scale: int=2):
         print(f"current count of Workshops: {workshop_count}")
         print(f"current count of Inventories: {inventory_count}")
         print(f"current count of Inventory Items: {inventory_item_count}")
-    
+
+
+        # reset all boolean flags
+        is_regular_user = False
+        is_designer = False
+        is_business_owner = False
+
 
     print(f"total count of Accounts: {account_count}")
     print(f"total count of Account Profiles: {account_profile_count}")
