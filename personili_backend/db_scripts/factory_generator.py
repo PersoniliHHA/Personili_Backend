@@ -280,7 +280,7 @@ def init_personili_db(data_scale: int=2):
             business_owner_profile = BusinessOwnerProfileFactory(account_profile=account_profile)
 
             # Create the organization
-            organization = OrganizationFactory(account_profile=account_profile)
+            organization = OrganizationFactory(business_owner_profile=business_owner_profile)
             # Create the organization profile
             organization_profile = OrganizationProfileFactory(organization=organization)
 
