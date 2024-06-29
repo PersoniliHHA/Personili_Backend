@@ -9,9 +9,6 @@ import factory
 from factory import Faker
 
 
-def empty_database():
-    call_command('flush', '--noinput')
-
 def create_roles_and_permissions():
     """
     Create the roles
@@ -254,10 +251,10 @@ def init_personili_db(data_scale: int=2):
             print("inside regular user block ")
             # Generate some user uploaded designs for the regular user
             # Determine how many designs this regular user should have (between 1 and 10)
-            designs_nb = random.randint(1, 10)
-            for _ in range(designs_nb):
-                # Create the design
-                design = DesignFactory(regular_user=account_profile, collection=None, theme=random.choice(themes_instances))
+            #designs_nb = random.randint(1, 10)
+            #for _ in range(designs_nb):
+            #    # Create the design
+            #    design = DesignFactory(regular_user=account_profile, collection=None, theme=random.choice(themes_instances))
 
         elif is_designer:
             print("inside designer block ")
@@ -269,10 +266,10 @@ def init_personili_db(data_scale: int=2):
             store_profile = StoreProfileFactory(store=store)
 
             # Determine how many designs this designer should have (between 1 and 30)
-            designs_nb = random.randint(1, 3)
-            for _ in range(designs_nb):
-                # Create the design
-                design = DesignFactory(store=store, collection=None, theme=random.choice(themes_instances))
+            #designs_nb = random.randint(1, 3)
+            #for _ in range(designs_nb):
+            #    # Create the design
+            #    design = DesignFactory(store=store, collection=None, theme=random.choice(themes_instances))
 
         else:
             print("inside business owner block ")
@@ -290,10 +287,10 @@ def init_personili_db(data_scale: int=2):
                 # Create the workshop
                 workshop = WorkshopFactory(organization=organization)
                 # For each workshop creates designs
-                designs_nb = random.randint(1, 30)
-                for _ in range(designs_nb):
-                    # Create the design
-                    design = DesignFactory(workshop=workshop, collection=None, theme=random.choice(themes_instances))
+                #designs_nb = random.randint(1, 30)
+                #for _ in range(designs_nb):
+                #    # Create the design
+                #    design = DesignFactory(workshop=workshop, collection=None, theme=random.choice(themes_instances))
 
                 # Create the inventory
                 inventory = InventoryFactory(workshop=workshop)
