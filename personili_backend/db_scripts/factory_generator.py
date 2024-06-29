@@ -181,13 +181,16 @@ def create_design_themes():
         },
 
     ]
-
+    theme_instances = []
     for theme in list_of_themes:
+        theme_instances.append(
         ThemeFactory(name=theme["name"], 
                      description=theme["description"], 
                      icon_1_path=theme["icon_1_path"], 
                      icon_2_path=theme["icon_2_path"], 
-                     icon_3_path=theme["icon_3_path"])
+                     icon_3_path=theme["icon_3_path"]))
+    
+    return theme_instances
 
 def init_personili_db(data_scale: int=2):
      # Track the number of created entries
@@ -209,8 +212,7 @@ def init_personili_db(data_scale: int=2):
 
     # Create static data
     # Create the themes
-    create_design_themes()
-    account = AccountFactory()
+    themes_instances = create_design_themes()
 
     # Create the roles
     create_roles_and_permissions()
@@ -265,7 +267,7 @@ def init_personili_db(data_scale: int=2):
             designs_nb = random.randint(1, 3)
             for _ in range(designs_nb):
                 # Create the design
-                design = DesignFactory(store=store, collection=None)
+                design = DesignFactory(store=store, collection=None, theme=random.choice(themes_instances))
 
         else:
             # Create the organization
