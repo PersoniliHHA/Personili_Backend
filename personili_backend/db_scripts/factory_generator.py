@@ -219,6 +219,8 @@ def generate_design_usage_parmaters(is_regular_user: bool,
         parameters["limited_usage_with_same_collection"] = False
         parameters["limited_usage_with_same_workshop"] = False
         parameters["limited_usage_with_same_organization"] = False
+        parameters["last_publication_date"] = last_publication_date
+        parameters["to_be_published"] = to_be_published
 
     else:
         free_usage = Faker('boolean', chance_of_getting_true=50)
@@ -251,7 +253,7 @@ def generate_design_usage_parmaters(is_regular_user: bool,
             limited_usage_with_same_organization = False
 
         else:
-            limited_usage_with_same_collection = Faker('boolean', chance_of_getting_true=50)
+            limited_usage_with_same_collection = Faker('boolean', chance_of_getting_true=90)
             limited_usage_with_same_workshop = Faker('boolean', chance_of_getting_true=90)
             limited_usage_with_same_organization = Faker('boolean', chance_of_getting_true=50)
             limited_usage_with_designer_uploads = Faker('boolean', chance_of_getting_true=90)
