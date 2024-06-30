@@ -195,6 +195,7 @@ class DesignsViewSet(viewsets.ViewSet):
                                                     free=free
                                                 )
         except Exception as e:
+            logging.error(e)
             logging.error(f"get_popular_designs_light action method error :{e.args} ")
             return Response({"error": "UNKNOWN_ERROR"}, status=400)
             
