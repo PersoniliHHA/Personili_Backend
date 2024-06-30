@@ -238,6 +238,7 @@ def generate_design_usage_parmaters(is_regular_user: bool,
         parameters["to_be_published"] = to_be_published
 
         if exclusive_usage:
+            print("inside exclusive usage block")
             free_usage = False
             limited_usage_with_designer_uploads = False
             limited_usage_with_user_uploads = False
@@ -248,6 +249,7 @@ def generate_design_usage_parmaters(is_regular_user: bool,
             limited_usage_with_same_organization = False
 
         elif free_usage:
+            print("inside free usage block")
             exclusive_usage = False
             limited_usage_with_designer_uploads = False
             limited_usage_with_user_uploads = False
@@ -258,6 +260,7 @@ def generate_design_usage_parmaters(is_regular_user: bool,
             limited_usage_with_same_organization = False
 
         else:
+            print("inside limited usage block")
             limited_usage_with_same_collection = Faker('boolean', chance_of_getting_true=90)
             limited_usage_with_same_workshop = Faker('boolean', chance_of_getting_true=90)
             limited_usage_with_same_organization = Faker('boolean', chance_of_getting_true=50)
