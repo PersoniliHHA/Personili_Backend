@@ -314,7 +314,7 @@ def init_personili_db(data_scale: int=2):
         delivery_addresses_nb = random.randint(1, 3)
         for _ in range(delivery_addresses_nb):
             delivery_address = DeliveryAddressFactory(account_profile=account_profile)
-            delivery_address_count += 1
+
         # Determine if this account is a regular user or a designer or a business owner
         is_regular_user = False
         is_designer = True
