@@ -412,7 +412,6 @@ def init_personili_db(data_scale: int=2):
         # Final counts
         print(f"current count of Accounts: {account_count}")
         print(f"current count of Account Profiles: {account_profile_count}")
-        print(f"current count of Delivery Addresses: {delivery_address_count}")
         print(f"current count of Designer Profiles: {designer_profile_count}")
         print(f"current count of Stores: {store_count}")
         print(f"current count of Store Profiles: {store_profile_count}")
@@ -426,8 +425,6 @@ def init_personili_db(data_scale: int=2):
 
     print(f"total count of Accounts: {account_count}")
     print(f"total count of Account Profiles: {account_profile_count}")
-    print(f"total count of Delivery Addresses: {delivery_address_count}")
-
     print(f"total count of Designer Profiles: {designer_profile_count}")
     print(f"total count of Stores: {store_count}")
     print(f"total count of Store Profiles: {store_profile_count}")
