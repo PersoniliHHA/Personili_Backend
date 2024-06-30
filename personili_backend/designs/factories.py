@@ -106,59 +106,21 @@ class DesignFactory(DjangoModelFactory):
     workshop = factory.SubFactory(WorkshopFactory)
     store = factory.SubFactory(StoreFactory)
     regular_user = factory.SubFactory(AccountProfileFactory)
-    
-    if workshop or store:
-        to_be_published = Faker('boolean', chance_of_getting_true=90)
-        latest_publication_date = Faker('date')
+    collection = factory.SubFactory(CollectionFactory)
 
-    if regular_user:
-        to_be_published = False
-        latest_publication_date = None
-    else:
-        to_be_published = Faker('boolean', chance_of_getting_true=90)
-        latest_publication_date = Faker('date')
-    
-    # Random float between 0 and 999999
-    if workshop or store:
-        base_price = Faker('random_float', min=0, max=999999)
-        sponsored = Faker('boolean', chance_of_getting_true=30)
-
-    if regular_user:
-        base_price = 0
-        sponsored = False
-        free_usage = True
-    else:
-        free_usage = Faker('boolean', chance_of_getting_true=50)
-        exclusive_usage = Faker('boolean', chance_of_getting_true=50)
-
-        if exclusive_usage:
-            free_usage = False
-            limited_usage_with_designer_uploads = False
-            limited_usage_with_user_uploads = False
-            limited_usage_with_other_workshops = False
-            limited_usage_with_other_organizations = False
-            limited_usage_with_same_collection = False
-            limited_usage_with_same_workshop = False
-            limited_usage_with_same_organization = False
-
-        elif free_usage:
-            exclusive_usage = False
-            limited_usage_with_designer_uploads = False
-            limited_usage_with_user_uploads = False
-            limited_usage_with_other_workshops = False
-            limited_usage_with_other_organizations = False
-            limited_usage_with_same_collection = False
-            limited_usage_with_same_workshop = False
-            limited_usage_with_same_organization = False
-
-        else:
-            limited_usage_with_same_collection = Faker('boolean', chance_of_getting_true=50)
-            limited_usage_with_same_workshop = Faker('boolean', chance_of_getting_true=50)
-            limited_usage_with_same_organization = Faker('boolean', chance_of_getting_true=50)
-            limited_usage_with_designer_uploads = Faker('boolean', chance_of_getting_true=50)
-            limited_usage_with_user_uploads = Faker('boolean', chance_of_getting_true=50)
-            limited_usage_with_other_workshops = Faker('boolean', chance_of_getting_true=50)
-            limited_usage_with_other_organizations = Faker('boolean', chance_of_getting_true=50)
+    latest_publication_date = Faker('date')
+    to_be_published = Faker('boolean', chance_of_getting_true=90)
+    base_price = Faker('random_float', min=0, max=999999)
+    sponsored = Faker('boolean', chance_of_getting_true=30)
+    free_usage = Faker('boolean', chance_of_getting_true=50)
+    exclusive_usage = Faker('boolean', chance_of_getting_true=50)
+    limited_usage_with_designer_uploads = Faker('boolean', chance_of_getting_true=50)
+    limited_usage_with_user_uploads = Faker('boolean', chance_of_getting_true=50)
+    limited_usage_with_other_workshops = Faker('boolean', chance_of_getting_true=50)
+    limited_usage_with_other_organizations = Faker('boolean', chance_of_getting_true=50)
+    limited_usage_with_same_collection = Faker('boolean', chance_of_getting_true=50)
+    limited_usage_with_same_workshop = Faker('boolean', chance_of_getting_true=50)
+    limited_usage_with_same_organization = Faker('boolean', chance_of_getting_true=50)
 
 
 
