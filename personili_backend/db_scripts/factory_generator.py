@@ -227,7 +227,7 @@ def generate_design_usage_parmaters(is_regular_user: bool,
         free_usage = Faker('boolean', chance_of_getting_true=50)
         exclusive_usage = Faker('boolean', chance_of_getting_true=50)
         sponsored = Faker('boolean', chance_of_getting_true=30)
-        base_price = Faker('random_digit', min=0, max=999999)
+        base_price = round(random.uniform(0, 999999), 2)
         last_publication_date = Faker('date')
         to_be_published = Faker('boolean', chance_of_getting_true=90)
         parameters["free_usage"] = free_usage
