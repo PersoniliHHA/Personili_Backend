@@ -293,15 +293,6 @@ class Design(TimeStampedModel):
         else:
             self.exclusive_usage = False
             self.free_usage = False
-            if not any([self.limited_usage_with_same_collection,
-                    self.limited_usage_with_same_workshop,
-                    self.limited_usage_with_same_organization,
-                    self.limited_usage_with_designer_uploads,
-                    self.limited_usage_with_user_uploads,
-                    self.limited_usage_with_other_workshops,
-                    self.limited_usage_with_other_organizations]):
-                raise ValueError('At least one of the limited usage parameters should be set to True')
-
         super(Design, self).save(*args, **kwargs)
 
     class Meta:
