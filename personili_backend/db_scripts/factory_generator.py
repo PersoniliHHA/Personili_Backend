@@ -292,7 +292,7 @@ def init_personili_db(data_scale: int=2):
     create_roles_and_permissions()
 
     # Create dynamic data
-    for i in range(10):
+    for i in range(40):
 
         # Create the account
         account = AccountFactory()
