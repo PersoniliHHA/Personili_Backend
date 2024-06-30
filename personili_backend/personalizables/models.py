@@ -63,6 +63,11 @@ class Category(TimeStampedModel):
     parent_category = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='subcategories')
     availability_status = models.CharField(max_length=255, choices=AVAILABILITY_STATUS_CHOICES, default='Available')
 
+    # Icons and images for each category
+    image_path_1 = models.CharField(max_length=255, null=True, blank=True)
+    image_path_2 = models.CharField(max_length=255, null=True, blank=True)
+    image_path_3 = models.CharField(max_length=255, null=True, blank=True)
+
     class Meta:
         db_table = 'categories'
 
@@ -232,7 +237,7 @@ class Personalizable(TimeStampedModel):
 
     # Parameters for personalizable usage with other designs
     used_with_designers_designs = models.BooleanField(default=False)
-    userd_with_user_uploaded_designs = models.BooleanField(default=False)
+    used_with_user_uploaded_designs = models.BooleanField(default=False)
     used_with_other_workshops_designs = models.BooleanField(default=False)
     used_with_platform_designs = models.BooleanField(default=False)
     
@@ -268,6 +273,7 @@ class PersonalizableVariant(TimeStampedModel):
     A personalizable variant is linked to a sku in the inventory item table and to a personalizable
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    name = models.CharField(max_length=255, null=True)
     personalizable = models.ForeignKey(Personalizable, on_delete=models.CASCADE, related_name='variants')
     quantity = models.IntegerField(null=True, default=1)
     

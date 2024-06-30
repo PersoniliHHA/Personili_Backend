@@ -43,7 +43,7 @@ class DesignsViewSet(viewsets.ViewSet):
     ################################### GET/POST APIS, PUBLIC #####################################
     
     ##### Get the designs based on criteria : theme, store, workshop, nb of likes, sponsored stores, sponsored workshops
-    @action(detail=False, methods=['POST'], url_path='catalog', permission_classes=[permissions.AllowAny])
+    @action(detail=False, methods=['GET'], url_path='catalog', permission_classes=[permissions.AllowAny])
     def get_designs(self, request):
         """
         Get the designs based on different criterias : 
@@ -322,43 +322,3 @@ class DesignsViewSet(viewsets.ViewSet):
         else:
             return Response({"message": "NOT_LIKED"}, status=status.HTTP_200_OK)
     
-
-    """
-    ViewSet for the Collection class
-    """
-    queryset = Collection.objects.all()
-    serializer_class = DesignSerializerBase
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-    def get_serializer_class(self):
-        if self.action == "get_collection_by_id":
-            return DesignSerializerBase
-
-        return DesignSerializerBase
-
-    @action(detail=True, methods=['GET'], url_path='get-collection-by-id', permission_classes=[permissions.IsAuthenticated])
-    def get_collection_by_id(self, request, pk=None):
-        """
-        Get a collection by id
-        """
-        collection = get_object_or_404(Collection, pk=pk)
-        serializer = DesignSerializerBase(collection)
-        return Response(serializer.data)
-    
-    @action(detail=True, methods=['GET'], url_path='get-collection-and-its-designs', permission_classes=[permissions.IsAuthenticated])
-    def get_collection_and_its_designs(self, request, pk=None):
-        """
-        Get a collection and its designs
-        """
-        collection = get_object_or_404(Collection, pk=pk)
-        serializer = DesignSerializerBase(collection)
-        return Response(serializer.data)
-
-    @action(detail=False, methods=['GET'], url_path='get-all-collections', permission_classes=[permissions.IsAuthenticated])
-    def get_all_collections(self, request):
-        """
-        Get all collections
-        """
-        collections = Collection.objects.all()
-        serializer = DesignSerializerBase(collections, many=True)
-        return Response(serializer.data)
