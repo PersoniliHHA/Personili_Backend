@@ -261,11 +261,11 @@ def generate_design_usage_parmaters(is_regular_user: bool,
 
         else:
             print("inside limited usage block")
-            limited_usage_with_same_collection = Faker('boolean', chance_of_getting_true=90)
+            limited_usage_with_same_collection = Faker('boolean', chance_of_getting_true=99)
             limited_usage_with_same_workshop = Faker('boolean', chance_of_getting_true=90)
-            limited_usage_with_same_organization = Faker('boolean', chance_of_getting_true=50)
+            limited_usage_with_same_organization = Faker('boolean', chance_of_getting_true=99)
             limited_usage_with_designer_uploads = Faker('boolean', chance_of_getting_true=90)
-            limited_usage_with_user_uploads = Faker('boolean', chance_of_getting_true=50)
+            limited_usage_with_user_uploads = Faker('boolean', chance_of_getting_true=99)
             limited_usage_with_other_workshops = Faker('boolean', chance_of_getting_true=90)
             limited_usage_with_other_organizations = Faker('boolean', chance_of_getting_true=99)
         
