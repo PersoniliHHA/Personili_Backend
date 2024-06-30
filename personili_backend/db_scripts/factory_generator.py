@@ -285,16 +285,13 @@ def init_personili_db(data_scale: int=2):
      # Track the number of created entries
     account_count = 0
     account_profile_count = 0
-    delivery_address_count = 0
-    design_count = 0
+    business_owner_profile_count = 0
     designer_profile_count = 0
     store_count = 0
     store_profile_count = 0
     organization_count = 0
     organization_profile_count = 0
     workshop_count = 0
-    inventory_count = 0
-    inventory_item_count = 0
 
     # Create static data
     # Create the themes
@@ -347,13 +344,16 @@ def init_personili_db(data_scale: int=2):
                                        **parameters)
 
         elif is_designer:
+            designer_profile_count += 1
             print("inside designer block ")
             # Create the designer profile
             designer_profile = DesignerProfileFactory(account_profile=account_profile)
             # Create the store
             store = StoreFactory(designer_profile=designer_profile)
+            store_count += 1
             # Create the store profile
             store_profile = StoreProfileFactory(store=store)
+            store_profile_count += 1
 
             # Determine how many designs this designer should have (between 1 and 30)
             designs_nb = random.randint(1, 20)
@@ -371,19 +371,23 @@ def init_personili_db(data_scale: int=2):
 
         else:
             print("inside business owner block ")
+            business_owner_profile_count += 1
             # Create business owner profile
             business_owner_profile = BusinessOwnerProfileFactory(account_profile=account_profile)
 
             # Create the organization
             organization = OrganizationFactory(business_owner_profile=business_owner_profile)
+            organization_count += 1
             # Create the organization profile
             organization_profile = OrganizationProfileFactory(organization=organization)
+            organization_profile_count += 1
 
             # Determine how many workshops this organization should have (between 1 and 5)
             workshops_nb = random.randint(1, 5)
             for _ in range(workshops_nb):
                 # Create the workshop
                 workshop = WorkshopFactory(organization=organization)
+                workshop_count += 1
                 # For each workshop creates designs
                 designs_nb = random.randint(1, 30)
                 for _ in range(designs_nb):
@@ -409,15 +413,13 @@ def init_personili_db(data_scale: int=2):
         print(f"current count of Accounts: {account_count}")
         print(f"current count of Account Profiles: {account_profile_count}")
         print(f"current count of Delivery Addresses: {delivery_address_count}")
-        print(f"current count of Designs: {design_count}")
         print(f"current count of Designer Profiles: {designer_profile_count}")
         print(f"current count of Stores: {store_count}")
         print(f"current count of Store Profiles: {store_profile_count}")
         print(f"current count of Organizations: {organization_count}")
         print(f"current count of Organization Profiles: {organization_profile_count}")
         print(f"current count of Workshops: {workshop_count}")
-        print(f"current count of Inventories: {inventory_count}")
-        print(f"current count of Inventory Items: {inventory_item_count}")
+
 
 
 
@@ -425,12 +427,11 @@ def init_personili_db(data_scale: int=2):
     print(f"total count of Accounts: {account_count}")
     print(f"total count of Account Profiles: {account_profile_count}")
     print(f"total count of Delivery Addresses: {delivery_address_count}")
-    print(f"total count of Designs: {design_count}")
+
     print(f"total count of Designer Profiles: {designer_profile_count}")
     print(f"total count of Stores: {store_count}")
     print(f"total count of Store Profiles: {store_profile_count}")
     print(f"total count of Organizations: {organization_count}")
     print(f"total count of Organization Profiles: {organization_profile_count}")
     print(f"total count of Workshops: {workshop_count}")
-    print(f"total count of Inventories: {inventory_count}")
-    print(f"total count of Inventory Items: {inventory_item_count}")
+
