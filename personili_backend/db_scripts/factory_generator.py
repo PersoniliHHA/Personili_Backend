@@ -317,12 +317,12 @@ def init_personili_db(data_scale: int=2):
 
         # Determine if this account is a regular user or a designer or a business owner
         is_regular_user = False
-        is_designer = True
+        is_designer = False
         is_business_owner = False
         which = random.randint(1, 100)
         if which <= 40:
             is_regular_user = True
-        elif which > 40 and which <= 75:
+        elif which > 40 and which <= 70:
             is_designer = True
         else:
             is_business_owner = True
