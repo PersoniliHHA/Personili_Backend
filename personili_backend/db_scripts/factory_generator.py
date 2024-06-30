@@ -206,6 +206,8 @@ def generate_design_usage_parmaters(is_regular_user: bool,
         base_price = 0
         sponsored = False
         free_usage = True
+        last_publication_date = None
+        to_be_published = False
         parameters["base_price"] = base_price
         parameters["sponsored"] = sponsored
         parameters["free_usage"] = free_usage
@@ -223,6 +225,8 @@ def generate_design_usage_parmaters(is_regular_user: bool,
         exclusive_usage = Faker('boolean', chance_of_getting_true=50)
         sponsored = Faker('boolean', chance_of_getting_true=30)
         base_price = Faker('random_float', min=0, max=999999)
+        last_publication_date = Faker('date')
+        to_be_published = Faker('boolean', chance_of_getting_true=90)
         parameters["free_usage"] = free_usage
         parameters["exclusive_usage"] = exclusive_usage
 
@@ -248,12 +252,12 @@ def generate_design_usage_parmaters(is_regular_user: bool,
 
         else:
             limited_usage_with_same_collection = Faker('boolean', chance_of_getting_true=50)
-            limited_usage_with_same_workshop = Faker('boolean', chance_of_getting_true=50)
+            limited_usage_with_same_workshop = Faker('boolean', chance_of_getting_true=90)
             limited_usage_with_same_organization = Faker('boolean', chance_of_getting_true=50)
-            limited_usage_with_designer_uploads = Faker('boolean', chance_of_getting_true=50)
+            limited_usage_with_designer_uploads = Faker('boolean', chance_of_getting_true=90)
             limited_usage_with_user_uploads = Faker('boolean', chance_of_getting_true=50)
-            limited_usage_with_other_workshops = Faker('boolean', chance_of_getting_true=50)
-            limited_usage_with_other_organizations = Faker('boolean', chance_of_getting_true=50)
+            limited_usage_with_other_workshops = Faker('boolean', chance_of_getting_true=90)
+            limited_usage_with_other_organizations = Faker('boolean', chance_of_getting_true=99)
         
         parameters["limited_usage_with_same_collection"] = limited_usage_with_same_collection
         parameters["limited_usage_with_same_workshop"] = limited_usage_with_same_workshop
@@ -307,9 +311,9 @@ def init_personili_db(data_scale: int=2):
         is_designer = True
         is_business_owner = False
         which = random.randint(1, 100)
-        if which <= 50:
+        if which <= 40:
             is_regular_user = True
-        elif which > 50 and which <= 80:
+        elif which > 40 and which <= 75:
             is_designer = True
         else:
             is_business_owner = True
@@ -318,7 +322,7 @@ def init_personili_db(data_scale: int=2):
             print("inside regular user block ")
             # Generate some user uploaded designs for the regular user
             # Determine how many designs this regular user should have (between 1 and 10)
-            designs_nb = random.randint(1, 10)
+            designs_nb = random.randint(0, 2)
             for _ in range(designs_nb):
                 # Create the design
                 # Generate the design usage parameters
@@ -340,7 +344,7 @@ def init_personili_db(data_scale: int=2):
             store_profile = StoreProfileFactory(store=store)
 
             # Determine how many designs this designer should have (between 1 and 30)
-            designs_nb = random.randint(1, 3)
+            designs_nb = random.randint(1, 20)
             for _ in range(designs_nb):
                 # Create the design
                 # Generate the design usage parameters
