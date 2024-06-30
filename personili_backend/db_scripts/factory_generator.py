@@ -231,6 +231,10 @@ def generate_design_usage_parmaters(is_regular_user: bool,
         to_be_published = Faker('boolean', chance_of_getting_true=90)
         parameters["free_usage"] = free_usage
         parameters["exclusive_usage"] = exclusive_usage
+        parameters["sponsored"] = sponsored
+        parameters["base_price"] = base_price
+        parameters["last_publication_date"] = last_publication_date
+        parameters["to_be_published"] = to_be_published
 
         if exclusive_usage:
             free_usage = False
@@ -268,6 +272,7 @@ def generate_design_usage_parmaters(is_regular_user: bool,
         parameters["limited_usage_with_user_uploads"] = limited_usage_with_user_uploads
         parameters["limited_usage_with_other_workshops"] = limited_usage_with_other_workshops
         parameters["limited_usage_with_other_organizations"] = limited_usage_with_other_organizations
+
 
     return parameters
 
