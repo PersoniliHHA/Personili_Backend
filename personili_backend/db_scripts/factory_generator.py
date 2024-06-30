@@ -207,7 +207,7 @@ def generate_design_usage_parmaters(is_regular_user: bool,
         base_price = 0
         sponsored = False
         free_usage = True
-        last_publication_date = None
+        latest_publication_date = None
         to_be_published = False
         parameters["base_price"] = base_price
         parameters["sponsored"] = sponsored
@@ -220,7 +220,7 @@ def generate_design_usage_parmaters(is_regular_user: bool,
         parameters["limited_usage_with_same_collection"] = False
         parameters["limited_usage_with_same_workshop"] = False
         parameters["limited_usage_with_same_organization"] = False
-        parameters["last_publication_date"] = last_publication_date
+        parameters["latest_publication_date"] = latest_publication_date
         parameters["to_be_published"] = to_be_published
 
     else:
@@ -228,13 +228,13 @@ def generate_design_usage_parmaters(is_regular_user: bool,
         exclusive_usage = Faker('boolean', chance_of_getting_true=50)
         sponsored = Faker('boolean', chance_of_getting_true=30)
         base_price = round(random.uniform(0, 999999), 2)
-        last_publication_date = Faker('date')
+        latest_publication_date = Faker('date')
         to_be_published = Faker('boolean', chance_of_getting_true=90)
         parameters["free_usage"] = free_usage
         parameters["exclusive_usage"] = exclusive_usage
         parameters["sponsored"] = sponsored
         parameters["base_price"] = base_price
-        parameters["last_publication_date"] = last_publication_date
+        parameters["latest_publication_date"] = latest_publication_date
         parameters["to_be_published"] = to_be_published
 
         if exclusive_usage:
