@@ -224,12 +224,12 @@ def generate_design_usage_parmaters(is_regular_user: bool,
         parameters["to_be_published"] = to_be_published
 
     else:
-        free_usage = Faker('boolean', chance_of_getting_true=50)
-        exclusive_usage = Faker('boolean', chance_of_getting_true=50)
-        sponsored = Faker('boolean', chance_of_getting_true=30)
+        free_usage = randint(0, 1) < 0.5
+        exclusive_usage = randint(0, 1) < 0.5
+        sponsored = randint(0, 1) < 0.5
         base_price = round(random.uniform(0, 999999), 2)
         latest_publication_date = Faker('date')
-        to_be_published = Faker('boolean', chance_of_getting_true=90)
+        to_be_published = randint(0, 1) < 0.9
         parameters["free_usage"] = free_usage
         parameters["exclusive_usage"] = exclusive_usage
         parameters["sponsored"] = sponsored
@@ -261,13 +261,13 @@ def generate_design_usage_parmaters(is_regular_user: bool,
 
         else:
             print("inside limited usage block")
-            limited_usage_with_same_collection = Faker('boolean', chance_of_getting_true=99)
-            limited_usage_with_same_workshop = Faker('boolean', chance_of_getting_true=90)
-            limited_usage_with_same_organization = Faker('boolean', chance_of_getting_true=99)
-            limited_usage_with_designer_uploads = Faker('boolean', chance_of_getting_true=90)
-            limited_usage_with_user_uploads = Faker('boolean', chance_of_getting_true=99)
-            limited_usage_with_other_workshops = Faker('boolean', chance_of_getting_true=90)
-            limited_usage_with_other_organizations = Faker('boolean', chance_of_getting_true=99)
+            limited_usage_with_same_collection = randint(0, 1) < 0.9
+            limited_usage_with_same_workshop = randint(0, 1) < 0.5
+            limited_usage_with_same_organization = randint(0, 1) < 0.9
+            limited_usage_with_designer_uploads = randint(0, 1) < 0.9
+            limited_usage_with_user_uploads = randint(0, 1) < 0.5
+            limited_usage_with_other_workshops = randint(0, 1) < 0.9
+            limited_usage_with_other_organizations = randint(0, 1) < 0.5
         
         parameters["limited_usage_with_same_collection"] = limited_usage_with_same_collection
         parameters["limited_usage_with_same_workshop"] = limited_usage_with_same_workshop
