@@ -273,7 +273,8 @@ def generate_design_usage_parmaters(is_regular_user: bool,
         parameters["limited_usage_with_user_uploads"] = limited_usage_with_user_uploads
         parameters["limited_usage_with_other_workshops"] = limited_usage_with_other_workshops
         parameters["limited_usage_with_other_organizations"] = limited_usage_with_other_organizations
-
+        # print the parameters
+        print(parameters)
 
     return parameters
 
