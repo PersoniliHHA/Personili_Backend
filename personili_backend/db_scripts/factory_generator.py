@@ -195,6 +195,76 @@ def create_categories_and_departments():
     """
     pass
 
+def generate_design_usage_parmaters(is_regular_user: bool, 
+                                    is_designer: bool, 
+                                    is_business_owner: bool):
+    """
+    Generate the design usage parameters
+    """
+    parameters = {}
+    if is_regular_user:
+        base_price = 0
+        sponsored = False
+        free_usage = True
+        parameters["base_price"] = base_price
+        parameters["sponsored"] = sponsored
+        parameters["free_usage"] = free_usage
+        parameters["exclusive_usage"] = False
+        parameters["limited_usage_with_designer_uploads"] = False
+        parameters["limited_usage_with_user_uploads"] = False
+        parameters["limited_usage_with_other_workshops"] = False
+        parameters["limited_usage_with_other_organizations"] = False
+        parameters["limited_usage_with_same_collection"] = False
+        parameters["limited_usage_with_same_workshop"] = False
+        parameters["limited_usage_with_same_organization"] = False
+
+    else:
+        free_usage = Faker('boolean', chance_of_getting_true=50)
+        exclusive_usage = Faker('boolean', chance_of_getting_true=50)
+        sponsored = Faker('boolean', chance_of_getting_true=30)
+        base_price = Faker('random_float', min=0, max=999999)
+        parameters["free_usage"] = free_usage
+        parameters["exclusive_usage"] = exclusive_usage
+
+        if exclusive_usage:
+            free_usage = False
+            limited_usage_with_designer_uploads = False
+            limited_usage_with_user_uploads = False
+            limited_usage_with_other_workshops = False
+            limited_usage_with_other_organizations = False
+            limited_usage_with_same_collection = False
+            limited_usage_with_same_workshop = False
+            limited_usage_with_same_organization = False
+
+        elif free_usage:
+            exclusive_usage = False
+            limited_usage_with_designer_uploads = False
+            limited_usage_with_user_uploads = False
+            limited_usage_with_other_workshops = False
+            limited_usage_with_other_organizations = False
+            limited_usage_with_same_collection = False
+            limited_usage_with_same_workshop = False
+            limited_usage_with_same_organization = False
+
+        else:
+            limited_usage_with_same_collection = Faker('boolean', chance_of_getting_true=50)
+            limited_usage_with_same_workshop = Faker('boolean', chance_of_getting_true=50)
+            limited_usage_with_same_organization = Faker('boolean', chance_of_getting_true=50)
+            limited_usage_with_designer_uploads = Faker('boolean', chance_of_getting_true=50)
+            limited_usage_with_user_uploads = Faker('boolean', chance_of_getting_true=50)
+            limited_usage_with_other_workshops = Faker('boolean', chance_of_getting_true=50)
+            limited_usage_with_other_organizations = Faker('boolean', chance_of_getting_true=50)
+        
+        parameters["limited_usage_with_same_collection"] = limited_usage_with_same_collection
+        parameters["limited_usage_with_same_workshop"] = limited_usage_with_same_workshop
+        parameters["limited_usage_with_same_organization"] = limited_usage_with_same_organization
+        parameters["limited_usage_with_designer_uploads"] = limited_usage_with_designer_uploads
+        parameters["limited_usage_with_user_uploads"] = limited_usage_with_user_uploads
+        parameters["limited_usage_with_other_workshops"] = limited_usage_with_other_workshops
+        parameters["limited_usage_with_other_organizations"] = limited_usage_with_other_organizations
+
+    return parameters
+
 def init_personili_db(data_scale: int=2):
      # Track the number of created entries
     account_count = 0
@@ -236,9 +306,6 @@ def init_personili_db(data_scale: int=2):
         is_regular_user = False
         is_designer = True
         is_business_owner = False
-        # 50% chance it's a regular user
-        # 30% chance it's a designer
-        # 20% chance it's a business owner
         which = random.randint(1, 100)
         if which <= 50:
             is_regular_user = True
@@ -254,11 +321,14 @@ def init_personili_db(data_scale: int=2):
             designs_nb = random.randint(1, 10)
             for _ in range(designs_nb):
                 # Create the design
+                # Generate the design usage parameters
+                parameters = generate_design_usage_parmaters(is_regular_user, is_designer, is_business_owner)
                 design = DesignFactory(regular_user=account_profile, 
                                        workshop=None,
                                        store=None,
                                        collection=None, 
-                                       theme=random.choice(themes_instances))
+                                       theme=random.choice(themes_instances),
+                                       **parameters)
 
         elif is_designer:
             print("inside designer block ")
@@ -273,11 +343,15 @@ def init_personili_db(data_scale: int=2):
             designs_nb = random.randint(1, 3)
             for _ in range(designs_nb):
                 # Create the design
+                # Generate the design usage parameters
+                parameters = generate_design_usage_parmaters(is_regular_user, is_designer, is_business_owner)
                 design = DesignFactory(store=store, 
                                        workshop=None,
                                        regular_user=None,
                                        collection=None, 
-                                       theme=random.choice(themes_instances))
+                                       theme=random.choice(themes_instances),
+                                        **parameters
+                                       )
 
         else:
             print("inside business owner block ")
@@ -298,11 +372,14 @@ def init_personili_db(data_scale: int=2):
                 designs_nb = random.randint(1, 30)
                 for _ in range(designs_nb):
                     # Create the design
+                    # Generate the design usage parameters
+                    parameters = generate_design_usage_parmaters(is_regular_user, is_designer, is_business_owner)
                     design = DesignFactory(workshop=workshop, 
                                            collection=None, 
                                            theme=random.choice(themes_instances),
                                            store=None,
-                                           regular_user=None)
+                                           regular_user=None,
+                                           **parameters)
 
                 # Create the inventory
                 inventory = InventoryFactory(workshop=workshop)
