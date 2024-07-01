@@ -545,9 +545,12 @@ class Design(TimeStampedModel):
                 'workshop_name': design.workshop.name,
                 'workshop_id': design.workshop.id,
                 'workshop_description': design.workshop.description,
-                'organization_name': design.workshop.organization.business_name,
+                'organization_business_name': design.workshop.organization.business_name,
                 'organization_id': design.workshop.organization.id,
                 'organization_sponsored': design.workshop.organization.orgprofile.is_sponsored,
+                'organization_logo_url': s3_engine.generate_presigned_s3_url(design.workshop.organization.orgprofile.organization_logo_path),
+                'organization_banner_url': s3_engine.generate_presigned_s3_url(design.workshop.organization.orgprofile.organization_banner_path),
+                'organization_social_media_links': design.workshop.organization.orgprofile.social_media_links,
             }
         design_usage_parameters = {}
         if design.exclusive_usage:
