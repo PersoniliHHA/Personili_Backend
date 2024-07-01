@@ -424,10 +424,8 @@ class Design(TimeStampedModel):
                            .annotate(num_likes=models.Count('design_likes')) 
                            .select_related('store__storeprofile', 'workshop__organization__orgprofile', 'theme')
                            .prefetch_related('design_previews')
-                           .order_by('-num_likes')[offset:offset+limit])
-        print("offset", offset)
-        print("limit", limit)
-        print("offset + limit", offset+limit)
+                           .order_by('-num_likes')[offset:limit])
+
         result = {"designs_list":[]}
         for design in designs:
             # Root dict to contain design data
