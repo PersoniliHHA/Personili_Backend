@@ -106,6 +106,18 @@ class PersonalizableFactory(DjangoModelFactory):
     used_with_workshop_designs = Faker('boolean', chance_of_getting_true=50)
 
 
+class PersonalizableZoneFactory(DjangoModelFactory):
+    class Meta:
+        model = PersonalizableZone
+    personalizable = factory.SubFactory(Personalizable)
+    name = Faker('word')
+    image_path = Faker('image_url')
+    max_nb_designs = Faker('random_int', min=1, max=10)
+    x1 = Faker('random_int', min=0, max=100)
+    y1 = Faker('random_int', min=0, max=100)
+    x2 = Faker('random_int', min=0, max=100)
+    y2 = Faker('random_int', min=0, max=100)
+    
 
 class PersonalizableVariantFactory(DjangoModelFactory):
     class Meta:
