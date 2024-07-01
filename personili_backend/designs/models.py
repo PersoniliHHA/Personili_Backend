@@ -1,6 +1,6 @@
 # Standard libraries
 from uuid import uuid4
-from enum import Enum
+import json
 
 # Django
 from django.db import models
@@ -550,7 +550,7 @@ class Design(TimeStampedModel):
                 'organization_sponsored': design.workshop.organization.orgprofile.is_sponsored,
                 'organization_logo_url': s3_engine.generate_presigned_s3_url(design.workshop.organization.orgprofile.logo_path),
                 'organization_banner_url': s3_engine.generate_presigned_s3_url(design.workshop.organization.orgprofile.banner_path),
-                'organization_social_media_links': design.workshop.organization.orgprofile.social_media_links,
+                'organization_social_media_links': json.loads(design.workshop.organization.orgprofile.social_media_links),
             }
         design_usage_parameters = {}
         if design.exclusive_usage:
