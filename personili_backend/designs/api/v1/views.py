@@ -260,8 +260,8 @@ class DesignsViewSet(viewsets.ViewSet):
         if not is_all_valid_uuid4([design_id]):
             return Response({"error": "BAD_REQUEST"}, status=400)
         # first check if the design exists and that it is to be published and that is approved
-        design = get_object_or_404(Design, pk=design_id)
-        if not design or not design.status == Design.APPROVED or not design.to_be_published:
+        design = Design.objects.filter(id=design_id).first()
+        if not design or not design.status == Design.APPROVED or not design.to_be_published or design.regular_user:
             return Response({"error": "NOT_FOUND"}, status=404)
         
         try :

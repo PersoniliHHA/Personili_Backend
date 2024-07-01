@@ -538,9 +538,38 @@ class Design(TimeStampedModel):
                 'store_id': design.store.id,
                 'store_sponsored': design.store.storeprofile.is_sponsored,
             }
+        elif design.workshop:
+            design_owner = {
+                'workshop_name': design.workshop.name,
+                'workshop_id': design.workshop.id,
+                'organization_name': design.workshop.organization.business_name,
+                'organization_id': design.workshop.organization.id,
+                'organization_sponsored': design.workshop.organization.orgprofile.is_sponsored,
+            }
+        design_usage_parameters = {}
+        if design.exclusive_usage:
+            design_usage_parameters = {
+                'exclusive_usage': design.exclusive_usage,
+            }
+        elif design.free_usage:
+            design_usage_parameters = {
+                'free_usage': design.free_usage,
+            }
+        else:
+            design_usage_parameters = {
+                'limited_usage_with_same_collection':     design.limited_usage_with_same_collection,
+                'limited_usage_with_same_organization':   design.limited_usage_with_same_organization,
+                'limited_usage_with_same_workshop':       design.limited_usage_with_same_workshop,
+                'limited_usage_with_designer_uploads':    design.limited_usage_with_designer_uploads,
+                'limited_usage_with_user_uploads':        design.limited_usage_with_user_uploads,
+                'limited_usage_with_other_workshops':     design.limited_usage_with_other_workshops,
+                'limited_usage_with_other_organizations': design.limited_usage_with_other_organizations,
+            }
+        design_full_details['design_details'] = design_details
+        design_full_details['design_owner'] = design_owner
+        design_full_details['design_usage_parameters'] = design_usage_parameters
+        return design_full_details
 
-
-        return design_details
     
     def like(self, account_profile: AccountProfile):
         """
