@@ -102,6 +102,7 @@ class WorkshopFactory(DjangoModelFactory):
     organization = factory.SubFactory(OrganizationFactory)
     name = Faker("company")
     description = Faker("text")
+    is_sponsored = Faker("boolean", chance_of_getting_true=50)
     is_active = Faker("boolean", chance_of_getting_true=50)
     contact_email = factory.LazyFunction(generate_unique_email)
     contact_phone = Faker("phone_number")

@@ -362,6 +362,8 @@ class Design(TimeStampedModel):
         q_objects.add(Q(status=cls.APPROVED, to_be_published=True), Q.AND)
         # Filter the designs which don't belong to a regular user
         q_objects.add(Q(regular_user=None), Q.AND)
+        # Filter the designs where the workshop is active
+        q_objects.add(Q(workshop__is_active=True), Q.AND)
 
         # price filters
         if free:
@@ -395,6 +397,15 @@ class Design(TimeStampedModel):
         # filter sponsored designs
         if sponsored_designs:
             q_objects.add(Q(sponsored=True), Q.AND)
+
+        if sponsored_organizations:
+            q_objects.add(Q(workshop__organization__orgprofile__is_sponsored=True), Q.AND)
+        
+        if sponsored_stores:
+            q_objects.add(Q(store__storeprofile__is_sponsored=True), Q.AND)
+        
+        if sponsored_workshops:
+            q_objects.add(Q(workshop__is_sponsored=True), Q.AND)
 
         # search for the search term in the title, the description, the tags of the design, also the theme name and description, the store name and organization name
         if search_term:

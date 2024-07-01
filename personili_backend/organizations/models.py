@@ -126,6 +126,7 @@ class Workshop(TimeStampedModel):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
+    is_sponsored = models.BooleanField(default=False)
     description = models.TextField(max_length=255, null=True)
     address = models.TextField(max_length=255, null=True)
     contact_email = models.EmailField(null=True, unique=True)
