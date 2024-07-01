@@ -249,16 +249,18 @@ class DesignsViewSet(viewsets.ViewSet):
         return response
     
     ##### Get the full design
-    @action(detail=True, methods=['GET'], url_path='details', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
-    def get_design_by_id(self, request, pk=None):
+    @action(detail=False, methods=['GET'], url_path='(?P<design_id>[^/.]+)/details', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    def get_design_by_id(self, request, design_id=None):
         """
         Get the full details of a design by its id
         """
         self.permission_classes = [permissions.IsAuthenticatedOrReadOnly]
         self.authentication_classes = []
 
+        if not is_all_valid_uuid4([design_id]):
+            return Response({"error": "BAD_REQUEST"}, status=400)
         # first check if the design exists and that it is to be published and that is approved
-        design = get_object_or_404(Design, pk=pk)
+        design = get_object_or_404(Design, pk=design_id)
         if not design or not design.status == Design.APPROVED or not design.to_be_published:
             return Response({"error": "NOT_FOUND"}, status=404)
         

@@ -516,7 +516,7 @@ class Design(TimeStampedModel):
                                     .annotate(num_likes=models.Count('design_likes'))
                                     .first())
         
-        design_details: dict = {}
+        design_full_details: dict = {}
         # Design title, description , image path, tags, price, theme id and name
         design_details = {
             'design_id': design.id,
@@ -530,7 +530,16 @@ class Design(TimeStampedModel):
             'design_nb_likes': design.num_likes,
             'design_previews': [s3_engine.generate_presigned_s3_url(preview.image_path) for preview in design.design_previews.all()],
         }
-        
+        design_owner = {}
+        if design.store:
+            design_owner = {
+                'type': 'store' if design.store else 'workshop',
+                'store_name': design.store.name,
+                'store_id': design.store.id,
+                'store_sponsored': design.store.storeprofile.is_sponsored,
+            }
+
+
         return design_details
     
     def like(self, account_profile: AccountProfile):
