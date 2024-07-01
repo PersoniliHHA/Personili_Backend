@@ -367,7 +367,7 @@ class Design(TimeStampedModel):
 
         # price filters
         if free:
-            q_objects.add(Q(price=0.0), Q.AND)
+            q_objects.add(Q(base_price=0.0), Q.AND)
         if min_price:
             q_objects.add(Q(base_price__gte=min_price), Q.AND)
         if max_price:
