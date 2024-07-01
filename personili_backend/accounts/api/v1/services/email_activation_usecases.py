@@ -34,7 +34,7 @@ def send_email_activation_link(email_to_activate: str,
                                account_id: str,
                                token_size: int = 32,
                                api_version: str = "v1", 
-                               template_name: str= "email_verification_en", 
+                               template_name: str= "fancy_email_verification_en", 
                                first_name: str = None, 
                                last_name: str = None):
     

@@ -169,9 +169,10 @@ class PersonalizationType(TimeStampedModel):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     name = models.CharField(max_length=255, null=True)
     description = models.TextField(null=True, blank=True)
-    logo_path = models.CharField(max_length=255, null=True, blank=True)
-    image_path = models.CharField(max_length=255, null=True, blank=True)
-
+    image_path_1 = models.CharField(max_length=255, null=True, blank=True)
+    image_path_2 = models.CharField(max_length=255, null=True, blank=True)
+    image_path_3 = models.CharField(max_length=255, null=True, blank=True)
+    
     class Meta:
         db_table = 'personalization_types'
 

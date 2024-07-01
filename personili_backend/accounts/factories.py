@@ -63,7 +63,7 @@ class AccountProfileFactory(DjangoModelFactory):
     
     profile_picture_path = Faker('image_url')
     date_of_birth = Faker('date_of_birth')
-    gender = Faker('random_element', elements=('Male', 'Female', 'Not specified')
+    gender = Faker('random_element', elements=('Male', 'Female', 'Not specified'))
     
     biography = Faker("text")
     social_media_links = factory.LazyFunction(lambda: json.dumps(generate_social_media_links()))

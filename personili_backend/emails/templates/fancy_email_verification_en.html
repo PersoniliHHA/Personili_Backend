@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin: auto;
+      background-color: #ffffff;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .header {
+      text-align: center;
+      padding: 10px 0;
+      animation: slideIn 1s ease-in-out;
+    }
+
+    .header img {
+      width: 150px;
+    }
+
+    .content {
+      padding: 20px;
+    }
+
+    .content h1 {
+      font-size: 24px;
+      color: #333333;
+      animation: slideIn 1s ease-in-out;
+    }
+
+    .content p {
+      font-size: 16px;
+      color: #666666;
+      line-height: 1.6;
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #ff6f61;
+      color: #ffffff;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 5px;
+      margin-top: 20px;
+      animation: slideIn 1.5s ease-in-out;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 10px 0;
+      color: #777777;
+      font-size: 12px;
+      animation: fadeIn 3s ease-in-out;
+    }
+
+    .animated-logo {
+      width: 100px;
+      height: 100px;
+      background: url('https://via.placeholder.com/100') no-repeat center center;
+      background-size: cover;
+      border-radius: 50%;
+      margin: auto;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-30px);
+      }
+      60% {
+        transform: translateY(-15px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="animated-logo"></div>
+      <img src="https://via.placeholder.com/150" alt="Platform Logo">
+    </div>
+    <div class="content">
+      <h1>Welcome to [Platform Name], [User’s First Name]!</h1>
+      <p>We're thrilled to have you join our community.</p>
+      <p>To get started and explore all the amazing features we offer, please activate your account by clicking the button below:</p>
+      <p><a href="{{ params.activation_link }}" class="button">Activate Your Account</a></p>
+      <p>Once your account is activated, you'll be able to access personalized recommendations, exclusive offers, and much more!</p>
+      <p>If you have any questions or need assistance, feel free to reach out to our support team.</p>
+      <p>Looking forward to seeing you on www.personili.com</p>
+    </div>
+    <div class="footer">
+      <p>&copy; [Year] [Platform Name]. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>
+

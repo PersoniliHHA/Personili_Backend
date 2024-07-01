@@ -1,4 +1,4 @@
-from personalizables.models import Departement, Category, Personalizable, PersonalizableOption, PersonalizableVariant, PersonalizableVariantValue, PersonalizableZone, DesignedPersonalizableVariant, DesignedPersonalizableZone
+from personalizables.models import Departement, Category, Personalizable, PersonalizableOption, PersonalizableVariant, PersonalizableVariantValue, PersonalizableZone, DesignedPersonalizableVariant, DesignedPersonalizableZone, Option, OptionValue, PersonalizationType, PersonalizationMethod
 
 # factory boy imports
 import factory
@@ -39,6 +39,40 @@ class Category(DjangoModelFactory):
     parent_category = None
     availability_status = None
 
+class Option(DjangoModelFactory):
+    class Meta:
+        model = Option
+    
+    name = Faker('word')
+
+class OptionValue(DjangoModelFactory):
+    class Meta:
+        model = OptionValue
+
+    option = factory.SubFactory(Option)
+    value = Faker('word')
+
+class PersonalizationType(DjangoModelFactory):
+    class Meta:
+        model = PersonalizationType
+
+    name = Faker('word')
+    description = Faker('text')
+    image_path_1 = Faker('image_url')
+    image_path_2 = Faker('image_url')
+    image_path_3 = Faker('image_url')
+
+class PersonalizationMethod(DjangoModelFactory):
+    class Meta:
+        model = PersonalizationMethod
+
+    name = Faker('word')
+    description = Faker('text')
+    personalization_type = factory.SubFactory(PersonalizationType)
+    image_path_1 = Faker('image_url')
+    image_path_2 = Faker('image_url')
+    image_path_3 = Faker('image_url')
+
 class PersonalizableFactory(DjangoModelFactory):
     class Meta:
         model = Personalizable
@@ -70,6 +104,7 @@ class PersonalizableFactory(DjangoModelFactory):
     used_with_user_uploaded_designs = Faker('boolean', chance_of_getting_true=50)
     used_with_store_designs = Faker('boolean', chance_of_getting_true=50)
     used_with_workshop_designs = Faker('boolean', chance_of_getting_true=50)
+
 
 
 class PersonalizableVariantFactory(DjangoModelFactory):
