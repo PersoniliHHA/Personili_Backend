@@ -511,7 +511,7 @@ class Design(TimeStampedModel):
         """
         
         design = (cls.objects.filter(id=design_id, status=cls.APPROVED, to_be_published=True, regular_user=None)
-                                    .select_related('store__storeprofile', 'store__designer_profile' 'workshop__organization', 'theme')
+                                    .select_related('store__storeprofile', 'store__designer_profile', 'workshop__organization', 'theme')
                                     .prefetch_related('design_previews')
                                     .annotate(num_likes=models.Count('design_likes'))
                                     .first())
