@@ -1,4 +1,5 @@
 from personalizables.models import Departement, Category, Personalizable, PersonalizableOption, PersonalizableVariant, PersonalizableVariantValue, PersonalizableZone, DesignedPersonalizableVariant, DesignedPersonalizableZone, Option, OptionValue, PersonalizationType, PersonalizationMethod
+from designs.factories import DesignFactory
 
 # factory boy imports
 import factory
@@ -119,9 +120,43 @@ class PersonalizableZoneFactory(DjangoModelFactory):
     y2 = Faker('random_int', min=0, max=100)
     
 
+class PersonalizableOption(DjangoModelFactory):
+    class Meta:
+        model = PersonalizableOption
+    
+    personalizable = factory.SubFactory(Personalizable)
+    option = factory.SubFactory(Option)
+
+
 class PersonalizableVariantFactory(DjangoModelFactory):
     class Meta:
         model = PersonalizableVariant
 
     name = Faker('word')
+    personalizable = factory.SubFactory(Personalizable)
+    quantity = Faker('random_int', min=1, max=100)
 
+class PersonalizableVariantValueFactory(DjangoModelFactory):
+    class Meta:
+        model = PersonalizableVariantValue
+
+    personalizable_variant = factory.SubFactory(PersonalizableVariant)
+    option_value = factory.SubFactory(OptionValue)
+    personalizable_option = factory.SubFactory(PersonalizableOption)
+
+class DesignedPersonalizableVariantFactory(DjangoModelFactory):
+    personalizable_variant = factory.SubFactory(PersonalizableVariant)
+    name = Faker('word')
+
+class DesignedPersonalizableZone(DjangoModelFactory):
+    class Meta:
+        model = DesignedPersonalizableZone
+
+    designed_personalizable_variant = factory.SubFactory(DesignedPersonalizableVariantFactory)
+    personalizable_zone = factory.SubFactory(PersonalizableZoneFactory)
+    design = factory.SubFactory(DesignFactory)
+
+    dx1 = Faker('random_int', min=0, max=100)
+    dy1 = Faker('random_int', min=0, max=100)
+    dx2 = Faker('random_int', min=0, max=100)
+    dy2 = Faker('random_int', min=0, max=100)

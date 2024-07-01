@@ -55,7 +55,9 @@ class DesignsViewSet(viewsets.ViewSet):
         - search term
         - offset
         - limit
-        - 
+        - free
+        - Latest publication date
+        - promotion ids
         """
         self.permission_classes = [permissions.AllowAny]
         self.authentication_classes = []
@@ -63,6 +65,9 @@ class DesignsViewSet(viewsets.ViewSet):
         # Get the query parameters from the request
         offset = request.query_params.get('offset', None)
         limit = request.query_params.get('limit', None)
+
+        min_price = request.query_params.get('min_price', None)
+        max_price = request.query_params.get('max_price', None)
 
         # Latest publication date
         latest_publication_date_max = request.query_params.get('latest_publication_date_max', None)
@@ -83,8 +88,6 @@ class DesignsViewSet(viewsets.ViewSet):
         free = request.query_params.get('free', None)
         tags = request.query_params.get('tags', None)
 
-        
-        
         ####################### Query parameters validation ########################
         if offset and limit:
             if not (offset.isdigit() and limit.isdigit()):
@@ -94,12 +97,23 @@ class DesignsViewSet(viewsets.ViewSet):
                 offset = int(offset)
                 limit = int(limit)
                 print(type(offset), type(limit))
-                if (offset < 0 or limit < 0) or (offset > limit):
-                    logger.debug("offset and limit should be positive integers and offset should be less than limit")
+                if (offset < 0 or limit < 0) or (offset > limit) or (limit > 50):
+                    logger.debug("offset and limit should be positive integers and offset should be less than limit and limit should be less than 50")
                     return Response({"error": "BAD_REQUEST"}, status=400)
         else:
             offset = 0
             limit = 20
+        
+        if max_price and min_price:
+            if not (max_price.isdigit() and min_price.isdigit()):
+                logger.debug("max_price and min_price should be integers")
+                return Response({"error": "BAD_REQUEST"}, status=400)
+            else:
+                max_price = int(max_price)
+                min_price = int(min_price)
+                if (max_price < 0 or min_price < 0) or (max_price < min_price):
+                    logger.debug("max_price and min_price should be positive integers and max_price should be greater than min_price")
+                    return Response({"error": "BAD_REQUEST"}, status=400)
 
         if free:
             if free not in ["true","True"]:
@@ -194,17 +208,16 @@ class DesignsViewSet(viewsets.ViewSet):
             popular_designs = Design.get_designs(   
                                                     offset=offset, 
                                                     limit=limit,
-
+                                                    min_price = min_price,
+                                                    max_price = max_price,
                                                     theme_ids=theme_ids,
                                                     store_ids=store_ids,
                                                     workshop_ids=workshop_ids,
                                                     organization_ids=organization_ids,
                                                     promotion_ids=promotion_ids,
-
                                                     sponsored_stores=sponsored_stores,
                                                     sponsored_organizations=sponsored_organizations,
                                                     search_term=search_term,
-                                                    
                                                     tags=tags,
                                                     free=free
                                                 )

@@ -308,21 +308,17 @@ class Design(TimeStampedModel):
                         workshop_ids=None,
                         organization_ids=None,
                         promotion_ids=None,
-
                         sponsored_designs=False,
                         sponsored_stores=False,
                         sponsored_workshops=False,
                         sponsored_organizations=False,
-
                         search_term=None,
                         tags=None,
-                        
                         free = None,
                         price_min=None,
                         price_max=None,
                         latest_publication_date_min=None,
                         latest_publication_date_max=None,
-
                         offset=0,
                         limit=20): 
         """
@@ -442,7 +438,6 @@ class Design(TimeStampedModel):
                     'type': 'store' if design.store else 'workshop',
                     'store_name': design.store.name,
                     'store_id': design.store.id,
-                    'store_verified': design.store.storeprofile.is_verified,
                     'store_sponsored': design.store.storeprofile.is_sponsored,
                 }
             elif design.workshop:
@@ -469,9 +464,11 @@ class Design(TimeStampedModel):
                 design_usage_parameters = {
                     'limited_usage_with_same_collection':     design.limited_usage_with_same_collection,
                     'limited_usage_with_same_organization':   design.limited_usage_with_same_organization,
+                    'limited_usage_with_same_workshop':       design.limited_usage_with_same_workshop,
                     'limited_usage_with_designer_uploads':    design.limited_usage_with_designer_uploads,
                     'limited_usage_with_user_uploads':        design.limited_usage_with_user_uploads,
                     'limited_usage_with_other_workshops':     design.limited_usage_with_other_workshops,
+                    'limited_usage_with_other_organizations': design.limited_usage_with_other_organizations,
                 }
             design_data['design_usage_parameters'] = design_usage_parameters
             result['designs_list'].append(design_data)

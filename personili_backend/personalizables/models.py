@@ -12,6 +12,17 @@ from accounts.models import TimeStampedModel
 from organizations.models import InventoryItem
 from designs.models import Design
 
+
+
+#######################################################
+"""
+Each personalizable has many options linked to it, like colors and sizes and materials
+Each personalizable can have many personalizable variants:
+ -- a variant is defined by a set of combinations between the option value of the personalizable and the personalizable
+    This combination is called personalizable variant value
+ """
+#######################################################
+
 #########################################
 #             Department model          #
 #########################################
@@ -197,7 +208,7 @@ class PersonalizationMethod(TimeStampedModel):
     image_path_2 = models.CharField(max_length=255, null=True, blank=True)
     image_path_3 = models.CharField(max_length=255, null=True, blank=True)
 
-    
+
     class Meta:
         db_table = 'personalization_methods'
 
