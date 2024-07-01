@@ -511,7 +511,7 @@ class Design(TimeStampedModel):
         """
         
         design = (cls.objects.filter(id=design_id, status=cls.APPROVED, to_be_published=True, regular_user=None)
-                                    .select_related('store__store_profile', 'workshop__organization', 'theme')
+                                    .select_related('store__storeprofile', 'store__designer_profile' 'workshop__organization', 'theme')
                                     .prefetch_related('design_previews')
                                     .annotate(num_likes=models.Count('design_likes'))
                                     .first())
@@ -537,6 +537,8 @@ class Design(TimeStampedModel):
                 'store_name': design.store.name,
                 'store_id': design.store.id,
                 'store_sponsored': design.store.storeprofile.is_sponsored,
+                'store_logo_url': s3_engine.generate_presigned_s3_url(design.store.storeprofile.store_logo_path),
+                'store_banner_url': s3_engine.generate_presigned_s3_url(design.store.storeprofile.store_banner_path),
             }
         elif design.workshop:
             design_owner = {
