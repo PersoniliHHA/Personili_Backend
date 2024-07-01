@@ -510,7 +510,7 @@ class Design(TimeStampedModel):
         - design store id and name and logo or workshop id and name and organization name and logo
         """
         
-        design = (cls.objects.filter(id=design_id, status=cls.APPROVED, to_be_published=True, regular_user=None)
+        design = (cls.objects.filter(id=design_id, status=cls.APPROVED, to_be_published=True, regular_user=None, workshop__is_active=True)
                                     .select_related('store__storeprofile', 'store__designer_profile', 'workshop__organization', 'theme')
                                     .prefetch_related('design_previews')
                                     .annotate(num_likes=models.Count('design_likes'))
@@ -544,6 +544,7 @@ class Design(TimeStampedModel):
             design_owner = {
                 'workshop_name': design.workshop.name,
                 'workshop_id': design.workshop.id,
+                'workshop_description': design.workshop.description,
                 'organization_name': design.workshop.organization.business_name,
                 'organization_id': design.workshop.organization.id,
                 'organization_sponsored': design.workshop.organization.orgprofile.is_sponsored,
