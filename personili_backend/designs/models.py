@@ -533,7 +533,7 @@ class Design(TimeStampedModel):
         design_owner = {}
         if design.store:
             design_owner = {
-                'type': 'store' if design.store else 'workshop',
+                'type': 'store',
                 'store_name': design.store.name,
                 'store_id': design.store.id,
                 'store_sponsored': design.store.storeprofile.is_sponsored,
@@ -542,6 +542,7 @@ class Design(TimeStampedModel):
             }
         elif design.workshop:
             design_owner = {
+                'type': 'workshop',
                 'workshop_name': design.workshop.name,
                 'workshop_id': design.workshop.id,
                 'workshop_description': design.workshop.description,
