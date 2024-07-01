@@ -307,18 +307,24 @@ class Design(TimeStampedModel):
                         store_ids=None,
                         workshop_ids=None,
                         organization_ids=None,
+                        
                         promotion_ids=None,
+                        events_ids=None,
+                        
                         sponsored_designs=False,
                         sponsored_stores=False,
                         sponsored_workshops=False,
                         sponsored_organizations=False,
                         search_term=None,
                         tags=None,
+                        
                         free = None,
-                        price_min=None,
-                        price_max=None,
+                        min_price=None,
+                        max_price=None,
+                        
                         latest_publication_date_min=None,
                         latest_publication_date_max=None,
+
                         offset=0,
                         limit=20): 
         """
@@ -360,10 +366,10 @@ class Design(TimeStampedModel):
         # price filters
         if free:
             q_objects.add(Q(price=0.0), Q.AND)
-        if price_min:
-            q_objects.add(Q(base_price__gte=price_min), Q.AND)
-        if price_max:
-            q_objects.add(Q(base_price__lte=price_max), Q.AND)
+        if min_price:
+            q_objects.add(Q(base_price__gte=min_price), Q.AND)
+        if max_price:
+            q_objects.add(Q(base_price__lte=max_price), Q.AND)
 
         # filter by theme, store, workshop, organization, sponsored stores, sponsored organizations
         if theme_ids:
@@ -418,10 +424,9 @@ class Design(TimeStampedModel):
             design_details = {
                 'design_title': design.title,
                 'design_description': design.description,
-                
                 'design_theme_id': design.theme.id,
                 'design_theme_name': design.theme.name,
-                
+                'design_theme_image_url': s3_engine.generate_presigned_s3_url(design.theme.icon_1_path),
                 'design_image_url': s3_engine.generate_presigned_s3_url(design.image_path),
                 'design_nb_likes': design.num_likes,
                 'design_previews': [s3_engine.generate_presigned_s3_url(preview.image_path) for preview in design.design_previews.all()],

@@ -83,6 +83,7 @@ class DesignsViewSet(viewsets.ViewSet):
         sponsored_stores = request.query_params.get('sponsored_stores', None)
         sponsored_organizations = request.query_params.get('sponsored_organizations', None)
         sponsored_designs = request.query_params.get('sponsored_designs', None)
+        sponsored_workshops = request.query_params.get('sponsored_workshops', None)
 
         search_term = request.query_params.get('search_term', None)
         free = request.query_params.get('free', None)
@@ -183,6 +184,12 @@ class DesignsViewSet(viewsets.ViewSet):
                 logger.debug("sponsored_designs should be a boolean value")
                 return Response({"error": "BAD_REQUEST"}, status=400)
         
+        if sponsored_workshops:
+            # sponsored_workshops should ba valid boolean value
+            if sponsored_workshops not in ["true","True"]:
+                logger.debug("sponsored_workshops should be a boolean value")
+                return Response({"error": "BAD_REQUEST"}, status=400)
+        
         if workshop_ids:
             # remove the white spaces
             workshop_ids = workshop_ids.replace(" ", "")
@@ -205,18 +212,29 @@ class DesignsViewSet(viewsets.ViewSet):
                 return Response({"error": "BAD_REQUEST"}, status=400)
         try :
 
-            popular_designs = Design.get_designs(   
+            popular_designs = Design.get_designs(   latest_publication_date_max=latest_publication_date_max,
+                                                    latest_publication_date_min=latest_publication_date_min,
+                                                    
                                                     offset=offset, 
                                                     limit=limit,
+                                                    
                                                     min_price = min_price,
                                                     max_price = max_price,
+                                                    
                                                     theme_ids=theme_ids,
+                                                    
                                                     store_ids=store_ids,
                                                     workshop_ids=workshop_ids,
                                                     organization_ids=organization_ids,
+                                                    
                                                     promotion_ids=promotion_ids,
+                                                    events_ids=events_ids,
+
                                                     sponsored_stores=sponsored_stores,
                                                     sponsored_organizations=sponsored_organizations,
+                                                    sponsored_workshops=sponsored_workshops,
+                                                    sponsored_designs=sponsored_designs,
+                                                    
                                                     search_term=search_term,
                                                     tags=tags,
                                                     free=free
