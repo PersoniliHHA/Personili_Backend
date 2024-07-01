@@ -375,11 +375,11 @@ class Design(TimeStampedModel):
         if theme_ids:
             q_objects.add(Q(theme_id__in=theme_ids), Q.AND)
         if store_ids:
-            q_objects.add(Q(collection__store_id__in=store_ids), Q.AND)
+            q_objects.add(Q(store__in=store_ids), Q.AND)
         if workshop_ids:
-            q_objects.add(Q(collection__workshop_id__in=workshop_ids), Q.AND)
+            q_objects.add(Q(workshop__in=workshop_ids), Q.AND)
         if organization_ids:
-            q_objects.add(Q(collection__workshop__organization_id__in=organization_ids), Q.AND)
+            q_objects.add(Q(organization__in=organization_ids), Q.AND)
 
         # Date filters
         if latest_publication_date_min:
