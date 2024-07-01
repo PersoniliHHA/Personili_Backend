@@ -424,7 +424,7 @@ class Design(TimeStampedModel):
                            .annotate(num_likes=models.Count('design_likes')) 
                            .select_related('store__storeprofile', 'workshop__organization__orgprofile', 'theme')
                            .prefetch_related('design_previews')
-                           .order_by('-num_likes')[offset:offset+limit])
+                           .order_by('num_likes')[offset:offset+limit])
         result = {"designs_list":[]}
         for design in designs:
             # Root dict to contain design data
@@ -489,7 +489,7 @@ class Design(TimeStampedModel):
             design_data['design_usage_parameters'] = design_usage_parameters
             result['designs_list'].append(design_data)
 
-        result["count"] = designs.count()
+        result["count"] = cls.objects.filter(q_objects).count()
         
         return result
     
@@ -515,6 +515,19 @@ class Design(TimeStampedModel):
                                     .first())
         
         design_details: dict = {}
+        # Design title, description , image path, tags, price, theme id and name
+        design_details = {
+            'design_id': design.id,
+            'design_title': design.title,
+            'design_description': design.description,
+            'design_image_url': s3_engine.generate_presigned_s3_url(design.image_path),
+            'design_tags': design.tags,
+            'design_price': design.base_price,
+            'design_theme_id': design.theme.id,
+            'design_theme_name': design.theme.name,
+            'design_nb_likes': design.num_likes,
+            'design_previews': [s3_engine.generate_presigned_s3_url(preview.image_path) for preview in design.design_previews.all()],
+        }
         
         return design_details
     
