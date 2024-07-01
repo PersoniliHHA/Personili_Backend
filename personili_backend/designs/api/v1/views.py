@@ -22,7 +22,7 @@ from botocore.exceptions import ClientError
 import logging
 
 # set the logging on the debug level
-logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 
 #################################
@@ -88,12 +88,14 @@ class DesignsViewSet(viewsets.ViewSet):
         ####################### Query parameters validation ########################
         if offset and limit:
             if not (offset.isdigit() and limit.isdigit()):
+                logger.debug("offset and limit should be integers")
                 return Response({"error": "BAD_REQUEST"}, status=400)
             else:
                 offset = int(offset)
                 limit = int(limit)
                 print(type(offset), type(limit))
                 if (offset < 0 or limit < 0) or (offset > limit):
+                    logger.debug("offset and limit should be positive integers and offset should be less than limit")
                     return Response({"error": "BAD_REQUEST"}, status=400)
         else:
             offset = 0
@@ -101,6 +103,7 @@ class DesignsViewSet(viewsets.ViewSet):
 
         if free:
             if free not in ["true","True"]:
+                logger.debug("free should be a boolean value")
                 return Response({"error": "BAD_REQUEST"}, status=400)
         
         if theme_ids:
@@ -109,6 +112,7 @@ class DesignsViewSet(viewsets.ViewSet):
             # split the string into a list
             theme_ids = theme_ids.split(",")
             if not is_all_valid_uuid4(theme_ids):
+                logger.debug("theme_ids should be a list of valid uuid4")
                 return Response({"error": "BAD_REQUEST"}, status=400)
             
         if organization_ids:
@@ -117,6 +121,7 @@ class DesignsViewSet(viewsets.ViewSet):
             # split the string into a list
             organization_ids = organization_ids.split(",")
             if not is_all_valid_uuid4(organization_ids):
+                logger.debug("organization_ids should be a list of valid uuid4")
                 return Response({"error": "BAD_REQUEST"}, status=400)
         
         if store_ids:
@@ -125,6 +130,7 @@ class DesignsViewSet(viewsets.ViewSet):
             # split the string into a list
             store_ids = store_ids.split(",")
             if not is_all_valid_uuid4(store_ids):
+                logger.debug("store_ids should be a list of valid uuid4")
                 return Response({"error": "BAD_REQUEST"}, status=400)
         
         if promotion_ids :
@@ -133,6 +139,7 @@ class DesignsViewSet(viewsets.ViewSet):
             # split the string into a list
             promotion_ids = promotion_ids.split(",")
             if not is_all_valid_uuid4(promotion_ids):
+                logger.debug("promotion_ids should be a list of valid uuid4")
                 return Response({"error": "BAD_REQUEST"}, status=400)
         
         if events_ids :
@@ -141,21 +148,25 @@ class DesignsViewSet(viewsets.ViewSet):
             # split the string into a list
             events_ids = events_ids.split(",")
             if not is_all_valid_uuid4(events_ids):
+                logger.debug("events_ids should be a list of valid uuid4")
                 return Response({"error": "BAD_REQUEST"}, status=400)
             
         if sponsored_organizations:
             # sponsored_organizations should ba valid boolean value
             if sponsored_organizations not in ["true","True"]:
+                logger.debug("sponsored_organizations should be a boolean value")
                 return Response({"error": "BAD_REQUEST"}, status=400)
         
         if sponsored_stores:
             # sponsored_stores should ba valid boolean value
             if sponsored_stores not in ["true","True"]:
+                logger.debug("sponsored_stores should be a boolean value")
                 return Response({"error": "BAD_REQUEST"}, status=400)
         
         if sponsored_designs:
             # sponsored_designs should ba valid boolean value
             if sponsored_designs not in ["true","True"]:
+                logger.debug("sponsored_designs should be a boolean value")
                 return Response({"error": "BAD_REQUEST"}, status=400)
         
         if workshop_ids:
@@ -164,16 +175,19 @@ class DesignsViewSet(viewsets.ViewSet):
             # split the string into a list
             workshop_ids = workshop_ids.split(",")
             if not is_all_valid_uuid4(workshop_ids):
+                logger.debug("workshop_ids should be a list of valid uuid4")
                 return Response({"error": "BAD_REQUEST"}, status=400)
             
         if search_term:
             # search term has to be a string and not longer than 100 characters
             if not isinstance(search_term, str) or len(search_term) > 100:
+                logger.debug("search_term should be a string and not longer than 100 characters")
                 return Response({"error": "BAD_REQUEST"}, status=400)
             
         if tags:
             # tags should be a string
             if not isinstance(tags, str):
+                logger.debug("tags should be a string")
                 return Response({"error": "BAD_REQUEST"}, status=400)
         try :
 
