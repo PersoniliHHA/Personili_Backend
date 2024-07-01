@@ -363,7 +363,7 @@ class Design(TimeStampedModel):
         # Filter the designs which don't belong to a regular user
         q_objects.add(Q(regular_user=None), Q.AND)
         # Filter the designs where the workshop is active
-        q_objects.add(Q(workshop__is_active=True), Q.AND)
+        #q_objects.add(Q(workshop__is_active=True), Q.AND)
 
         # price filters
         if free:
@@ -424,7 +424,7 @@ class Design(TimeStampedModel):
                            .annotate(num_likes=models.Count('design_likes')) 
                            .select_related('store__storeprofile', 'workshop__organization__orgprofile', 'theme')
                            .prefetch_related('design_previews')
-                           .order_by('num_likes')[offset:offset+limit])
+                           .order_by('-num_likes')[offset:offset+limit])
         result = {"designs_list":[]}
         for design in designs:
             # Root dict to contain design data
