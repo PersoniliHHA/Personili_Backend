@@ -449,7 +449,7 @@ class Design(TimeStampedModel):
                 design_owner = {
                     'workshop_name': design.workshop.name,
                     'workshop_id': design.workshop.id,
-                    'organization_name': design.workshop.organization.name,
+                    'organization_name': design.workshop.organization.business_name,
                     'organization_id': design.workshop.organization.id,
                     'organization_sponsored': design.workshop.organization.orgprofile.is_sponsored,
                 }
