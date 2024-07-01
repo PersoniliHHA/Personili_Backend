@@ -265,7 +265,7 @@ class DesignsViewSet(viewsets.ViewSet):
             return Response({"error": "NOT_FOUND"}, status=404)
         
         try :
-            design_details = Design.get_full_design_details(design_id=pk)
+            design_details = Design.get_full_design_details(design_id=design_id)
             response = Response(design_details, status=status.HTTP_200_OK)
             return response
         
