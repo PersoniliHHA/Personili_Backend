@@ -416,11 +416,10 @@ class Design(TimeStampedModel):
                           Q(theme__description__icontains=search_term) | 
                           Q(store__name__icontains=search_term) |
                           Q(store__storeprofile__biography__icontains=search_term) |
-                          Q(workshop__organization__name__icontains=search_term) |
-                          Q(workshop__organization__orgprofile__biography__icontains=search_term) |
+                          Q(workshop__organization__business_name__icontains=search_term) |
+                          Q(workshop__organization__description__icontains=search_term) |
                           Q(workshop__name__icontains=search_term), Q.AND)
-        print("offset", offset)
-        print("limit", limit)
+
         designs = (cls.objects.filter(q_objects)
                            .annotate(num_likes=models.Count('design_likes')) 
                            .select_related('store__storeprofile', 'workshop__organization__orgprofile', 'theme')
