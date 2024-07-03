@@ -3,7 +3,9 @@ import random
 from random import randint
 from organizations.factories import BusinessOwnerProfileFactory, OrganizationFactory, OrganizationMembershipFactory, OrganizationProfileFactory, WorkshopFactory, WorkshopMembershipFactory, InventoryFactory, InventoryItemFactory
 from designs.factories import ThemeFactory, DesignerProfileFactory, DesignFactory, StoreFactory, StoreProfileFactory, CollectionFactory
-from personalizables.factories import CategoryFactory, DepartmentFactory, PersonalizableFactory, PersonalizableVariantFactory, PersonalizableVariantValueFactory
+from personalizables.factories import CategoryFactory, DepartmentFactory, PersonalizableFactory, PersonalizableVariantFactory, PersonalizableVariantValueFactory, OptionFactory, OptionValueFactory, DesignedPersonalizableVariantFactory, DesignedPersonalizableZoneFactory, PersonalizableOptionFactory, PersonalizableZoneFactory, PersonalizationMethodFactory, PersonalizationTypeFactory
+# Import data
+from personalizables.factories import CATEGORIES_LIST, DEPARTMENTS_LIST
 
 # factory boy imports
 import factory
@@ -188,11 +190,22 @@ def create_design_themes():
     
     return theme_instances
 
-def create_categories_and_departments():
+def create_categories():
     """
-    create the categories and departments
+
     """
-    pass
+
+def create_departments():
+    """
+    create departments
+    """
+    # Create the departements
+    departement_instances = []
+    for department in DEPARTMENTS_LIST:
+        departement_instances.append(DepartmentFactory(name=department["name"], description=department["description"]))
+    
+    return departement_instances
+
 
 def generate_design_usage_parmaters(is_regular_user: bool, 
                                     is_designer: bool, 
@@ -297,6 +310,9 @@ def init_personili_db(data_scale: int=2):
 
     # Create the roles
     create_roles_and_permissions()
+
+    # Create the departements
+    departement_instances = create_departments()
 
     # Create dynamic data
     for i in range(1000):

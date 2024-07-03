@@ -91,7 +91,7 @@ DEPARTMENTS_LIST = [
 ]
 
         
-class DepartementFactory(DjangoModelFactory):
+class DepartmentFactory(DjangoModelFactory):
     class Meta:
         model = Departement
 
@@ -102,7 +102,7 @@ class DepartementFactory(DjangoModelFactory):
     image_path_2 = Faker('image_url')
     image_path_3 = Faker('image_url')
 
-class Category(DjangoModelFactory):
+class CategoryFactory(DjangoModelFactory):
     class Meta:
         model = Category
 
@@ -113,22 +113,22 @@ class Category(DjangoModelFactory):
     image_path_3 = Faker('image_url')
 
     parent_category = None
-    availability_status = None
+    availability_status = "Available"
 
-class Option(DjangoModelFactory):
+class OptionFactory(DjangoModelFactory):
     class Meta:
         model = Option
     
     name = Faker('word')
 
-class OptionValue(DjangoModelFactory):
+class OptionValueFactory(DjangoModelFactory):
     class Meta:
         model = OptionValue
 
     option = factory.SubFactory(Option)
     value = Faker('word')
 
-class PersonalizationType(DjangoModelFactory):
+class PersonalizationTypeFactory(DjangoModelFactory):
     class Meta:
         model = PersonalizationType
 
@@ -138,7 +138,7 @@ class PersonalizationType(DjangoModelFactory):
     image_path_2 = Faker('image_url')
     image_path_3 = Faker('image_url')
 
-class PersonalizationMethod(DjangoModelFactory):
+class PersonalizationMethodFactory(DjangoModelFactory):
     class Meta:
         model = PersonalizationMethod
 
@@ -195,7 +195,7 @@ class PersonalizableZoneFactory(DjangoModelFactory):
     y2 = Faker('random_int', min=0, max=100)
     
 
-class PersonalizableOption(DjangoModelFactory):
+class PersonalizableOptionFactory(DjangoModelFactory):
     class Meta:
         model = PersonalizableOption
     
@@ -223,7 +223,7 @@ class DesignedPersonalizableVariantFactory(DjangoModelFactory):
     personalizable_variant = factory.SubFactory(PersonalizableVariant)
     name = Faker('word')
 
-class DesignedPersonalizableZone(DjangoModelFactory):
+class DesignedPersonalizableZoneFactory(DjangoModelFactory):
     class Meta:
         model = DesignedPersonalizableZone
 
