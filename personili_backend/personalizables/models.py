@@ -274,12 +274,16 @@ class Personalizable(TimeStampedModel):
         """
         # Validate the usage parameters of the personalizable
         if self.is_open_for_personalization :
-            self.used_with_specific_designs = False
-            self.used_with_specific_workshops = False
-            self.used_with_designers_designs = False
-            self.userd_with_user_uploaded_designs = False
+            self.used_with_store_designs = False
+            self.used_with_user_uploaded_designs = False
+            self.used_with_same_workshop_designs = False
+            self.used_with_other_workshop_designs = False
             self.used_with_platform_designs = False
-        elif any([self.used_with_specific_designs, self.used_with_specific_workshops, self.used_with_designers_designs, self.userd_with_user_uploaded_designs, self.used_with_platform_designs]):
+        elif any([self.used_with_store_designs, 
+                  self.used_with_user_uploaded_designs, 
+                  self.used_with_same_workshop_designs, 
+                  self.used_with_other_workshop_designs, 
+                  self.used_with_platform_designs]):
             self.is_open_for_personalization = False
 
         super().save()
