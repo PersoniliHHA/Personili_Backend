@@ -1,4 +1,4 @@
-from personalizables.models import Departement, Category, Personalizable, PersonalizableOption, PersonalizableVariant, PersonalizableVariantValue, PersonalizableZone, DesignedPersonalizableVariant, DesignedPersonalizableZone, Option, OptionValue, PersonalizationType, PersonalizationMethod
+from personalizables.models import Department, Category, Personalizable, PersonalizableOption, PersonalizableVariant, PersonalizableVariantValue, PersonalizableZone, DesignedPersonalizableVariant, DesignedPersonalizableZone, Option, OptionValue, PersonalizationType, PersonalizationMethod
 from designs.factories import DesignFactory
 
 # factory boy imports
