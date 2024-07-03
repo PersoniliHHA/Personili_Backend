@@ -268,7 +268,7 @@ class Personalizable(TimeStampedModel):
     def __str__(self):
         return self.name + " - " + self.category.name + " - " + str(self.id)
 
-    def save(self):
+    def save(self, *args, **kwargs):
         """
         This method saves the personalizable object
         """
