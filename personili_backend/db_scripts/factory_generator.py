@@ -3,7 +3,7 @@ import random
 from random import randint
 from organizations.factories import BusinessOwnerProfileFactory, OrganizationFactory, OrganizationMembershipFactory, OrganizationProfileFactory, WorkshopFactory, WorkshopMembershipFactory, InventoryFactory, InventoryItemFactory
 from designs.factories import ThemeFactory, DesignerProfileFactory, DesignFactory, StoreFactory, StoreProfileFactory, CollectionFactory
-from django.core.management import call_command
+from personalizables.factories import CategoryFactory, DepartmentFactory, PersonalizableFactory, PersonalizableVariantFactory, PersonalizableVariantValueFactory
 
 # factory boy imports
 import factory
@@ -105,9 +105,7 @@ def create_roles_and_permissions():
                 permission_list.append(PermissionFactory(name=permission["name"], description=permission["description"]))
             
             RoleFactory(name=role["name"], description=role["description"]).permissions.set(permission_list)
-        
-                
-                
+              
            
 def create_design_themes():
     """

@@ -12,10 +12,85 @@ from random import randint
 
 CATEGORIES_LIST = [
  {
-     
- }
+     "name": "Phone Cases",
+     "description": "Personalizable and designs tailored for Phone Cases",
+     "sub_categories": [
+            {
+                "name": "Iphone Cases",
+                "description": "Personalizable and designs tailored for Phone Cases",
+                "sub_categories": [
+                    { 
+                    "name": "iPhone 11 Cases",
+                    "description": "Personalizable and designs tailored for Iphone Cases",
+                    "sub_categories": []
+                    },
+                     { 
+                    "name": "iPhone 12 Cases",
+                    "description": "Personalizable and designs tailored for Iphone Cases",
+                    "sub_categories": []
+                    }
+                ]
+            },
+            {
+                "name": "Samsung Cases",
+                "description": "Personalizable and designs tailored for Phone Cases",
+                "sub_categories": [
+                    { 
+                    "name": "Galaxy S20 Cases",
+                    "description": "Personalizable and designs tailored for Iphone Cases",
+                    "sub_categories": []
+                    },
+                     { 
+                    "name": "Galaxy S21 Cases",
+                    "description": "Personalizable and designs tailored for Iphone Cases",
+                    "sub_categories": []
+                    }
+                ]
+            },
+            {
+                "name": "Pixel Cases",
+                "description": "Personalizable and designs tailored for Phone Cases",
+                "sub_categories": [
+                     { 
+                    "name": "Galaxy S20 Cases",
+                    "description": "Personalizable and designs tailored for Iphone Cases",
+                    "sub_categories": []
+                    },
+                     { 
+                    "name": "Galaxy S21 Cases",
+                    "description": "Personalizable and designs tailored for Iphone Cases",
+                    "sub_categories": []
+                    }
+                ]
+            }
+        ]
+
+ },
 ]
 
+DEPARTMENTS_LIST = [
+        {
+        "name": "Men",
+        "description": "Personalizable and designs tailored for Men",
+         },
+        {"name": "Women",
+        "description": "Personalizable and designs tailored fro Women",
+        },
+        { 
+      "name": "Kids",
+      "description": "Personalizable and designs tailored for Kids",
+        },
+        {
+        "name": "Baby",
+        "description": "Personalizable and designs tailored for Babies",
+        },
+        {
+        "name": "Unisex",
+        "description": "Personalizable and designs tailored for Unisex",
+        }
+]
+
+        
 class DepartementFactory(DjangoModelFactory):
     class Meta:
         model = Departement
