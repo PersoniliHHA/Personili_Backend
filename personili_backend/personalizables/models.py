@@ -241,7 +241,7 @@ class Personalizable(TimeStampedModel):
     model = models.CharField(max_length=255, null=True, default="Generic Model")
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category')
-    Department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='department')
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='department')
 
     # Designs that can be used on this personalizable
     allowed_designs = models.ManyToManyField(Design, related_name='personalizables')
@@ -254,8 +254,9 @@ class Personalizable(TimeStampedModel):
     can_be_template = models.BooleanField(default=False)
 
     # Parameters for personalizable usage with other designs
-    used_with_designers_designs = models.BooleanField(default=False)
+    used_with_store_designs = models.BooleanField(default=False)
     used_with_user_uploaded_designs = models.BooleanField(default=False)
+    used_with_same_workshop_designs = models.BooleanField(default=False)
     used_with_other_workshops_designs = models.BooleanField(default=False)
     used_with_platform_designs = models.BooleanField(default=False)
     

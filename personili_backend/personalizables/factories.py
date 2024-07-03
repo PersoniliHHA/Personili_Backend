@@ -230,7 +230,7 @@ class PersonalizableFactory(DjangoModelFactory):
     model = Faker('name')
 
     category = None
-    departement = None
+    department = None
 
     @factory.post_generation
     def related_designs(self, create, extracted, **kwargs):
@@ -246,11 +246,12 @@ class PersonalizableFactory(DjangoModelFactory):
 
     can_be_template = Faker('boolean', chance_of_getting_true=50)
 
-    used_with_designers_designs = Faker('boolean', chance_of_getting_true=50)
     used_with_user_uploaded_designs = Faker('boolean', chance_of_getting_true=50)
     used_with_store_designs = Faker('boolean', chance_of_getting_true=50)
-    used_with_workshop_designs = Faker('boolean', chance_of_getting_true=50)
-
+    
+    used_with_other_workshop_designs = Faker('boolean', chance_of_getting_true=50)
+    used_with_same_workshop_designs = Faker('boolean', chance_of_getting_true=50)
+    used_with_platform_designs = Faker('boolean', chance_of_getting_true=50)
 
 class PersonalizableZoneFactory(DjangoModelFactory):
     class Meta:

@@ -357,7 +357,7 @@ def init_personili_db(data_scale: int=2):
     create_roles_and_permissions()
 
     # Create the departements
-    departement_instances = create_departments()
+    department_instances = create_departments()
     # Create the categories
     leaf_categories = create_categories()
     # Create the options and their values
@@ -471,7 +471,7 @@ def init_personili_db(data_scale: int=2):
                 for _ in range(personalizables_nb):
                     # Create the personalizable
                     # First pick a random department and a random leaf category
-                    department = random.choice(departement_instances)
+                    department = random.choice(department_instances)
                     category = random.choice(leaf_categories)
                     personalizable = PersonalizableFactory(department=department, 
                                                            category=category)
