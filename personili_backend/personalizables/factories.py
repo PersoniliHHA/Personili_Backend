@@ -66,6 +66,59 @@ CATEGORIES_LIST = [
         ]
 
  },
+
+ {
+     "name": "Home & Living",
+     "description": "Personalizable and designs tailored for Home & Living",
+     "sub_categories": [
+         {
+             "name": "Bedding",
+             "description": "Personalizable and designs tailored for Bedding",
+             "sub_categories": [
+                    {
+                            "name": "Duvet Covers",
+                            "description": "Personalizable and designs tailored for Duvet Covers",
+                    },
+                    {
+                            "name": "Pillow Cases",
+                            "description": "Personalizable and designs tailored for Pillow Cases",
+                    },
+                    {
+                            "name": "Blankets",
+                            "description": "Personalizable and designs tailored for Blankets",
+                    },
+                    {
+                            "name": "Bed Sheets",
+                            "description": "Personalizable and designs tailored for Bed Sheets",
+                    },
+             ]
+
+         },
+         {
+             "name": "Kitchen & Dining",
+             "description": "Personalizable and designs tailored for Kitchen & Dining",
+                "sub_categories": [
+                        {
+                                "name": "Cutting Boards",
+                                "description": "Personalizable and designs tailored for Cutting Boards",
+                        },
+                        {
+                                "name": "Mugs",
+                                "description": "Personalizable and designs tailored for Mugs",
+                        },
+                        {
+                                "name": "Tea Towels",
+                                "description": "Personalizable and designs tailored for Tea Towels",
+                        },
+                        {
+                                "name": "Bowls",
+                                "description": "Personalizable and designs tailored for Bowls",
+                        },
+                ]
+         },
+
+     ]
+ }
 ]
 
 DEPARTMENTS_LIST = [

@@ -7,10 +7,11 @@ from personalizables.factories import CategoryFactory, DepartmentFactory, Person
 # Import data
 from personalizables.factories import CATEGORIES_LIST, DEPARTMENTS_LIST
 
+
 # factory boy imports
 import factory
 from factory import Faker
-
+from django.db import transaction
 
 def create_roles_and_permissions():
     """
@@ -190,10 +191,33 @@ def create_design_themes():
     
     return theme_instances
 
-def create_categories():
+@transaction.atomic
+def create_leaf_categories(data, parent=None):
     """
 
     """
+    category = CategoryFactory(name=data["name"], 
+                               description=data["description"], 
+                               parent_category=parent)
+
+    leaf_categories = []
+    if not data.get("sub_categories"):
+        leaf_categories.append(category)
+    else:
+        for sub_category in data["sub_categories"]:
+            leaf_categories.extend(create_leaf_categories(sub_category, category))
+    
+    return leaf_categories
+
+def create_categories():
+    """
+    Create the categories
+    """
+    leaf_categories = []
+    for category in CATEGORIES_LIST:
+        leaf_categories.extend(create_leaf_categories(category))
+    
+    return leaf_categories
 
 def create_departments():
     """
@@ -313,9 +337,11 @@ def init_personili_db(data_scale: int=2):
 
     # Create the departements
     departement_instances = create_departments()
+    # Create the categories
+    leaf_categories = create_categories()
 
     # Create dynamic data
-    for i in range(1000):
+    for i in range(500):
 
         # Create the account
         account = AccountFactory()
@@ -384,7 +410,6 @@ def init_personili_db(data_scale: int=2):
                                        )
 
         else:
-            print("inside business owner block ")
             business_owner_profile_count += 1
             # Create business owner profile
             business_owner_profile = BusinessOwnerProfileFactory(account_profile=account_profile)
