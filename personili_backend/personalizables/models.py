@@ -257,7 +257,7 @@ class Personalizable(TimeStampedModel):
     used_with_store_designs = models.BooleanField(default=False)
     used_with_user_uploaded_designs = models.BooleanField(default=False)
     used_with_same_workshop_designs = models.BooleanField(default=False)
-    used_with_other_workshops_designs = models.BooleanField(default=False)
+    used_with_other_workshop_designs = models.BooleanField(default=False)
     used_with_platform_designs = models.BooleanField(default=False)
     
 
