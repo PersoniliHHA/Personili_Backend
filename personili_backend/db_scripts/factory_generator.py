@@ -5,7 +5,7 @@ from organizations.factories import BusinessOwnerProfileFactory, OrganizationFac
 from designs.factories import ThemeFactory, DesignerProfileFactory, DesignFactory, StoreFactory, StoreProfileFactory, CollectionFactory
 from personalizables.factories import CategoryFactory, DepartmentFactory, PersonalizableFactory, PersonalizableVariantFactory, PersonalizableVariantValueFactory, OptionFactory, OptionValueFactory, DesignedPersonalizableVariantFactory, DesignedPersonalizableZoneFactory, PersonalizableOptionFactory, PersonalizableZoneFactory, PersonalizationMethodFactory, PersonalizationTypeFactory
 # Import data
-from personalizables.factories import CATEGORIES_LIST, DEPARTMENTS_LIST
+from personalizables.factories import CATEGORIES_LIST, DEPARTMENTS_LIST, OPTIONS_AND_VALUES
 
 
 # factory boy imports
@@ -316,6 +316,26 @@ def generate_design_usage_parmaters(is_regular_user: bool,
 
     return parameters
 
+
+def create_options_and_option_values():
+    """
+    Create the options and their values
+    
+    """
+    option_instances_values: list[dict] = []
+    for option in OPTIONS_AND_VALUES:
+        option_value_dict = {
+            "option": None,
+            "values": []
+        }
+        option_instance = OptionFactory(name=option["name"])
+        option_value_dict["option"] = option_instance
+        
+        for value in option["values"]:
+            option_value_instance=OptionValueFactory(option=option_instance, value=value["name"])
+            option_value_dict["values"].append(option_value_instance)
+        option_instances_values.append(option_value_dict)
+
 def init_personili_db(data_scale: int=2):
      # Track the number of created entries
     account_count = 0
@@ -339,9 +359,11 @@ def init_personili_db(data_scale: int=2):
     departement_instances = create_departments()
     # Create the categories
     leaf_categories = create_categories()
+    # Create the options and their values
+    option_values: list[dict] = create_options_and_option_values()
 
     # Create dynamic data
-    for i in range(500):
+    for i in range(50):
 
         # Create the account
         account = AccountFactory()
@@ -439,6 +461,20 @@ def init_personili_db(data_scale: int=2):
                                            store=None,
                                            regular_user=None,
                                            **parameters)
+                # Create the personalizables and their variants
+                # First decide how many personalizables this workshop should have (between 1 and 10)
+                personalizables_nb = random.randint(1, 10)
+                # Decide how many variants per personalizable (between 1 and 5)
+                personalizable_var_nb = random.randint(1, 5)
+
+                for _ in range(personalizables_nb):
+                    # Create the personalizable
+                    # First pick a random department and a random leaf category
+                    department = random.choice(departement_instances)
+                    category = random.choice(leaf_categories)
+                    personalizable = PersonalizableFactory(department=department, 
+                                                           category=category)
+
 
                 # Create the inventory
                 inventory = InventoryFactory(workshop=workshop)

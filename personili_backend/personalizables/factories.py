@@ -168,6 +168,23 @@ class CategoryFactory(DjangoModelFactory):
     parent_category = None
     availability_status = "Available"
 
+
+
+OPTIONS_AND_VALUES = [
+    {
+        "name": "Color",
+        "values": ["Red", "Blue", "Green", "Yellow", "Black", "White", "Pink", "Purple"]
+    },
+    {
+        "name": "Size",
+        "values": ["Small", "Medium", "Large", "Extra Large"]
+    },
+    {
+        "name": "Material",
+        "values": ["Cotton", "Polyester", "Leather", "Wool"]
+    }
+]
+
 class OptionFactory(DjangoModelFactory):
     class Meta:
         model = Option
@@ -206,11 +223,11 @@ class PersonalizableFactory(DjangoModelFactory):
     class Meta:
         model = Personalizable
 
-    name = Faker('word')
+    name = Faker('sentence')
     description = Faker('text')
     
-    brand = Faker('word')
-    model = Faker('word')
+    brand = Faker('name')
+    model = Faker('name')
 
     category = None
     departement = None
