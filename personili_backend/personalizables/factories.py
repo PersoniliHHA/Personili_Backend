@@ -93,7 +93,7 @@ DEPARTMENTS_LIST = [
         
 class DepartmentFactory(DjangoModelFactory):
     class Meta:
-        model = Departement
+        model = Department
 
     name = Faker('word')
     description = Faker('text')
