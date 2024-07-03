@@ -332,7 +332,7 @@ def create_options_and_option_values():
         option_value_dict["option"] = option_instance
         
         for value in option["values"]:
-            option_value_instance=OptionValueFactory(option=option_instance, value=value["name"])
+            option_value_instance=OptionValueFactory(option=option_instance, value=value)
             option_value_dict["values"].append(option_value_instance)
         option_instances_values.append(option_value_dict)
 
