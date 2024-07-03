@@ -41,8 +41,6 @@ class CategoryViewSet(viewsets.ViewSet):
             },status=status.HTTP_400_BAD_REQUEST)
             
 
-
-
 #################################
 #  Personalization   ViewSet    #
 #################################

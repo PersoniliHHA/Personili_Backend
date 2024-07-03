@@ -114,7 +114,10 @@ class Category(TimeStampedModel):
                 category_dict = {}
                 category_dict["id"] = category.id
                 category_dict["name"] = category.name
-                category_dict["image_path"] = category.image_path
+                category_dict["description"] = category.description
+                category_dict["image_path_1"] = category.image_path_1
+                category_dict["image_path_2"] = category.image_path_2
+                category_dict["image_path_3"] = category.image_path_3
                 category_dict["sub_categories"] = cls.get_category_tree(category.id)
                 category_tree.append(category_dict)
         
