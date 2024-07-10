@@ -345,6 +345,7 @@ class PersonalizableZone(TimeStampedModel):
     name = models.CharField(max_length=255, null=True)
     image_path = models.CharField(max_length=255, null=True, blank=True)
     max_nb_designs = models.IntegerField(null=True, default=1)
+    
     x1 = models.FloatField(null=True)
     y1 = models.FloatField(null=True)
     x2 = models.FloatField(null=True)

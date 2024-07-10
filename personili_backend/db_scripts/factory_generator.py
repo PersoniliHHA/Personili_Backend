@@ -479,6 +479,7 @@ def init_personili_db(data_scale: int=2):
                     # For each personalizable associate it with options, using the options list
                     for option in option_values:
                         personalizable_option = PersonalizableOptionFactory(personalizable=personalizable, option=option["option"])
+                        
                         # Now we create a personalizable variant, each variant is linked to a personalizable and multiple personalizable variant values
                         # Decide how many variants per personalizable (between 1 and 5)
                         for value in option["values"]:
