@@ -71,7 +71,7 @@ class Store(TimeStampedModel):
     a biography and is linked to one and only one designer profile
     """
 
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     name = models.CharField(max_length=255)
     # user can can have many stores linked to its profile
     designer_profile = models.ForeignKey(DesignerProfile, on_delete=models.CASCADE, related_name='stores')
@@ -121,7 +121,7 @@ class Collection(TimeStampedModel):
     """
     Every collection can be either linked to a store or a workshop
     """
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     name = models.CharField(max_length=255, default="My Collection")
     
     # only one of the two fields should be filled
@@ -193,7 +193,7 @@ class Design(TimeStampedModel):
         (_2D, '2D'),
     ]
 
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
    
     # General attributes 
     theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='design', null=True, blank=True)

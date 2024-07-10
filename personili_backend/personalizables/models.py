@@ -402,23 +402,36 @@ class DesignedPersonalizableVariant(TimeStampedModel):
 class DesignedPersonalizableZone(TimeStampedModel):
     """
     A designed personalizable zone is linked to a personalizable zone, 
-    it has an id and a foreign key to a personalizable zone and foreign key to the designed personalizable variant and a foreign key to the 
-    design table
+    - it has an id and a foreign key to a personalizable zone and foreign key to the designed personalizable variant
+    - a designed personalizable zone can be linked to multiple designs with many to many relationship
     and also 4 coordinates dx, dy, dh, dw
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     personalizable_zone = models.ForeignKey(PersonalizableZone, on_delete=models.CASCADE, related_name='designed_personalizable_zone')
     designed_personalizable_variant = models.ForeignKey(DesignedPersonalizableVariant, on_delete=models.CASCADE, related_name='designed_personalizable_variant_zone')
-    design = models.ForeignKey('designs.Design', on_delete=models.CASCADE, related_name='designed_personalizable_zone')
-
-
-    dx1 = models.FloatField(null=True)
-    dy1 = models.FloatField(null=True)
-    dx2 = models.FloatField(null=True)
-    dy2 = models.FloatField(null=True)
+    
+    # Represents the shapes, texts and other components of the design
+    components = models.JSONField(null=True, blank=True)
 
     class Meta:
         db_table = 'designed_personalizable_zones'
 
     def __str__(self):
         return self.personalizable_zone.name + " - " + str(self.id)
+
+class DesignedPersonalizableZoneDesign(models.Model):
+    """
+    A designed personalizable zone can have many designs linked to it
+    """
+    designed_personalizable_zone = models.ForeignKey(DesignedPersonalizableZone, on_delete=models.CASCADE, related_name='designs')
+    design = models.ForeignKey(Design, on_delete=models.CASCADE, related_name='designed_personalizable_zone')
+
+    # Coordinates of the design in the zone
+    dx = models.FloatField(null=True)
+    dy = models.FloatField(null=True)
+    dh = models.FloatField(null=True)
+    dw = models.FloatField(null=True)
+
+    class Meta:
+        db_table = 'designed_personalizable_zone_designs'
+

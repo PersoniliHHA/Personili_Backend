@@ -7,7 +7,6 @@ from personalizables.factories import CategoryFactory, DepartmentFactory, Person
 # Import data
 from personalizables.factories import CATEGORIES_LIST, DEPARTMENTS_LIST, OPTIONS_AND_VALUES
 
-
 # factory boy imports
 import factory
 from factory import Faker
@@ -108,8 +107,7 @@ def create_roles_and_permissions():
                 permission_list.append(PermissionFactory(name=permission["name"], description=permission["description"]))
             
             RoleFactory(name=role["name"], description=role["description"]).permissions.set(permission_list)
-              
-           
+                
 def create_design_themes():
     """
     Create the themes
@@ -230,7 +228,6 @@ def create_departments():
     
     return departement_instances
 
-
 def generate_design_usage_parmaters(is_regular_user: bool, 
                                     is_designer: bool, 
                                     is_business_owner: bool):
@@ -316,11 +313,9 @@ def generate_design_usage_parmaters(is_regular_user: bool,
 
     return parameters
 
-
 def create_options_and_option_values():
     """
     Create the options and their values
-    
     """
     option_instances_values: list[dict] = []
     for option in OPTIONS_AND_VALUES:
@@ -391,7 +386,6 @@ def init_personili_db(data_scale: int=2):
             is_business_owner = True
         
         if is_regular_user:
-            print("inside regular user block ")
             # Generate some user uploaded designs for the regular user
             # Determine how many designs this regular user should have (between 1 and 10)
             designs_nb = random.randint(0, 2)
@@ -408,7 +402,6 @@ def init_personili_db(data_scale: int=2):
 
         elif is_designer:
             designer_profile_count += 1
-            print("inside designer block ")
             # Create the designer profile
             designer_profile = DesignerProfileFactory(account_profile=account_profile)
             # Create the store
@@ -429,8 +422,7 @@ def init_personili_db(data_scale: int=2):
                                        regular_user=None,
                                        collection=None, 
                                        theme=random.choice(themes_instances),
-                                        **parameters
-                                       )
+                                       **parameters)
 
         else:
             business_owner_profile_count += 1
@@ -462,6 +454,7 @@ def init_personili_db(data_scale: int=2):
                                            store=None,
                                            regular_user=None,
                                            **parameters)
+                
                 # Create the personalizables and their variants
                 # First decide how many personalizables this workshop should have (between 1 and 10)
                 personalizables_nb = random.randint(1, 10)
@@ -475,7 +468,22 @@ def init_personili_db(data_scale: int=2):
                     category = random.choice(leaf_categories)
                     personalizable = PersonalizableFactory(department=department, 
                                                            category=category)
+                    # Create the personalizable zones 
+                    # First decide how many zones this personalizable should have (between 1 and 5)
+                    personalizable_zones_nb = random.randint(1, 5)
+                    personalizable_zones = []
+                    for _ in range(personalizable_zones_nb):
+                        personalizable_zone = PersonalizableZoneFactory(personalizable=personalizable)
+                        personalizable_zones.append(personalizable_zone)
 
+                    # For each personalizable associate it with options, using the options list
+                    for option in option_values:
+                        personalizable_option = PersonalizableOptionFactory(personalizable=personalizable, option=option["option"])
+                        # Now we create a personalizable variant, each variant is linked to a personalizable and multiple personalizable variant values
+                        # Decide how many variants per personalizable (between 1 and 5)
+                        for value in option["values"]:
+                            personalizable_option_value = PersonalizableVariantValueFactory(personalizable_option=personalizable_option, option_value=value) 
+                        
 
                 # Create the inventory
                 inventory = InventoryFactory(workshop=workshop)
