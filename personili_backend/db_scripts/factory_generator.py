@@ -330,6 +330,8 @@ def create_options_and_option_values():
             option_value_instance=OptionValueFactory(option=option_instance, value=value)
             option_value_dict["values"].append(option_value_instance)
         option_instances_values.append(option_value_dict)
+    
+    return option_instances_values
 
 @transaction.atomic
 def init_personili_db(data_scale: int=2):
