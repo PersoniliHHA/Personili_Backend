@@ -490,7 +490,7 @@ class Design(TimeStampedModel):
             design_data['design_usage_parameters'] = design_usage_parameters
             result['designs_list'].append(design_data)
 
-        result["count"] = cls.objects.filter(q_objects).count()
+        result["count"] = cls.objects.count()
         
         return result
     
