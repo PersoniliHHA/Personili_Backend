@@ -59,7 +59,7 @@ class PersonalizationTypeViewSet(viewsets.ModelViewSet):
     
 
     # Get all personalization types
-    @action(detail=False, methods=['GET'], url_path='personalization-types')
+    @action(detail=False, methods=['GET'], url_path='personalization-types', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def get_all_personalization_types(self, request):
         """This method returns all personalization types"""
         response = Response()

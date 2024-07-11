@@ -43,7 +43,7 @@ class DesignsViewSet(viewsets.ViewSet):
     ################################### GET/POST APIS, PUBLIC #####################################
     
     ##### Get the designs based on criteria : theme, store, workshop, nb of likes, sponsored stores, sponsored workshops
-    @action(detail=False, methods=['GET'], url_path='catalog', permission_classes=[permissions.AllowAny])
+    @action(detail=False, methods=['GET'], url_path='catalog', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def get_designs(self, request):
         """
         Get the designs based on different criterias : 
