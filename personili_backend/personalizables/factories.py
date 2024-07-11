@@ -143,7 +143,71 @@ DEPARTMENTS_LIST = [
         }
 ]
 
-        
+
+shape_components = [
+{"Rectangle": {
+    "x1": 0,
+    "y1": 0,
+    "x2": 100,
+    "y2": 100
+}},
+{"Circle": {
+    "x1": 0,
+    "y1": 0,
+    "x2": 100,
+    "y2": 100
+}},
+{"Triangle": {
+    "x1": 0,
+    "y1": 0,
+    "x2": 100,
+    "y2": 100
+}},
+{"Square": {
+    "x1": 0,
+    "y1": 0,
+    "x2": 100,
+    "y2": 100
+}},
+{"Heart": {
+    "x1": 0,
+    "y1": 0,
+    "x2": 100,
+    "y2": 100
+}},
+{"Star": {
+    "x1": 0,
+    "y1": 0,
+    "x2": 100,
+    "y2": 100
+}},
+{"Diamond": {
+    "x1": 0,
+    "y1": 0,
+    "x2": 100,
+    "y2": 100
+}},
+{"Oval": {
+    "x1": 0,
+    "y1": 0,
+    "x2": 100,
+    "y2": 100
+}},
+{"Hexagon": {
+    "x1": 0,
+    "y1": 0,
+    "x2": 100,
+    "y2": 100
+}},
+{"Pentagon": {
+    "x1": 0,
+    "y1": 0,
+    "x2": 100,
+    "y2": 100
+}}
+
+]
+
 class DepartmentFactory(DjangoModelFactory):
     class Meta:
         model = Department
@@ -300,9 +364,5 @@ class DesignedPersonalizableZoneFactory(DjangoModelFactory):
 
     designed_personalizable_variant = factory.SubFactory(DesignedPersonalizableVariantFactory)
     personalizable_zone = factory.SubFactory(PersonalizableZoneFactory)
-    design = factory.SubFactory(DesignFactory)
 
-    dx1 = Faker('random_int', min=0, max=100)
-    dy1 = Faker('random_int', min=0, max=100)
-    dx2 = Faker('random_int', min=0, max=100)
-    dy2 = Faker('random_int', min=0, max=100)
+    components = None
