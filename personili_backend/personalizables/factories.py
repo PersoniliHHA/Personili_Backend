@@ -237,15 +237,15 @@ class CategoryFactory(DjangoModelFactory):
 OPTIONS_AND_VALUES = [
     {
         "name": "Color",
-        "values": ["Red", "Blue", "Green", "Yellow", "Black", "White", "Pink", "Purple"]
+        "values": ["White", "Black"]
     },
     {
         "name": "Size",
-        "values": ["Small", "Medium", "Large", "Extra Large"]
+        "values": ["Small", "Medium", "Large"]
     },
     {
         "name": "Material",
-        "values": ["Cotton", "Polyester", "Leather", "Wool"]
+        "values": ["Cotton", "Polyester"]
     },
 ]
 
