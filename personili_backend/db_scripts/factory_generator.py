@@ -1,3 +1,7 @@
+# Standard imports
+import itertools
+from typing import Tuple, List
+
 from accounts.factories import AccountFactory, AccountProfileFactory, DeliveryAddressFactory, RoleFactory, PermissionFactory
 import random
 from random import randint
@@ -331,7 +335,11 @@ def create_options_and_option_values():
             option_value_dict["values"].append(option_value_instance)
         option_instances_values.append(option_value_dict)
     
-    return option_instances_values
+    # Generate a unique combinations of option-values
+    option_values_combinations: List[Tuple] = list(itertools.product(*[option["values"] for option in option_instances_values]))
+
+    return option_instances_values, option_values_combinations
+
 
 @transaction.atomic
 def init_personili_db(data_scale: int=2):
@@ -358,7 +366,7 @@ def init_personili_db(data_scale: int=2):
     # Create the categories
     leaf_categories = create_categories()
     # Create the options and their values
-    option_values: list[dict] = create_options_and_option_values()
+    option_values, value_combinations = create_options_and_option_values()
 
     # Create dynamic data
     for i in range(50):
@@ -446,6 +454,8 @@ def init_personili_db(data_scale: int=2):
                 workshop_count += 1
                 # For each workshop creates designs
                 designs_nb = random.randint(1, 30)
+                designs_list = []
+
                 for _ in range(designs_nb):
                     # Create the design
                     # Generate the design usage parameters
@@ -456,6 +466,7 @@ def init_personili_db(data_scale: int=2):
                                            store=None,
                                            regular_user=None,
                                            **parameters)
+                    designs_list.append(design)
                 
                 # Create the personalizables and their variants
                 # First decide how many personalizables this workshop should have (between 1 and 10)
@@ -477,47 +488,34 @@ def init_personili_db(data_scale: int=2):
                     for _ in range(personalizable_zones_nb):
                         personalizable_zone = PersonalizableZoneFactory(personalizable=personalizable)
                         personalizable_zones.append(personalizable_zone)
-                    
+
                     # Link the personalizable with the options
                     personalizable_options = []
                     for option in option_values:
                         personalizable_option = PersonalizableOptionFactory(personalizable=personalizable, option=option["option"])
                         personalizable_options.append(personalizable_option)
-
+                    
                     # Create the personalizable variants
                     # Determine how many variants per personalizable (between 1 and 5)
-                    personalizable_var_nb = random.randint(1, 5)
                     personalizable_variants = []
-                    for _ in range(personalizable_var_nb):
-                        # Instantiate the personalizable variant instance
+                    # this list will hold the option values that have been used
+                    option_values_list = []
+                    for value_combination in range(value_combinations):
+                        # Create the personalizable variant
                         personalizable_variant = PersonalizableVariantFactory(personalizable=personalizable)
                         personalizable_variants.append(personalizable_variant)
-                        
-                        # Now we create the personalizable variant values, each variant value is linked to an personalizable option, a personalizable variant and an option value
-                        for option in personalizable_options:
-                            for value in option["values"]:
-                                personalizable_variant_value = PersonalizableVariantValueFactory(personalizable_option=option, 
-                                                                                                 personalizable_variant=personalizable_variant, 
-                                                                                                 option_value=value)
-                      
 
-                    # For each personalizable associate it with options, using the options list
-                    for option in option_values:
-                        personalizable_option = PersonalizableOptionFactory(personalizable=personalizable, option=option["option"])
-                        
-                        # Now we create a personalizable variant, each variant is linked to a personalizable and multiple personalizable variant values
-                        # Decide how many variants per personalizable (between 1 and 5)
-                        for value in option["values"]:
-                            personalizable_option_value = PersonalizableVariantValueFactory(personalizable_option=personalizable_option, 
-                                                                                            option_value=value) 
-                        
+                        # each value combination is a tuple of option values (color, size, material)
+                        for index, value in enumerate(value_combination):
+                            # For each value in the combination, use the index to get the personalizable option and the option instance
+                            personalizable_option = personalizable_options[index]
+                            option = personalizable_option.option
+                            # Create the variant value
+                            variant_value = PersonalizableVariantValueFactory(personalizable_variant=personalizable_variant, 
+                                                                              option=option, 
+                                                                              value=value)
 
-                # Create the inventory
-                inventory = InventoryFactory(workshop=workshop)
-                # Create the inventory item
-                inventory_item = InventoryItemFactory(inventory=inventory)
-    
-
+                            
         # Log which objects have been created in this round
         print("created data block number ", i)
         # Final counts

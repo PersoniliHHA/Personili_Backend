@@ -182,7 +182,7 @@ OPTIONS_AND_VALUES = [
     {
         "name": "Material",
         "values": ["Cotton", "Polyester", "Leather", "Wool"]
-    }
+    },
 ]
 
 class OptionFactory(DjangoModelFactory):
@@ -278,9 +278,9 @@ class PersonalizableVariantFactory(DjangoModelFactory):
     class Meta:
         model = PersonalizableVariant
 
-    name = Faker('word')
+    name = Faker('name')
     personalizable = factory.SubFactory(Personalizable)
-    quantity = Faker('random_int', min=1, max=100)
+    quantity = Faker('random_int', min=1, max=500)
 
 class PersonalizableVariantValueFactory(DjangoModelFactory):
     class Meta:
