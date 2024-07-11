@@ -352,7 +352,7 @@ class PersonalizableVariantValueFactory(DjangoModelFactory):
         model = PersonalizableVariantValue
 
     personalizable_variant = factory.SubFactory(PersonalizableVariantFactory)
-    option_value = factory.SubFactory(OptionValue)
+    option_value = factory.SubFactory(OptionValueFactory)
     personalizable_option = factory.SubFactory(PersonalizableOptionFactory)
 
 class DesignedPersonalizableVariantFactory(DjangoModelFactory):
