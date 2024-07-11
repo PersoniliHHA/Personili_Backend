@@ -11,7 +11,7 @@ from django.forms.models import model_to_dict
 from accounts.models import TimeStampedModel
 from organizations.models import InventoryItem
 from designs.models import Design
-
+from organizations.models import Workshop
 
 
 #######################################################
@@ -230,10 +230,18 @@ class PersonalizationMethod(TimeStampedModel):
 #########################################
 class Personalizable(TimeStampedModel):
     """
-    A personalizable has a name, description, brand, model, category, department
-    Each
+    A personalizable is linked to a workshop.
+    it has a name, 
+    description, 
+    brand, model
+    category
+    department
+
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
+    
+    workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE, related_name='personalizables')
+    
     name = models.CharField(max_length=255, null=True)
     description = models.TextField(null=True, blank=True)
     

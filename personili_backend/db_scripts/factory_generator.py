@@ -471,15 +471,14 @@ def init_personili_db(data_scale: int=2):
                 # Create the personalizables and their variants
                 # First decide how many personalizables this workshop should have (between 1 and 10)
                 personalizables_nb = random.randint(1, 10)
-                # Decide how many variants per personalizable (between 1 and 5)
-                personalizable_var_nb = random.randint(1, 5)
 
                 for _ in range(personalizables_nb):
                     # Create the personalizable
                     # First pick a random department and a random leaf category
                     department = random.choice(department_instances)
                     category = random.choice(leaf_categories)
-                    personalizable = PersonalizableFactory(department=department, 
+                    personalizable = PersonalizableFactory(workshop=workshop,
+                                                           department=department, 
                                                            category=category)
                     # Create the personalizable zones 
                     # First decide how many zones this personalizable should have (between 1 and 5)

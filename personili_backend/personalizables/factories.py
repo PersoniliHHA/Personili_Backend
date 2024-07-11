@@ -259,7 +259,7 @@ class OptionValueFactory(DjangoModelFactory):
     class Meta:
         model = OptionValue
 
-    option = factory.SubFactory(Option)
+    option = factory.SubFactory(OptionFactory)
     value = Faker('word')
 
 class PersonalizationTypeFactory(DjangoModelFactory):
@@ -278,7 +278,7 @@ class PersonalizationMethodFactory(DjangoModelFactory):
 
     name = Faker('word')
     description = Faker('text')
-    personalization_type = factory.SubFactory(PersonalizationType)
+    personalization_type = factory.SubFactory(PersonalizationTypeFactory)
     image_path_1 = Faker('image_url')
     image_path_2 = Faker('image_url')
     image_path_3 = Faker('image_url')
@@ -287,6 +287,7 @@ class PersonalizableFactory(DjangoModelFactory):
     class Meta:
         model = Personalizable
 
+    workshop = None
     name = Faker('sentence')
     description = Faker('text')
     
@@ -320,7 +321,7 @@ class PersonalizableFactory(DjangoModelFactory):
 class PersonalizableZoneFactory(DjangoModelFactory):
     class Meta:
         model = PersonalizableZone
-    personalizable = factory.SubFactory(Personalizable)
+    personalizable = factory.SubFactory(PersonalizableFactory)
     name = Faker('word')
     image_path = Faker('image_url')
     max_nb_designs = Faker('random_int', min=1, max=10)
@@ -334,7 +335,7 @@ class PersonalizableOptionFactory(DjangoModelFactory):
     class Meta:
         model = PersonalizableOption
     
-    personalizable = factory.SubFactory(Personalizable)
+    personalizable = factory.SubFactory(PersonalizableFactory)
     option = factory.SubFactory(Option)
 
 
@@ -343,19 +344,19 @@ class PersonalizableVariantFactory(DjangoModelFactory):
         model = PersonalizableVariant
 
     name = Faker('name')
-    personalizable = factory.SubFactory(Personalizable)
+    personalizable = factory.SubFactory(PersonalizableFactory)
     quantity = Faker('random_int', min=1, max=500)
 
 class PersonalizableVariantValueFactory(DjangoModelFactory):
     class Meta:
         model = PersonalizableVariantValue
 
-    personalizable_variant = factory.SubFactory(PersonalizableVariant)
+    personalizable_variant = factory.SubFactory(PersonalizableVariantFactory)
     option_value = factory.SubFactory(OptionValue)
-    personalizable_option = factory.SubFactory(PersonalizableOption)
+    personalizable_option = factory.SubFactory(PersonalizableOptionFactory)
 
 class DesignedPersonalizableVariantFactory(DjangoModelFactory):
-    personalizable_variant = factory.SubFactory(PersonalizableVariant)
+    personalizable_variant = factory.SubFactory(PersonalizableVariantFactory)
     name = Faker('word')
 
 class DesignedPersonalizableZoneFactory(DjangoModelFactory):
