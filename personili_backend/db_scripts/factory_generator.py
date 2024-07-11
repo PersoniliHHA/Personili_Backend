@@ -503,11 +503,10 @@ def init_personili_db(data_scale: int=10):
                         for index, value in enumerate(value_combination):
                             # For each value in the combination, use the index to get the personalizable option and the option instance
                             personalizable_option = personalizable_options[index]
-                            option = option_values[index]["option"]
                             # Create the variant value
                             variant_value = PersonalizableVariantValueFactory(personalizable_variant=personalizable_variant, 
-                                                                              option=option, 
-                                                                              value=value)
+                                                                              personalizable_option=personalizable_option, 
+                                                                              option_value=value)
 
                             
         # Log which objects have been created in this round
