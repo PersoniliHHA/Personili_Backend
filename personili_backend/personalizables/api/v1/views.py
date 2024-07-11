@@ -52,12 +52,6 @@ class PersonalizationTypeViewSet(viewsets.ModelViewSet):
     serializer_class = PersonalizationTypeGetSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    def get_user_profile(self):
-        """This method returns the user profile of the user who made the request"""
-        user_profile = get_object_or_404(AccountProfile, user=self.request.user)
-        return user_profile
-    
-
     # Get all personalization types
     @action(detail=False, methods=['GET'], url_path='personalization-types', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def get_all_personalization_types(self, request):
@@ -80,9 +74,7 @@ class PersonalizationTypeViewSet(viewsets.ModelViewSet):
         return response
 
     
-    # Get all personalizables and their zones based on the personalization type
-    @action(detail=False, methods=['GET'], url_path='get-personalizables-with-zones-based-on-personalization-type', permission_classes=[permissions.IsAuthenticated])
-    def get_all_personizables_and_their_zones_based_on_personalization_type(self, request):
+
         """
         This method gets all personalizables and their zones based on the personalization type
         """
