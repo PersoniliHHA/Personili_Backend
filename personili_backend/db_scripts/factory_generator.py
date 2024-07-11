@@ -274,7 +274,6 @@ def generate_design_usage_parmaters(is_regular_user: bool,
         parameters["to_be_published"] = to_be_published
 
         if exclusive_usage:
-            print("inside exclusive usage block")
             free_usage = False
             limited_usage_with_designer_uploads = False
             limited_usage_with_user_uploads = False
@@ -285,7 +284,6 @@ def generate_design_usage_parmaters(is_regular_user: bool,
             limited_usage_with_same_organization = False
 
         elif free_usage:
-            print("inside free usage block")
             exclusive_usage = False
             limited_usage_with_designer_uploads = False
             limited_usage_with_user_uploads = False
@@ -296,7 +294,6 @@ def generate_design_usage_parmaters(is_regular_user: bool,
             limited_usage_with_same_organization = False
 
         else:
-            print("inside limited usage block")
             limited_usage_with_same_collection = randint(0, 1) < 0.9
             limited_usage_with_same_workshop = randint(0, 1) < 0.5
             limited_usage_with_same_organization = randint(0, 1) < 0.9
@@ -312,8 +309,6 @@ def generate_design_usage_parmaters(is_regular_user: bool,
         parameters["limited_usage_with_user_uploads"] = limited_usage_with_user_uploads
         parameters["limited_usage_with_other_workshops"] = limited_usage_with_other_workshops
         parameters["limited_usage_with_other_organizations"] = limited_usage_with_other_organizations
-        # print the parameters
-        print(parameters)
 
     return parameters
 
@@ -341,8 +336,8 @@ def create_options_and_option_values():
     return option_instances_values, option_values_combinations
 
 
-@transaction.atomic
-def init_personili_db(data_scale: int=2):
+
+def init_personili_db(data_scale: int=10):
      # Track the number of created entries
     account_count = 0
     account_profile_count = 0
@@ -369,7 +364,7 @@ def init_personili_db(data_scale: int=2):
     option_values, value_combinations = create_options_and_option_values()
 
     # Create dynamic data
-    for i in range(50):
+    for i in range(data_scale):
 
         # Create the account
         account = AccountFactory()
