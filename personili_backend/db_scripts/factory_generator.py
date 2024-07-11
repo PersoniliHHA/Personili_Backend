@@ -500,7 +500,7 @@ def init_personili_db(data_scale: int=2):
                     personalizable_variants = []
                     # this list will hold the option values that have been used
                     option_values_list = []
-                    for value_combination in range(value_combinations):
+                    for value_combination in value_combinations:
                         # Create the personalizable variant
                         personalizable_variant = PersonalizableVariantFactory(personalizable=personalizable)
                         personalizable_variants.append(personalizable_variant)
