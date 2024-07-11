@@ -50,6 +50,25 @@ class Department(TimeStampedModel):
 
     def __str__(self):
         return self.name + " - " + str(self.id)
+    
+    @classmethod
+    def get_all_departments(cls):
+        """
+        Get all the departments
+        """
+        departments = Department.objects.all()
+        department_list = []
+        for department in departments:
+            department_dict = {}
+            department_dict["id"] = department.id
+            department_dict["name"] = department.name
+            department_dict["description"] = department.description
+            department_dict["image_path_1"] = department.image_path_1
+            department_dict["image_path_2"] = department.image_path_2
+            department_dict["image_path_3"] = department.image_path_3
+            department_list.append(department_dict)
+        
+        return department_list
 
 
 #########################################

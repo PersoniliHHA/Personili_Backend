@@ -5,8 +5,7 @@ from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
 
 # Local imports
-from personalizables.models import Category, PersonalizationType, PersonalizationMethod, Personalizable, PersonalizableVariant, PersonalizableZone
-from personalizables.api.v1.serializers import CategorySerializer, PersonalizationTypeGetSerializer, PersonalizationMethodGetSerializer
+from personalizables.models import Department, Category, PersonalizationType, PersonalizationMethod, Personalizable, PersonalizableVariant, PersonalizableZone
 from accounts.models import AccountProfile
 
 # Standard imports
@@ -18,7 +17,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 
 #################################
-#     Cat/Sub ViewSet           #
+#     Cat ViewSet              #
 #################################
 
 class CategoryViewSet(viewsets.ViewSet):
@@ -39,33 +38,35 @@ class CategoryViewSet(viewsets.ViewSet):
             return Response({
                 "error": "UNKNOWN_ERROR"
             },status=status.HTTP_400_BAD_REQUEST)
-            
+
+
+#################################
+#     Cat ViewSet           #
+#################################
+
+class DepartmentViewSet(viewsets.ViewSet):
+    """Viewset for the department class"""
+
+    queryset = Category.objects.all()
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    @action(detail=False, methods=['GET'], url_path='departments', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    def get_all_departments(self, request):
+        """Method that returns all categories and their subcategories"""
+        try:
+            response_data: List = Department.get_all_departments()
+            return Response(response_data, status=status.HTTP_200_OK)
+        except Exception as e:
+            logging.error(f"UNKNOWN_ERROR : {e}")
+            return Response({
+                "error": "UNKNOWN_ERROR"
+            },status=status.HTTP_400_BAD_REQUEST)
 
 #################################
 #  Personalization   ViewSet    #
 #################################
-class PersonalizationTypeViewSet(viewsets.ModelViewSet):
-    """
-    Viewset for the PersonalizationType class, as well as the Personalization method
-    """
-    queryset = PersonalizationType.objects.all()
-    serializer_class = PersonalizationTypeGetSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    # Get all personalization types
-    @action(detail=False, methods=['GET'], url_path='personalization-types', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
-    def get_all_personalization_types(self, request):
-        """This method returns all personalization types"""
-        response = Response()
-        response.data = PersonalizationType.get_all_personalization_types()
-        response.status_code = status.HTTP_200_OK
 
-        return response
-    
-
-    # Get all personalization types and their methods
-    @action(detail=False, methods=['GET'], url_path='personalization-types-and-methods')
-    def get_all_personalization_types_and_methods(self, request):
         """This method returns all personalization types and methods"""
         response = Response()
         response.data = PersonalizationType.get_all_personaliation_types_with_related_personalization_methods()

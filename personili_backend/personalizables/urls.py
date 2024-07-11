@@ -8,6 +8,7 @@ from personalizables.api.v1.views import CategoryViewSet, PersonalizationTypeVie
 
 router = DefaultRouter()
 router.register('v1/personalizables', CategoryViewSet, basename='categories')
+router.register('v1/personalizables', PersonalizationTypeViewSet, basename='departments')
 router.register('v1/personalizables', PersonalizationTypeViewSet, basename='personalization-types')
 urlpatterns = [
  path('', include(router.urls)),
