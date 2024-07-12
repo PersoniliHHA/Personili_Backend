@@ -74,7 +74,7 @@ class DesignsViewSet(viewsets.ViewSet):
         latest_publication_date_min = request.data.get('latest_publication_date_min', None)
 
         theme_ids = request.data.get('themes', None)
-        store_ids = request.body.get('stores', None)
+        store_ids = request.data.get('stores', None)
         workshop_ids = request.data.get('workshops', None)
         organization_ids = request.data.get('organizations', None)
         promotion_ids = request.data.get('promotions', None)
