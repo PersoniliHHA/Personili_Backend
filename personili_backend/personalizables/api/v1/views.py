@@ -63,34 +63,53 @@ class DepartmentViewSet(viewsets.ViewSet):
             },status=status.HTTP_400_BAD_REQUEST)
 
 #################################
-#  Personalization   ViewSet    #
+#  Personalizables   ViewSet    #
 #################################
+class PersonalizableViewSet(viewsets.ViewSet):
+    """Viewset for the personalizable class"""
 
+    queryset = Personalizable.objects.all()
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-        """This method returns all personalization types and methods"""
-        response = Response()
-        response.data = PersonalizationType.get_all_personaliation_types_with_related_personalization_methods()
-        response.status_code = status.HTTP_200_OK
-
-        return response
-
-    
-
-        """
-        This method gets all personalizables and their zones based on the personalization type
-        """
-        # check that the personalization_type_id is in the request
-        if not request.query_params.get('personalization_type_id'):
-            logging.error("content of query params:",request.query_params)
-            logging.error("get_all_personizables_and_their_zones_based_on_personalization_type error : personalization_type_id not in query params")
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
-        response = Response()
-        try :
-            response.data = PersonalizationType.get_allowed_personalizables_and_their_zones_for_personalization_type(request.query_params.get('personalization_type_id'))
-            response.status_code = status.HTTP_200_OK
+    @action(detail=False, methods=['GET'], url_path='catalog', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    def get_all_personalizables(self, request):
+        """Method that returns all personalizables"""
+        try:
+            response_data: List = Personalizable.get_personalizables()
+            return Response(response_data, status=status.HTTP_200_OK)
         except Exception as e:
-            logging.error(f"get_all_personizables_and_their_zones_based_on_personalization_type error : {e}")
-            response.status_code = status.HTTP_400_BAD_REQUEST
+            logging.error(f"UNKNOWN_ERROR : {e}")
+            return Response({
+                "error": "UNKNOWN_ERROR"
+            },status=status.HTTP_400_BAD_REQUEST)
 
-        return response
+    @action(detail=True, methods=['GET'], url_path='personalizables/(?P<pk>[^/.]+)', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    def get_personalizable(self, request, pk=None):
+        """Method that returns a personalizable object"""
+        try:
+            personalizable = get_object_or_404(Personalizable, pk=pk)
+            response_data = personalizable.get_personalizable()
+            return Response(response_data, status=status.HTTP_200_OK)
+        except Exception as e:
+            logging.error(f"UNKNOWN_ERROR : {e}")
+            return Response({
+                "error": "UNKNOWN_ERROR"
+            },status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['GET'], url_path='personalizables/(?P<pk>[^/.]+)/variants', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    def get_personalizable_variants(self, request, pk=None):
+        """Method that returns all variants of a personalizable object"""
+        try:
+            personalizable = get_object_or_404(Personalizable, pk=pk)
+            response_data = personalizable.get_personalizable_variants()
+            return Response(response_data, status=status.HTTP_200_OK)
+        except Exception as e:
+            logging.error(f"UNKNOWN_ERROR : {e}")
+            return Response({
+                "error": "UNKNOWN_ERROR"
+            },status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['GET'], url_path='personalizables/(?P<pk>[^/.]+)/zones', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    def get_personalizable_zones(self, request, pk=None):
+        """Method that returns all zones of a personalizable object"""
+        pass

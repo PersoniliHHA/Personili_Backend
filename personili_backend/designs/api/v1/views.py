@@ -43,7 +43,7 @@ class DesignsViewSet(viewsets.ViewSet):
     ################################### GET/POST APIS, PUBLIC #####################################
     
     ##### Get the designs based on criteria : theme, store, workshop, nb of likes, sponsored stores, sponsored workshops
-    @action(detail=False, methods=['GET'], url_path='catalog', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    @action(detail=False, methods=['POST'], url_path='catalog', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def get_designs(self, request):
         """
         Get the designs based on different criterias : 
@@ -61,33 +61,33 @@ class DesignsViewSet(viewsets.ViewSet):
         """
         self.permission_classes = [permissions.AllowAny]
         self.authentication_classes = []
-        
+        body_data = request.data
         # Get the query parameters from the request
-        offset = request.query_params.get('offset', None)
-        limit = request.query_params.get('limit', None)
+        offset = request.body.get('offset', None)
+        limit = request.body.get('limit', None)
 
-        min_price = request.query_params.get('min_price', None)
-        max_price = request.query_params.get('max_price', None)
+        min_price = request.body.get('min_price', None)
+        max_price = request.body.get('max_price', None)
 
         # Latest publication date
-        latest_publication_date_max = request.query_params.get('latest_publication_date_max', None)
-        latest_publication_date_min = request.query_params.get('latest_publication_date_min', None)
+        latest_publication_date_max = request.body.get('latest_publication_date_max', None)
+        latest_publication_date_min = request.body.get('latest_publication_date_min', None)
 
-        theme_ids = request.query_params.get('themes', None)
-        store_ids = request.query_params.get('stores', None)
-        workshop_ids = request.query_params.get('workshops', None)
-        organization_ids = request.query_params.get('organizations', None)
-        promotion_ids = request.query_params.get('promotions', None)
-        events_ids = request.query_params.get('events', None)
+        theme_ids = request.body.get('themes', None)
+        store_ids = request.body.get('stores', None)
+        workshop_ids = request.body.get('workshops', None)
+        organization_ids = request.body.get('organizations', None)
+        promotion_ids = request.body.get('promotions', None)
+        events_ids = request.body.get('events', None)
         
-        sponsored_stores = request.query_params.get('sponsored_stores', None)
-        sponsored_organizations = request.query_params.get('sponsored_organizations', None)
-        sponsored_designs = request.query_params.get('sponsored_designs', None)
-        sponsored_workshops = request.query_params.get('sponsored_workshops', None)
+        sponsored_stores = request.body.get('sponsored_stores', None)
+        sponsored_organizations = request.body.get('sponsored_organizations', None)
+        sponsored_designs = request.body.get('sponsored_designs', None)
+        sponsored_workshops = request.body.get('sponsored_workshops', None)
 
-        search_term = request.query_params.get('search_term', None)
-        free = request.query_params.get('free', None)
-        tags = request.query_params.get('tags', None)
+        search_term = request.body.get('search_term', None)
+        free = request.body.get('free', None)
+        tags = request.body.get('tags', None)
 
         ####################### Query parameters validation ########################
         if offset and limit:

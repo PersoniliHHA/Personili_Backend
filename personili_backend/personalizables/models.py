@@ -192,7 +192,8 @@ class OptionValue(TimeStampedModel):
 
     def __str__(self):
         return self.value + " - " + str(self.option.name)
-
+        
+        return option_values_list
 #########################################
 #       PersonalizationType model       #
 #########################################
@@ -315,6 +316,19 @@ class Personalizable(TimeStampedModel):
 
         super().save()
     
+    @classmethod
+    def get_personalizables(cls):
+        """
+        Get a list of personlizables based on a set of filters.
+        Filters can be :
+            - category
+            - department
+            - workshops
+            - organizations
+            - promotions
+            - option values (color, size, material)
+        - include all the details of each personalizable
+        """
 #########################################
 #      PersonalizableVariant model      #
 #########################################
