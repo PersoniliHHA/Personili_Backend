@@ -362,6 +362,8 @@ class Personalizable(TimeStampedModel):
         - include the category and the department as well
         """
         q_objects = Q()
+        # Filter only for active workshops
+        q_objects.add(Q(workshop__is_active=True), Q.AND)
         if search_term:
             q_objects.add(Q(name__icontains=search_term) | 
                             Q(description__icontains=search_term) | 
@@ -409,17 +411,18 @@ class Personalizable(TimeStampedModel):
         result = {"personalizables_list": []}
         for personalizable in personalizables:
             personalizable_dict = {}
-            personalizable_dict["id"] = personalizable.id
-            personalizable_dict["name"] = personalizable.name
-            personalizable_dict["description"] = personalizable.description
-            personalizable_dict["brand"] = personalizable.brand
-            personalizable_dict["model"] = personalizable.model
+            personalizable_dict["personalizable_id"] = personalizable.id
+            personalizable_dict["personalizable_name"] = personalizable.name
+            personalizable_dict["personalizable_description"] = personalizable.description
+            personalizable_dict["personalizable_brand"] = personalizable.brand
+            personalizable_dict["personalizable_model"] = personalizable.model
             personalizable_dict["category"] = personalizable.category.name
             personalizable_dict["department"] = personalizable.department.name
             personalizable_dict["workshop"] = personalizable.workshop.name
             personalizable_dict["workshop_description"] = personalizable.workshop.description
-            personalizable_dict["organization"] = personalizable.workshop.organization.name
-            personalizable_dict["organization_description"] = personalizable.workshop.organization.description
+            personalizable_dict["organization_name"] = personalizable.workshop.organization.business_name
+            personalizable_dict["organization_logo"] = personalizable.workshop.organization.orgprofile.logo_path
+            personalizable_dict["organization_sponsored"] = personalizable.workshop.organization.orgprofile.is_sponsored
             personalizable_dict["variants"] = []
             for variant in personalizable.variants.all():
                 variant_dict = {}
