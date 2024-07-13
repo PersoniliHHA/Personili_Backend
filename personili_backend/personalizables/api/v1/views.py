@@ -213,7 +213,7 @@ class PersonalizableViewSet(viewsets.ViewSet):
                 brands=brands,
                 models=models,
                 category_ids=category_ids,
-                departement_ids=departement_ids,
+                department_ids=departement_ids,
                 option_values_ids=option_values_ids,
                 workshop_ids=workshop_ids,
                 organization_ids=organization_ids,
