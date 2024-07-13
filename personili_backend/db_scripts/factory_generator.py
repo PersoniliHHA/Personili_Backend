@@ -6,7 +6,7 @@ from accounts.factories import AccountFactory, AccountProfileFactory, DeliveryAd
 import random
 from random import randint
 from organizations.factories import BusinessOwnerProfileFactory, OrganizationFactory, OrganizationMembershipFactory, OrganizationProfileFactory, WorkshopFactory, WorkshopMembershipFactory, InventoryFactory, InventoryItemFactory
-from designs.factories import ThemeFactory, DesignerProfileFactory, DesignFactory, StoreFactory, StoreProfileFactory, CollectionFactory
+from designs.factories import DesignPreviewFactory,ThemeFactory, DesignerProfileFactory, DesignFactory, StoreFactory, StoreProfileFactory, CollectionFactory
 from personalizables.factories import CategoryFactory, DepartmentFactory, PersonalizableFactory, PersonalizableVariantFactory, PersonalizableVariantValueFactory, OptionFactory, OptionValueFactory, DesignedPersonalizableVariantFactory, DesignedPersonalizableZoneFactory, PersonalizableOptionFactory, PersonalizableZoneFactory, PersonalizationMethodFactory, PersonalizationTypeFactory
 # Import data
 from personalizables.factories import CATEGORIES_LIST, DEPARTMENTS_LIST, OPTIONS_AND_VALUES
@@ -462,6 +462,11 @@ def init_personili_db(data_scale: int=10):
                                            regular_user=None,
                                            **parameters)
                     designs_list.append(design)
+                    # Determine the number of design previews
+                    design_previews_nb = random.randint(1, 5)
+                    for _ in range(design_previews_nb):
+                        # Create the design preview
+                        design_preview = DesignPreviewFactory(design=design)
                 
                 # Create the personalizables and their variants
                 # First decide how many personalizables this workshop should have (between 1 and 10)

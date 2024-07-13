@@ -137,4 +137,4 @@ class DesignPreviewFactory(DjangoModelFactory):
         model = DesignPreview
     
     design = factory.SubFactory(DesignFactory)
-    image_path = Faker('file_path', depth=5, category="image")
+    image_path = Faker('image_url')

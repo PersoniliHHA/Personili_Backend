@@ -412,7 +412,7 @@ class Personalizable(TimeStampedModel):
         # Add the events filter and highest sales filter later
         personalizables = (cls.objects.filter(q_objects)
                            .select_related('workshop__organization__orgprofile', 'category', 'department')
-                           .prefetch_related('variants'))[offset:limit]
+                           .prefetch_related('variants__variant_values__option_values'))[offset:limit]
         end_time = time.time()
         print("Time taken to get personalizables : ", end_time - start_time)
         print("Personalizables length : ")
@@ -429,7 +429,6 @@ class Personalizable(TimeStampedModel):
             personalizable_dict["category"] = personalizable.category.name
             personalizable_dict["department"] = personalizable.department.name
             personalizable_dict["workshop"] = personalizable.workshop.name
-            personalizable_dict["workshop_description"] = personalizable.workshop.description
             personalizable_dict["organization_name"] = personalizable.workshop.organization.business_name
             personalizable_dict["organization_logo"] = personalizable.workshop.organization.orgprofile.logo_path
             personalizable_dict["organization_sponsored"] = personalizable.workshop.organization.orgprofile.is_sponsored
@@ -440,12 +439,12 @@ class Personalizable(TimeStampedModel):
                 variant_dict["name"] = variant.name
                 variant_dict["quantity"] = variant.quantity
                 variant_dict["variant_values"] = []
-                #for variant_value in variant.variant_values.all():
-                #    variant_value_dict = {}
-                #    variant_value_dict["id"] = variant_value.id
-                #    variant_value_dict["option_value"] = variant_value.option_value.value
-                #    variant_value_dict["option"] = variant_value.personalizable_option.option.name
-                #    variant_dict["variant_values"].append(variant_value_dict)
+                for variant_value in variant.variant_values.all():
+                    variant_value_dict = {}
+                    variant_value_dict["id"] = variant_value.id
+                    variant_value_dict["option_value"] = variant_value.option_value.value
+                    variant_value_dict["option"] = variant_value.personalizable_option.option.name
+                    variant_dict["variant_values"].append(variant_value_dict)
                 personalizable_dict["variants"].append(variant_dict)
             result["personalizables_list"].append(personalizable_dict)
             result["count"] = cls.objects.filter(q_objects).count()
