@@ -345,8 +345,13 @@ class Promotion(TimeStampedModel):
     end_date = models.DateTimeField()
     is_active = models.BooleanField(default=True)
 
-    code = models.CharField(max_length=255, null=True, blank=True)
+    promotion_identification_code = models.CharField(max_length=255, null=True, blank=True)
+    redeem_codes = models.JSONField(null=True, blank=True)
 
+    # A promotion can be linked to many products, designs or personalizable variants
+    product = models.ManyToManyField(Product, related_name='promotions', null=True, blank=True)
+    personalizable_variant = models.ManyToManyField(DesignedPersonalizableVariant, related_name='promotions', null=True, blank=True)
+    
     class Meta:
         abstract = True
 

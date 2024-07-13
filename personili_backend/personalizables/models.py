@@ -4,8 +4,9 @@ from uuid import uuid4
 
 # Django
 from django.db import models
-from django.db.models import Count
-from django.forms.models import model_to_dict
+# Django
+from django.db import models
+from django.db.models import Q
 
 # Models
 from accounts.models import TimeStampedModel
@@ -317,18 +318,132 @@ class Personalizable(TimeStampedModel):
         super().save()
     
     @classmethod
-    def get_personalizables(cls):
+    def get_personalizables(cls,
+                            search_term: str = None,
+                            min_price: float = None,
+                            max_price: float = None,
+                            model: str = None,
+                            brand: str = None,
+                            category_ids: str = None,
+                            department_ids: str = None,
+                            workshops_ids  = None,
+                            organizations_ids = None,
+                            promotions_ids = None,
+                            option_values_ids = None,
+                            sponsored_personalizables = False,
+                            sponsored_organizations = False,
+                            sponsored_workshops = False,
+                            events_ids = None,
+                            offset = 0,
+                            limit = 20):
+                            
         """
         Get a list of personlizables based on a set of filters.
         Filters can be :
+            - search term
+            - price min and max
+            - model
+            - brand   
             - category
             - department
             - workshops
             - organizations
             - promotions
             - option values (color, size, material)
+            - sponsored personalizables
+            - sponsored organizations
+            - sponsored workshops
+            - events
+            - limit and offset
+            - most popular (highest sales)
         - include all the details of each personalizable
+        - include infos about the workshop and the organization
+        - include all the variants and their options and options values
+        - include the category and the department as well
         """
+        q_objects = Q()
+        if search_term:
+            q_objects.add(Q(name__icontains=search_term) | 
+                            Q(description__icontains=search_term) | 
+                            Q(brand__icontains=search_term) | 
+                            Q(model__icontains=search_term) |
+                            Q(category__name__icontains=search_term) |
+                            Q(department__name__icontains=search_term) |
+                            Q(workshop__name__icontains=search_term) |
+                            Q(workshop__description__icontains=search_term) |
+                            Q(workshop__organization__name__icontains=search_term) |
+                            Q(workshop__organization__description__icontains=search_term), Q.AND)
+
+        if min_price :
+            q_objects.add(Q(price__gte=min_price), Q.AND)
+        if max_price :
+            q_objects.add(Q(price__lte=max_price), Q.AND)
+        if model:
+            q_objects.add(Q(model__icontains=model), Q.AND)
+        if brand:
+            q_objects.add(Q(brand__icontains=brand), Q.AND)
+        if category_ids:
+            q_objects.add(Q(category__in=category_ids), Q.AND)
+        if department_ids:
+            q_objects.add(Q(department__in=department_ids), Q.AND)
+        if workshops_ids:
+            q_objects.add(Q(workshop__in=workshops_ids), Q.AND)
+        if organizations_ids:
+            q_objects.add(Q(workshop__organization__in=organizations_ids), Q.AND)
+        if promotions_ids:
+            q_objects.add(Q(promotions__in=promotions_ids), Q.AND)
+        if option_values_ids:
+            q_objects.add(Q(variants__variant_values_option_value__in=option_values_ids), Q.AND)
+        if sponsored_personalizables:
+            q_objects.add(Q(sponsored_personalizables=True), Q.AND)
+        if sponsored_organizations:
+            q_objects.add(Q(workshop__organization__orgprofile__sponsored=True), Q.AND)
+        if sponsored_workshops:
+            q_objects.add(Q(workshop__is_sponsored=True), Q.AND)
+        
+        # Add the events filter and highest sales filter later
+        personalizables = (cls.objects.filter(q_objects)
+                           .select_related('workshop__organization__orgprofile', 'category', 'department')
+                           .prefetch_related('variants__variant_values__option_value'))[offset:limit]
+        
+        result = {"personalizables_list": []}
+        for personalizable in personalizables:
+            personalizable_dict = {}
+            personalizable_dict["id"] = personalizable.id
+            personalizable_dict["name"] = personalizable.name
+            personalizable_dict["description"] = personalizable.description
+            personalizable_dict["brand"] = personalizable.brand
+            personalizable_dict["model"] = personalizable.model
+            personalizable_dict["category"] = personalizable.category.name
+            personalizable_dict["department"] = personalizable.department.name
+            personalizable_dict["workshop"] = personalizable.workshop.name
+            personalizable_dict["workshop_description"] = personalizable.workshop.description
+            personalizable_dict["organization"] = personalizable.workshop.organization.name
+            personalizable_dict["organization_description"] = personalizable.workshop.organization.description
+            personalizable_dict["variants"] = []
+            for variant in personalizable.variants.all():
+                variant_dict = {}
+                variant_dict["id"] = variant.id
+                variant_dict["name"] = variant.name
+                variant_dict["quantity"] = variant.quantity
+                variant_dict["variant_values"] = []
+                for variant_value in variant.variant_values.all():
+                    variant_value_dict = {}
+                    variant_value_dict["id"] = variant_value.id
+                    variant_value_dict["option_value"] = variant_value.option_value.value
+                    variant_value_dict["option"] = variant_value.personalizable_option.option.name
+                    variant_dict["variant_values"].append(variant_value_dict)
+                personalizable_dict["variants"].append(variant_dict)
+            result["personalizables_list"].append(personalizable_dict)
+
+        
+        return result
+
+
+
+
+        
+
 #########################################
 #      PersonalizableVariant model      #
 #########################################
@@ -410,9 +525,9 @@ class PersonalizableVariantValue(TimeStampedModel):
     - a personalizable option
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    personalizable_variant = models.ForeignKey(PersonalizableVariant, on_delete=models.CASCADE, related_name='option_values')
-    option_value = models.ForeignKey(OptionValue, on_delete=models.CASCADE, related_name='personalizable_variants')
-    personalizable_option = models.ForeignKey(PersonalizableOption, on_delete=models.CASCADE, related_name='personalizable_variants')
+    personalizable_variant = models.ForeignKey(PersonalizableVariant, on_delete=models.CASCADE, related_name='variant_values')
+    option_value = models.ForeignKey(OptionValue, on_delete=models.CASCADE, related_name='variant_values')
+    personalizable_option = models.ForeignKey(PersonalizableOption, on_delete=models.CASCADE, related_name='variant_values')
     
     class Meta:
         db_table = 'personalizable_variant_values'

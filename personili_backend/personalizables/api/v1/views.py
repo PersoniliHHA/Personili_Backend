@@ -71,7 +71,7 @@ class PersonalizableViewSet(viewsets.ViewSet):
     queryset = Personalizable.objects.all()
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    @action(detail=False, methods=['GET'], url_path='catalog', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    @action(detail=False, methods=['POST'], url_path='catalog', permission_classes=[permissions.AllowAny])
     def get_all_personalizables(self, request):
         """Method that returns all personalizables"""
         try:
