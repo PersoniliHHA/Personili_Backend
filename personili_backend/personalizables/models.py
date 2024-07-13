@@ -440,13 +440,13 @@ class Personalizable(TimeStampedModel):
                 variant_dict["name"] = variant.name
                 variant_dict["quantity"] = variant.quantity
                 variant_dict["variant_values"] = []
-                for variant_value in variant.variant_values.all():
-                    variant_value_dict = {}
-                    variant_value_dict["id"] = variant_value.id
+                #for variant_value in variant.variant_values.all():
+                #    variant_value_dict = {}
+                #    variant_value_dict["id"] = variant_value.id
                 #    variant_value_dict["option_value"] = variant_value.option_value.value
                 #    variant_value_dict["option"] = variant_value.personalizable_option.option.name
                 #    variant_dict["variant_values"].append(variant_value_dict)
-                #personalizable_dict["variants"].append(variant_dict)
+                personalizable_dict["variants"].append(variant_dict)
             result["personalizables_list"].append(personalizable_dict)
             result["count"] = cls.objects.filter(q_objects).count()
         
@@ -535,7 +535,7 @@ class PersonalizableVariantValue(TimeStampedModel):
     - an option value
     - a personalizable option
     """
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     personalizable_variant = models.ForeignKey(PersonalizableVariant, on_delete=models.CASCADE, related_name='variant_values')
     option_value = models.ForeignKey(OptionValue, on_delete=models.CASCADE, related_name='variant_values')
     personalizable_option = models.ForeignKey(PersonalizableOption, on_delete=models.CASCADE, related_name='variant_values')
