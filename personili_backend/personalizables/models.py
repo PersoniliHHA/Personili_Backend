@@ -409,10 +409,15 @@ class Personalizable(TimeStampedModel):
         
         start_time = time.time()
         
+        # Define the queryset for variant_values including select_related for foreign keys
+        variant_values_queryset = PersonalizableVariantValue.objects.select_related('personalizable_option', 'option_value')
+
+        
         # Add the events filter and highest sales filter later
         personalizables = (cls.objects.filter(q_objects)
                            .select_related('workshop__organization__orgprofile', 'category', 'department')
-                           .prefetch_related('variants__variant_values'))[offset:limit]
+                           .prefetch_related('variants__variant_values', query_set=variant_values_queryset)
+                           .select_related(''))[offset:limit]
         end_time = time.time()
         print("Time taken to get personalizables : ", end_time - start_time)
         print("Personalizables length : ")
