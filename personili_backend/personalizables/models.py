@@ -382,9 +382,9 @@ class Personalizable(TimeStampedModel):
         if max_price :
             q_objects.add(Q(price__lte=max_price), Q.AND)
         if models:
-            q_objects.add(Q(model__icontains=model), Q.AND)
+            q_objects.add(Q(model__in=models), Q.AND)
         if brands:
-            q_objects.add(Q(brand__icontains=brand), Q.AND)
+            q_objects.add(Q(brand__in=brands), Q.AND)
         if category_ids:
             q_objects.add(Q(category__in=category_ids), Q.AND)
         if department_ids:
@@ -426,13 +426,13 @@ class Personalizable(TimeStampedModel):
             personalizable_dict["organization_logo"] = personalizable.workshop.organization.orgprofile.logo_path
             personalizable_dict["organization_sponsored"] = personalizable.workshop.organization.orgprofile.is_sponsored
             personalizable_dict["variants"] = []
-            for variant in personalizable.variants:
+            for variant in personalizable.variants.all():
                 variant_dict = {}
                 variant_dict["id"] = variant.id
                 variant_dict["name"] = variant.name
                 variant_dict["quantity"] = variant.quantity
                 variant_dict["variant_values"] = []
-                for variant_value in variant.variant_values:
+                for variant_value in variant.variant_values.all():
                     variant_value_dict = {}
                     variant_value_dict["id"] = variant_value.id
                     variant_value_dict["option_value"] = variant_value.option_value.value
