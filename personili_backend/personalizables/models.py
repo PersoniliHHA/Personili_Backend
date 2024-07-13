@@ -425,13 +425,13 @@ class Personalizable(TimeStampedModel):
             personalizable_dict["organization_logo"] = personalizable.workshop.organization.orgprofile.logo_path
             personalizable_dict["organization_sponsored"] = personalizable.workshop.organization.orgprofile.is_sponsored
             personalizable_dict["variants"] = []
-            for variant in personalizable.variants.all():
+            for variant in personalizable.variants:
                 variant_dict = {}
                 variant_dict["id"] = variant.id
                 variant_dict["name"] = variant.name
                 variant_dict["quantity"] = variant.quantity
                 variant_dict["variant_values"] = []
-                for variant_value in variant.variant_values.all():
+                for variant_value in variant.variant_values:
                     variant_value_dict = {}
                     variant_value_dict["id"] = variant_value.id
                     variant_value_dict["option_value"] = variant_value.option_value.value
