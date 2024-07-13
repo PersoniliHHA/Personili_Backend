@@ -440,9 +440,9 @@ class Personalizable(TimeStampedModel):
                 variant_dict["name"] = variant.name
                 variant_dict["quantity"] = variant.quantity
                 variant_dict["variant_values"] = []
-                #for variant_value in variant.variant_values.all():
-                #    variant_value_dict = {}
-                #    variant_value_dict["id"] = variant_value.id
+                for variant_value in variant.variant_values.all():
+                    variant_value_dict = {}
+                    variant_value_dict["id"] = variant_value.id
                 #    variant_value_dict["option_value"] = variant_value.option_value.value
                 #    variant_value_dict["option"] = variant_value.personalizable_option.option.name
                 #    variant_dict["variant_values"].append(variant_value_dict)
