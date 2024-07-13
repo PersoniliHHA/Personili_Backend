@@ -408,7 +408,8 @@ class Personalizable(TimeStampedModel):
         personalizables = (cls.objects.filter(q_objects)
                            .select_related('workshop__organization__orgprofile', 'category', 'department')
                            .prefetch_related('variants__variant_values__option_value'))[offset:limit]
-        
+        print("Personalizables length : ")
+        print(len(personalizables))
         result = {"personalizables_list": []}
         for personalizable in personalizables:
             personalizable_dict = {}
