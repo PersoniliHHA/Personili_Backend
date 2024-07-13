@@ -7,14 +7,18 @@ from rest_framework.generics import get_object_or_404
 # Local imports
 from personalizables.models import Department, Category, PersonalizationType, PersonalizationMethod, Personalizable, PersonalizableVariant, PersonalizableZone
 from accounts.models import AccountProfile
+from utils.validators import is_all_valid_uuid4
 
 # Standard imports
 from typing import List
 
 
 # configure logging 
+# logger
 import logging
-logging.basicConfig(level=logging.DEBUG)
+
+# set the logging on the debug level
+logger = logging.getLogger(__name__)
 
 #################################
 #     Cat ViewSet              #
@@ -74,8 +78,152 @@ class PersonalizableViewSet(viewsets.ViewSet):
     @action(detail=False, methods=['POST'], url_path='catalog', permission_classes=[permissions.AllowAny])
     def get_all_personalizables(self, request):
         """Method that returns all personalizables"""
+        # Get the query parameters from the request
+        offset = request.data.get('offset', None)
+        limit = request.data.get('limit', None)
+
+        min_price = request.data.get('min_price', None)
+        max_price = request.data.get('max_price', None)
+
+        brands = request.data.get('brands', None)
+        models = request.data.get('models', None)
+
+        category_ids = request.data.get('category', None)
+        departement_ids = request.data.get('departement', None)
+
+        option_values_ids = request.data.get('option_values', None)
+
+        workshop_ids = request.data.get('workshops', None)
+        organization_ids = request.data.get('organizations', None)
+        promotion_ids = request.data.get('promotions', None)
+        events_ids = request.data.get('events', None)
+        
+        sponsored_organizations = request.data.get('sponsored_organizations', None)
+        sponsored_workshops = request.data.get('sponsored_workshops', None)
+        sponsored_personalizables = request.data.get('sponsored_personalizables', None)
+
+        search_term = request.data.get('search_term', None)
+
+        ####################### Query parameters validation ########################
+        if offset and limit:
+            if not (offset.isdigit() and limit.isdigit()):
+                logger.debug("offset and limit should be integers")
+                return Response({"error": "BAD_REQUEST"}, status=400)
+            else:
+                offset = int(offset)
+                limit = int(limit)
+                print(type(offset), type(limit))
+                if (offset < 0 or limit < 0) or (offset > limit) or (limit - offset > 50):
+                    logger.debug("offset and limit should be positive integers and offset should be less than limit and limit should be less than 50")
+                    return Response({"error": "BAD_REQUEST"}, status=400)
+        else:
+            offset = 0
+            limit = 20
+        
+        if max_price and min_price:
+            if not (max_price.isdigit() and min_price.isdigit()):
+                logger.debug("max_price and min_price should be integers")
+                return Response({"error": "BAD_REQUEST"}, status=400)
+            else:
+                max_price = int(max_price)
+                min_price = int(min_price)
+                if (max_price < 0 or min_price < 0) or (max_price < min_price):
+                    logger.debug("max_price and min_price should be positive integers and max_price should be greater than min_price")
+                    return Response({"error": "BAD_REQUEST"}, status=400)
+
+        if organization_ids:
+            # remove the white spaces
+            organization_ids = organization_ids.replace(" ", "")
+            # split the string into a list
+            organization_ids = organization_ids.split(",")
+            if not is_all_valid_uuid4(organization_ids):
+                logger.debug("organization_ids should be a list of valid uuid4")
+                return Response({"error": "BAD_REQUEST"}, status=400)
+        
+        
+        if promotion_ids :
+            # remove the white spaces
+            promotion_ids = promotion_ids.replace(" ", "")
+            # split the string into a list
+            promotion_ids = promotion_ids.split(",")
+            if not is_all_valid_uuid4(promotion_ids):
+                logger.debug("promotion_ids should be a list of valid uuid4")
+                return Response({"error": "BAD_REQUEST"}, status=400)
+        
+        if events_ids :
+            # remove the white spaces
+            events_ids = events_ids.replace(" ", "")
+            # split the string into a list
+            events_ids = events_ids.split(",")
+            if not is_all_valid_uuid4(events_ids):
+                logger.debug("events_ids should be a list of valid uuid4")
+                return Response({"error": "BAD_REQUEST"}, status=400)
+            
+        if sponsored_organizations:
+            # sponsored_organizations should ba valid boolean value
+            if sponsored_organizations not in ["true","True"]:
+                logger.debug("sponsored_organizations should be a boolean value")
+                return Response({"error": "BAD_REQUEST"}, status=400)
+        
+        if sponsored_workshops:
+            # sponsored_workshops should ba valid boolean value
+            if sponsored_workshops not in ["true","True"]:
+                logger.debug("sponsored_workshops should be a boolean value")
+                return Response({"error": "BAD_REQUEST"}, status=400)
+        
+        if workshop_ids:
+            # remove the white spaces
+            workshop_ids = workshop_ids.replace(" ", "")
+            # split the string into a list
+            workshop_ids = workshop_ids.split(",")
+            if not is_all_valid_uuid4(workshop_ids):
+                logger.debug("workshop_ids should be a list of valid uuid4")
+                return Response({"error": "BAD_REQUEST"}, status=400)
+            
+        if search_term:
+            # search term has to be a string and not longer than 100 characters
+            if not isinstance(search_term, str) or len(search_term) > 100:
+                logger.debug("search_term should be a string and not longer than 100 characters")
+                return Response({"error": "BAD_REQUEST"}, status=400)
+        
+        if category_ids:
+            # remove the white spaces
+            category_ids = category_ids.replace(" ", "")
+            # split the string into a list
+            category_ids = category_ids.split(",")
+            if not is_all_valid_uuid4(category_ids):
+                logger.debug("category_ids should be a list of valid uuid4")
+                return Response({"error": "BAD_REQUEST"}, status=400)
+        
+        if departement_ids:
+            # remove the white spaces
+            departement_ids = departement_ids.replace(" ", "")
+            # split the string into a list
+            departement_ids = departement_ids.split(",")
+            if not is_all_valid_uuid4(departement_ids):
+                logger.debug("departement_ids should be a list of valid uuid4")
+                return Response({"error": "BAD_REQUEST"}, status=400)
+        
         try:
-            response_data: List[dict] = Personalizable.get_personalizables()
+            response_data: List[dict] = Personalizable.get_personalizables(
+                offset=offset,
+                limit=limit,
+                min_price=min_price,
+                max_price=max_price,
+                brands=brands,
+                models=models,
+                category_ids=category_ids,
+                departement_ids=departement_ids,
+                option_values_ids=option_values_ids,
+                workshop_ids=workshop_ids,
+                organization_ids=organization_ids,
+                promotion_ids=promotion_ids,
+                events_ids=events_ids,
+                sponsored_personalizables=sponsored_personalizables,
+                sponsored_organizations=sponsored_organizations,
+                sponsored_workshops=sponsored_workshops,
+                search_term=search_term
+            )
             return Response(response_data, status=status.HTTP_200_OK)
         except Exception as e:
             logging.error(f"UNKNOWN_ERROR : {e}")

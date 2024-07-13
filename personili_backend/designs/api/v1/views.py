@@ -61,7 +61,6 @@ class DesignsViewSet(viewsets.ViewSet):
         """
         self.permission_classes = [permissions.AllowAny]
         self.authentication_classes = []
-        body_data = request.data
         # Get the query parameters from the request
         offset = request.data.get('offset', None)
         limit = request.data.get('limit', None)

@@ -322,8 +322,8 @@ class Personalizable(TimeStampedModel):
                             search_term: str = None,
                             min_price: float = None,
                             max_price: float = None,
-                            model: str = None,
-                            brand: str = None,
+                            models: str = None,
+                            brands: str = None,
                             category_ids: str = None,
                             department_ids: str = None,
                             workshops_ids  = None,
@@ -335,7 +335,7 @@ class Personalizable(TimeStampedModel):
                             sponsored_workshops = False,
                             events_ids = None,
                             offset = 0,
-                            limit = 20):
+                            limit = 5):
                             
         """
         Get a list of personlizables based on a set of filters.
@@ -381,9 +381,9 @@ class Personalizable(TimeStampedModel):
             q_objects.add(Q(price__gte=min_price), Q.AND)
         if max_price :
             q_objects.add(Q(price__lte=max_price), Q.AND)
-        if model:
+        if models:
             q_objects.add(Q(model__icontains=model), Q.AND)
-        if brand:
+        if brands:
             q_objects.add(Q(brand__icontains=brand), Q.AND)
         if category_ids:
             q_objects.add(Q(category__in=category_ids), Q.AND)
@@ -451,7 +451,7 @@ class PersonalizableVariant(TimeStampedModel):
     """
     A personalizable variant is linked to a sku in the inventory item table and to a personalizable
     """
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     name = models.CharField(max_length=255, null=True)
     personalizable = models.ForeignKey(Personalizable, on_delete=models.CASCADE, related_name='variants')
     quantity = models.IntegerField(null=True, default=1)
