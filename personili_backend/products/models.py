@@ -347,11 +347,6 @@ class Promotion(TimeStampedModel):
 
     promotion_identification_code = models.CharField(max_length=255, null=True, blank=True)
     redeem_codes = models.JSONField(null=True, blank=True)
-
-    # A promotion can be linked to many products, designs or personalizable variants
-    product = models.ManyToManyField(Product, related_name='promotions', null=True, blank=True)
-    personalizable_variant = models.ManyToManyField(DesignedPersonalizableVariant, related_name='promotions', null=True, blank=True)
-    
     class Meta:
         abstract = True
 
@@ -360,6 +355,7 @@ class DiscountPromotion(Promotion):
     This is for percentage based discounts
     """
     percentage = models.DecimalField(max_digits=5, decimal_places=2)
+    
     class Meta:
         db_table = 'discount_promotions'
 
