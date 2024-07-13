@@ -1,6 +1,7 @@
 # Standard libraries
 from typing import Iterable
 from uuid import uuid4
+import time
 
 # Django
 from django.db import models
@@ -403,13 +404,20 @@ class Personalizable(TimeStampedModel):
             q_objects.add(Q(workshop__organization__orgprofile__sponsored=True), Q.AND)
         if sponsored_workshops:
             q_objects.add(Q(workshop__is_sponsored=True), Q.AND)
+        if events_ids:
+            q_objects.add(Q(events__in=events_ids), Q.AND)
+        
+        start_time = time.time()
         
         # Add the events filter and highest sales filter later
         personalizables = (cls.objects.filter(q_objects)
                            .select_related('workshop__organization__orgprofile', 'category', 'department')
                            .prefetch_related('variants__variant_values__option_value'))[offset:limit]
+        end_time = time.time()
+        print("Time taken to get personalizables : ", end_time - start_time)
         print("Personalizables length : ")
         print(len(personalizables))
+        start_time = time.time()
         result = {"personalizables_list": []}
         for personalizable in personalizables:
             personalizable_dict = {}
@@ -442,6 +450,8 @@ class Personalizable(TimeStampedModel):
             result["personalizables_list"].append(personalizable_dict)
             result["count"] = cls.objects.filter(q_objects).count()
         
+        end_time = time.time()
+        print("Time taken to format personalizables : ", end_time - start_time)
         return result
 
 
