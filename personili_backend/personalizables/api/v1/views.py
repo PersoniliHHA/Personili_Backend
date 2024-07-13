@@ -69,7 +69,7 @@ class PersonalizableViewSet(viewsets.ViewSet):
     """Viewset for the personalizable class"""
 
     queryset = Personalizable.objects.all()
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = []
 
     @action(detail=False, methods=['POST'], url_path='catalog', permission_classes=[permissions.AllowAny])
     def get_all_personalizables(self, request):
@@ -83,7 +83,7 @@ class PersonalizableViewSet(viewsets.ViewSet):
                 "error": "UNKNOWN_ERROR"
             },status=status.HTTP_400_BAD_REQUEST)
 
-    @action(detail=True, methods=['GET'], url_path='personalizables/(?P<pk>[^/.]+)', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    @action(detail=False, methods=['GET'], url_path='personalizables/(?P<pk>[^/.]+)', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def get_personalizable(self, request, pk=None):
         """Method that returns a personalizable object"""
         try:
@@ -96,7 +96,7 @@ class PersonalizableViewSet(viewsets.ViewSet):
                 "error": "UNKNOWN_ERROR"
             },status=status.HTTP_400_BAD_REQUEST)
 
-    @action(detail=True, methods=['GET'], url_path='personalizables/(?P<pk>[^/.]+)/variants', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    @action(detail=False, methods=['GET'], url_path='personalizables/(?P<pk>[^/.]+)/variants', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def get_personalizable_variants(self, request, pk=None):
         """Method that returns all variants of a personalizable object"""
         try:
@@ -109,7 +109,7 @@ class PersonalizableViewSet(viewsets.ViewSet):
                 "error": "UNKNOWN_ERROR"
             },status=status.HTTP_400_BAD_REQUEST)
 
-    @action(detail=True, methods=['GET'], url_path='personalizables/(?P<pk>[^/.]+)/zones', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    @action(detail=False, methods=['GET'], url_path='personalizables/(?P<pk>[^/.]+)/zones', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def get_personalizable_zones(self, request, pk=None):
         """Method that returns all zones of a personalizable object"""
         pass
