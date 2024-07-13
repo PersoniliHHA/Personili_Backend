@@ -326,9 +326,9 @@ class Personalizable(TimeStampedModel):
                             brands: str = None,
                             category_ids: str = None,
                             department_ids: str = None,
-                            workshops_ids  = None,
-                            organizations_ids = None,
-                            promotions_ids = None,
+                            workshop_ids  = None,
+                            organization_ids = None,
+                            promotion_ids = None,
                             option_values_ids = None,
                             sponsored_personalizables = False,
                             sponsored_organizations = False,
@@ -389,12 +389,12 @@ class Personalizable(TimeStampedModel):
             q_objects.add(Q(category__in=category_ids), Q.AND)
         if department_ids:
             q_objects.add(Q(department__in=department_ids), Q.AND)
-        if workshops_ids:
-            q_objects.add(Q(workshop__in=workshops_ids), Q.AND)
-        if organizations_ids:
-            q_objects.add(Q(workshop__organization__in=organizations_ids), Q.AND)
-        if promotions_ids:
-            q_objects.add(Q(promotions__in=promotions_ids), Q.AND)
+        if workshop_ids:
+            q_objects.add(Q(workshop__in=workshop_ids), Q.AND)
+        if organization_ids:
+            q_objects.add(Q(workshop__organization__in=organization_ids), Q.AND)
+        if promotion_ids:
+            q_objects.add(Q(promotions__in=promotion_ids), Q.AND)
         if option_values_ids:
             q_objects.add(Q(variants__variant_values_option_value__in=option_values_ids), Q.AND)
         if sponsored_personalizables:
