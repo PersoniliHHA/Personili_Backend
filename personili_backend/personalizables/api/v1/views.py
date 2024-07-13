@@ -75,7 +75,7 @@ class PersonalizableViewSet(viewsets.ViewSet):
     def get_all_personalizables(self, request):
         """Method that returns all personalizables"""
         try:
-            response_data: List = Personalizable.get_personalizables()
+            response_data: List[dict] = Personalizable.get_personalizables()
             return Response(response_data, status=status.HTTP_200_OK)
         except Exception as e:
             logging.error(f"UNKNOWN_ERROR : {e}")

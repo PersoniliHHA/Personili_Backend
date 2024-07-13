@@ -364,6 +364,7 @@ class Personalizable(TimeStampedModel):
         q_objects = Q()
         # Filter only for active workshops
         q_objects.add(Q(workshop__is_active=True), Q.AND)
+        
         if search_term:
             q_objects.add(Q(name__icontains=search_term) | 
                             Q(description__icontains=search_term) | 
@@ -438,14 +439,10 @@ class Personalizable(TimeStampedModel):
                     variant_dict["variant_values"].append(variant_value_dict)
                 personalizable_dict["variants"].append(variant_dict)
             result["personalizables_list"].append(personalizable_dict)
-
+            result["count"] = cls.objects.filter(q_objects).count()
         
         return result
 
-
-
-
-        
 
 #########################################
 #      PersonalizableVariant model      #
