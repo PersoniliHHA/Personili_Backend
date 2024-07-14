@@ -204,6 +204,15 @@ class PersonalizableViewSet(viewsets.ViewSet):
                 logger.debug("departement_ids should be a list of valid uuid4")
                 return Response({"error": "BAD_REQUEST"}, status=400)
         
+        if option_values_ids:
+            # remove the white spaces
+            option_values_ids = option_values_ids.replace(" ", "")
+            # split the string into a list
+            option_values_ids = option_values_ids.split(",")
+            if not is_all_valid_uuid4(option_values_ids):
+                logger.debug("option_values_ids should be a list of valid uuid4")
+                return Response({"error": "BAD_REQUEST"}, status=400)
+        
         try:
             response_data: List[dict] = Personalizable.get_personalizables(
                 offset=offset,
