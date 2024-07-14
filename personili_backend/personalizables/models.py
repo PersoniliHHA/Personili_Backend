@@ -388,6 +388,7 @@ class Personalizable(TimeStampedModel):
             q_objects.add(Q(variants__base_price__lte=max_price), Q.AND)
         if models:
             q_objects.add(Q(model__in=models), Q.AND)
+        print("brands", brands)
         if brands:
             q_objects.add(Q(brand__in=brands), Q.AND)
         if category_ids:
