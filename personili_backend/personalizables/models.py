@@ -7,7 +7,7 @@ import time
 from django.db import models
 # Django
 from django.db import models
-from django.db.models import Q
+from django.db.models import Q, Prefetch
 
 # Models
 from accounts.models import TimeStampedModel
@@ -415,7 +415,7 @@ class Personalizable(TimeStampedModel):
         # Add the events filter and highest sales filter later
         personalizables = (cls.objects.filter(q_objects)
                            .select_related('workshop__organization__orgprofile', 'category', 'department')
-                           .prefetch_related('variants__variant_values', query_set=variant_values_queryset))[offset:limit]
+                           .prefetch_related('variants__variant_values', Prefetch('option_value__option')))[offset:limit]
         end_time = time.time()
         print("Time taken to get personalizables : ", end_time - start_time)
         print("Personalizables length : ")
