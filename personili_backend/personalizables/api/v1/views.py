@@ -112,7 +112,6 @@ class PersonalizableViewSet(viewsets.ViewSet):
             else:
                 offset = int(offset)
                 limit = int(limit)
-                print(type(offset), type(limit))
                 if (offset < 0 or limit < 0) or (offset > limit) or (limit - offset > 50):
                     logger.debug("offset and limit should be positive integers and offset should be less than limit and limit should be less than 50")
                     return Response({"error": "BAD_REQUEST"}, status=400)

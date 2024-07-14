@@ -34,7 +34,6 @@ def verify_account_and_account_profile(account_id: str, account_profile_id: str)
     
     # Check if the account profile belongs to the account
     if account_profile.account != account:
-        print(account_profile.account, account)
         return (Response({"error": "FORBIDDEN"}, status=status.HTTP_403_FORBIDDEN), False)
     
     return ((account, account_profile), True)
