@@ -337,7 +337,7 @@ def create_options_and_option_values():
 
 
 
-def init_personili_db(data_scale: int=10):
+def init_personili_db(data_scale: int=100):
      # Track the number of created entries
     account_count = 0
     account_profile_count = 0
@@ -417,7 +417,7 @@ def init_personili_db(data_scale: int=10):
             store_profile_count += 1
 
             # Determine how many designs this designer should have (between 1 and 30)
-            designs_nb = random.randint(1, 20)
+            designs_nb = random.randint(1, 30)
             for _ in range(designs_nb):
                 # Create the design
                 # Generate the design usage parameters
@@ -470,7 +470,7 @@ def init_personili_db(data_scale: int=10):
                 
                 # Create the personalizables and their variants
                 # First decide how many personalizables this workshop should have (between 1 and 10)
-                personalizables_nb = random.randint(1, 10)
+                personalizables_nb = random.randint(1, 50)
 
                 for _ in range(personalizables_nb):
                     # Create the personalizable
@@ -482,7 +482,7 @@ def init_personili_db(data_scale: int=10):
                                                            category=category)
                     # Create the personalizable zones 
                     # First decide how many zones this personalizable should have (between 1 and 5)
-                    personalizable_zones_nb = random.randint(1, 5)
+                    personalizable_zones_nb = random.randint(1, 7)
                     personalizable_zones = []
                     for _ in range(personalizable_zones_nb):
                         personalizable_zone = PersonalizableZoneFactory(personalizable=personalizable)

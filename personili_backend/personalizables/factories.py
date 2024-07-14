@@ -346,6 +346,7 @@ class PersonalizableVariantFactory(DjangoModelFactory):
     name = Faker('name')
     personalizable = factory.SubFactory(PersonalizableFactory)
     quantity = Faker('random_int', min=1, max=500)
+    base_price = Faker('random_int', min=1, max=10000)
 
 class PersonalizableVariantValueFactory(DjangoModelFactory):
     class Meta:
