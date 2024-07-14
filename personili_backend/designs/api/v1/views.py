@@ -8,7 +8,6 @@ from rest_framework.response import Response
 from designs.models import Store, Design, Collection, Theme
 from accounts.models import AccountProfile
 from designs.api.v1.serializers import DesignSerializerBase, ThemeSerializerGet
-from utils.constants import DESIGNER_UPLOADED_IMAGES_PATH_TEMPLATES
 from utils.validators import is_all_valid_uuid4
 
 from security.authentication.jwt_authentication_class import JWTAuthentication
