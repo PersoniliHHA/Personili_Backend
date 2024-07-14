@@ -443,6 +443,18 @@ class Personalizable(TimeStampedModel):
             personalizable_dict["organization_name"] = personalizable.workshop.organization.business_name
             personalizable_dict["organization_logo"] = personalizable.workshop.organization.orgprofile.logo_path
             personalizable_dict["organization_sponsored"] = personalizable.workshop.organization.orgprofile.is_sponsored
+            
+            personalizable_dict["usage_parameters"] = {}
+            if personalizable.is_open_for_personalization:
+                personalizable_dict["usage_parameters"]["is_open_for_personalization"] = True
+            else:
+                personalizable_dict["usage_parameters"]["is_open_for_personalization"] = False
+                personalizable_dict["usage_parameters"]["used_with_store_designs"] = personalizable.used_with_store_designs
+                personalizable_dict["usage_parameters"]["used_with_user_uploaded_designs"] = personalizable.used_with_user_uploaded_designs
+                personalizable_dict["usage_parameters"]["used_with_same_workshop_designs"] = personalizable.used_with_same_workshop_designs
+                personalizable_dict["usage_parameters"]["used_with_other_workshop_designs"] = personalizable.used_with_other_workshop_designs
+                personalizable_dict["usage_parameters"]["used_with_platform_designs"] = personalizable.used_with_platform_designs
+
             personalizable_dict["variants"] = []
             for variant in personalizable.variants.all():
                 variant_dict = {}
