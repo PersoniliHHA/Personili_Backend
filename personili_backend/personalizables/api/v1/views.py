@@ -88,8 +88,8 @@ class PersonalizableViewSet(viewsets.ViewSet):
         brands = request.data.get('brands', None)
         models = request.data.get('models', None)
 
-        category_ids = request.data.get('category', None)
-        departement_ids = request.data.get('departement', None)
+        category_ids = request.data.get('categories', None)
+        departement_ids = request.data.get('departements', None)
 
         option_values_ids = request.data.get('option_values', None)
 

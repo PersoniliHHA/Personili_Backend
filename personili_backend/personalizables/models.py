@@ -388,7 +388,6 @@ class Personalizable(TimeStampedModel):
             q_objects.add(Q(variants__base_price__lte=max_price), Q.AND)
         if models:
             q_objects.add(Q(model__in=models), Q.AND)
-        print("brands", brands)
         if brands:
             q_objects.add(Q(brand__in=brands), Q.AND)
         if category_ids:
@@ -401,15 +400,14 @@ class Personalizable(TimeStampedModel):
             q_objects.add(Q(workshop__organization__in=organization_ids), Q.AND)
         if promotion_ids:
             q_objects.add(Q(promotions__in=promotion_ids), Q.AND)
-        print("option_values_ids", option_values_ids)
         if option_values_ids:
             q_objects.add(Q(variants__variant_values__option_value__id__in=option_values_ids), Q.AND)
-        if sponsored_personalizables:
-            q_objects.add(Q(is_sponsored=True), Q.AND)
-        if sponsored_organizations:
-            q_objects.add(Q(workshop__organization__orgprofile__sponsored=True), Q.AND)
-        if sponsored_workshops:
-            q_objects.add(Q(workshop__is_sponsored=True), Q.AND)
+        if sponsored_personalizables is not None:
+            q_objects.add(Q(is_sponsored=sponsored_personalizables), Q.AND)
+        if sponsored_organizations is not None:
+            q_objects.add(Q(workshop__organization__orgprofile__sponsored=sponsored_organizations), Q.AND)
+        if sponsored_workshops is not None:
+            q_objects.add(Q(workshop__is_sponsored=sponsored_workshops), Q.AND)
         if events_ids:
             q_objects.add(Q(events__in=events_ids), Q.AND)
         
