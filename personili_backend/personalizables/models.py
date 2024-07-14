@@ -379,7 +379,8 @@ class Personalizable(TimeStampedModel):
                             Q(workshop__description__icontains=search_term) |
                             Q(workshop__organization__name__icontains=search_term) |
                             Q(workshop__organization__description__icontains=search_term), Q.AND)
-
+        print("min_price", min_price)
+        print("max_price", max_price)
         if min_price :
             q_objects.add(Q(variants__base_price__gte=min_price), Q.AND)
         if max_price :

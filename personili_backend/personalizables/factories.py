@@ -309,6 +309,8 @@ class PersonalizableFactory(DjangoModelFactory):
     
     is_open_for_personalization = Faker('boolean', chance_of_getting_true=50)
 
+    is_sponsored = Faker('boolean', chance_of_getting_true=20)
+
     can_be_template = Faker('boolean', chance_of_getting_true=50)
 
     used_with_user_uploaded_designs = Faker('boolean', chance_of_getting_true=50)
