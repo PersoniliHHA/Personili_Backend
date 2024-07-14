@@ -474,6 +474,7 @@ class PersonalizableVariant(TimeStampedModel):
     name = models.CharField(max_length=255, null=True)
     personalizable = models.ForeignKey(Personalizable, on_delete=models.CASCADE, related_name='variants')
     quantity = models.IntegerField(null=True, default=1)
+    base_price = models.FloatField(null=True, default=0.0)
     
     def __str__(self):
         return "variant of : " + self.personalizable.name + " - " + str(self.id)
