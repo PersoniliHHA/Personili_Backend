@@ -266,7 +266,7 @@ class PersonalizableViewSet(viewsets.ViewSet):
             # Check if the workshop linked to this personalizable is active
             if not personalizable.workshop.is_active:
                 return Response({
-                "error": "BAD_REQUEST"
+                "error": "BAD_REQUEST_NOT_ACTIVE"
                 }, status=status.HTTP_400_BAD_REQUEST)
 
             response_data = personalizable.get_personalizable_details(personalizable_id=personalizable_id)
