@@ -563,6 +563,8 @@ class Personalizable(TimeStampedModel):
                 "y2": zone.y2
             }
             personalizable_dict["zones"].append(zone_dict)
+    
+        return personalizable_dict
         
 #########################################
 #      PersonalizableVariant model      #
