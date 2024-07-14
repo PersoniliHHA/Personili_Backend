@@ -259,7 +259,7 @@ class PersonalizableViewSet(viewsets.ViewSet):
             # Check if the personalizable id is present in the url
             if not personalizable_id or not is_all_valid_uuid4(personalizable_id):
                 return Response({
-                    "error": "BAD_REQUEST"
+                    "error": "BAD_REQUEST_NOT_VALID_OR_FOUND"
                 }, status=status.HTTP_400_BAD_REQUEST)
             personalizable = get_object_or_404(Personalizable, pk=personalizable_id)
             
