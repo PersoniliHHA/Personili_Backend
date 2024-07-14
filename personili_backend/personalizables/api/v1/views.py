@@ -269,7 +269,7 @@ class PersonalizableViewSet(viewsets.ViewSet):
                 "error": "BAD_REQUEST"
                 }, status=status.HTTP_400_BAD_REQUEST)
 
-            response_data = personalizable.get_personalizable_details()
+            response_data = personalizable.get_personalizable_details(personalizable_id=personalizable_id)
             return Response(response_data, status=status.HTTP_200_OK)
         except Exception as e:
             logging.error(f"UNKNOWN_ERROR : {e}")
