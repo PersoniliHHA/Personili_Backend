@@ -407,24 +407,20 @@ class Personalizable(TimeStampedModel):
         if events_ids:
             q_objects.add(Q(events__in=events_ids), Q.AND)
         
-        # First apply the Q filters and the limit offset for optimization
-        personalizables_ids = (cls.objects.filter(q_objects)
-                               .values_list('id', flat=True)[offset:limit])
-        
-        # Second fetch the detailed information for these IDs only
         # Prefetch the option values and their options with custom queryset 
         variant_value_queryset = PersonalizableVariantValue.objects.select_related('option_value__option')
 
         # Add the events filter and highest sales filter later
-        personalizables = (cls.objects.filter(id__in=personalizables_ids)
+        personalizables = (cls.objects.filter(q_objects)
                            .select_related('workshop__organization__orgprofile', 'category', 'department')
                            .prefetch_related(
                                 Prefetch(
                                                 'variants__variant_values',
                                                 queryset=variant_value_queryset
                                             )
-                           ))
+                           ))[offset:limit]
         
+
         result = {"personalizables_list": []}
         for personalizable in personalizables:
             personalizable_dict = {}
