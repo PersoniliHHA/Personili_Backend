@@ -489,7 +489,10 @@ class Personalizable(TimeStampedModel):
         - all the variants and their option values
         - all the personalizable zones as well
         """
-        personalizable = cls.objects.get(id=personalizable_id)
+        # Use select related to get the workshop and organization details, category and department
+        # Use prefetch related to get the variants and their option values, the zones
+        personalizable = cls.objects.select_related('workshop__organization__orgprofile', 'category', 'department').prefetch_related('variants__variant_values__option_values', 'zones').get(id=personalizable_id)
+
         personalizable_dict = {}
         personalizable_dict["personalizable_id"] = personalizable.id
         personalizable_dict["personalizable_name"] = personalizable.name
