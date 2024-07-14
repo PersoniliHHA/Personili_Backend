@@ -379,9 +379,9 @@ class Personalizable(TimeStampedModel):
                             Q(workshop__organization__description__icontains=search_term), Q.AND)
 
         if min_price :
-            q_objects.add(Q(price__gte=min_price), Q.AND)
+            q_objects.add(Q(variants_base_price__gte=min_price), Q.AND)
         if max_price :
-            q_objects.add(Q(price__lte=max_price), Q.AND)
+            q_objects.add(Q(variants_base_price__lte=max_price), Q.AND)
         if models:
             q_objects.add(Q(model__in=models), Q.AND)
         if brands:
@@ -407,26 +407,25 @@ class Personalizable(TimeStampedModel):
         if events_ids:
             q_objects.add(Q(events__in=events_ids), Q.AND)
         
-        start_time = time.time()
+        # First apply the Q filters and the limit offset for optimization
+        personalizables_ids = (cls.objects.filter(q_objects)
+                               .values_list('id', flat=True)[offset:limit])
+        # Second fetch the detailed information for these IDs only
+
         
         # Prefetch the option values and their options with custom queryset 
         variant_value_queryset = PersonalizableVariantValue.objects.select_related('option_value__option')
 
         # Add the events filter and highest sales filter later
-        personalizables = (cls.objects.filter(q_objects)
+        personalizables = (cls.objects.filter(id__in=personalizables_ids)
                            .select_related('workshop__organization__orgprofile', 'category', 'department')
                            .prefetch_related(
                                 Prefetch(
                                                 'variants__variant_values',
                                                 queryset=variant_value_queryset
                                             )
-                           ))[offset:limit]
+                           ))
         
-        end_time = time.time()
-        print("Time taken to get personalizables : ", end_time - start_time)
-        print("Personalizables length : ")
-        print(len(personalizables))
-        start_time = time.time()
         result = {"personalizables_list": []}
         for personalizable in personalizables:
             personalizable_dict = {}
@@ -447,19 +446,19 @@ class Personalizable(TimeStampedModel):
                 variant_dict["id"] = variant.id
                 variant_dict["name"] = variant.name
                 variant_dict["quantity"] = variant.quantity
+                variant_dict["base_price"] = variant.base_price
                 variant_dict["variant_values"] = []
                 for variant_value in variant.variant_values.all():
                     variant_value_dict = {}
                     variant_value_dict["id"] = variant_value.id
                     variant_value_dict["option_value"] = variant_value.option_value.value
-                    variant_value_dict["option"] = variant_value.option_value.option.name
+                    variant_value_dict["option_id"] = variant_value.option_value.option.id
+                    variant_value_dict["option_name"] = variant_value.option_value.option.name
                     variant_dict["variant_values"].append(variant_value_dict)
                 personalizable_dict["variants"].append(variant_dict)
             result["personalizables_list"].append(personalizable_dict)
             result["count"] = cls.objects.filter(q_objects).count()
         
-        end_time = time.time()
-        print("Time taken to format personalizables : ", end_time - start_time)
         return result
 
 
@@ -475,7 +474,7 @@ class PersonalizableVariant(TimeStampedModel):
     personalizable = models.ForeignKey(Personalizable, on_delete=models.CASCADE, related_name='variants')
     quantity = models.IntegerField(null=True, default=1)
     base_price = models.FloatField(null=True, default=0.0)
-    
+
     def __str__(self):
         return "variant of : " + self.personalizable.name + " - " + str(self.id)
     
