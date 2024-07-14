@@ -515,6 +515,10 @@ class Design(TimeStampedModel):
                                     .annotate(num_likes=models.Count('design_likes'))
                                     .first())
         
+        print(design)
+        if not design:
+            print('Design not found')
+            return None
         design_full_details: dict = {}
         # Design title, description , image path, tags, price, theme id and name
         design_details = {
