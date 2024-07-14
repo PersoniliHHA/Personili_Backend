@@ -401,7 +401,7 @@ class Personalizable(TimeStampedModel):
             q_objects.add(Q(promotions__in=promotion_ids), Q.AND)
         print("option_values_ids", option_values_ids)
         if option_values_ids:
-            q_objects.add(Q(variants__variant_values__option_value__id__in=option_values_ids), Q.AND)
+            q_objects.add(Q(variants__variant_values__option_values__in=option_values_ids), Q.AND)
         if sponsored_personalizables:
             q_objects.add(Q(is_sponsored=True), Q.AND)
         if sponsored_organizations:
