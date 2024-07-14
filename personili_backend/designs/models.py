@@ -509,7 +509,7 @@ class Design(TimeStampedModel):
         - design store id and name and logo or workshop id and name and organization name and logo
         """
         
-        design = (cls.objects.filter(id=design_id, status=cls.APPROVED, to_be_published=True, regular_user=None, workshop__is_active=True)
+        design = (cls.objects.filter( Q(workshop__is_active=True) | Q(workshop_id=None),id=design_id, status=cls.APPROVED, to_be_published=True, regular_user=None)
                                     .select_related('store__storeprofile', 'store__designer_profile', 'workshop__organization', 'theme')
                                     .prefetch_related('design_previews')
                                     .annotate(num_likes=models.Count('design_likes'))
