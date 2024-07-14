@@ -391,7 +391,9 @@ class Personalizable(TimeStampedModel):
         if brands:
             q_objects.add(Q(brand__in=brands), Q.AND)
         if category_ids:
-            q_objects.add(Q(category__in=category_ids), Q.AND)
+            # First get the leaf categories from the list of categories
+            leaf_categories = Category.get_leaf_categories_from_list(category_ids)
+            q_objects.add(Q(category__in=leaf_categories), Q.AND)
         if department_ids:
             q_objects.add(Q(department__in=department_ids), Q.AND)
         if workshop_ids:
