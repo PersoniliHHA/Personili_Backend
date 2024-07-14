@@ -257,7 +257,7 @@ class PersonalizableViewSet(viewsets.ViewSet):
         """Method that returns a personalizable object"""
         try:
             # Check if the personalizable id is present in the url
-            if not personalizable_id:
+            if not personalizable_id or not is_all_valid_uuid4(personalizable_id):
                 return Response({
                     "error": "BAD_REQUEST"
                 }, status=status.HTTP_400_BAD_REQUEST)
