@@ -1,5 +1,5 @@
 # Standard libraries
-from typing import Iterable
+from typing import List
 from uuid import uuid4
 import time
 
@@ -325,18 +325,18 @@ class Personalizable(TimeStampedModel):
                             search_term: str = None,
                             min_price: float = None,
                             max_price: float = None,
-                            models: str = None,
-                            brands: str = None,
-                            category_ids: str = None,
-                            department_ids: str = None,
-                            workshop_ids  = None,
-                            organization_ids = None,
-                            promotion_ids = None,
-                            option_values_ids = None,
+                            models: List[str] = None,
+                            brands: List[str] = None,
+                            category_ids: List[str] = None,
+                            department_ids: List[str] = None,
+                            workshop_ids: List[str] = None,
+                            organization_ids: List[str] = None,
+                            promotion_ids: List[str] = None,
+                            option_values_ids: List[str] = None,
                             sponsored_personalizables = False,
                             sponsored_organizations = False,
                             sponsored_workshops = False,
-                            events_ids = None,
+                            events_ids: List[str] = None,
                             offset = 0,
                             limit = 5):
                             

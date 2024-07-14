@@ -214,16 +214,12 @@ class PersonalizableViewSet(viewsets.ViewSet):
                 return Response({"error": "BAD_REQUEST"}, status=400)
         
         if brands:
-            # remove the white spaces
-            brands = brands.replace(" ", "")
             # split the string into a list
             brands = brands.split(",")
             if not all(isinstance(brand, str) for brand in brands):
                 logger.debug("brands should be a list of strings")
                 return Response({"error": "BAD_REQUEST"}, status=400)
         if models:
-            # remove the white spaces
-            models = models.replace(" ", "")
             # split the string into a list
             models = models.split(",")
             if not all(isinstance(model, str) for model in models):
