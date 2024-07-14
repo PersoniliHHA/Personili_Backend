@@ -405,7 +405,7 @@ class Personalizable(TimeStampedModel):
         if sponsored_personalizables is not None:
             q_objects.add(Q(is_sponsored=sponsored_personalizables), Q.AND)
         if sponsored_organizations is not None:
-            q_objects.add(Q(workshop__organization__orgprofile__sponsored=sponsored_organizations), Q.AND)
+            q_objects.add(Q(workshop__organization__orgprofile__is_sponsored=sponsored_organizations), Q.AND)
         if sponsored_workshops is not None:
             q_objects.add(Q(workshop__is_sponsored=sponsored_workshops), Q.AND)
         if events_ids:
@@ -443,7 +443,7 @@ class Personalizable(TimeStampedModel):
             personalizable_dict["organization_name"] = personalizable.workshop.organization.business_name
             personalizable_dict["organization_logo"] = personalizable.workshop.organization.orgprofile.logo_path
             personalizable_dict["organization_sponsored"] = personalizable.workshop.organization.orgprofile.is_sponsored
-            
+
             personalizable_dict["usage_parameters"] = {}
             if personalizable.is_open_for_personalization:
                 personalizable_dict["usage_parameters"]["is_open_for_personalization"] = True
