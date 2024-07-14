@@ -96,7 +96,6 @@ class DesignsViewSet(viewsets.ViewSet):
             else:
                 offset = int(offset)
                 limit = int(limit)
-                print(type(offset), type(limit))
                 if (offset < 0 or limit < 0) or (offset > limit) or (limit - offset > 50):
                     logger.debug("offset and limit should be positive integers and offset should be less than limit and limit should be less than 50")
                     return Response({"error": "BAD_REQUEST"}, status=400)
@@ -261,7 +260,7 @@ class DesignsViewSet(viewsets.ViewSet):
         # first check if the design exists and that it is to be published and that is approved
         design = Design.objects.filter(id=design_id).first()
         if not design or not design.status == Design.APPROVED or not design.to_be_published or design.regular_user:
-            return Response({"error": "NOT_FOUND"}, status=404)
+            return Response({"error": "DESIGN_NOT_FOUND_OR_NOT_TO_BE_PUBLISHED"}, status=404)
         
         try :
             design_details = Design.get_full_design_details(design_id=design_id)

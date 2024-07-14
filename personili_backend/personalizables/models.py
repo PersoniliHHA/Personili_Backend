@@ -410,9 +410,8 @@ class Personalizable(TimeStampedModel):
         # First apply the Q filters and the limit offset for optimization
         personalizables_ids = (cls.objects.filter(q_objects)
                                .values_list('id', flat=True)[offset:limit])
-        # Second fetch the detailed information for these IDs only
-
         
+        # Second fetch the detailed information for these IDs only
         # Prefetch the option values and their options with custom queryset 
         variant_value_queryset = PersonalizableVariantValue.objects.select_related('option_value__option')
 

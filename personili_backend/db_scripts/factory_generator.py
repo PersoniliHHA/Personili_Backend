@@ -469,7 +469,7 @@ def init_personili_db(data_scale: int=100):
                         design_preview = DesignPreviewFactory(design=design)
                 
                 # Create the personalizables and their variants
-                # First decide how many personalizables this workshop should have (between 1 and 10)
+                # First decide how many personalizables this workshop should have (between 1 and 50)
                 personalizables_nb = random.randint(1, 50)
 
                 for _ in range(personalizables_nb):
@@ -525,9 +525,6 @@ def init_personili_db(data_scale: int=100):
         print(f"current count of Organizations: {organization_count}")
         print(f"current count of Organization Profiles: {organization_profile_count}")
         print(f"current count of Workshops: {workshop_count}")
-
-
-
 
 
     print(f"total count of Accounts: {account_count}")

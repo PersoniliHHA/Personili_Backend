@@ -219,7 +219,6 @@ class AccountAuthViewSet(viewsets.ViewSet):
         """
         This api will be used to verify the email of the user, it extracts the token from the path parameters and checks its existence and validity
         """
-        print("token: ", token)
         
         # Verify the token
         is_token_valid, account_id = verify_email_verification_token(token, "EMAIL_VERIFICATION")
@@ -320,13 +319,11 @@ class AccountAuthViewSet(viewsets.ViewSet):
             
         # Check the validity of the refresh token
         token_components = verify_refresh_token(refresh_token)
-        print(token_components)
         if not token_components.get('is_valid_token'):
             return Response({"error": "UNAUTHORIZED"}, status=status.HTTP_401_UNAUTHORIZED)
 
         # Check the token components
         account = verify_token_components(token_components, "ref")
-        print(account)
         if account is None:
             return Response({"error": "UNAUTHORIZED"}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -369,7 +366,6 @@ class AccountProfileViewSet(viewsets.ModelViewSet):
         """
         # Check if the account_id and profile_id are not empty
         if not account_id or not profile_id:
-            print("condition 1")
             return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
         
         # Check that the path parameters are the same as the authenticated user
