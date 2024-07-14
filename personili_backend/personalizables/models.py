@@ -434,19 +434,23 @@ class Personalizable(TimeStampedModel):
             personalizable_dict["personalizable_description"] = personalizable.description
             personalizable_dict["personalizable_brand"] = personalizable.brand
             personalizable_dict["personalizable_model"] = personalizable.model
-            personalizable_dict["category"] = personalizable.category.name
-            personalizable_dict["department"] = personalizable.department.name
-            personalizable_dict["workshop"] = personalizable.workshop.name
+            personalizable_dict["category_id"] = personalizable.category.id
+            personalizable_dict["category_name"] = personalizable.category.name
+            personalizable_dict["department_id"] = personalizable.department.id            
+            personalizable_dict["department_name"] = personalizable.department.name
+            personalizable_dict["workshop_name"] = personalizable.workshop.name
+            personalizable_dict["workshop_id"] = personalizable.workshop.id
+            personalizable_dict["organization_id"] = personalizable.workshop.organization.id            
             personalizable_dict["organization_name"] = personalizable.workshop.organization.business_name
             personalizable_dict["organization_logo"] = personalizable.workshop.organization.orgprofile.logo_path
             personalizable_dict["organization_sponsored"] = personalizable.workshop.organization.orgprofile.is_sponsored
             personalizable_dict["variants"] = []
             for variant in personalizable.variants.all():
                 variant_dict = {}
-                variant_dict["id"] = variant.id
-                variant_dict["name"] = variant.name
-                variant_dict["quantity"] = variant.quantity
-                variant_dict["base_price"] = variant.base_price
+                variant_dict["variant_id"] = variant.id
+                variant_dict["variant_name"] = variant.name
+                variant_dict["variant_quantity"] = variant.quantity
+                variant_dict["variant_base_price"] = variant.base_price
                 variant_dict["variant_values"] = []
                 for variant_value in variant.variant_values.all():
                     variant_value_dict = {}
