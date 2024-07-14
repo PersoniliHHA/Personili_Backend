@@ -272,6 +272,8 @@ class Personalizable(TimeStampedModel):
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category')
     department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='department')
+    
+    is_sponsored = models.BooleanField(default=False)
 
     # Designs that can be used on this personalizable
     allowed_designs = models.ManyToManyField(Design, related_name='personalizables')
@@ -379,9 +381,9 @@ class Personalizable(TimeStampedModel):
                             Q(workshop__organization__description__icontains=search_term), Q.AND)
 
         if min_price :
-            q_objects.add(Q(variants_base_price__gte=min_price), Q.AND)
+            q_objects.add(Q(variants__base_price__gte=min_price), Q.AND)
         if max_price :
-            q_objects.add(Q(variants_base_price__lte=max_price), Q.AND)
+            q_objects.add(Q(variants__base_price__lte=max_price), Q.AND)
         if models:
             q_objects.add(Q(model__in=models), Q.AND)
         if brands:
@@ -399,7 +401,7 @@ class Personalizable(TimeStampedModel):
         if option_values_ids:
             q_objects.add(Q(variants__variant_values_option_value__in=option_values_ids), Q.AND)
         if sponsored_personalizables:
-            q_objects.add(Q(sponsored_personalizables=True), Q.AND)
+            q_objects.add(Q(is_sponsored=True), Q.AND)
         if sponsored_organizations:
             q_objects.add(Q(workshop__organization__orgprofile__sponsored=True), Q.AND)
         if sponsored_workshops:
