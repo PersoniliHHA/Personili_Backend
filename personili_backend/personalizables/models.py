@@ -15,6 +15,9 @@ from organizations.models import InventoryItem
 from designs.models import Design
 from organizations.models import Workshop
 
+# aws
+from utils.aws.storage.s3_engine import s3_engine
+
 
 #######################################################
 """
@@ -476,7 +479,88 @@ class Personalizable(TimeStampedModel):
         
         return result
 
+    @classmethod
+    def get_personalizable_details(cls, personalizable_id: str):
+        """
+        Get the complete details of this personalizable, including :
+        - name, description, model ..... etc
+        - all the usage parameters
+        - information about the organization and workshop
+        - all the variants and their option values
+        - all the personalizable zones as well
+        """
+        personalizable = cls.objects.get(id=personalizable_id)
+        personalizable_dict = {}
+        personalizable_dict["personalizable_id"] = personalizable.id
+        personalizable_dict["personalizable_name"] = personalizable.name
+        personalizable_dict["personalizable_description"] = personalizable.description
+        personalizable_dict["personalizable_brand"] = personalizable.brand
+        personalizable_dict["personalizable_model"] = personalizable.model
+        personalizable_dict["personalizable_sponsored"] = personalizable.is_sponsored
+        
+        personalizable_dict["category_id"] = personalizable.category.id
+        personalizable_dict["category_name"] = personalizable.category.name
+        personalizable_dict["category_image_url_1"] = s3_engine.generate_presigned_s3_url(personalizable.category.image_path_1)
+        personalizable_dict["category_image_url_2"] = s3_engine.generate_presigned_s3_url(personalizable.category.image_path_2)
+        personalizable_dict["category_image_url_3"] = s3_engine.generate_presigned_s3_url(personalizable.category.image_path_3)
+        
+        personalizable_dict["department_id"] = personalizable.department.id            
+        personalizable_dict["department_name"] = personalizable.department.name
+        personalizable_dict["department_image_url_1"] = s3_engine.generate_presigned_s3_url(personalizable.department.image_path_1)
+        personalizable_dict["department_image_url_2"] = s3_engine.generate_presigned_s3_url(personalizable.department.image_path_2)
+        personalizable_dict["department_image_url_3"] = s3_engine.generate_presigned_s3_url(personalizable.department.image_path_3)
+        
+        personalizable_dict["workshop_name"] = personalizable.workshop.name
+        personalizable_dict["workshop_id"] = personalizable.workshop.id
+        personalizable_dict["organization_id"] = personalizable.workshop.organization.id            
+        personalizable_dict["organization_name"] = personalizable.workshop.organization.business_name
+        personalizable_dict["organization_logo"] = personalizable.workshop.organization.orgprofile.logo_path
+        personalizable_dict["organization_sponsored"] = personalizable.workshop.organization.orgprofile.is_sponsored
 
+        personalizable_dict["usage_parameters"] = {}
+        if personalizable.is_open_for_personalization:
+            personalizable_dict["usage_parameters"]["is_open_for_personalization"] = True
+        else:
+            personalizable_dict["usage_parameters"]["is_open_for_personalization"] = False
+            personalizable_dict["usage_parameters"]["used_with_store_designs"] = personalizable.used_with_store_designs
+            personalizable_dict["usage_parameters"]["used_with_user_uploaded_designs"] = personalizable.used_with_user_uploaded_designs
+            personalizable_dict["usage_parameters"]["used_with_same_workshop_designs"] = personalizable.used_with_same_workshop_designs
+            personalizable_dict["usage_parameters"]["used_with_other_workshop_designs"] = personalizable.used_with_other_workshop_designs
+            personalizable_dict["usage_parameters"]["used_with_platform_designs"] = personalizable.used_with_platform_designs
+
+        personalizable_dict["variants"] = []
+        for variant in personalizable.variants.all():
+            variant_dict = {}
+            variant_dict["variant_id"] = variant.id
+            variant_dict["variant_name"] = variant.name
+            variant_dict["variant_quantity"] = variant.quantity
+            variant_dict["variant_base_price"] = variant
+        
+            variant_dict["variant_values"] = []
+            for variant_value in variant.variant_values.all():
+                variant_value_dict = {}
+                variant_value_dict["option_value_id"] = variant_value.id
+                variant_value_dict["option_value"] = variant_value.option_value.value
+                variant_value_dict["option_name_id"] = variant_value.option_value.option.id
+                variant_value_dict["option_name"] = variant_value.option_value.option.name
+                variant_dict["variant_values"].append(variant_value_dict)
+            personalizable_dict["variants"].append(variant_dict)
+
+        personalizable_dict["zones"] = []
+        for zone in personalizable.zones.all():
+            zone_dict = {}
+            zone_dict["zone_id"] = zone.id
+            zone_dict["zone_name"] = zone.name
+            zone_dict["zone_image_path"] = zone.image_path
+            zone_dict["zone_max_nb_designs"] = zone.max_nb_designs
+            zone_dict["zone_coordinates"] = {
+                "x1": zone.x1,
+                "y1": zone.y1,
+                "x2": zone.x2,
+                "y2": zone.y2
+            }
+            personalizable_dict["zones"].append(zone_dict)
+        
 #########################################
 #      PersonalizableVariant model      #
 #########################################

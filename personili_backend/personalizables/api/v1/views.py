@@ -252,12 +252,24 @@ class PersonalizableViewSet(viewsets.ViewSet):
                 "error": "UNKNOWN_ERROR"
             },status=status.HTTP_400_BAD_REQUEST)
 
-    @action(detail=False, methods=['GET'], url_path='personalizables/(?P<pk>[^/.]+)', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
-    def get_personalizable(self, request, pk=None):
+    @action(detail=False, methods=['GET'], url_path='(?P<personalizable_id>[^/.]+)/details', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    def get_personalizable_details_by_id(self, request, personalizable_id=None):
         """Method that returns a personalizable object"""
         try:
-            personalizable = get_object_or_404(Personalizable, pk=pk)
-            response_data = personalizable.get_personalizable()
+            # Check if the personalizable id is present in the url
+            if not personalizable_id:
+                return Response({
+                    "error": "BAD_REQUEST"
+                }, status=status.HTTP_400_BAD_REQUEST)
+            personalizable = get_object_or_404(Personalizable, pk=personalizable_id)
+            
+            # Check if the workshop linked to this personalizable is active
+            if not personalizable.workshop.is_active:
+                return Response({
+                "error": "BAD_REQUEST"
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            response_data = personalizable.get_personalizable_details()
             return Response(response_data, status=status.HTTP_200_OK)
         except Exception as e:
             logging.error(f"UNKNOWN_ERROR : {e}")
