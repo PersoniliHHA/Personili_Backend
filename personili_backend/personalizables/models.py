@@ -730,3 +730,16 @@ class ZoneRelatedDesign(TimeStampedModel):
     class Meta:
         db_table = 'zone_related_designs'
 
+class DummyModel(models.Model):
+    """
+    A dummy model to test the creation of a model
+    """
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    name = models.CharField(max_length=255, null=True)
+
+    class Meta:
+        db_table = 'dummy_model'
+
+    def __str__(self):
+        return self.name + " - " + str(self.id)
+
