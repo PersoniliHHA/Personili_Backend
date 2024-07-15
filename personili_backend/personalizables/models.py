@@ -745,7 +745,7 @@ class DesignedZoneRelatedDesign(TimeStampedModel):
     dy2 = models.FloatField(null=True)
 
     class Meta:
-        db_table = 'dummy_model'
+        db_table = 'designed_zone_related_designs'
 
     def __str__(self):
         return self.name + " - " + str(self.id)
