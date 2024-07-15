@@ -8,7 +8,7 @@ from random import randint
 from organizations.factories import BusinessOwnerProfileFactory, OrganizationFactory, OrganizationMembershipFactory, OrganizationProfileFactory, WorkshopFactory, WorkshopMembershipFactory, InventoryFactory, InventoryItemFactory
 from designs.factories import DesignPreviewFactory,ThemeFactory, DesignerProfileFactory, DesignFactory, StoreFactory, StoreProfileFactory, CollectionFactory
 from personalizables.factories import CategoryFactory, DepartmentFactory, PersonalizableFactory, PersonalizableVariantFactory, PersonalizableVariantValueFactory, OptionFactory, OptionValueFactory, DesignedPersonalizableVariantFactory, DesignedPersonalizableZoneFactory, PersonalizableOptionFactory, PersonalizableZoneFactory, PersonalizationMethodFactory, PersonalizationTypeFactory
-from personalizables.factories import DesignedZoneRelatedDesign
+from personalizables.factories import DesignedZoneRelatedDesignFactory
 
 # Import data
 from personalizables.factories import CATEGORIES_LIST, DEPARTMENTS_LIST, OPTIONS_AND_VALUES, generate_random_shape
@@ -533,7 +533,7 @@ def init_personili_db(data_scale: int=5):
                                 print("zone max nb designs", zone.max_nb_designs)
                                 # Choose a random design
                                 design = random.choice(designs_list)
-                                designed_zone_related_design = DesignedZoneRelatedDesign(
+                                designed_zone_related_design = DesignedZoneRelatedDesignFactory(
                                     designed_personalizable_zone=designed_personalizable_zone,
                                     design=design)
                                                          

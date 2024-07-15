@@ -429,7 +429,7 @@ class DesignedPersonalizableZoneFactory(DjangoModelFactory):
 
     components = None
 
-class ZoneRelatedDesignFactory(DjangoModelFactory):
+class DesignedZoneRelatedDesignFactory(DjangoModelFactory):
     class Meta:
         model = DesignedZoneRelatedDesign
 
