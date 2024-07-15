@@ -714,7 +714,7 @@ class DesignedPersonalizableZone(TimeStampedModel):
     def __str__(self):
         return self.personalizable_zone.name + " - " + str(self.id)
 
-class DesignedPersonalizableZoneRelatedDesign(TimeStampedModel):
+class ZoneRelatedDesign(TimeStampedModel):
     """
     A designed personalizable zone can have many designs linked to it
     """
@@ -728,5 +728,5 @@ class DesignedPersonalizableZoneRelatedDesign(TimeStampedModel):
     dx2 = models.FloatField(null=True)
     dy2 = models.FloatField(null=True)
     class Meta:
-        db_table = 'designed_personalizable_zone_related_designs'
+        db_table = 'zone_related_designs'
 

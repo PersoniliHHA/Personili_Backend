@@ -1,6 +1,6 @@
 from personalizables.models import Department, Category, Personalizable, PersonalizableOption, PersonalizableVariant, PersonalizableVariantValue, PersonalizableZone, DesignedPersonalizableVariant, DesignedPersonalizableZone, Option, OptionValue, PersonalizationType, PersonalizationMethod
 from designs.factories import DesignFactory
-from personalizables.models import DesignedPersonalizableZoneRelatedDesign
+from personalizables.models import ZoneRelatedDesign
 
 # factory boy imports
 import factory
@@ -427,9 +427,9 @@ class DesignedPersonalizableZoneFactory(DjangoModelFactory):
 
     components = None
 
-class DesignedPersonalizableZoneRelatedDesignFactory(DjangoModelFactory):
+class ZoneRelatedDesignFactory(DjangoModelFactory):
     class Meta:
-        model = DesignedPersonalizableZoneRelatedDesign
+        model = ZoneRelatedDesign
 
 
     designed_personalizable_zone = factory.SubFactory(DesignedPersonalizableZoneFactory)

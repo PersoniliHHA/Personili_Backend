@@ -8,7 +8,7 @@ from random import randint
 from organizations.factories import BusinessOwnerProfileFactory, OrganizationFactory, OrganizationMembershipFactory, OrganizationProfileFactory, WorkshopFactory, WorkshopMembershipFactory, InventoryFactory, InventoryItemFactory
 from designs.factories import DesignPreviewFactory,ThemeFactory, DesignerProfileFactory, DesignFactory, StoreFactory, StoreProfileFactory, CollectionFactory
 from personalizables.factories import CategoryFactory, DepartmentFactory, PersonalizableFactory, PersonalizableVariantFactory, PersonalizableVariantValueFactory, OptionFactory, OptionValueFactory, DesignedPersonalizableVariantFactory, DesignedPersonalizableZoneFactory, PersonalizableOptionFactory, PersonalizableZoneFactory, PersonalizationMethodFactory, PersonalizationTypeFactory
-from personalizables.factories import DesignedPersonalizableZoneRelatedDesignFactory
+from personalizables.factories import ZoneRelatedDesignFactory
 
 # Import data
 from personalizables.factories import CATEGORIES_LIST, DEPARTMENTS_LIST, OPTIONS_AND_VALUES, generate_random_shape
