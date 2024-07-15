@@ -382,7 +382,7 @@ class PersonalizableZoneFactory(DjangoModelFactory):
     personalizable = factory.SubFactory(PersonalizableFactory)
     name = Faker('word')
     image_path = Faker('image_url')
-    max_nb_designs = Faker('random_int', min=1, max=10)
+    max_nb_designs = Faker('random_int', min=1, max=3)
     x1 = Faker('random_int', min=0, max=100)
     y1 = Faker('random_int', min=0, max=100)
     x2 = Faker('random_int', min=0, max=100)
