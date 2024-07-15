@@ -727,7 +727,7 @@ class DesignedPersonalizableZoneDesign(TimeStampedModel):
     dy1 = models.FloatField(null=True)
     dx2 = models.FloatField(null=True)
     dy2 = models.FloatField(null=True)
-
+    d = models.FloatField(null=True)
     class Meta:
         db_table = 'designed_personalizable_zone_designs'
 
