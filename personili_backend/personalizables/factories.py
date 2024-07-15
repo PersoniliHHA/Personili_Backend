@@ -415,6 +415,8 @@ class PersonalizableVariantValueFactory(DjangoModelFactory):
     personalizable_option = factory.SubFactory(PersonalizableOptionFactory)
 
 class DesignedPersonalizableVariantFactory(DjangoModelFactory):
+    class Meta:
+        model = DesignedPersonalizableVariant
     personalizable_variant = factory.SubFactory(PersonalizableVariantFactory)
     name = Faker('word')
 
