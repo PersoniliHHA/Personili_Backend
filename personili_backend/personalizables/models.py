@@ -730,7 +730,7 @@ class ZoneRelatedDesign(TimeStampedModel):
     class Meta:
         db_table = 'zone_related_designs'
 
-class DummyModel(models.Model):
+class DummyModel(TimeStampedModel):
     """
     A dummy model to test the creation of a model
     """
