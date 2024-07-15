@@ -723,10 +723,10 @@ class DesignedPersonalizableZoneDesign(models.Model):
     design = models.ForeignKey(Design, on_delete=models.CASCADE, related_name='designed_personalizable_zone')
 
     # Coordinates of the design in the zone
-    dx = models.FloatField(null=True)
-    dy = models.FloatField(null=True)
-    dh = models.FloatField(null=True)
-    dw = models.FloatField(null=True)
+    dx1 = models.FloatField(null=True)
+    dy1 = models.FloatField(null=True)
+    dx2 = models.FloatField(null=True)
+    dy2 = models.FloatField(null=True)
 
     class Meta:
         db_table = 'designed_personalizable_zone_designs'
