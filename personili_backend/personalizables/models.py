@@ -735,7 +735,14 @@ class DummyModel(TimeStampedModel):
     A dummy model to test the creation of a model
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    name = models.CharField(max_length=255, null=True)
+    designed_personalizable_zone = models.ForeignKey(DesignedPersonalizableZone, on_delete=models.CASCADE, related_name='rrrr')
+    design = models.ForeignKey(Design, on_delete=models.CASCADE, related_name='bbbb')
+
+    # Coordinates of the design in the zone
+    dx1 = models.FloatField(null=True)
+    dy1 = models.FloatField(null=True)
+    dx2 = models.FloatField(null=True)
+    dy2 = models.FloatField(null=True)
 
     class Meta:
         db_table = 'dummy_model'
