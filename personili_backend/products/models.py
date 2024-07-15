@@ -28,7 +28,6 @@ class Product(TimeStampedModel):
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name='organization', null=True)
     workshop = models.ForeignKey(Workshop, on_delete=models.CASCADE, related_name='workshop', null=True)
 
     category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, null=True, blank=True)
@@ -36,20 +35,19 @@ class Product(TimeStampedModel):
 
     # if not null then this means the product is self made by a user
     user = models.ForeignKey(AccountProfile, on_delete=models.CASCADE, related_name='user', null=True)
+    # self made or not, if true this mean the product was created by a regular user
+    self_made = models.BooleanField(default=False)
 
     # to be published or not (products are created but not published until the organization decides to publish them)
     to_be_published = models.BooleanField(default=False)
-    # self made or not, if true this mean the product was created by a regular user
-    self_made = models.BooleanField(default=False)
+    latest_publication_date = models.DateTimeField(null=True, blank=True)
     
     # editable : this means the user can personalize the product 
     editable = models.BooleanField(default=True)
 
     title = models.CharField(max_length=255)
     description = models.TextField(max_length=1000)
-
-    starting_price = models.DecimalField(max_digits=10, decimal_places=2)
-
+    
     class Meta:
         db_table = 'products'
 
@@ -143,7 +141,8 @@ class Product(TimeStampedModel):
             )
         
         # Now get the products, their variants and their reviews, the organization info, the category, the department, the personalization method, the designs and the themes
-        products = (products.prefetch_related('productpreview', 'organization', 'category', 'productvariants__designed_personalizable_variant__designed_personalizable_variant_zone__design__theme')
+        products = (products.select_related('organization', 'workshop', 'category', 'department', 'personalization_method')
+                    .prefetch_related('productpreview', 'productvariants__designed_personalizable_variant__designed_personalizable_variant_zone__design__theme')
                     .annotate(num_reviews=Count('productvariants__productreview'))
                     .annotate(avg_rating=Avg('productvariants__productreview__rating'))
                     .annotate(num_sales=Count('productvariants__orderitem'))
@@ -160,12 +159,17 @@ class Product(TimeStampedModel):
                 "product_rating": product.avg_rating,
                 "product_nb_reviews": product.num_reviews,
                 "product_nb_sales": product.num_sales,
+                
                 "product_category_id": product.category.id,
-                "product_departement_id": product.department.id,
+                "product_category_name": product.category.name,
+                "product_department_id": product.department.id,
+                "product_department_name": product.department.name,
+                
                 "product_organization_id": product.organization.id,
                 "product_organization_name": product.organization.name,
                 "product_workshop_id": product.workshop.id if product.workshop else None,
                 "product_workshop_name": product.workshop.name if product.workshop else None,
+                
                 "product_price": product.price,
                 "product_designs": [{"design_id": zone.design.id, 
                                      "theme_id": zone.design.theme.id, 

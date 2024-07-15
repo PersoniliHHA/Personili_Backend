@@ -8,8 +8,10 @@ from random import randint
 from organizations.factories import BusinessOwnerProfileFactory, OrganizationFactory, OrganizationMembershipFactory, OrganizationProfileFactory, WorkshopFactory, WorkshopMembershipFactory, InventoryFactory, InventoryItemFactory
 from designs.factories import DesignPreviewFactory,ThemeFactory, DesignerProfileFactory, DesignFactory, StoreFactory, StoreProfileFactory, CollectionFactory
 from personalizables.factories import CategoryFactory, DepartmentFactory, PersonalizableFactory, PersonalizableVariantFactory, PersonalizableVariantValueFactory, OptionFactory, OptionValueFactory, DesignedPersonalizableVariantFactory, DesignedPersonalizableZoneFactory, PersonalizableOptionFactory, PersonalizableZoneFactory, PersonalizationMethodFactory, PersonalizationTypeFactory
+from personalizables.factories import DesignedPersonalizableZoneDesignFactory
+
 # Import data
-from personalizables.factories import CATEGORIES_LIST, DEPARTMENTS_LIST, OPTIONS_AND_VALUES
+from personalizables.factories import CATEGORIES_LIST, DEPARTMENTS_LIST, OPTIONS_AND_VALUES, generate_random_shape
 
 # factory boy imports
 import factory
@@ -512,9 +514,28 @@ def init_personili_db(data_scale: int=100):
                             variant_value = PersonalizableVariantValueFactory(personalizable_variant=personalizable_variant, 
                                                                               personalizable_option=personalizable_option, 
                                                                               option_value=value)
-
-                            
-        # Log which objects have been created in this round
+                    
+                    # Create the designed personalizable variants
+                    # For each designed personalizable variant, create multiple designed personalizable zones
+                    for personalizable_variant in personalizable_variants:
+                        designed_personalizable_variant = DesignedPersonalizableVariantFactory(
+                            personalizable_variant=personalizable_variant,
+                        )
+                        # Loop through the personalizable zones and create designed personalizable zones
+                        for zone in personalizable_zones:
+                            designed_personalizable_zone = DesignedPersonalizableZoneFactory(
+                                designed_personalizable_variant=designed_personalizable_variant,
+                                personalizable_zone=zone,
+                                components = generate_random_shape()
+                            )
+                            # create the designed personalizable zone design
+                            for _ in range(zone.max_nb_designs):
+                                # Choose a random design
+                                design = random.choice(designs_list)
+                                designed_personalizable_zone_design = DesignedPersonalizableZoneDesignFactory(
+                                    designed_personalizable_zone=designed_personalizable_zone,
+                                    design=design)
+                                                         
         print("created data block number ", i)
         # Final counts
         print(f"current count of Accounts: {account_count}")

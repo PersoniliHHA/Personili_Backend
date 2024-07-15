@@ -326,6 +326,7 @@ class Personalizable(TimeStampedModel):
     @classmethod
     def get_personalizables(cls,
                             search_term: str = None,
+                            highest_sales: bool = False,
                             min_price: float = None,
                             max_price: float = None,
                             models: List[str] = None,
@@ -413,6 +414,20 @@ class Personalizable(TimeStampedModel):
             q_objects.add(Q(workshop__is_sponsored=sponsored_workshops), Q.AND)
         if events_ids:
             q_objects.add(Q(events__in=events_ids), Q.AND)
+        if highest_sales:
+            # to determin the highest sales, we need to link personalizable to variant to designed personalizable variant to product variant to order item
+            # then we annotate the number of sales for order items
+            # Step 1: Define a Subquery to calculate sales for each Personalizable
+            sales_subquery = OrderItem.objects.filter(
+                product_variant__designedpersonalizablevariant__variant__personalizable=OuterRef('pk')
+            ).annotate(
+                total_sales=Sum('quantity')  # Assuming 'quantity' represents the number of items sold
+            ).values('total_sales')
+
+            # Step 2: Annotate the Personalizable queryset with the calculated sales
+            personalizables_annotated_with_sales = cls.objects.annotate(
+                total_sales=Subquery(sales_subquery[:1], output_field=models.IntegerField())
+            )
         
         # Prefetch the option values and their options with custom queryset 
         variant_value_queryset = PersonalizableVariantValue.objects.select_related('option_value__option')
@@ -703,6 +718,7 @@ class DesignedPersonalizableZoneDesign(models.Model):
     """
     A designed personalizable zone can have many designs linked to it
     """
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     designed_personalizable_zone = models.ForeignKey(DesignedPersonalizableZone, on_delete=models.CASCADE, related_name='designs')
     design = models.ForeignKey(Design, on_delete=models.CASCADE, related_name='designed_personalizable_zone')
 

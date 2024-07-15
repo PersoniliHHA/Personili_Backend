@@ -1,5 +1,6 @@
 from personalizables.models import Department, Category, Personalizable, PersonalizableOption, PersonalizableVariant, PersonalizableVariantValue, PersonalizableZone, DesignedPersonalizableVariant, DesignedPersonalizableZone, Option, OptionValue, PersonalizationType, PersonalizationMethod
 from designs.factories import DesignFactory
+from personalizables.models import DesignedPersonalizableZoneDesign
 
 # factory boy imports
 import factory
@@ -144,7 +145,7 @@ DEPARTMENTS_LIST = [
 ]
 
 
-shape_components = [
+SHAPE_COMPONENTS = [
 {"Rectangle": {
     "x1": 0,
     "y1": 0,
@@ -207,6 +208,15 @@ shape_components = [
 }}
 
 ]
+def generate_random_shape():
+    """
+    Return a dict containing the shape and its coordinates
+    """
+    nb_shapes = randint(1, len(SHAPE_COMPONENTS) - 1)
+    shapes = []
+    for i in range(nb_shapes):
+        shapes.append(SHAPE_COMPONENTS[i])
+    return json.dumps(shapes)
 
 class DepartmentFactory(DjangoModelFactory):
     class Meta:
@@ -247,6 +257,52 @@ OPTIONS_AND_VALUES = [
         "name": "Material",
         "values": ["Cotton", "Polyester"]
     },
+]
+
+PERSONALIZATION_TYPES_METHODS = [
+    {
+        "name": "Print",
+        "description": "Printed on the product",
+        "methods": [
+            {
+                "name": "Laser Engraving",
+                "description": "Laser Engraved on the product",
+
+            },
+            {
+                "name": "Sublimation",
+                "description": "Sublimated on the product",
+
+            },
+            {
+                "name": "Heat Transfer",
+                "description": "Heat Transfered on the product",
+            },
+            {
+                "name": "Screen Printing",
+                "description": "Screen Printed on the product",
+            },
+            {
+                "name": "Digital Printing",
+                "description": "Digitally Printed on the product",
+            },
+        ]
+    },
+    {
+        "name": "Embroidery",
+        "description": "Embroidered on the product",
+        "methods": [
+            {
+                "name": "Machine Embroidery",
+                "description": "Machine Embroidered on the product",
+            },
+            {
+                "name": "Hand Embroidery",
+                "description": "Hand Embroidered on the product",
+            }
+        ]
+    },
+   
 ]
 
 class OptionFactory(DjangoModelFactory):
@@ -370,3 +426,14 @@ class DesignedPersonalizableZoneFactory(DjangoModelFactory):
     personalizable_zone = factory.SubFactory(PersonalizableZoneFactory)
 
     components = None
+
+class DesignedPersonalizableZoneDesignFactory(DjangoModelFactory):
+    class Meta:
+        model = DesignedPersonalizableZoneDesign
+
+    designed_personalizable_zone = factory.SubFactory(DesignedPersonalizableZoneFactory)
+    design = factory.SubFactory(DesignFactory)
+    dx1 = Faker('random_int', min=0, max=100)
+    dy1 = Faker('random_int', min=0, max=100)
+    dx2 = Faker('random_int', min=0, max=100)
+    dy2 = Faker('random_int', min=0, max=100)
