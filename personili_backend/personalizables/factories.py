@@ -431,6 +431,7 @@ class DesignedPersonalizableZoneDesignFactory(DjangoModelFactory):
     class Meta:
         model = DesignedPersonalizableZoneDesign
 
+    
     designed_personalizable_zone = factory.SubFactory(DesignedPersonalizableZoneFactory)
     design = factory.SubFactory(DesignFactory)
     dx1 = Faker('random_int', min=0, max=100)
