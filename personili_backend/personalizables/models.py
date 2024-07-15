@@ -713,23 +713,7 @@ class DesignedPersonalizableZone(TimeStampedModel):
 
     def __str__(self):
         return self.personalizable_zone.name + " - " + str(self.id)
-
-class ZoneRelatedDesign(TimeStampedModel):
-    """
-    A designed personalizable zone can have many designs linked to it
-    """
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    designed_personalizable_zone = models.ForeignKey(DesignedPersonalizableZone, on_delete=models.CASCADE, related_name='related_designs')
-    design = models.ForeignKey(Design, on_delete=models.CASCADE, related_name='designed_zones')
-
-    # Coordinates of the design in the zone
-    dx1 = models.FloatField(null=True)
-    dy1 = models.FloatField(null=True)
-    dx2 = models.FloatField(null=True)
-    dy2 = models.FloatField(null=True)
-    class Meta:
-        db_table = 'zone_related_designs'
-
+    
 class DesignedZoneRelatedDesign(TimeStampedModel):
     """
     A dummy model to test the creation of a model
