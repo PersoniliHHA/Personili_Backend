@@ -535,7 +535,6 @@ def init_personili_db(data_scale: int=5):
                             )
                             # create the designed personalizable zone design
                             for _ in range(zone.max_nb_designs):
-                                print("zone max nb designs", zone.max_nb_designs)
                                 # Choose a random design
                                 design = random.choice(designs_list)
                                 designed_zone_related_design = DesignedZoneRelatedDesignFactory(
@@ -565,8 +564,8 @@ def init_personili_db(data_scale: int=5):
                         for _ in range(3):
                             product_variant_review = ProductVariantReviewFactory(product_variant=product_variant, 
                                                                                  account_profile=account_profile)
-                        
-                                         
+
+
         print("created data block number ", i)
         # Final counts
         print(f"current count of Accounts: {account_count}")
