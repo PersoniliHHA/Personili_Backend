@@ -552,17 +552,17 @@ def init_personili_db(data_scale: int=5):
                     products.append(product)
                     # Create the product variants, each product variant is linked to a designed personalizable variant
                     product_variants = []
-                    for designed_personalizable_variant in designed_personalizable_variants:
-                        product_variant = ProductVariantFactory(product=product, 
-                                                                designed_personalizable_variant=designed_personalizable_variant)
-                        product_variants.append(product_variant)
-                        # Create the product variant previews
-                        for _ in range(3):
-                            product_variant_preview = ProductVariantPreviewFactory(product_variant=product_variant)
-                        
-                        # Create the product variant reviews
-                        for _ in range(3):
-                            product_variant_review = ProductVariantReviewFactory(product_variant=product_variant, 
+                    #for designed_personalizable_variant in designed_personalizable_variants:
+                    #    product_variant = ProductVariantFactory(product=product, 
+                    #                                            designed_personalizable_variant=designed_personalizable_variant)
+                    #    product_variants.append(product_variant)
+                    #    # Create the product variant previews
+                    #    for _ in range(3):
+                    #        product_variant_preview = ProductVariantPreviewFactory(product_variant=product_variant)
+                    #    
+                    #    # Create the product variant reviews
+                    #    for _ in range(3):
+                    #        product_variant_review = ProductVariantReviewFactory(product_variant=product_variant, 
                                                                                  account_profile=account_profile)
 
 
