@@ -549,6 +549,7 @@ def init_personili_db(data_scale: int=5):
                                              department=department, 
                                              user=None,
                                              self_made=False)
+                    print("product created")
                     products.append(product)
                     # Create the product variants, each product variant is linked to a designed personalizable variant
                     product_variants = []
