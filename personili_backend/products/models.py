@@ -267,10 +267,6 @@ class Product(TimeStampedModel):
         This method returns the minimum price of the product
         """
         return self.productvariants.aggregate(models.Min('price'))['price__min']
-
-    # Override the save method 
-    def save(self, *args, **kwargs):
-        pass
     
 class ProductVariant(TimeStampedModel):
     """
