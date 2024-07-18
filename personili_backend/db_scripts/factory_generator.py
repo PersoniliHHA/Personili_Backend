@@ -563,7 +563,7 @@ def init_personili_db(data_scale: int=5):
                     #    # Create the product variant reviews
                     #    for _ in range(3):
                     #        product_variant_review = ProductVariantReviewFactory(product_variant=product_variant, 
-                                                                                 account_profile=account_profile)
+                                                                                 #account_profile=account_profile)
 
 
         print("created data block number ", i)
