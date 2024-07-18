@@ -26,8 +26,8 @@ class DesignerProfileFactory(DjangoModelFactory):
     designer_username = Faker('user_name')
     biography = Faker('text')
     social_media_website_links = factory.LazyFunction(lambda: json.dumps(generate_social_media_links()))
-    designer_logo_path = faker_g.image_url()
-    designer_banner_path = faker_g.image_url()
+    designer_logo_path = Faker('image_url')
+    designer_banner_path = Faker('image_url')
     is_verified = faker_g.boolean(chance_of_getting_true=50)
 
     tax_number = Faker('random_int', min=1000000000, max=9999999999)

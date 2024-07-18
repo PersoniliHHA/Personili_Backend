@@ -9,6 +9,7 @@ from organizations.factories import BusinessOwnerProfileFactory, OrganizationFac
 from designs.factories import DesignPreviewFactory,ThemeFactory, DesignerProfileFactory, DesignFactory, StoreFactory, StoreProfileFactory, CollectionFactory
 from personalizables.factories import CategoryFactory, DepartmentFactory, PersonalizableFactory, PersonalizableVariantFactory, PersonalizableVariantValueFactory, OptionFactory, OptionValueFactory, DesignedPersonalizableVariantFactory, DesignedPersonalizableZoneFactory, PersonalizableOptionFactory, PersonalizableZoneFactory, PersonalizationMethodFactory, PersonalizationTypeFactory
 from personalizables.factories import DesignedZoneRelatedDesignFactory
+from products.factories import ProductFactory, ProductVariantFactory, ProductVariantPreviewFactory, ProductVariantReviewFactory
 
 # Import data
 from personalizables.factories import CATEGORIES_LIST, DEPARTMENTS_LIST, OPTIONS_AND_VALUES, generate_random_shape
@@ -372,7 +373,9 @@ def init_personili_db(data_scale: int=5):
         account = AccountFactory()
         account_count += 1
         # Create its profile
+        account_profiles = []
         account_profile = AccountProfileFactory(account=account)
+        account_profiles.append(account_profile)
         account_profile_count += 1
         # Create its delivery address
         # determine how many delivery addresses it should has (between 1 and 3 )
@@ -517,10 +520,12 @@ def init_personili_db(data_scale: int=5):
                     
                     # Create the designed personalizable variants
                     # For each designed personalizable variant, create multiple designed personalizable zones
+                    designed_personalizable_variants = []
                     for personalizable_variant in personalizable_variants:
                         designed_personalizable_variant = DesignedPersonalizableVariantFactory(
                             personalizable_variant=personalizable_variant,
                         )
+                        designed_personalizable_variants.append(designed_personalizable_variant)
                         # Loop through the personalizable zones and create designed personalizable zones
                         for zone in personalizable_zones:
                             designed_personalizable_zone = DesignedPersonalizableZoneFactory(
@@ -536,7 +541,32 @@ def init_personili_db(data_scale: int=5):
                                 designed_zone_related_design = DesignedZoneRelatedDesignFactory(
                                     designed_personalizable_zone=designed_personalizable_zone,
                                     design=design)
-                                                         
+                    
+                    products = []
+                    # Create the products and their variants
+                    # First create the product 
+                    product = ProductFactory(workshop=workshop, 
+                                             category=category, 
+                                             department=department, 
+                                             user=None,
+                                             self_made=False)
+                    products.append(product)
+                    # Create the product variants, each product variant is linked to a designed personalizable variant
+                    product_variants = []
+                    for designed_personalizable_variant in designed_personalizable_variants:
+                        product_variant = ProductVariantFactory(product=product, 
+                                                                designed_personalizable_variant=designed_personalizable_variant)
+                        product_variants.append(product_variant)
+                        # Create the product variant previews
+                        for _ in range(3):
+                            product_variant_preview = ProductVariantPreviewFactory(product_variant=product_variant)
+                        
+                        # Create the product variant reviews
+                        for _ in range(3):
+                            product_variant_review = ProductVariantReviewFactory(product_variant=product_variant, 
+                                                                                 account_profile=account_profile)
+                        
+                                         
         print("created data block number ", i)
         # Final counts
         print(f"current count of Accounts: {account_count}")

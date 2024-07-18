@@ -7,7 +7,8 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from accounts.models import TimeStampedModel
 from accounts.models import AccountProfile
 from organizations.models import Organization, Workshop
-from personalizables.models import Category, Department, PersonalizationMethod, DesignedPersonalizableVariant
+from personalizables.models import Personalizable, PersonalizableVariant, Category, Department, PersonalizationMethod, DesignedPersonalizableVariant
+from designs.models import Design
 
 from django.db.models import Count
 from django.forms.models import model_to_dict
@@ -42,7 +43,7 @@ class Product(TimeStampedModel):
     to_be_published = models.BooleanField(default=False)
     latest_publication_date = models.DateTimeField(null=True, blank=True)
     
-    # editable : this means the user can personalize the product 
+    # editable : this means the user can personalize the product, maybe will be replaces by templates
     editable = models.BooleanField(default=True)
 
     title = models.CharField(max_length=255)
@@ -360,6 +361,10 @@ class DiscountPromotion(Promotion):
     """
     percentage = models.DecimalField(max_digits=5, decimal_places=2)
     
+    product_variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE)
+    design = models.ForeignKey(Design, on_delete=models.CASCADE, null=True, blank=True)
+    personalizable_variant = models.ForeignKey(PersonalizableVariant, on_delete=models.CASCADE, null=True, blank=True)
+
     class Meta:
         db_table = 'discount_promotions'
 
