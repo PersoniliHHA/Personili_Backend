@@ -183,12 +183,11 @@ class Product(TimeStampedModel):
                 "product_department_id": product.department.id,
                 "product_department_name": product.department.name,
                 
-                "product_organization_id": product.organization.id,
-                "product_organization_name": product.organization.name,
+                "product_organization_id": product.workshop.organization.id,
+                "product_organization_name": product.workshop.organization.business_name,
                 "product_workshop_id": product.workshop.id if product.workshop else None,
                 "product_workshop_name": product.workshop.name if product.workshop else None,
                 
-                "product_price": product.price,
                 "product_designs": [{"design_id": related_design.design.id, 
                                      "theme_id": related_design.design.theme.id, 
                                      "design_image_path":related_design.design.image_path} for variant in product.productvariants.all() for zone in variant.designed_personalizable_variant_zone.all() for related_design in zone.related_designs.all()],
