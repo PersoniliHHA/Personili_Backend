@@ -48,6 +48,8 @@ class Product(TimeStampedModel):
 
     title = models.CharField(max_length=255)
     description = models.TextField(max_length=1000)
+
+    tags = models.TextField(max_length=1000, null=True, blank=True)
     
     class Meta:
         db_table = 'products'
@@ -126,18 +128,23 @@ class Product(TimeStampedModel):
                         .select_related('workshop'))
 
         # Personalization method, theme and design filters
-        if personalization_method_ids:
-            products = (products.filter(personalization_method_id__in=personalization_method_ids)
-                        .select_related('personalization_method'))
+        #if personalization_method_ids:
+        #    products = (products.filter(personalization_method_id__in=personalization_method_ids)
+        #                .select_related('personalization_method'))
+        
         if theme_ids:
-            products = (products.filter(productvariants__designed_personalizable_variant__designed_personalizable_variant_zone__design__theme_id__in=theme_ids))
+            products = (products.filter(productvariants__designed_personalizable_variant__designed_personalizable_variant_zone__related_designs__design__theme_id__in=theme_ids))
         if design_ids:
-            products = (products.filter(productvariants__designed_personalizable_variant__designed_personalizable_variant_zone__design_id__in=design_ids))
+            products = (products.filter(productvariants__designed_personalizable_variant__designed_personalizable_variant_zone__related_designs__design_id__in=design_ids))
         
         # Sponsored organizations filter
         if sponsored_organizations:
             products = (products.filter(organization__orgprofile__is_sponsored=True)
                         .select_related('organization'))
+        # Sponsored workshops filter
+        if sponsored_workshops:
+            products = (products.filter(workshop__orgprofile__is_sponsored=True)
+                        .select_related('workshop'))
         
         # Search term filter : search in the product title and description, the product variant title and description, the organization name
         if search_term:
@@ -147,16 +154,17 @@ class Product(TimeStampedModel):
                 Q(productvariants__name__icontains=search_term) |
                 Q(productvariants__description__icontains=search_term) |
                 Q(workshop__organization__name__icontains=search_term) |
-                Q(workshop__organization__orgprofile__description__icontains=search_term)
+                Q(workshop__organization__orgprofile__description__icontains=search_term) |
+                Q(tags__icontains=search_term)
             )
         
         # Now get the products, their variants and their reviews, the organization info, the category, the department, the personalization method, the designs and the themes
-        products = (products.select_related('organization', 'workshop', 'category', 'department', 'personalization_method')
-                    .prefetch_related('productpreview', 'productvariants__designed_personalizable_variant__designed_personalizable_variant_zone__design__theme')
+        products = (products.select_related('organization', 'workshop', 'category', 'department')
+                    .prefetch_related('productpreview', 'productvariants__designed_personalizable_variant__designed_personalizable_variant_zone__related_designs__design__theme')
                     .annotate(num_reviews=Count('productvariants__productreview'))
                     .annotate(avg_rating=Avg('productvariants__productreview__rating'))
                     .annotate(num_sales=Count('productvariants__orderitem'))
-                    .order_by('-num_sales','-num_reviews', '-avg_rating')[offset:offset+limit])
+                    .order_by('-num_sales','-num_reviews', '-avg_rating')[offset:limit])
         
         
         # Now prepare the json response
@@ -181,10 +189,10 @@ class Product(TimeStampedModel):
                 "product_workshop_name": product.workshop.name if product.workshop else None,
                 
                 "product_price": product.price,
-                "product_designs": [{"design_id": zone.design.id, 
-                                     "theme_id": zone.design.theme.id, 
-                                     "design_image_path": zone.design.image_path} for variant in product.productvariants.all() for zone in variant.designed_personalizable_variant_zone.all()],
-                "product_variants": [{"variant_id": variant.id,
+                "product_designs": [{"design_id": related_design.design.id, 
+                                     "theme_id": related_design.design.theme.id, 
+                                     "design_image_path":related_design.design.image_path} for variant in product.productvariants.all() for zone in variant.designed_personalizable_variant_zone.all() for related_design in zone.related_designs.all()],
+                "product_variants": [{  "variant_id": variant.id,
                                         "variant_name": variant.name,
                                         "variant_description": variant.description,
                                         "variant_price": variant.price,
@@ -195,7 +203,7 @@ class Product(TimeStampedModel):
                                                             "rating": review.rating, 
                                                             "comment": review.comment} for review in variant.productreview.all()],
                                         "variant_previews": [preview.image_path for preview in variant.productvariantpreviews.all()],
-                                        "variant_theme_ids": [zone.design.theme.id for zone in variant.designed_personalizable_variant_zone.all()] if theme_ids else None,
+                                        "variant_theme_ids": [] if theme_ids else None,
                                         } for variant in product.productvariants.all()],
                 "product_preview": [preview.image_path for preview in product.productpreview.all()],
                   }

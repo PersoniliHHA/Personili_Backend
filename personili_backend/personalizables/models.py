@@ -719,8 +719,8 @@ class DesignedZoneRelatedDesign(TimeStampedModel):
     A dummy model to test the creation of a model
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    designed_personalizable_zone = models.ForeignKey(DesignedPersonalizableZone, on_delete=models.CASCADE, related_name='rrrr')
-    design = models.ForeignKey(Design, on_delete=models.CASCADE, related_name='bbbb')
+    designed_personalizable_zone = models.ForeignKey(DesignedPersonalizableZone, on_delete=models.CASCADE, related_name='related_designs')
+    design = models.ForeignKey(Design, on_delete=models.CASCADE, related_name='designed_zones')
 
     # Coordinates of the design in the zone
     dx1 = models.FloatField(null=True)
