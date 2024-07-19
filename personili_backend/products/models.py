@@ -312,7 +312,7 @@ class ProductVariantPreview(TimeStampedModel):
     This table is used to store the product preview
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    product_variant = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='productvariantpreviews')
+    product_variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE, related_name='productvariantpreviews')
     image_path = models.CharField(max_length=255)
 
     class Meta:
