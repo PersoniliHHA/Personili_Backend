@@ -153,14 +153,14 @@ class Product(TimeStampedModel):
                 Q(description__icontains=search_term) |
                 Q(productvariants__name__icontains=search_term) |
                 Q(productvariants__description__icontains=search_term) |
-                Q(workshop__organization__name__icontains=search_term) |
+                Q(workshop__organization__business_name__icontains=search_term) |
                 Q(workshop__organization__orgprofile__description__icontains=search_term) |
                 Q(tags__icontains=search_term)
             )
         
         # Now get the products, their variants and their reviews, the organization info, the category, the department, the personalization method, the designs and the themes
         products = (products.select_related( 'workshop__organization', 'category', 'department')
-                    .prefetch_related('productvariants__productvariantpreviews', 'productvariants__designed_personalizable_variant__designed_personalizable_variant_zone__related_designs__design__theme')
+                    .prefetch_related('productvariants__productvariantpreviews', 'productvariants')
                     .annotate(num_reviews=Count('productvariants__productvariantreviews'))
                     .annotate(avg_rating=Avg('productvariants__productvariantreviews__rating'))
                     .annotate(num_sales=Count('productvariants__orderitem'))
@@ -188,9 +188,6 @@ class Product(TimeStampedModel):
                 "product_workshop_id": product.workshop.id if product.workshop else None,
                 "product_workshop_name": product.workshop.name if product.workshop else None,
                 
-                "product_designs": [{"design_id": related_design.design.id, 
-                                     "theme_id": related_design.design.theme.id, 
-                                     "design_image_path":related_design.design.image_path} for variant in product.productvariants.all() for zone in variant.designed_personalizable_variant.designed_personalizable_variant_zone.all() for related_design in zone.related_designs.all()],
                 "product_variants": [{  "variant_id": variant.id,
                                         "variant_name": variant.name,
                                         "variant_description": variant.description,
