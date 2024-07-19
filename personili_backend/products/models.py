@@ -190,7 +190,7 @@ class Product(TimeStampedModel):
                 
                 "product_designs": [{"design_id": related_design.design.id, 
                                      "theme_id": related_design.design.theme.id, 
-                                     "design_image_path":related_design.design.image_path} for variant in product.productvariants.all() for zone in variant.designed_personalizable_variant_zone.all() for related_design in zone.related_designs.all()],
+                                     "design_image_path":related_design.design.image_path} for variant in product.productvariants.all() for zone in variant.designed_personalizable_variant.designed_personalizable_variant_zone.all() for related_design in zone.related_designs.all()],
                 "product_variants": [{  "variant_id": variant.id,
                                         "variant_name": variant.name,
                                         "variant_description": variant.description,
