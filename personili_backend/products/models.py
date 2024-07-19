@@ -201,11 +201,11 @@ class Product(TimeStampedModel):
                                         "variant_reviews": [{"account_id": review.account.id, 
                                                             "account_email": review.account.email, 
                                                             "rating": review.rating, 
-                                                            "comment": review.comment} for review in variant.productreview.all()],
+                                                            "comment": review.comment} for review in variant.productvariantreviews.all()],
                                         "variant_previews": [preview.image_path for preview in variant.productvariantpreviews.all()],
                                         "variant_theme_ids": [] if theme_ids else None,
                                         } for variant in product.productvariants.all()],
-                "product_preview": [preview.image_path for preview in product.productpreview.all()],
+                
                   }
             # Remove the null key values
             product_data = {k: v for k, v in product_data.items() if v is not None}
