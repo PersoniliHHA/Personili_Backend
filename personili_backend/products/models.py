@@ -77,8 +77,11 @@ class Product(TimeStampedModel):
                     theme_ids: list[str]=None,
                     
                     sponsored_organizations =None,
+                    sponsored_workshops=None,
                     sponsored_products=None,
-                    search_term: str=None):
+                    search_term: str=None,
+                    
+                    publication_date: str=None,):
         
         """
         This method returns a list of products ordered by the number of sales with the following infos :
@@ -143,7 +146,8 @@ class Product(TimeStampedModel):
                 Q(description__icontains=search_term) |
                 Q(productvariants__name__icontains=search_term) |
                 Q(productvariants__description__icontains=search_term) |
-                Q(organization__name__icontains=search_term)
+                Q(workshop__organization__name__icontains=search_term) |
+                Q(workshop__organization__orgprofile__description__icontains=search_term)
             )
         
         # Now get the products, their variants and their reviews, the organization info, the category, the department, the personalization method, the designs and the themes
@@ -301,7 +305,7 @@ class ProductVariant(TimeStampedModel):
 
 
     def __str__(self):
-        return self.product.title + " " + self.name + " " + self.id
+        return self.product.title + " " + self.name + " " + str(self.id)
     
 class ProductVariantPreview(TimeStampedModel):
     """
@@ -315,7 +319,7 @@ class ProductVariantPreview(TimeStampedModel):
         db_table = 'product_variant_previews'
 
     def __str__(self):
-        return self.product.title + " " + self.id
+        return self.product.title + " " + str(self.id)
 
 
 class ProductVariantReview(TimeStampedModel):
