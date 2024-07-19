@@ -63,16 +63,21 @@ class Product(TimeStampedModel):
     def get_products(cls,  
                     offset: int,
                     limit: int,
+                    
                     max_price: float=None,
                     min_price: float=None,
+                    
                     category_ids: list[str]=None,
                     department_ids: list[str]=None,
                     organization_ids: list[str]=None,
                     workshop_ids :list[str]=None,
+                    
                     personalization_method_ids: list[str]=None,
                     design_ids: list[str]=None,
                     theme_ids: list[str]=None,
+                    
                     sponsored_organizations =None,
+                    sponsored_products=None,
                     search_term: str=None):
         
         """
@@ -111,7 +116,7 @@ class Product(TimeStampedModel):
         
         # Organization and workshop filters
         if organization_ids:
-            products = (products.filter(organization_id__in=organization_ids)
+            products = (products.filter(workshop__organization_id__in=organization_ids)
                         .select_related('organization'))
         if workshop_ids:
             products = (products.filter(workshop_id__in=workshop_ids)

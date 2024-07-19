@@ -340,7 +340,7 @@ def create_options_and_option_values():
 
 
 
-def init_personili_db(data_scale: int=5):
+def init_personili_db(data_scale: int=10):
      # Track the number of created entries
     account_count = 0
     account_profile_count = 0
@@ -549,22 +549,21 @@ def init_personili_db(data_scale: int=5):
                                              department=department, 
                                              user=None,
                                              self_made=False)
-                    print("product created")
                     products.append(product)
                     # Create the product variants, each product variant is linked to a designed personalizable variant
                     product_variants = []
-                    #for designed_personalizable_variant in designed_personalizable_variants:
-                    #    product_variant = ProductVariantFactory(product=product, 
-                    #                                            designed_personalizable_variant=designed_personalizable_variant)
-                    #    product_variants.append(product_variant)
-                    #    # Create the product variant previews
-                    #    for _ in range(3):
-                    #        product_variant_preview = ProductVariantPreviewFactory(product_variant=product_variant)
-                    #    
-                    #    # Create the product variant reviews
-                    #    for _ in range(3):
-                    #        product_variant_review = ProductVariantReviewFactory(product_variant=product_variant, 
-                                                                                 #account_profile=account_profile)
+                    for designed_personalizable_variant in designed_personalizable_variants:
+                        product_variant = ProductVariantFactory(product=product, 
+                                                                designed_personalizable_variant=designed_personalizable_variant)
+                        product_variants.append(product_variant)
+                        # Create the product variant previews
+                        for _ in range(3):
+                            product_variant_preview = ProductVariantPreviewFactory(product_variant=product_variant)
+                        
+                        # Create the product variant reviews
+                        for _ in range(3):
+                            product_variant_review = ProductVariantReviewFactory(product_variant=product_variant, 
+                                                                                 account_profile=account_profile)
 
 
         print("created data block number ", i)
