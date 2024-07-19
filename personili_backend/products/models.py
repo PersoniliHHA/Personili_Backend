@@ -160,7 +160,7 @@ class Product(TimeStampedModel):
         
         # Now get the products, their variants and their reviews, the organization info, the category, the department, the personalization method, the designs and the themes
         products = (products.select_related( 'workshop__organization', 'category', 'department')
-                    .prefetch_related('productpreview', 'productvariants__designed_personalizable_variant__designed_personalizable_variant_zone__related_designs__design__theme')
+                    .prefetch_related('productvariants__productvariantpreviews', 'productvariants_productvariantreviews', 'productvariants__designed_personalizable_variant__designed_personalizable_variant_zone__related_designs__design__theme')
                     .annotate(num_reviews=Count('productvariants__productreview'))
                     .annotate(avg_rating=Avg('productvariants__productreview__rating'))
                     .annotate(num_sales=Count('productvariants__orderitem'))
@@ -340,7 +340,7 @@ class ProductVariantReview(TimeStampedModel):
     - comment
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
-    product_variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE, related_name='productreview')
+    product_variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE, related_name='productvariantreviews')
     account_profile = models.ForeignKey(AccountProfile, on_delete=models.CASCADE)
     rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     comment = models.TextField(max_length=1000)
