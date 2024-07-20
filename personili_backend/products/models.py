@@ -210,12 +210,12 @@ class Product(TimeStampedModel):
                 "product_workshop_id": product.workshop.id if product.workshop else None,
                 "product_workshop_name": product.workshop.name if product.workshop else None,
                 
-                "product_variants": [{  "variant_id": variant.id,
-                                        "variant_name": variant.name,
-                                        "variant_price": variant.price,
-                                        "variant_quantity": variant.quantity,
-                                        "variant_sku": variant.sku,
-                                        "variant_values":[
+                "product_variants": [{  "product_variant_id": variant.id,
+                                        "product_variant_name": variant.name,
+                                        "product_variant_price": variant.price,
+                                        "product_variant_quantity": variant.quantity,
+                                        "product_variant_sku": variant.sku,
+                                        "product_variant_values":[
                                             {
                                                 "option_id": variant_value.option_value.option.id,
                                                 "option_name": variant_value.option_value.option.name,
@@ -223,7 +223,7 @@ class Product(TimeStampedModel):
                                                 "option_value": variant_value.option_value.value
                                             } for variant_value in variant.designed_personalizable_variant.personalizable_variant.variant_values.all()
                                         ] ,
-                                        "variant_previews": [preview.image_path for preview in variant.productvariantpreviews.all()],
+                                        "product_variant_previews": [preview.image_path for preview in variant.productvariantpreviews.all()],
                                         } for variant in product.productvariants.all()],
                 
                   }
