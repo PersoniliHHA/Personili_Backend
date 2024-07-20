@@ -42,6 +42,8 @@ class Product(TimeStampedModel):
     # to be published or not (products are created but not published until the organization decides to publish them)
     to_be_published = models.BooleanField(default=False)
     latest_publication_date = models.DateTimeField(null=True, blank=True)
+
+    personalization_method = models.ForeignKey(PersonalizationMethod, on_delete=models.DO_NOTHING, null=True, blank=True)
     
     # editable : this means the user can personalize the product, maybe will be replaces by templates
     editable = models.BooleanField(default=True)
@@ -253,7 +255,7 @@ class Product(TimeStampedModel):
         - Product themes
         """
         product_details = (cls.objects.filter(id=product_id, self_made=False, to_be_published=True)
-                              .select_related('workshop__organization_orgprofile', 'category', 'department', 'personalization_method__personalization_type')
+                              .select_related('workshop__organization_orgprofile', 'category', 'department')
                               .prefetch_related('productpreview', 'productvariants__productreview', 'product_designed_personalizable_variant__designed_personalizable_variant_zone__design__theme')      
                               .annotate(num_reviews=Count('productreview'))
                               .annotate(avg_rating=Avg('productreview__rating'))
