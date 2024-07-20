@@ -45,6 +45,7 @@ class Product(TimeStampedModel):
     
     # editable : this means the user can personalize the product, maybe will be replaces by templates
     editable = models.BooleanField(default=True)
+    is_sponsored = models.BooleanField(default=False)
 
     title = models.CharField(max_length=255)
     description = models.TextField(max_length=1000)
@@ -68,6 +69,11 @@ class Product(TimeStampedModel):
                     
                     max_price: float=None,
                     min_price: float=None,
+
+                    option_value_ids: list[str]=None,
+                    brands: list[str]=None,
+                    models: list[str]=None,
+
                     
                     category_ids: list[str]=None,
                     department_ids: list[str]=None,
@@ -112,14 +118,21 @@ class Product(TimeStampedModel):
                     Q(productvariants__price__gte=min_price)
                 )
             
-        # Add filters incrementally
         # Category and department filters
         if category_ids:
             # First get the leaf categories
-            leaf_categories = Category.get_leaf_categories(category_ids)
+            leaf_categories = Category.get_leaf_categories_from_list(category_ids)
             products = products.filter(category_id__in=leaf_categories)
         if department_ids:
             products = products.filter(department_id__in=department_ids)
+
+        # Option value, brands, models filters
+        if option_value_ids:
+            products = products.filter(productvariants__designed_personalizable_variant__personalizable_variant__variant_values__option_value_id__in=option_value_ids)
+        if brands:
+            products = products.filter(productvariants__designed_personalizable_variant__personalizable_variant__personalizable_brand__in=brands)
+        if models:
+            products = products.filter(productvariants__designed_personalizable_variant__personalizable_variant__personalizable_model__in=models)
         
         # Organization and workshop filters
         if organization_ids:
@@ -147,6 +160,9 @@ class Product(TimeStampedModel):
         if sponsored_workshops:
             products = (products.filter(workshop__orgprofile__is_sponsored=True)
                         .select_related('workshop'))
+        # Sponsored products filter
+        if sponsored_products:
+            products = products.filter(is_sponsored=True)
         
         # Search term filter : search in the product title and description, the product variant title and description, the organization name
         if search_term:
@@ -157,8 +173,12 @@ class Product(TimeStampedModel):
                 Q(productvariants__description__icontains=search_term) |
                 Q(workshop__organization__business_name__icontains=search_term) |
                 Q(workshop__organization__orgprofile__description__icontains=search_term) |
-                Q(tags__icontains=search_term)
-            )
+                Q(tags__icontains=search_term) |
+                Q(productvariants__designed_personalizable_variant__personalizable_variant__variant_values__option_value__option__name__icontains=search_term) |
+                Q(productvariants__designed_personalizable_variant__personalizable_variant__variant_values__option_value__value__icontains=search_term) |
+                Q(productvariants__designed_personalizable_variant__personalizable_variant__personalizable_brand__icontains=search_term) |
+                Q(productvariants__designed_personalizable_variant__personalizable_variant__personalizable_model__icontains=search_term) 
+            )   
         
         # Now get the products, their variants and their reviews, the organization info, the category, the department, the personalization method, the designs and the themes
         products = (products.select_related( 'workshop__organization', 'category', 'department')
