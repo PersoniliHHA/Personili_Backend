@@ -154,11 +154,11 @@ class Product(TimeStampedModel):
         
         # Sponsored organizations filter
         if sponsored_organizations:
-            products = (products.filter(organization__orgprofile__is_sponsored=True)
+            products = (products.filter(workshop__organization__orgprofile__is_sponsored=True)
                         .select_related('organization'))
         # Sponsored workshops filter
         if sponsored_workshops:
-            products = (products.filter(workshop__orgprofile__is_sponsored=True)
+            products = (products.filter(workshop__is_sponsored=True)
                         .select_related('workshop'))
         # Sponsored products filter
         if sponsored_products:
