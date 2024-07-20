@@ -136,11 +136,9 @@ class Product(TimeStampedModel):
         
         # Organization and workshop filters
         if organization_ids:
-            products = (products.filter(workshop__organization_id__in=organization_ids)
-                        .select_related('organization'))
+            products = (products.filter(workshop__organization_id__in=organization_ids))
         if workshop_ids:
-            products = (products.filter(workshop_id__in=workshop_ids)
-                        .select_related('workshop'))
+            products = (products.filter(workshop_id__in=workshop_ids))
 
         # Personalization method, theme and design filters
         #if personalization_method_ids:
@@ -154,12 +152,10 @@ class Product(TimeStampedModel):
         
         # Sponsored organizations filter
         if sponsored_organizations:
-            products = (products.filter(workshop__organization__orgprofile__is_sponsored=True)
-                        .select_related('organization'))
+            products = (products.filter(workshop__organization__orgprofile__is_sponsored=True))
         # Sponsored workshops filter
         if sponsored_workshops:
-            products = (products.filter(workshop__is_sponsored=True)
-                        .select_related('workshop'))
+            products = (products.filter(workshop__is_sponsored=True))
         # Sponsored products filter
         if sponsored_products:
             products = products.filter(is_sponsored=True)
