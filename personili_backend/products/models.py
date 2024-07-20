@@ -160,7 +160,7 @@ class Product(TimeStampedModel):
         
         # Now get the products, their variants and their reviews, the organization info, the category, the department, the personalization method, the designs and the themes
         products = (products.select_related( 'workshop__organization', 'category', 'department')
-                    .prefetch_related('productvariants__productvariantpreviews', 'productvariants')
+                    .prefetch_related('productvariants__productvariantpreviews', 'productvariants__designed_personalizable_variant__personalizable_variant__variant_values__option_value__option')
                     .annotate(num_reviews=Count('productvariants__productvariantreviews'))
                     .annotate(avg_rating=Avg('productvariants__productvariantreviews__rating'))
                     .annotate(num_sales=Count('productvariants__orderitem'))
@@ -190,12 +190,17 @@ class Product(TimeStampedModel):
                 
                 "product_variants": [{  "variant_id": variant.id,
                                         "variant_name": variant.name,
-                                        "variant_description": variant.description,
                                         "variant_price": variant.price,
                                         "variant_quantity": variant.quantity,
                                         "variant_sku": variant.sku,
+                                        "variant_values":[
+                                            {
+                                                "option_id": variant_value.option_value.option.id,
+                                                "option_name": variant_value.option_value.option.name,
+                                                "option_value": variant_value.option_value.value
+                                            } for variant_value in variant.designed_personalizable_variant.personalizable_variant.variant_values.all()
+                                        ] ,
                                         "variant_previews": [preview.image_path for preview in variant.productvariantpreviews.all()],
-                                        "variant_theme_ids": [] if theme_ids else None,
                                         } for variant in product.productvariants.all()],
                 
                   }

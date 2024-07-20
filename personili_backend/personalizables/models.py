@@ -614,7 +614,7 @@ class PersonalizableOption(TimeStampedModel):
     """
     A personalizable option is linked to a personalizable with an option
     """
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     personalizable = models.ForeignKey(Personalizable, on_delete=models.CASCADE, related_name='options')
     option = models.ForeignKey('Option', on_delete=models.CASCADE, related_name='personalizables')
 
@@ -635,7 +635,7 @@ class PersonalizableZone(TimeStampedModel):
     a name, 
     an image path and coordinates x1, y1, x2, y2
     """
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     personalizable = models.ForeignKey(Personalizable, on_delete=models.CASCADE, related_name='zones')
     name = models.CharField(max_length=255, null=True)
     image_path = models.CharField(max_length=255, null=True, blank=True)
@@ -664,9 +664,9 @@ class PersonalizableVariantValue(TimeStampedModel):
     - a personalizable option
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
-    personalizable_variant = models.ForeignKey(PersonalizableVariant, on_delete=models.CASCADE, related_name='variant_values')
-    option_value = models.ForeignKey(OptionValue, on_delete=models.CASCADE, related_name='variant_values')
-    personalizable_option = models.ForeignKey(PersonalizableOption, on_delete=models.CASCADE, related_name='variant_values')
+    personalizable_variant = models.ForeignKey(PersonalizableVariant, on_delete=models.CASCADE, related_name='variant_values', db_index=True)
+    option_value = models.ForeignKey(OptionValue, on_delete=models.CASCADE, related_name='variant_values', db_index=True)
+    personalizable_option = models.ForeignKey(PersonalizableOption, on_delete=models.CASCADE, related_name='variant_values', db_index=True)
     
     class Meta:
         db_table = 'personalizable_variant_values'
@@ -685,7 +685,7 @@ class DesignedPersonalizableVariant(TimeStampedModel):
      - a product : each product can have many designed personalizable variants, but a designed personalizable variant is linked to one and only one product
     """
 
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     personalizable_variant = models.ForeignKey(PersonalizableVariant, on_delete=models.CASCADE, related_name='designed_personalizable_variant')
     name = models.CharField(max_length=255, null=True)
 
@@ -702,7 +702,7 @@ class DesignedPersonalizableZone(TimeStampedModel):
     - a designed personalizable zone can be linked to multiple designs with many to many relationship
     and also 4 coordinates dx, dy, dh, dw
     """
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     personalizable_zone = models.ForeignKey(PersonalizableZone, on_delete=models.CASCADE, related_name='designed_personalizable_zone')
     designed_personalizable_variant = models.ForeignKey(DesignedPersonalizableVariant, on_delete=models.CASCADE, related_name='designed_personalizable_variant_zone')
     
@@ -719,9 +719,9 @@ class DesignedZoneRelatedDesign(TimeStampedModel):
     """
     A dummy model to test the creation of a model
     """
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    designed_personalizable_zone = models.ForeignKey(DesignedPersonalizableZone, on_delete=models.CASCADE, related_name='related_designs')
-    design = models.ForeignKey(Design, on_delete=models.CASCADE, related_name='designed_zones')
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
+    designed_personalizable_zone = models.ForeignKey(DesignedPersonalizableZone, on_delete=models.CASCADE, related_name='related_designs', db_index=True)
+    design = models.ForeignKey(Design, on_delete=models.CASCADE, related_name='designed_zones', db_index=True)
 
     # Coordinates of the design in the zone
     dx1 = models.FloatField(null=True)
