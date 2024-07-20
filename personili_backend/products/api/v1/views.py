@@ -31,7 +31,7 @@ class ProductViewSet(viewsets.ViewSet):
     
     #################################### GET APIS, PUBLIC #####################################
     ##### GET PRODUCTS LIGHT #####
-    @action(detail=False, methods=['GET'], url_path='catalog', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    @action(detail=False, methods=['POST'], url_path='catalog', permission_classes=[permissions.AllowAnydata])
     def get_products(self, request):
         """
         This method is used to get the list of products with minimal information and based on criterias :
@@ -55,34 +55,34 @@ class ProductViewSet(viewsets.ViewSet):
         self.authentication_classes = []
 
         # Get the query parameters
-        offset = request.query_params.get('offset', None)
-        limit = request.query_params.get('limit', None)
+        offset = request.data.get('offset', None)
+        limit = request.data.get('limit', None)
         
-        category_ids = request.query_params.get('categories', None)
-        department_ids = request.query_params.get('departments', None)
-        organization_ids = request.query_params.get('organizations', None)
-        workshop_ids = request.query_params.get('workshops', None)
-        sponsored_organizations = request.query_params.get('sponsored_organizations', None)
-        sponsored_products = request.query_params.get('sponsored_products', None)
+        category_ids = request.data.get('categories', None)
+        department_ids = request.data.get('departments', None)
+        organization_ids = request.data.get('organizations', None)
+        workshop_ids = request.data.get('workshops', None)
+        sponsored_organizations = request.data.get('sponsored_organizations', None)
+        sponsored_products = request.data.get('sponsored_products', None)
         
         
-        brands = request.query_params.get('brands', None)
-        models = request.query_params.get('models', None)
-        option_value_ids = request.query_params.get('option_values', None)
+        brands = request.data.get('brands', None)
+        models = request.data.get('models', None)
+        option_value_ids = request.data.get('option_values', None)
         
-        personalization_method_ids = request.query_params.get('personalization_methods', None)
+        personalization_method_ids = request.data.get('personalization_methods', None)
         
-        theme_ids = request.query_params.get('themes', None)
-        design_ids = request.query_params.get('designs', None)
+        theme_ids = request.data.get('themes', None)
+        design_ids = request.data.get('designs', None)
         
-        search_term = request.query_params.get('search_term', None)
+        search_term = request.data.get('search_term', None)
         
-        min_price = request.query_params.get('min_p', None)
-        max_price = request.query_params.get('max_p', None)
+        min_price = request.data.get('min_price', None)
+        max_price = request.data.get('max_price', None)
 
-        publication_date = request.query_params.get('publication_date', None)
+        publication_date = request.data.get('publication_date', None)
 
-        with_promotion = request.query_params.get('with_promotion', None)
+        with_promotion = request.data.get('with_promotion', None)
 
         ####################### Query parameters validation ########################
         ##### offset and limit should be integers and greater than 0
@@ -166,6 +166,15 @@ class ProductViewSet(viewsets.ViewSet):
             models = models.split(",")
             if not is_all_valid_uuid4(models):
                 return Response({"error": "BAD_REQUEST"}, status=400)
+        
+        if option_value_ids:
+            # remove the white spaces
+            option_value_ids = option_value_ids.replace(" ", "")
+            # split the string into a list
+            option_value_ids = option_value_ids.split(",")
+            if not is_all_valid_uuid4(option_value_ids):
+                return Response({"error": "BAD_REQUEST"}, status=400)
+            
         if organization_ids:
             # remove the white spaces
             organization_ids = organization_ids.replace(" ", "")

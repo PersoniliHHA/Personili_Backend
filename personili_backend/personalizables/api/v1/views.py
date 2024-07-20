@@ -78,6 +78,7 @@ class PersonalizableViewSet(viewsets.ViewSet):
     @action(detail=False, methods=['POST'], url_path='catalog', permission_classes=[permissions.AllowAny])
     def get_all_personalizables(self, request):
         """Method that returns all personalizables"""
+        
         # Get the query parameters from the request
         offset = request.data.get('offset', None)
         limit = request.data.get('limit', None)
