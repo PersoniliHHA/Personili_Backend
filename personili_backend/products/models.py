@@ -110,6 +110,7 @@ class Product(TimeStampedModel):
         """
         # Start with the base query (only non self made products) and their previews
         products = cls.objects.filter(self_made=False, to_be_published=True)
+        count = products.count()
         
         # Filter the price, if at least one variant's price meets the criteria the product and its variants are returned
         if max_price and min_price:
@@ -232,7 +233,7 @@ class Product(TimeStampedModel):
             response["products_list"].append(product_data)
         
         # Add the count of the products
-        response["count"] = len(products)
+        response["count"] = count
 
         return response
 
