@@ -340,7 +340,7 @@ def create_options_and_option_values():
 
 
 
-def init_personili_db(data_scale: int=10):
+def init_personili_db(data_scale: int=50):
      # Track the number of created entries
     account_count = 0
     account_profile_count = 0
@@ -453,7 +453,7 @@ def init_personili_db(data_scale: int=10):
                 workshop = WorkshopFactory(organization=organization)
                 workshop_count += 1
                 # For each workshop creates designs
-                designs_nb = random.randint(1, 20)
+                designs_nb = random.randint(1, 30)
                 designs_list = []
 
                 for _ in range(designs_nb):

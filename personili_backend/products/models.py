@@ -115,7 +115,9 @@ class Product(TimeStampedModel):
         # Add filters incrementally
         # Category and department filters
         if category_ids:
-            products = products.filter(category_id__in=category_ids)
+            # First get the leaf categories
+            leaf_categories = Category.get_leaf_categories(category_ids)
+            products = products.filter(category_id__in=leaf_categories)
         if department_ids:
             products = products.filter(department_id__in=department_ids)
         
@@ -197,6 +199,7 @@ class Product(TimeStampedModel):
                                             {
                                                 "option_id": variant_value.option_value.option.id,
                                                 "option_name": variant_value.option_value.option.name,
+                                                "option_value_id": variant_value.option_value.id,
                                                 "option_value": variant_value.option_value.value
                                             } for variant_value in variant.designed_personalizable_variant.personalizable_variant.variant_values.all()
                                         ] ,
