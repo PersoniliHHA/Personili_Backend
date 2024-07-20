@@ -152,13 +152,13 @@ class ProductViewSet(viewsets.ViewSet):
                 return Response({"error": "BAD_REQUEST"}, status=400)
         
         if brands:
-            # brands has to be a string and not longer than 100 characters
-            if not isinstance(brands, str) or len(brands) > 100:
+            brands = brands.split(",")
+            if not all(isinstance(brand, str) for brand in brands):
                 return Response({"error": "BAD_REQUEST"}, status=400)
         
         if models:
-            # models has to be a string and not longer than 100 characters
-            if not isinstance(models, str) or len(models) > 100:
+            models = models.split(",")
+            if not all(isinstance(model, str) for model in models):
                 return Response({"error": "BAD_REQUEST"}, status=400)
         
         if option_value_ids:
