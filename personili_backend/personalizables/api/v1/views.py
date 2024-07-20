@@ -293,5 +293,36 @@ class PersonalizableViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=['GET'], url_path='personalizables/(?P<pk>[^/.]+)/zones', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def get_personalizable_zones(self, request, pk=None):
+
         """Method that returns all zones of a personalizable object"""
         pass
+
+    #############################################################
+    #  GET request to get all available options and their values #
+    #############################################################
+    @action(detail=False, methods=['GET'], url_path='options', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    def get_all_options(self, request):
+        """Method that returns all options and their values"""
+        try:
+            response_data = PersonalizationType.get_all_options()
+            return Response(response_data, status=status.HTTP_200_OK)
+        except Exception as e:
+            logging.error(f"UNKNOWN_ERROR : {e}")
+            return Response({
+                "error": "UNKNOWN_ERROR"
+            },status=status.HTTP_400_BAD_REQUEST)
+    
+    #############################################################
+    #  GET request to get all available brands and models       #
+    #############################################################
+    @action(detail=False, methods=['GET'], url_path='brands', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    def get_all_brands(self, request):
+        """Method that returns all brands and their models"""
+        try:
+            response_data = Personalizable.get_all_brands()
+            return Response(response_data, status=status.HTTP_200_OK)
+        except Exception as e:
+            logging.error(f"UNKNOWN_ERROR : {e}")
+            return Response({
+                "error": "UNKNOWN_ERROR"
+            },status=status.HTTP_400_BAD_REQUEST)

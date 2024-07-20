@@ -150,7 +150,22 @@ class ProductViewSet(viewsets.ViewSet):
             design_ids = design_ids.split(",")
             if not is_all_valid_uuid4(design_ids):
                 return Response({"error": "BAD_REQUEST"}, status=400)
-            
+        
+        if brands:
+            # remove the white spaces
+            brands = brands.replace(" ", "")
+            # split the string into a list
+            brands = brands.split(",")
+            if not is_all_valid_uuid4(brands):
+                return Response({"error": "BAD_REQUEST"}, status=400)
+        
+        if models:
+            # remove the white spaces
+            models = models.replace(" ", "")
+            # split the string into a list
+            models = models.split(",")
+            if not is_all_valid_uuid4(models):
+                return Response({"error": "BAD_REQUEST"}, status=400)
         if organization_ids:
             # remove the white spaces
             organization_ids = organization_ids.replace(" ", "")
