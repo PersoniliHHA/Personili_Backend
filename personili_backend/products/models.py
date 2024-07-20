@@ -210,7 +210,7 @@ class Product(TimeStampedModel):
             response["products_list"].append(product_data)
         
         # Add the count of the products
-        response["count"] = len(response["products_list"])
+        response["count"] = len(products)
 
         return response
 
