@@ -163,6 +163,9 @@ class Product(TimeStampedModel):
         # Sponsored products filter
         if sponsored_products:
             products = products.filter(is_sponsored=True)
+
+        if publication_date:
+            products = products.filter(latest_publication_date__gte=publication_date)
         
         # Search term filter : search in the product title and description, the product variant title and description, the organization name
         if search_term:

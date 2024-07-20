@@ -11,6 +11,7 @@ from personalizables.models import Category
 
 # Utils
 from utils.validators import is_all_valid_uuid4
+from datetime import datetime
 
 
 # configure logging 
@@ -56,16 +57,31 @@ class ProductViewSet(viewsets.ViewSet):
         # Get the query parameters
         offset = request.query_params.get('offset', None)
         limit = request.query_params.get('limit', None)
+        
         category_ids = request.query_params.get('categories', None)
         department_ids = request.query_params.get('departments', None)
+        organization_ids = request.query_params.get('organizations', None)
+        workshop_ids = request.query_params.get('workshops', None)
+        sponsored_organizations = request.query_params.get('sponsored_organizations', None)
+        sponsored_products = request.query_params.get('sponsored_products', None)
+        
+        
+        brands = request.query_params.get('brands', None)
+        models = request.query_params.get('models', None)
+        option_value_ids = request.query_params.get('option_values', None)
+        
         personalization_method_ids = request.query_params.get('personalization_methods', None)
+        
         theme_ids = request.query_params.get('themes', None)
         design_ids = request.query_params.get('designs', None)
-        organization_ids = request.query_params.get('organizations', None)
-        sponsored_organizations = request.query_params.get('sponsored_organizations', None)
+        
         search_term = request.query_params.get('search_term', None)
+        
         min_price = request.query_params.get('min_p', None)
         max_price = request.query_params.get('max_p', None)
+
+        publication_date = request.query_params.get('publication_date', None)
+
         with_promotion = request.query_params.get('with_promotion', None)
 
         ####################### Query parameters validation ########################
@@ -143,9 +159,22 @@ class ProductViewSet(viewsets.ViewSet):
             if not is_all_valid_uuid4(organization_ids):
                 return Response({"error": "BAD_REQUEST"}, status=400)
             
+        if workshop_ids:
+            # remove the white spaces
+            workshop_ids = workshop_ids.replace(" ", "")
+            # split the string into a list
+            workshop_ids = workshop_ids.split(",")
+            if not is_all_valid_uuid4(workshop_ids):
+                return Response({"error": "BAD_REQUEST"}, status=400)
+        
         if sponsored_organizations:
             # sponsored_organizations should ba valid boolean value
-            if sponsored_organizations not in ["true","True"]:
+            if sponsored_organizations not in ["true","True", "false", "False"]:
+                return Response({"error": "BAD_REQUEST"}, status=400)
+        
+        if sponsored_products:
+            # sponsored_products should ba valid boolean value
+            if sponsored_products not in ["true","True", "false", "False"]:
                 return Response({"error": "BAD_REQUEST"}, status=400)
         
         if with_promotion:
@@ -157,23 +186,41 @@ class ProductViewSet(viewsets.ViewSet):
             # search term has to be a string and not longer than 100 characters
             if not isinstance(search_term, str) or len(search_term) > 100:
                 return Response({"error": "BAD_REQUEST"}, status=400)
+        
+        if publication_date:
+            # publication date has to be a string and in the format YYYY-MM-DD
+            if not isinstance(publication_date, str) or len(publication_date) != 10:
+                return Response({"error": "BAD_REQUEST"}, status=400)
+            if datetime.strptime(publication_date, '%d-%m-%Y'):
+                publication_date = datetime.strptime(publication_date, '%d-%m-%Y')
+
         ###########################################################################
 
         try :
             # Get the products based on the query parameters
             products = Product.get_products(
-                                                offset=offset,
-                                                limit=limit,
-                                                max_price=max_price,
-                                                min_price=min_price,
-                                                category_ids=category_ids, 
-                                                department_ids=department_ids,
-                                                organization_ids=organization_ids, 
-                                                personalization_method_ids=personalization_method_ids, 
-                                                design_ids=design_ids, 
-                                                theme_ids=theme_ids, 
-                                                sponsored_organizations=sponsored_organizations,
-                                                search_term=search_term)
+                                            offset=offset,
+                                            limit=limit,
+                                            
+                                            max_price=max_price,
+                                            min_price=min_price,
+                                            
+                                            category_ids=category_ids, 
+                                            department_ids=department_ids,
+                                            organization_ids=organization_ids, 
+                                            workshop_ids=workshop_ids,
+                                            
+                                            personalization_method_ids=personalization_method_ids, 
+                                            design_ids=design_ids, 
+                                            theme_ids=theme_ids, 
+                                            
+                                            sponsored_products=sponsored_products,
+                                            sponsored_workshops=workshop_ids,
+                                            sponsored_organizations=sponsored_organizations,
+                                            
+                                            publication_date=publication_date,
+
+                                            search_term=search_term)
 
             # Return the response
             response = Response(products, status=status.HTTP_200_OK)
