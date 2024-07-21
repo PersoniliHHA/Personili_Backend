@@ -269,7 +269,7 @@ class Product(TimeStampedModel):
             """
             product_details = (cls.objects.filter(id=product_id, self_made=False, to_be_published=True)
                                   .select_related('workshop__organization__orgprofile', 'category', 'department')
-                                  .prefetch_related('productvariants__productvariantpreviews', 'productvariants__productvariantreviews', 'productvariants__designed_personalizable_variant__designed_personalizable_variant_zones__related_designs__design__theme')      
+                                  .prefetch_related('productvariants__productvariantpreviews', 'productvariants__productvariantreviews__account_profile', 'productvariants__designed_personalizable_variant__designed_personalizable_variant_zones__related_designs__design__theme')      
                                   .annotate(num_reviews=Count('productvariants__productvariantreviews'))
                                   .annotate(avg_rating=Avg('productvariants__productvariantreviews__rating'))
                                   .annotate(num_sales=Count('productvariants__orderitem'))
@@ -397,7 +397,7 @@ class ProductVariantReview(TimeStampedModel):
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     product_variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE, related_name='productvariantreviews')
-    account_profile = models.ForeignKey(AccountProfile, on_delete=models.CASCADE)
+    account_profile = models.ForeignKey(AccountProfile, on_delete=models.CASCADE, related_name='accountprofilereviews')
     rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     comment = models.TextField(max_length=1000)
 
