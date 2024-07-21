@@ -248,7 +248,7 @@ class ProductViewSet(viewsets.ViewSet):
             return Response({"error": "UNKNOWN_ERROR"}, status=400)
     
     ##### GET SINGLE PRODUCT DETAILS #####
-    @action(detail=False, methods=['GET'], url_path='(?P<product_id>[^/.]+)/reviews', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    @action(detail=False, methods=['GET'], url_path='(?P<product_id>[^/.]+)/details', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def get_product_detail(self, request, product_id=None):
         """
         This method is used to get the detail of a product
@@ -277,6 +277,7 @@ class ProductViewSet(viewsets.ViewSet):
             return Response({"error": "UNKNOWN_INTERNAL_ERROR"}, status=400)
     
     ###### GET SINGLE PRODUCT REVIEWS #####
+    @action(detail=False, methods=['GET'], url_path='(?P<product_id>[^/.]+)/reviews', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def get_product_reviews(self, request, product_id=None):
         """
         This method is used to get the reviews of a product
