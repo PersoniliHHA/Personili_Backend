@@ -332,7 +332,6 @@ class Product(TimeStampedModel):
                 review_data = {
                     "product_variant_id": variant.id,
                     "product_variant_name": variant.name,
-                    "product_variant_price": variant.price,
                     "product_variant_description": variant.description,
                     "review_id": review.id,
                     "review_rating": review.rating,

@@ -182,6 +182,29 @@ class Option(TimeStampedModel):
 
     def __str__(self):
         return self.name + " - " + str(self.id)
+    
+    @classmethod
+    def get_all_options_and_values(cls):
+        """
+        This method returns all the options and their values that are used in all the personalizable variants
+        """
+        # Get the related option values and variant values using prefetch related
+        options = Option.objects.prefetch_related('option_values__variant_values')
+        option_and_values_list = []
+        for option in options:
+            option_dict = {}
+            option_dict["option_id"] = option.id
+            option_dict["option_name"] = option.name
+            option_dict["option_values"] = []
+            for option_value in option.option_values.all():
+                option_value_dict = {}
+                option_value_dict["option_value_id"] = option_value.id
+                option_value_dict["option_value"] = option_value.value
+                option_dict["option_values"].append(option_value_dict)
+            option_and_values_list.append(option_dict)
+        
+        return option_and_values_list
+
 
 class OptionValue(TimeStampedModel):
     """
@@ -581,7 +604,16 @@ class Personalizable(TimeStampedModel):
             personalizable_dict["zones"].append(zone_dict)
     
         return personalizable_dict
-        
+    
+    @classmethod
+    def get_brands_and_models(cl):
+        """"
+        Get a list of all the unique brands and models of the personalizables
+        """
+        brands = cl.objects.values_list('brand', flat=True).distinct()
+        models = cl.objects.values_list('model', flat=True).distinct()
+        return {"brands": brands, "models": models}
+
 #########################################
 #      PersonalizableVariant model      #
 #########################################

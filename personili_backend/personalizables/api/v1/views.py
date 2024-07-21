@@ -315,11 +315,11 @@ class PersonalizableViewSet(viewsets.ViewSet):
     #############################################################
     #  GET request to get all available brands and models       #
     #############################################################
-    @action(detail=False, methods=['GET'], url_path='brands', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
-    def get_all_brands(self, request):
+    @action(detail=False, methods=['GET'], url_path='brands-models', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    def get_available_brands_and_models(self, request):
         """Method that returns all brands and their models"""
         try:
-            response_data = Personalizable.get_all_brands()
+            response_data = Personalizable.get_brands_and_models()
             return Response(response_data, status=status.HTTP_200_OK)
         except Exception as e:
             logging.error(f"UNKNOWN_ERROR : {e}")
