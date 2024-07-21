@@ -326,18 +326,23 @@ class Product(TimeStampedModel):
                             .prefetch_related('productvariants__productvariantreviews__account_profile')
                             .first())
         
-        response = {
-            "product_id": product_reviews.id,
-            "product_reviews": [
-                {
-                    "account_profile_id": review.account_profile.id,  
-                    "account_username": review.account_profile.username,
-                    "rating": round(review.rating, 1), 
-                    "comment": review.comment
-                } for variant in product_reviews.productvariants.all() for review in variant.productvariantreviews.all()
-            ]
-        }
-
+        response=[]
+        for variant in product_reviews.productvariants.all():
+            for review in variant.productvariantreviews.all():
+                review_data = {
+                    "product_variant_id": variant.id,
+                    "product_variant_name": variant.name,
+                    "product_variant_price": variant.price,
+                    "product_variant_description": variant.description,
+                    "review_id": review.id,
+                    "review_rating": review.rating,
+                    "review_comment": review.comment,
+                    "review_account_username": review.account_profile.username
+                }
+                response.append(review_data)
+        
+        return response
+    
 class ProductVariant(TimeStampedModel):
     """
     Each product has one or more variants
