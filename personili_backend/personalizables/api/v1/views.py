@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
 
 # Local imports
-from personalizables.models import Department, Category, PersonalizationType, PersonalizationMethod, Personalizable, PersonalizableVariant, PersonalizableZone
+from personalizables.models import Department, Category, Option, PersonalizationType, PersonalizationMethod, Personalizable, PersonalizableVariant, PersonalizableZone
 from accounts.models import AccountProfile
 from utils.validators import is_all_valid_uuid4
 
@@ -301,10 +301,10 @@ class PersonalizableViewSet(viewsets.ViewSet):
     #  GET request to get all available options and their values #
     #############################################################
     @action(detail=False, methods=['GET'], url_path='options', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
-    def get_all_options(self, request):
+    def get_available_options_and_values(self, request):
         """Method that returns all options and their values"""
         try:
-            response_data = PersonalizationType.get_all_options()
+            response_data = Option.get_all_options_and_values()
             return Response(response_data, status=status.HTTP_200_OK)
         except Exception as e:
             logging.error(f"UNKNOWN_ERROR : {e}")
