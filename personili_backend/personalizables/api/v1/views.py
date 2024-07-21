@@ -257,7 +257,6 @@ class PersonalizableViewSet(viewsets.ViewSet):
     def get_personalizable_details_by_id(self, request, personalizable_id=None):
         """Method that returns a personalizable object"""
         try:
-            print(personalizable_id)
             # Check if the personalizable id is present in the url
             if not personalizable_id or not is_all_valid_uuid4([personalizable_id]):
                 return Response({
