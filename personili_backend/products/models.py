@@ -254,7 +254,7 @@ class Product(TimeStampedModel):
         """
         product_details = (cls.objects.filter(id=product_id, self_made=False, to_be_published=True)
                                 .select_related('workshop__organization__orgprofile', 'category', 'department')
-                                .prefetch_related('productvariants__productvariantpreviews', 'productvariants__productvariantreviews__account_profile', 'productvariants__designed_personalizable_variant__designed_personalizable_variant_zones__related_designs__design__theme')      
+                                .prefetch_related('productvariants__productvariantpreviews', 'productvariants__designed_personalizable_variant__designed_personalizable_variant_zones__related_designs__design')      
                                 .only(
                                     'id', 'title', 'description', 'category__id', 'category__name', 'department__id', 'department__name', 
                                     'workshop__organization__id', 'workshop__organization__business_name', 'workshop__organization__orgprofile__logo_path', 'workshop__organization__orgprofile__is_sponsored', 'workshop__id', 'workshop__name'
@@ -309,27 +309,35 @@ class Product(TimeStampedModel):
                     for zone in product_variant.designed_personalizable_variant.designed_personalizable_variant_zones.all()
                     for related_design in zone.related_designs.all()
             ],
-            #"product_variants_reviews": [
-            #    {
-            #        "account_profile_id": review.account_profile.id,  
-            #        "account_username": review.account_profile.username,
-            #        "rating": round(review.rating, 1), 
-            #        "comment": review.comment
-            #    } for variant in product_details.productvariants.all() for review in variant.productvariantreviews.all()
-            #],
             "product_num_reviews": product_details.num_reviews,
             "product_avg_rating": product_details.avg_rating,
             "product_num_sales": product_details.num_sales,    
         }
         
         return response
-
-    def get_minimum_price(self):
-        """
-        This method returns the minimum price of the product
-        """
-        return self.productvariants.aggregate(models.Min('price'))['price__min']
     
+    @classmethod
+    def get_product_reviews(cls, product_id: str):
+        """
+        This method returns all the reviews of the products variants
+        """
+        # First use prefetch related to get all the reviews of the product variants
+        product_reviews = (cls.objects.filter(id=product_id, self_made=False, to_be_published=True)
+                            .prefetch_related('productvariants__productvariantreviews__account_profile')
+                            .first())
+        
+        response = {
+            "product_id": product_reviews.id,
+            "product_reviews": [
+                {
+                    "account_profile_id": review.account_profile.id,  
+                    "account_username": review.account_profile.username,
+                    "rating": round(review.rating, 1), 
+                    "comment": review.comment
+                } for variant in product_reviews.productvariants.all() for review in variant.productvariantreviews.all()
+            ]
+        }
+
 class ProductVariant(TimeStampedModel):
     """
     Each product has one or more variants
