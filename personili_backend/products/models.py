@@ -309,7 +309,7 @@ class Product(TimeStampedModel):
                 {
                     "account_profile_id": review.account_profile.id,  
                     "account_username": review.account_profile.username,
-                    "rating": review.rating, 
+                    "rating": round(review.rating, 1), 
                     "comment": review.comment
                 } for variant in product_details.productvariants.all() for review in variant.productvariantreviews.all()
             ],
