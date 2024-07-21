@@ -704,7 +704,7 @@ class DesignedPersonalizableZone(TimeStampedModel):
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     personalizable_zone = models.ForeignKey(PersonalizableZone, on_delete=models.CASCADE, related_name='designed_personalizable_zone')
-    designed_personalizable_variant = models.ForeignKey(DesignedPersonalizableVariant, on_delete=models.CASCADE, related_name='designed_personalizable_variant_zone')
+    designed_personalizable_variant = models.ForeignKey(DesignedPersonalizableVariant, on_delete=models.CASCADE, related_name='designed_personalizable_variant_zones')
     
     # Represents the shapes, texts and other components of the design
     components = models.JSONField(null=True, blank=True)

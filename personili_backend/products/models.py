@@ -256,45 +256,65 @@ class Product(TimeStampedModel):
         """
         product_details = (cls.objects.filter(id=product_id, self_made=False, to_be_published=True)
                               .select_related('workshop__organization_orgprofile', 'category', 'department')
-                              .prefetch_related('productpreview', 'productvariants__productreview', 'product_designed_personalizable_variant__designed_personalizable_variant_zone__design__theme')      
-                              .annotate(num_reviews=Count('productreview'))
-                              .annotate(avg_rating=Avg('productreview__rating'))
-                              .annotate(num_sales=Count('orderitem'))
+                              .prefetch_related('productvariants__productpreviews', 'productvariants__productreview', 'productvariants__productvariantpreviews', 'productvariants__designed_personalizable_variant__designed_personalizable_variant_zones__related_designs__design__theme')      
+                              .annotate(num_reviews=Count('productvariantreviews'))
+                              .annotate(avg_rating=Avg('productvariantreviews__rating'))
+                              .annotate(num_sales=Count('productvariants__orderitem'))
                               .first())
         response: dict = {
             "product_id": product_details.id,
             "product_title": product_details.title,
             "product_description": product_details.description,
-            "product_price": product_details.price,
+            
             "product_category_id": product_details.category.id,
             "product_category_name": product_details.category.name,
-            "product_organization_id": product_details.organization.id,
-            "product_organization_name": product_details.organization.name,
-            "product_organization_logo": product_details.organization.orgprofile.logo_path,
-            "product_organization_sponsored": product_details.organization.orgprofile.is_sponsored,
-            "product_workshop_id": product_details.workshop.id if product_details.workshop else None,
-            "product_workshop_name": product_details.workshop.name if product_details.workshop else None,
-            "product_personalization_method_id": product_details.personalization_method.id if product_details.personalization_method else None,
-            "product_personalization_method_name": product_details.personalization_method.name if product_details.personalization_method else None,
-            "product_personalization_type_id": product_details.personalization_method.personalization_type.id if product_details.personalization_method else None,
-            "product_personalization_type_name": product_details.personalization_method.personalization_type.name if product_details.personalization_method else None,
-            "product_reviews": [
-                {"account_id": review.account.id, 
-                 "account_email": review.account.email, 
-                 "rating": review.rating, 
-                 "comment": review.comment} for review in product_details.productreview.all()],
-            "product_previews": [{"image_path": preview.image_path} for preview in product_details.productpreview.all()],
+            "product_department_id": product_details.department.id,
+            "product_department_name": product_details.department.name,
+            
+            "product_organization_id": product_details.workshop.organization.id,
+            "product_organization_name": product_details.workshop.organization.business_name,
+            "product_organization_logo": product_details.workshop.organization.orgprofile.logo_path,
+            "product_organization_sponsored": product_details.workshop.organization.orgprofile.is_sponsored,
+            "product_workshop_id": product_details.workshop.id,
+            "product_workshop_name": product_details.workshop.name, 
+            "product_variants": [
+                {"product_variant_id": variant.id,
+                    "product_variant_name": variant.name,
+                    "product_variant_description": variant.description,
+                    "product_variant_price": variant.price,
+                    "product_variant_quantity": variant.quantity,
+                    "product_variant_sku": variant.sku,
+                    "product_variant_values":[
+                        {
+                            "option_id": variant_value.option_value.option.id,
+                            "option_name": variant_value.option_value.option.name,
+                            "option_value_id": variant_value.option_value.id,
+                            "option_value": variant_value.option_value.value
+                        } for variant_value in variant.designed_personalizable_variant.personalizable_variant.variant_values.all()
+                    ] ,
+                    "product_variant_previews": [preview.image_path for preview in variant.productvariantpreviews.all()],
+                    } for variant in product_details.productvariants.all()],
+            
             "designs_used": [{
-                            "design_id": zone.design.id,
-                            "design_title": zone.design.title,
-                            "design_image_path": zone.design.image_path,
-                            "theme_id": zone.design.theme.id,
-                            "theme_name": zone.design.theme.name,
-                            "num_likes": zone.design.design_likes.count()
-                        } 
-                        for variant in product_details.product_designed_personalizable_variant.all() 
-                        for zone in variant.designed_personalizable_variant_zone.all()
-                    ],
+                            "design_id": design.id,
+                            "design_title": design.title,
+                            "design_image_path": design.image_path,
+                            "theme_id": design.theme.id,
+                            "theme_name": design.theme.name,
+                            "num_likes": design.design_likes.count()
+                        } for designed_personalizable_variant in product_details.productvariants.designed_personalizable_variants.all()
+                          for zone in designed_personalizable_variant.designed_personalizable_variant_zones.all()
+                          for design in zone.related_designs.all()],
+            #"product_personalization_method_id": product_details.personalization_method.id if product_details.personalization_method else None,
+            #"product_personalization_method_name": product_details.personalization_method.name if product_details.personalization_method else None,
+            #"product_personalization_type_id": product_details.personalization_method.personalization_type.id if product_details.personalization_method else None,
+            #"product_personalization_type_name": product_details.personalization_method.personalization_type.name if product_details.personalization_method else None,
+            "product_variants_reviews": [
+                {"account_id": review.account.id,  
+                 "account_username": review.account.profile.username,
+                 "rating": review.rating, 
+                 "comment": review.comment} for review in product_details.productreviews.all()],
+            
             "product_num_reviews": product_details.num_reviews,
             "product_avg_rating": product_details.avg_rating,
             "product_num_sales": product_details.num_sales,    
