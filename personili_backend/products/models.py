@@ -297,26 +297,26 @@ class Product(TimeStampedModel):
                     "product_variant_previews": [preview.image_path for preview in variant.productvariantpreviews.all()],
                 } for variant in product_details.productvariants.all()
             ],
-            #"designs_used": [
-            #    {
-            #        "design_id": related_design.design.id,
-            #        "design_title": related_design.design.title,
-            #        "design_image_path": related_design.design.image_path,
-            #        "theme_id": related_design.design.theme.id,
-            #        "theme_name": related_design.design.theme.name,
-            #        "num_likes": related_design.design.design_likes.count()
-            #    } for product_variant in product_details.productvariants.all()
-            #        for zone in product_variant.designed_personalizable_variant.designed_personalizable_variant_zones.all()
-            #        for related_design in zone.related_designs.all()
-            #],
-            "product_variants_reviews": [
+            "designs_used": [
                 {
-                    "account_profile_id": review.account_profile.id,  
-                    "account_username": review.account_profile.username,
-                    "rating": round(review.rating, 1), 
-                    "comment": review.comment
-                } for variant in product_details.productvariants.all() for review in variant.productvariantreviews.all()
+                    "design_id": related_design.design.id,
+                    "design_title": related_design.design.title,
+                    "design_image_path": related_design.design.image_path,
+                    "theme_id": related_design.design.theme.id,
+                    "theme_name": related_design.design.theme.name,
+                    "num_likes": related_design.design.design_likes.count()
+                } for product_variant in product_details.productvariants.all()
+                    for zone in product_variant.designed_personalizable_variant.designed_personalizable_variant_zones.all()
+                    for related_design in zone.related_designs.all()
             ],
+            #"product_variants_reviews": [
+            #    {
+            #        "account_profile_id": review.account_profile.id,  
+            #        "account_username": review.account_profile.username,
+            #        "rating": round(review.rating, 1), 
+            #        "comment": review.comment
+            #    } for variant in product_details.productvariants.all() for review in variant.productvariantreviews.all()
+            #],
             "product_num_reviews": product_details.num_reviews,
             "product_avg_rating": product_details.avg_rating,
             "product_num_sales": product_details.num_sales,    
