@@ -196,7 +196,7 @@ class Option(TimeStampedModel):
             option_dict["option_id"] = option.id
             option_dict["option_name"] = option.name
             option_dict["option_values"] = []
-            for option_value in option.option_values.all():
+            for option_value in option.option_values:
                 option_value_dict = {}
                 option_value_dict["option_value_id"] = option_value.id
                 option_value_dict["option_value"] = option_value.value
