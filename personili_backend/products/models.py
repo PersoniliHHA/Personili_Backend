@@ -258,7 +258,7 @@ class Product(TimeStampedModel):
                               .select_related('workshop__organization_orgprofile', 'category', 'department')
                               .prefetch_related('productvariants__productvariantpreviews', 'productvariants__productvariantreviews', 'productvariants__designed_personalizable_variant__designed_personalizable_variant_zones__related_designs__design__theme')      
                               .annotate(num_reviews=Count('productvariants__productvariantreviews'))
-                              .annotate(avg_rating=Avg('productvariantreviews__rating'))
+                              .annotate(avg_rating=Avg('productvariants__productvariantreviews__rating'))
                               .annotate(num_sales=Count('productvariants__orderitem'))
                               .first())
         response: dict = {
