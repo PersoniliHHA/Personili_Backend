@@ -37,10 +37,10 @@ class Product(TimeStampedModel):
     # if not null then this means the product is self made by a user
     user = models.ForeignKey(AccountProfile, on_delete=models.CASCADE, related_name='user', null=True)
     # self made or not, if true this mean the product was created by a regular user
-    self_made = models.BooleanField(default=False)
+    self_made = models.BooleanField(default=False, db_index=True)
 
     # to be published or not (products are created but not published until the organization decides to publish them)
-    to_be_published = models.BooleanField(default=False)
+    to_be_published = models.BooleanField(default=False, db_index=True)
     latest_publication_date = models.DateTimeField(null=True, blank=True)
 
     personalization_method = models.ForeignKey(PersonalizationMethod, on_delete=models.DO_NOTHING, null=True, blank=True)
