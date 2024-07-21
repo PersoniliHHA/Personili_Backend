@@ -189,18 +189,18 @@ class Option(TimeStampedModel):
         This method returns all the options and their values that are used in all the personalizable variants
         """
         # Get the related option values and variant values using prefetch related
-        options = Option.objects.prefetch_related('option_values__variant_values')
+        options = Option.objects.prefetch_related('option_values__option_variant_values')
         option_and_values_list = []
         for option in options:
             option_dict = {}
             option_dict["option_id"] = option.id
             option_dict["option_name"] = option.name
             option_dict["option_values"] = []
-            #for option_value in option.option_values:
-            #    option_value_dict = {}
-            #    option_value_dict["option_value_id"] = option_value.id
-            #    option_value_dict["option_value"] = option_value.value
-            #    option_dict["option_values"].append(option_value_dict)
+            for option_value in option.option_values:
+                option_value_dict = {}
+                option_value_dict["option_value_id"] = option_value.id
+                option_value_dict["option_value"] = option_value.value
+                option_dict["option_values"].append(option_value_dict)
             option_and_values_list.append(option_dict)
         
         return option_and_values_list
@@ -696,9 +696,9 @@ class PersonalizableVariantValue(TimeStampedModel):
     - a personalizable option
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
-    personalizable_variant = models.ForeignKey(PersonalizableVariant, on_delete=models.CASCADE, related_name='variant_values', db_index=True)
-    option_value = models.ForeignKey(OptionValue, on_delete=models.CASCADE, related_name='variant_values', db_index=True)
-    personalizable_option = models.ForeignKey(PersonalizableOption, on_delete=models.CASCADE, related_name='variant_values', db_index=True)
+    personalizable_variant = models.ForeignKey(PersonalizableVariant, on_delete=models.CASCADE, related_name='personalizable_variant_values', db_index=True)
+    option_value = models.ForeignKey(OptionValue, on_delete=models.CASCADE, related_name='option_variant_values', db_index=True)
+    personalizable_option = models.ForeignKey(PersonalizableOption, on_delete=models.CASCADE, related_name='personalizable_option_variant_values', db_index=True)
     
     class Meta:
         db_table = 'personalizable_variant_values'
