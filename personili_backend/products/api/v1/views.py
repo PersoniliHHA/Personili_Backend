@@ -246,8 +246,9 @@ class ProductViewSet(viewsets.ViewSet):
         except Exception as e:
             logging.error(f"get_products_light action method error :{e.args} ")
             return Response({"error": "UNKNOWN_ERROR"}, status=400)
-
-    @action(detail=False, methods=['GET'], url_path='(?P<product_id>[^/.]+)/details', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
+    
+    ##### GET SINGLE PRODUCT DETAILS #####
+    @action(detail=False, methods=['GET'], url_path='(?P<product_id>[^/.]+)/reviews', permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def get_product_detail(self, request, product_id=None):
         """
         This method is used to get the detail of a product
@@ -264,7 +265,7 @@ class ProductViewSet(viewsets.ViewSet):
             
             # First check if the product exists and that it's not self made or not to be published
             product: Product = Product.objects.filter(id=product_id, self_made=False, to_be_published=True).first()
-            if not product or product.self_made or not product.to_be_published:
+            if not product:
                 return Response({"error": "NOT_FOUND"}, status=404)
             
             # Get the full details  of the product
@@ -275,3 +276,30 @@ class ProductViewSet(viewsets.ViewSet):
             logging.error(f"get_product_detail action method error :{e.args} ")
             return Response({"error": "UNKNOWN_INTERNAL_ERROR"}, status=400)
     
+    ###### GET SINGLE PRODUCT REVIEWS #####
+    def get_product_reviews(self, request, product_id=None):
+        """
+        This method is used to get the reviews of a product
+        """
+        self.permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+        self.authentication_classes = []
+        try:
+            # Get the product id
+            if not product_id:
+                return Response({"error": "BAD_REQUEST"}, status=400)
+            # Check if the id is a valid uuid
+            if not is_all_valid_uuid4([product_id]):
+                return Response({"error": "BAD_REQUEST"}, status=400)
+            
+            # First check if the product exists and that it's not self made or not to be published
+            product: Product = Product.objects.filter(id=product_id, self_made=False, to_be_published=True).first()
+            if not product:
+                return Response({"error": "NOT_FOUND"}, status=404)
+            
+            # Get the reviews of the product
+            reviews: dict = Product.get_product_reviews(product_id)
+            response = Response(reviews, status=status.HTTP_200_OK)
+            return response
+        except Exception as e:
+            logging.error(f"get_product_reviews action method error :{e.args} ")
+            return Response({"error": "UNKNOWN_INTERNAL_ERROR"}, status=400)
