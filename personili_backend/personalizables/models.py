@@ -174,7 +174,7 @@ class Option(TimeStampedModel):
     """
     Each option has a name and a description
     """
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     name = models.CharField(max_length=255, null=True)
 
     class Meta:
@@ -211,7 +211,7 @@ class OptionValue(TimeStampedModel):
     Each option value is linked to one and only one option, 
     it has a name and a description
     """
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False, db_index=True)
     option = models.ForeignKey(Option, on_delete=models.CASCADE, related_name='option_values')
     value = models.CharField(max_length=255, null=True)
 
@@ -293,8 +293,8 @@ class Personalizable(TimeStampedModel):
     name = models.CharField(max_length=255, null=True)
     description = models.TextField(null=True, blank=True)
     
-    brand = models.CharField(max_length=255, null=True, default="Generic Brand")
-    model = models.CharField(max_length=255, null=True, default="Generic Model")
+    brand = models.CharField(max_length=255, null=True, default="Generic Brand", blank=True, db_index=True)
+    model = models.CharField(max_length=255, null=True, default="Generic Model", blank=True, db_index=True)
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category')
     department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='department')
