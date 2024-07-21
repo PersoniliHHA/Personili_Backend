@@ -65,33 +65,32 @@ class Product(TimeStampedModel):
         return self.productvariants.first()
 
     @classmethod
-    def get_products(cls,  
-                    offset: int,
-                    limit: int,
-                    
-                    max_price: float=None,
-                    min_price: float=None,
+    def get_products(   cls,  
+                        offset: int,
+                        limit: int,
+                        
+                        max_price: float=None,
+                        min_price: float=None,
 
-                    option_value_ids: list[str]=None,
-                    brands: list[str]=None,
-                    models: list[str]=None,
+                        option_value_ids: list[str]=None,
+                        brands: list[str]=None,
+                        models: list[str]=None,
 
-                    
-                    category_ids: list[str]=None,
-                    department_ids: list[str]=None,
-                    organization_ids: list[str]=None,
-                    workshop_ids :list[str]=None,
-                    
-                    personalization_method_ids: list[str]=None,
-                    design_ids: list[str]=None,
-                    theme_ids: list[str]=None,
-                    
-                    sponsored_organizations =None,
-                    sponsored_workshops=None,
-                    sponsored_products=None,
-                    search_term: str=None,
-                    
-                    publication_date: str=None,):
+                        category_ids: list[str]=None,
+                        department_ids: list[str]=None,
+                        organization_ids: list[str]=None,
+                        workshop_ids :list[str]=None,
+                        
+                        personalization_method_ids: list[str]=None,
+                        design_ids: list[str]=None,
+                        theme_ids: list[str]=None,
+                        
+                        sponsored_organizations =None,
+                        sponsored_workshops=None,
+                        sponsored_products=None,
+                        search_term: str=None,
+                        
+                        publication_date: str=None,):
         
         """
         This method returns a list of products ordered by the number of sales with the following infos :
@@ -305,10 +304,12 @@ class Product(TimeStampedModel):
                         } for designed_personalizable_variant in product_details.productvariants.designed_personalizable_variants.all()
                           for zone in designed_personalizable_variant.designed_personalizable_variant_zones.all()
                           for design in zone.related_designs.all()],
+            
             #"product_personalization_method_id": product_details.personalization_method.id if product_details.personalization_method else None,
             #"product_personalization_method_name": product_details.personalization_method.name if product_details.personalization_method else None,
             #"product_personalization_type_id": product_details.personalization_method.personalization_type.id if product_details.personalization_method else None,
             #"product_personalization_type_name": product_details.personalization_method.personalization_type.name if product_details.personalization_method else None,
+            
             "product_variants_reviews": [
                 {"account_id": review.account.id,  
                  "account_username": review.account.profile.username,
