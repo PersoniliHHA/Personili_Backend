@@ -255,7 +255,7 @@ class Product(TimeStampedModel):
         - Product themes
         """
         product_details = (cls.objects.filter(id=product_id, self_made=False, to_be_published=True)
-                              .select_related('workshop__organization_orgprofile', 'category', 'department')
+                              .select_related('workshop__organization__orgprofile', 'category', 'department')
                               .prefetch_related('productvariants__productvariantpreviews', 'productvariants__productvariantreviews', 'productvariants__designed_personalizable_variant__designed_personalizable_variant_zones__related_designs__design__theme')      
                               .annotate(num_reviews=Count('productvariants__productvariantreviews'))
                               .annotate(avg_rating=Avg('productvariants__productvariantreviews__rating'))
