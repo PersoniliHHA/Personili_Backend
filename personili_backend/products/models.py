@@ -301,8 +301,8 @@ class Product(TimeStampedModel):
                             "theme_id": design.theme.id,
                             "theme_name": design.theme.name,
                             "num_likes": design.design_likes.count()
-                        } for designed_personalizable_variant in product_details.productvariants.designed_personalizable_variants.all()
-                          for zone in designed_personalizable_variant.designed_personalizable_variant_zones.all()
+                        } for product_variant in product_details.productvariants.all()
+                          for zone in product_variant.designed_personalizable_variant.designed_personalizable_variant_zones.all()
                           for design in zone.related_designs.all()],
             
             #"product_personalization_method_id": product_details.personalization_method.id if product_details.personalization_method else None,
