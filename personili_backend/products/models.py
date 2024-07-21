@@ -314,7 +314,7 @@ class Product(TimeStampedModel):
                 {"account_id": review.account.id,  
                  "account_username": review.account.profile.username,
                  "rating": review.rating, 
-                 "comment": review.comment} for review in product_details.productreviews.all()],
+                 "comment": review.comment} for review in product_details.productvariants.productvariantreviews.all()],
             
             "product_num_reviews": product_details.num_reviews,
             "product_avg_rating": product_details.avg_rating,
