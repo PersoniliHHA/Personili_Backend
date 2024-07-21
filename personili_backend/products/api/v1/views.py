@@ -263,7 +263,7 @@ class ProductViewSet(viewsets.ViewSet):
                 return Response({"error": "BAD_REQUEST"}, status=400)
             
             # First check if the product exists and that it's not self made or not to be published
-            product: Product = get_object_or_404(Product, id=product_id)
+            product: Product = Product.objects.filter(id=product_id).first()
             if not product or product.self_made or not product.to_be_published:
                 return Response({"error": "NOT_FOUND"}, status=404)
             
