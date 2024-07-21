@@ -295,15 +295,15 @@ class Product(TimeStampedModel):
                     } for variant in product_details.productvariants.all()],
             
             "designs_used": [{
-                            "design_id": design.id,
-                            "design_title": design.title,
-                            "design_image_path": design.image_path,
-                            "theme_id": design.theme.id,
-                            "theme_name": design.theme.name,
-                            "num_likes": design.design_likes.count()
+                            "design_id": related_design.design.id,
+                            "design_title": related_design.design.title,
+                            "design_image_path": related_design.design.image_path,
+                            "theme_id": related_design.design.theme.id,
+                            "theme_name": related_design.design.theme.name,
+                            "num_likes": related_design.design.design_likes.count()
                         } for product_variant in product_details.productvariants.all()
                           for zone in product_variant.designed_personalizable_variant.designed_personalizable_variant_zones.all()
-                          for design in zone.related_designs.all()],
+                          for related_design in zone.related_designs.all()],
             
             #"product_personalization_method_id": product_details.personalization_method.id if product_details.personalization_method else None,
             #"product_personalization_method_name": product_details.personalization_method.name if product_details.personalization_method else None,
