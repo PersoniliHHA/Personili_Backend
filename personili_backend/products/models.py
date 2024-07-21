@@ -333,7 +333,7 @@ class Product(TimeStampedModel):
                 "product_num_sales": product_details.num_sales,    
             }
             
-            return response
+            return product_details
     
     def get_minimum_price(self):
         """
