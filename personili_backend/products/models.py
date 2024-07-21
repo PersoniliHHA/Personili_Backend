@@ -171,7 +171,7 @@ class Product(TimeStampedModel):
                 Q(title__icontains=search_term) |
                 Q(description__icontains=search_term) |
                 Q(productvariants__name__icontains=search_term) |
-                Q(productvariants__description__icontains=search_term) |
+                #Q(productvariants__description__icontains=search_term) |
                 Q(workshop__organization__business_name__icontains=search_term) |
                 Q(workshop__organization__orgprofile__description__icontains=search_term) |
                 Q(tags__icontains=search_term) |

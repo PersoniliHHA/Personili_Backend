@@ -26,9 +26,7 @@ class Cart(TimeStampedModel):
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     account_profile = models.ForeignKey(AccountProfile, on_delete=models.CASCADE)
-    total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     open = models.BooleanField(default=True)
-
 
     class Meta:
         db_table = 'carts'
@@ -141,7 +139,7 @@ class CartItem(TimeStampedModel):
     """
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='cart_items_of_a_cart')
-    product = models.ForeignKey(ProductVariant, on_delete=models.CASCADE, related_name='cart_items_of_a_product')
+    product_variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE, related_name='cart_items_of_a_product')
     quantity = models.IntegerField(default=1)
     sub_total = models.DecimalField(max_digits=10, decimal_places=2)
 
