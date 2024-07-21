@@ -253,74 +253,87 @@ class Product(TimeStampedModel):
         - Product designs ids and images
         - Product themes
         """
-        product_details = (cls.objects.filter(id=product_id, self_made=False, to_be_published=True)
-                              .select_related('workshop__organization__orgprofile', 'category', 'department')
-                              .prefetch_related('productvariants__productvariantpreviews', 'productvariants__productvariantreviews', 'productvariants__designed_personalizable_variant__designed_personalizable_variant_zones__related_designs__design__theme')      
-                              .annotate(num_reviews=Count('productvariants__productvariantreviews'))
-                              .annotate(avg_rating=Avg('productvariants__productvariantreviews__rating'))
-                              .annotate(num_sales=Count('productvariants__orderitem'))
-                              .first())
-        response: dict = {
-            "product_id": product_details.id,
-            "product_title": product_details.title,
-            "product_description": product_details.description,
+        @classmethod
+        def get_full_product_details(cls, product_id: str):
+            """
+            This method takes a product id and returns the full details of the product:
+            - Product id
+            - Product title
+            - Product description
+            - Product variants ids, names, descriptions, prices, quantities, skus, reviews, previews, promotions
+            - Product category, department id
+            - Product organization and workshop name
+            - Product previews ids and images
+            - Product designs ids and images
+            - Product themes
+            """
+            product_details = (cls.objects.filter(id=product_id, self_made=False, to_be_published=True)
+                                  .select_related('workshop__organization__orgprofile', 'category', 'department')
+                                  .prefetch_related('productvariants__productvariantpreviews', 'productvariants__productvariantreviews', 'productvariants__designed_personalizable_variant__designed_personalizable_variant_zones__related_designs__design__theme')      
+                                  .annotate(num_reviews=Count('productvariants__productvariantreviews'))
+                                  .annotate(avg_rating=Avg('productvariants__productvariantreviews__rating'))
+                                  .annotate(num_sales=Count('productvariants__orderitem'))
+                                  .first())
             
-            "product_category_id": product_details.category.id,
-            "product_category_name": product_details.category.name,
-            "product_department_id": product_details.department.id,
-            "product_department_name": product_details.department.name,
-            
-            "product_organization_id": product_details.workshop.organization.id,
-            "product_organization_name": product_details.workshop.organization.business_name,
-            "product_organization_logo": product_details.workshop.organization.orgprofile.logo_path,
-            "product_organization_sponsored": product_details.workshop.organization.orgprofile.is_sponsored,
-            "product_workshop_id": product_details.workshop.id,
-            "product_workshop_name": product_details.workshop.name, 
-            "product_variants": [
-                {"product_variant_id": variant.id,
-                    "product_variant_name": variant.name,
-                    "product_variant_description": variant.description,
-                    "product_variant_price": variant.price,
-                    "product_variant_quantity": variant.quantity,
-                    "product_variant_sku": variant.sku,
-                    "product_variant_values":[
-                        {
-                            "option_id": variant_value.option_value.option.id,
-                            "option_name": variant_value.option_value.option.name,
-                            "option_value_id": variant_value.option_value.id,
-                            "option_value": variant_value.option_value.value
-                        } for variant_value in variant.designed_personalizable_variant.personalizable_variant.variant_values.all()
-                    ] ,
-                    "product_variant_previews": [preview.image_path for preview in variant.productvariantpreviews.all()],
-                    } for variant in product_details.productvariants.all()],
-            
-            "designs_used": [{
-                            "design_id": related_design.design.id,
-                            "design_title": related_design.design.title,
-                            "design_image_path": related_design.design.image_path,
-                            "theme_id": related_design.design.theme.id,
-                            "theme_name": related_design.design.theme.name,
-                            "num_likes": related_design.design.design_likes.count()
-                        } for product_variant in product_details.productvariants.all()
-                          for zone in product_variant.designed_personalizable_variant.designed_personalizable_variant_zones.all()
-                          for related_design in zone.related_designs.all()],
-            
-            #"product_personalization_method_id": product_details.personalization_method.id if product_details.personalization_method else None,
-            #"product_personalization_method_name": product_details.personalization_method.name if product_details.personalization_method else None,
-            #"product_personalization_type_id": product_details.personalization_method.personalization_type.id if product_details.personalization_method else None,
-            #"product_personalization_type_name": product_details.personalization_method.personalization_type.name if product_details.personalization_method else None,
-            
-            "product_variants_reviews": [
-                {"account_id": review.account.id,  
-                 "account_username": review.account.profile.username,
-                 "rating": review.rating, 
-                 "comment": review.comment} for variant in product_details.productvariants.all() for review in variant.productvariantreviews.all()],
-            
-            "product_num_reviews": product_details.num_reviews,
-            "product_avg_rating": product_details.avg_rating,
-            "product_num_sales": product_details.num_sales,    
+            response = {
+                "product_id": product_details.id,
+                "product_title": product_details.title,
+                "product_description": product_details.description,
+                "product_category_id": product_details.category.id,
+                "product_category_name": product_details.category.name,
+                "product_department_id": product_details.department.id,
+                "product_department_name": product_details.department.name,
+                "product_organization_id": product_details.workshop.organization.id,
+                "product_organization_name": product_details.workshop.organization.business_name,
+                "product_organization_logo": product_details.workshop.organization.orgprofile.logo_path,
+                "product_organization_sponsored": product_details.workshop.organization.orgprofile.is_sponsored,
+                "product_workshop_id": product_details.workshop.id,
+                "product_workshop_name": product_details.workshop.name, 
+                "product_variants": [
+                    {
+                        "product_variant_id": variant.id,
+                        "product_variant_name": variant.name,
+                        "product_variant_description": variant.description,
+                        "product_variant_price": variant.price,
+                        "product_variant_quantity": variant.quantity,
+                        "product_variant_sku": variant.sku,
+                        "product_variant_values": [
+                            {
+                                "option_id": variant_value.option_value.option.id,
+                                "option_name": variant_value.option_value.option.name,
+                                "option_value_id": variant_value.option_value.id,
+                                "option_value": variant_value.option_value.value
+                            } for variant_value in variant.designed_personalizable_variant.personalizable_variant.variant_values.all()
+                        ],
+                        "product_variant_previews": [preview.image_path for preview in variant.productvariantpreviews.all()],
+                    } for variant in product_details.productvariants.all()
+                ],
+                "designs_used": [
+                    {
+                        "design_id": related_design.design.id,
+                        "design_title": related_design.design.title,
+                        "design_image_path": related_design.design.image_path,
+                        "theme_id": related_design.design.theme.id,
+                        "theme_name": related_design.design.theme.name,
+                        "num_likes": related_design.design.design_likes.count()
+                    } for product_variant in product_details.productvariants.all()
+                      for zone in product_variant.designed_personalizable_variant.designed_personalizable_variant_zones.all()
+                      for related_design in zone.related_designs.all()
+                ],
+                "product_variants_reviews": [
+                    {
+                        "account_profile_id": review.accout_profile.id,  
+                        "account_username": review.account_profile.username,
+                        "rating": review.rating, 
+                        "comment": review.comment
+                    } for variant in product_details.productvariants.all() for review in variant.productvariantreviews.all()
+                ],
+                "product_num_reviews": product_details.num_reviews,
+                "product_avg_rating": product_details.avg_rating,
+                "product_num_sales": product_details.num_sales,    
             }
-        return response
+            
+            return response
     
     def get_minimum_price(self):
         """
