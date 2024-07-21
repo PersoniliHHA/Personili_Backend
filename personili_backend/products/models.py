@@ -255,9 +255,13 @@ class Product(TimeStampedModel):
         product_details = (cls.objects.filter(id=product_id, self_made=False, to_be_published=True)
                                 .select_related('workshop__organization__orgprofile', 'category', 'department')
                                 .prefetch_related('productvariants__productvariantpreviews', 'productvariants__productvariantreviews__account_profile', 'productvariants__designed_personalizable_variant__designed_personalizable_variant_zones__related_designs__design__theme')      
-                                .annotate(num_reviews=Count('productvariants__productvariantreviews'))
-                                .annotate(avg_rating=Avg('productvariants__productvariantreviews__rating'))
-                                .annotate(num_sales=Count('productvariants__orderitem'))
+                                .only(
+                                    'id', 'title', 'description', 'category__id', 'category__name', 'department__id', 'department__name', 
+                                    'workshop__organization__id', 'workshop__organization__business_name', 'workshop__organization__orgprofile__logo_path', 'workshop__organization__orgprofile__is_sponsored', 'workshop__id', 'workshop__name'
+                                )
+                                .annotate(num_reviews=Count('productvariants__productvariantreviews'),
+                                          avg_rating=Avg('productvariants__productvariantreviews__rating'),
+                                          num_sales=Count('productvariants__orderitem'))
                                 .first())
         
         response = {
