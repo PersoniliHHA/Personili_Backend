@@ -307,7 +307,7 @@ class Product(TimeStampedModel):
             ],
             "product_variants_reviews": [
                 {
-                    "account_profile_id": review.accout_profile.id,  
+                    "account_profile_id": review.account_profile.id,  
                     "account_username": review.account_profile.username,
                     "rating": review.rating, 
                     "comment": review.comment
