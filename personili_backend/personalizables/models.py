@@ -189,7 +189,7 @@ class Option(TimeStampedModel):
         This method returns all the options and their values that are used in all the personalizable variants
         """
         # Get the related option values and variant values using prefetch related
-        options = Option.objects.prefetch_related('option_values__option_variant_values')
+        options = Option.objects.prefetch_related('option_values')
         option_and_values_list = []
         for option in options:
             option_dict = {}
