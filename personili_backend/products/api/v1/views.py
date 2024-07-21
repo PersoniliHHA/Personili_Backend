@@ -263,14 +263,13 @@ class ProductViewSet(viewsets.ViewSet):
                 return Response({"error": "BAD_REQUEST"}, status=400)
             
             # First check if the product exists and that it's not self made or not to be published
-            product: Product = Product.objects.filter(id=product_id).first()
+            product: Product = Product.objects.filter(id=product_id, self_made=False, to_be_published=True).first()
             if not product or product.self_made or not product.to_be_published:
                 return Response({"error": "NOT_FOUND"}, status=404)
             
             # Get the full details  of the product
             product_details: dict = Product.get_full_product_details(product_id)
             response = Response(product_details, status=status.HTTP_200_OK)
-
             return response
         except Exception as e:
             logging.error(f"get_product_detail action method error :{e.args} ")
