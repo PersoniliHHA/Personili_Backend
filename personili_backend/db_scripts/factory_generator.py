@@ -340,7 +340,7 @@ def create_options_and_option_values():
 
 
 
-def init_personili_db(data_scale: int=50):
+def init_personili_db(data_scale: int=100):
      # Track the number of created entries
     account_count = 0
     account_profile_count = 0

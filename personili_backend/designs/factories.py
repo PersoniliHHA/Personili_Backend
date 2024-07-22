@@ -108,6 +108,8 @@ class DesignFactory(DjangoModelFactory):
     regular_user = factory.SubFactory(AccountProfileFactory)
     collection = factory.SubFactory(CollectionFactory)
 
+    ai_generated = Faker('boolean', chance_of_getting_true=10)
+
     latest_publication_date = Faker('date')
     to_be_published = Faker('boolean', chance_of_getting_true=90)
     base_price = Faker('random_float', min=0, max=999999)
