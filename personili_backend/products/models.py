@@ -182,7 +182,7 @@ class Product(TimeStampedModel):
         
         # Now get the products, their variants and their reviews, the organization info, the category, the department, the personalization method, the designs and the themes
         products = (products.select_related( 'workshop__organization', 'category', 'department')
-                    .prefetch_related('productvariants__productvariantpreviews', 'productvariants__designed_personalizable_variant__personalizable_variant__variant_values__option_value__option')
+                    .prefetch_related('productvariants__productvariantpreviews', 'productvariants__designed_personalizable_variant__personalizable_variant__personalizable_variant_values__option_value__option')
                     .annotate(num_reviews=Count('productvariants__productvariantreviews'))
                     .annotate(avg_rating=Avg('productvariants__productvariantreviews__rating'))
                     .annotate(num_sales=Count('productvariants__orderitem'))
