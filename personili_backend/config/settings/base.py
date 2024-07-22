@@ -28,6 +28,8 @@ AWS_S3_SIGNATURE_VERSION = env.str("AWS_S3_SIGNATURE_VERSION", None)
 AWS_S3_REGION_NAME = env.str("AWS_S3_REGION_NAME", None)
 
 
+# stability api key
+STABILITY_API_KEY = env.str("STABILITY_API_KEY", None)
 
 # Local time zone. Choices are
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name

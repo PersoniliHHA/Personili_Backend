@@ -405,8 +405,7 @@ class Personalizable(TimeStampedModel):
                             Q(workshop__name__icontains=search_term) |
                             Q(workshop__description__icontains=search_term) |
                             Q(workshop__organization__legal_name__icontains=search_term) |
-                            Q(workshop__organization__business_name__icontains=search_term) |
-                            Q(workshop__organization__description__icontains=search_term), Q.AND)
+                            Q(workshop__organization__business_name__icontains=search_term), Q.AND)
         if min_price :
             q_objects.add(Q(variants__base_price__gte=min_price), Q.AND)
         if max_price :
@@ -461,7 +460,7 @@ class Personalizable(TimeStampedModel):
                            .select_related('workshop__organization__orgprofile', 'category', 'department')
                            .prefetch_related(
                                 Prefetch(
-                                                'variants__variant_values',
+                                                'variants__personalizable_variant_values',
                                                 queryset=variant_value_queryset
                                             )
                            ))[offset:limit]
@@ -505,7 +504,7 @@ class Personalizable(TimeStampedModel):
                 variant_dict["variant_quantity"] = variant.quantity
                 variant_dict["variant_base_price"] = variant.base_price
                 variant_dict["variant_values"] = []
-                for variant_value in variant.variant_values.all():
+                for variant_value in variant.personalizable_variant_values.all():
                     variant_value_dict = {}
                     variant_value_dict["option_value_id"] = variant_value.id
                     variant_value_dict["option_value"] = variant_value.option_value.value

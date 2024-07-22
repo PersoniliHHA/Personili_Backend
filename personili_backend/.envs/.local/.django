@@ -36,3 +36,7 @@ BREVO_API_KEY=xkeysib-d33f4ed1f26c090ac14ff0700d59de1132011b800ac70f992dabdf79fc
 # DJANGO
 # ----------------------------------------------------------------------------
 DJANGO_SECRET_KEY=qP8IJPOKuzEgEoyvD0fnRRiQSxwlZFcibdUaHVCWFA1jY3QMqJLE3wG0VE_nDWuv758snef2sxUxoaSITUSNJA
+
+# AI
+# Stability api key
+STABILITY_API_KEY=sk-Tvh9nKYxvI1vzpRv6j3omN4w7Wx6VuGw6m0oRZCZcagm8zSO
