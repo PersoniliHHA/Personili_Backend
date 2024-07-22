@@ -140,6 +140,8 @@ class AccountProfile(TimeStampedModel):
     social_media_links = models.JSONField(null=True, blank=True)
     biography = models.TextField(null=True, blank=True)
 
+    personili_gems = models.IntegerField(default=10)
+
     class Meta:
         db_table = 'account_profiles'
 

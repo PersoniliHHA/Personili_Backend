@@ -288,7 +288,7 @@ class DesignsViewSet(viewsets.ViewSet):
             return Response({"error": "UNKNOWN_ERROR"}, status=400)
 
     ################################### POST APIS, PRIVATE #####################################
-    ##### Like a design
+    ##### Like a published design on the platform
     @action(detail=True, methods=['POST'], url_path='like')
     def like_design(self, request, pk=None):
         """
@@ -316,7 +316,7 @@ class DesignsViewSet(viewsets.ViewSet):
             logging.error(f"like_design action method error :{e.args} ")
             return Response({"error": "UNKNOWN_ERROR"}, status=400)
         
-    ##### Unlike a design
+    ##### Unlike a published design on the platform
     @action(detail=True, methods=['POST'], url_path='unlike')
     def unlike_design(self, request, pk=None):
         """
@@ -367,3 +367,50 @@ class DesignsViewSet(viewsets.ViewSet):
         else:
             return Response({"message": "NOT_LIKED"}, status=status.HTTP_200_OK)
     
+
+    #### Generate an image using stability ai api (reserved for regular users) #######
+    @action(detail=False, methods=['POST'], url_path='ai/generate', permission_classes=[permissions.IsAuthenticated])
+    def generate_image(self, request):
+        """
+        Generate an image using the stability ai api, user must be authenticated and have a valid token
+        - each AI image generation consums a number of personili gems
+        """
+        self.authentication_classes = [JWTAuthentication]
+        self.permission_classes = [permissions.IsAuthenticated]
+        
+        # Get the image from the request
+        image = request.data.get('image', None)
+
+        # Check if the user has enough gems
+
+        
+        if not image:
+            return Response({"error": "BAD_REQUEST"}, status=400)
+        
+        try:
+            # Generate the image
+            response = Design.generate_image(image)
+            return Response(response, status=status.HTTP_200_OK)
+        except Exception as e:
+            logging.error(f"generate_image action method error :{e.args} ")
+            return Response({"error": "UNKNOWN_ERROR"}, status=400)
+    
+    #### Get user ai generated designs and uploaded designs #######
+    @action(detail=False, methods=['GET'], url_path='ai/designs', permission_classes=[permissions.IsAuthenticated])
+    def get_user_designs(self, request):
+        """
+        Get the user's ai generated designs and uploaded designs
+        """
+        self.authentication_classes = [JWTAuthentication]
+        self.permission_classes = [permissions.IsAuthenticated]
+        
+        account = request.user
+        account_profile = AccountProfile.objects.get(account=account)
+        
+        try:
+            # Get the user's designs
+            user_designs = Design.get_user_designs(account_profile)
+            return Response(user_designs, status=status.HTTP_200_OK)
+        except Exception as e:
+            logging.error(f"get_user_designs action method error :{e.args} ")
+            return Response({"error": "UNKNOWN_ERROR"}, status=400)

@@ -226,6 +226,9 @@ class Design(TimeStampedModel):
     # sponsored design
     sponsored = models.BooleanField(default=False)
 
+    # AI generated 
+    ai_generated = models.BooleanField(default=False)
+
 
     ###### Usage and exclusivity parameters #######
     ## the following two parameters are mutually exclusive, if one is true the other should be false
