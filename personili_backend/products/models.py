@@ -130,7 +130,7 @@ class Product(TimeStampedModel):
 
         # Option value, brands, models filters
         if option_value_ids:
-            products = products.filter(productvariants__designed_personalizable_variant__personalizable_variant__variant_values__option_value_id__in=option_value_ids)
+            products = products.filter(productvariants__designed_personalizable_variant__personalizable_variant__personalizable_variant_values__option_value_id__in=option_value_ids)
         if brands:
             products = products.filter(productvariants__designed_personalizable_variant__personalizable_variant__personalizable_brand__in=brands)
         if models:
@@ -217,11 +217,11 @@ class Product(TimeStampedModel):
                                         "product_variant_sku": variant.sku,
                                         "product_variant_values":[
                                             {
-                                                "option_id": variant_value.option_value.option.id,
-                                                "option_name": variant_value.option_value.option.name,
-                                                "option_value_id": variant_value.option_value.id,
-                                                "option_value": variant_value.option_value.value
-                                            } for variant_value in variant.designed_personalizable_variant.personalizable_variant.variant_values.all()
+                                                "option_id": personalizable_variant_value.option_value.option.id,
+                                                "option_name": personalizable_variant_value.option_value.option.name,
+                                                "option_value_id": personalizable_variant_value.option_value.id,
+                                                "option_value": personalizable_variant_value.option_value.value
+                                            } for personalizable_variant_value in variant.designed_personalizable_variant.personalizable_variant.personalizable_variant_values.all()
                                         ] ,
                                         "product_variant_previews": [preview.image_path for preview in variant.productvariantpreviews.all()],
                                         } for variant in product.productvariants.all()],
