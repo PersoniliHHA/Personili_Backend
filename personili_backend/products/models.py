@@ -176,8 +176,8 @@ class Product(TimeStampedModel):
                 Q(tags__icontains=search_term) |
                 Q(productvariants__designed_personalizable_variant__personalizable_variant__personalizable_variant_values__option_value__option__name__icontains=search_term) |
                 Q(productvariants__designed_personalizable_variant__personalizable_variant__personalizable_variant_values__option_value__value__icontains=search_term) |
-                Q(productvariants__designed_personalizable_variant__personalizable_variant__personalizable_brand__icontains=search_term) |
-                Q(productvariants__designed_personalizable_variant__personalizable_variant__personalizable_model__icontains=search_term) 
+                Q(productvariants__designed_personalizable_variant__personalizable_variant__personalizable__brand__icontains=search_term) |
+                Q(productvariants__designed_personalizable_variant__personalizable_variant__personalizable__model__icontains=search_term) 
             )   
         
         # Now get the products, their variants and their reviews, the organization info, the category, the department, the personalization method, the designs and the themes
