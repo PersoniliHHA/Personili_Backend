@@ -23,10 +23,14 @@ class Cart(TimeStampedModel):
     - total_amount (total amount of the cart after applying discounts)
     - open (boolean field to indicate if the cart is open or not)
     """
+    CART_STATUS_CHOICES = [
+        ('Open', 'open'),
+        ('Closed', 'closed')
+    ]
 
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     account_profile = models.ForeignKey(AccountProfile, on_delete=models.CASCADE)
-    open = models.BooleanField(default=True)
+    status = models.CharField(max_length=20, default='Open', choices=CART_STATUS_CHOICES)
 
     class Meta:
         db_table = 'carts'
@@ -36,28 +40,29 @@ class Cart(TimeStampedModel):
     
 
     @classmethod
-    def is_there_an_open_cart(cls, account_profile: AccountProfile) -> bool:
+    def get_current_open_cart(cls, account_profile_id: str) -> dict:
         """
-        This method will check if there is a cart which is open, if yes then it will return True, otherwise
-        it will return False
+        This method will return the current open cart for the user, if it exists. 
+        :param account_profile_id: The user profile id
+        :return: 
+            - Cart id
+            - Cart total amount
+            - Cart items and product variants linked to them, get the product variant previews with them
         """
-        try:
-            cart = cls.objects.get(account_profile=account_profile, open=True)
-            return True
-        except cls.DoesNotExist:
-            return False
-    
+        if cls.objects.filter(account_profile=account_profile_id, open=True).first():
+            response = {}
+            cart_details = cls.objects.f
+        else:
+
+            return None
+       
     @classmethod
-    def create_or_get_the_cart(cls, account_profile: AccountProfile):
+    def create_new_cart(cls, account_profile_id: str) -> dict:
         """
         This method will check if there is a cart which is open, if yes then it will return it, otherwise
         it will create a new one and return it as well
         """
-        try:
-            cart = cls.objects.get(account_profile=account_profile, open=True)
-        except cls.DoesNotExist:
-            cart = cls.objects.create(account_profile=account_profile, open=True)
-        return cart
+        pass
 
     def add_items_to_cart(self, products:list[ProductVariant]):
         """
