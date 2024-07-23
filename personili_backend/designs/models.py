@@ -427,9 +427,9 @@ class Design(TimeStampedModel):
                .select_related('store__storeprofile', 'workshop__organization__orgprofile', 'theme')
                .prefetch_related('design_previews')
                .order_by('-num_likes', 'id')
-               .defer('created_at', 'updated_at', '*'))[offset:limit]
+               .defer('created_at', 'updated_at'))[offset:limit]
         # TODO: Exclude the created_at and updated_at fields from the query (all the tables and not just the design table)
-        print(designs.query)
+    
         result = {"designs_list":[]}
         for design in designs:
             # Root dict to contain design data
