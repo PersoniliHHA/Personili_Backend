@@ -423,12 +423,12 @@ class Design(TimeStampedModel):
                           Q(workshop__name__icontains=search_term), Q.AND)
 
         designs = (cls.objects.filter(q_objects)
-                   .annotate(num_likes=models.Count('design_likes')) 
-                   .select_related('store__storeprofile', 'workshop__organization__orgprofile', 'theme')
-                   .prefetch_related('design_previews')
-                   .order_by('-num_likes', 'id')
-                   .defer('created_at', 'updated_at'))[offset:limit]
-        print("this is the designs query")
+               .annotate(num_likes=models.Count('design_likes')) 
+               .select_related('store__storeprofile', 'workshop__organization__orgprofile', 'theme')
+               .prefetch_related('design_previews')
+               .order_by('-num_likes', 'id')
+               .defer('created_at', 'updated_at', '*'))[offset:limit]
+        # TODO: Exclude the created_at and updated_at fields from the query (all the tables and not just the design table)
         print(designs.query)
         result = {"designs_list":[]}
         for design in designs:
