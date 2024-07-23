@@ -199,9 +199,9 @@ def generate_ai_design_with_stability(account_profile_id: str,
                  'design_title': prompt})
     
     # Deduct the personili_gems from the account
-    account_profile = AccountProfile.objects.get(id=account_profile_id)
-    account_profile.personili_gems -= gems_cost
-    account_profile.save()
+    #account_profile = AccountProfile.objects.get(id=account_profile_id)
+    #account_profile.personili_gems -= gems_cost
+    #account_profile.save()
 
     # TODO: Store the design in the database
 
