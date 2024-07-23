@@ -423,13 +423,13 @@ class Design(TimeStampedModel):
                           Q(workshop__name__icontains=search_term), Q.AND)
 
         designs = (cls.objects.filter(q_objects)
-                           .annotate(num_likes=models.Count('design_likes')) 
-                           .select_related('store__storeprofile', 'workshop__organization__orgprofile', 'theme')
-                           .prefetch_related('design_previews')
-                           .order_by('-num_likes', 'id'))[offset:limit]
+                   .annotate(num_likes=models.Count('design_likes')) 
+                   .select_related('store__storeprofile', 'workshop__organization__orgprofile', 'theme')
+                   .prefetch_related('design_previews')
+                   .order_by('-num_likes', 'id')
+                   .defer('created_at', 'updated_at'))[offset:limit]
         print("this is the designs query")
         print(designs.query)
-        assert False
         result = {"designs_list":[]}
         for design in designs:
             # Root dict to contain design data
