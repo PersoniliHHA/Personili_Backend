@@ -377,7 +377,9 @@ class DesignsViewSet(viewsets.ViewSet):
         Generate an image using the stability ai api, user must be authenticated and have a valid token
         - each AI image generation consums a number of personili gems
         """
-        
+        self.authentication_classes = [JWTAuthentication]
+        self.permission_classes = [permissions.IsAuthenticated]
+
         # Check that the path parameters are the same as the authenticated user
         if not str(request.user.id) or not str(request.user.profile):
             return Response({"error": "UNAUTHORIZED"}, status=status.HTTP_401_UNAUTHORIZED)
@@ -396,6 +398,11 @@ class DesignsViewSet(viewsets.ViewSet):
         mode = request.data.get('mode', "text-to-image")
         sd3_model = request.data.get('sd3_model', "SD 1.6")
         style_preset = request.data.get('style_preset', "3d-model")
+
+        if for_user:
+            for_store = False
+            for_workshop = False
+            for_user = True
 
         
         try:
