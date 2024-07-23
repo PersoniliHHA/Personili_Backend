@@ -2,6 +2,7 @@ import boto3
 from utils.aws.iam.iam_engine import IamEngine
 from typing import List, Any, Optional
 from django.core.files import File
+from django.core.files.base import ContentFile
 import os
 from typing import Union
 
@@ -100,16 +101,19 @@ class S3Engine:
         s3_path: str = self.build_s3_path(template_name, placeholder_values)
 
         if isinstance(file, bytes):
-            file_name = placeholder_values.get('design_title')
+            # If the file is bytes, convert it to a file
+           django_file = File(ContentFile(file), name=placeholder_values.get('design_title'))
+                
         else:
+            django_file = file
             file_name = file.name
 
         # add the file name to the path
-        s3_path = s3_path + '/' + file_name
+        s3_path = s3_path + '/' + django_file.name
 
         try:
             # Upload the file
-            self.s3_client_session.upload_fileobj(file, self.bucket_name, s3_path)
+            self.s3_client_session.upload_fileobj(django_file, self.bucket_name, s3_path)
             # Return the presigned URL
             return s3_path
         except Exception as e:

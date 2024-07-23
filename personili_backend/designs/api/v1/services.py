@@ -110,7 +110,7 @@ def generate_ai_design_with_stability(account_profile_id: str,
                                       output_format: str="png",
                                       mode: str="text-to-image",
                                       sd3_model: str="",
-                                      style_preset: str="3d-model"):
+                                      style_preset: str="3d-model") -> str:
     """
     This function generates an AI design with the specified stability model
     """
@@ -207,6 +207,8 @@ def generate_ai_design_with_stability(account_profile_id: str,
 
     # generate a signed url for the image
     signed_url = s3_engine.generate_presigned_s3_url(s3_path)
+
+    return signed_url
 
     
 
