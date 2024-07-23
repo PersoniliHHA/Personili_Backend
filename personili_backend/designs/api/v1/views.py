@@ -371,17 +371,15 @@ class DesignsViewSet(viewsets.ViewSet):
     
 
     #### Generate an image using stability ai api (reserved for regular users) #######
-    @action(detail=False, methods=['POST'], url_path='ai/generate', permission_classes=[permissions.IsAuthenticated])
+    @action(detail=False, methods=['POST'], url_path='ai/generate',  authentication_classes=[JWTAuthentication])
     def generate_image(self, request):
         """
         Generate an image using the stability ai api, user must be authenticated and have a valid token
         - each AI image generation consums a number of personili gems
         """
-        self.authentication_classes = [JWTAuthentication]
-        self.permission_classes = [permissions.IsAuthenticated]
         
         # Check that the path parameters are the same as the authenticated user
-        if not str(request.user.id) or str(request.user.profile):
+        if not str(request.user.id) or not str(request.user.profile):
             return Response({"error": "UNAUTHORIZED"}, status=status.HTTP_401_UNAUTHORIZED)
        
 
