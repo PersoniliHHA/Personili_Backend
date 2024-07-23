@@ -382,7 +382,7 @@ class DesignsViewSet(viewsets.ViewSet):
         
         # Check that the path parameters are the same as the authenticated user
         if not str(request.user.id) or str(request.user.profile):
-            return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "UNAUTHORIZED"}, status=status.HTTP_401_UNAUTHORIZED)
        
 
         # Get the parameters from the request
