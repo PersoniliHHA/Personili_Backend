@@ -12,6 +12,8 @@ from utils.validators import is_all_valid_uuid4
 
 from security.authentication.jwt_authentication_class import JWTAuthentication
 
+# Services
+from designs.api.v1.services import generate_ai_design_with_stability
 
 # boto3 imports
 import boto3
@@ -378,18 +380,42 @@ class DesignsViewSet(viewsets.ViewSet):
         self.authentication_classes = [JWTAuthentication]
         self.permission_classes = [permissions.IsAuthenticated]
         
-        # Get the image from the request
-        image = request.data.get('image', None)
+        # Check that the path parameters are the same as the authenticated user
+        if not str(request.user.id) or str(request.user.profile):
+            return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
+       
 
-        # Check if the user has enough gems
-
-        
-        if not image:
-            return Response({"error": "BAD_REQUEST"}, status=400)
+        # Get the parameters from the request
+        for_store = request.data.get('for_store', False)
+        for_user = request.data.get('for_user', False)
+        for_workshop = request.data.get('for_workshop', False)
+        prompt = request.data.get('prompt', None)
+        negative_prompt = request.data.get('negative_prompt', None)
+        seed = request.data.get('seed', 0)
+        stability_model = request.data.get('stability_model', "Core")
+        aspect_ratio = request.data.get('aspect_ratio', "1:1")
+        output_format = request.data.get('output_format', "png")
+        mode = request.data.get('mode', "text-to-image")
+        sd3_model = request.data.get('sd3_model', "SD 1.6")
+        style_preset = request.data.get('style_preset', "3d-model")
         
         try:
             # Generate the image
-            response = Design.generate_image(image)
+            signed_url = generate_ai_design_with_stability(account_profile_id=request.user.profile.id,
+                                                           for_store=for_store,
+                                                           for_user=for_user,
+                                                           for_workshop=for_workshop,
+                                                           prompt=prompt,
+                                                           negative_prompt=negative_prompt,
+                                                           seed=seed,
+                                                           stability_model=stability_model,
+                                                           aspect_ratio=aspect_ratio,
+                                                           output_format=output_format,
+                                                           mode=mode,
+                                                           sd3_model=sd3_model,
+                                                           style_preset=style_preset
+                                                           )
+            response = {"signed_url": signed_url}
             return Response(response, status=status.HTTP_200_OK)
         except Exception as e:
             logging.error(f"generate_image action method error :{e.args} ")
