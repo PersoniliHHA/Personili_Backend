@@ -102,7 +102,7 @@ class S3Engine:
 
         if isinstance(file, bytes):
             # If the file is bytes, convert it to a file with a random name
-           django_file = File(ContentFile(file), name="random_name.png")
+           django_file = File(ContentFile(file), name="random_name.jpeg")
                 
         else:
             django_file = file
