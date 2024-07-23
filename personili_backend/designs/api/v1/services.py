@@ -107,7 +107,7 @@ def generate_ai_design_with_stability(account_profile_id: str,
                                       seed: int = 0,
                                       stability_model: str = "SDXL 1.0", 
                                       aspect_ratio: str="1:1",
-                                      output_format: str="png",
+                                      output_format: str="jpeg",
                                       mode: str="text-to-image",
                                       sd3_model: str="",
                                       style_preset: str="3d-model") -> str:
