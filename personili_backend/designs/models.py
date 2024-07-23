@@ -429,6 +429,7 @@ class Design(TimeStampedModel):
                            .order_by('-num_likes', 'id'))[offset:limit]
         print("this is the designs query")
         print(designs.query)
+        assert False
         result = {"designs_list":[]}
         for design in designs:
             # Root dict to contain design data
