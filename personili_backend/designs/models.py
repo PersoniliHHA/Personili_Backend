@@ -427,7 +427,8 @@ class Design(TimeStampedModel):
                            .select_related('store__storeprofile', 'workshop__organization__orgprofile', 'theme')
                            .prefetch_related('design_previews')
                            .order_by('-num_likes', 'id'))[offset:limit]
-
+        print("this is the designs query")
+        print(designs.query)
         result = {"designs_list":[]}
         for design in designs:
             # Root dict to contain design data
