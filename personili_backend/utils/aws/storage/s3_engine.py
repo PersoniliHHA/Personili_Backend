@@ -101,8 +101,8 @@ class S3Engine:
         s3_path: str = self.build_s3_path(template_name, placeholder_values)
 
         if isinstance(file, bytes):
-            # If the file is bytes, convert it to a file
-           django_file = File(ContentFile(file), name=placeholder_values.get('design_title'))
+            # If the file is bytes, convert it to a file with a random name
+           django_file = File(ContentFile(file), name="random_name")
                 
         else:
             django_file = file
