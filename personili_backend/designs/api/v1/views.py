@@ -400,7 +400,7 @@ class DesignsViewSet(viewsets.ViewSet):
         style_preset = request.data.get('style_preset', "3d-model")
 
         # check that parameters are not empty
-        if not stability_model or not aspect_ratio or not output_format or not mode or not sd3_model or not style_preset:
+        if not stability_model or not aspect_ratio or not output_format or not style_preset:
             return Response({"error": "BAD_REQUEST"}, status=400)
         
         try:
