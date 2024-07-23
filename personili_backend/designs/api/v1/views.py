@@ -413,7 +413,7 @@ class DesignsViewSet(viewsets.ViewSet):
                                                            for_workshop=for_workshop,
                                                            prompt=prompt,
                                                            negative_prompt=negative_prompt,
-                                                           seed=seed,
+                                                           seed=int(seed),
                                                            stability_model=stability_model,
                                                            aspect_ratio=aspect_ratio,
                                                            output_format=output_format,
