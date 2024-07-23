@@ -3,6 +3,7 @@ from utils.aws.iam.iam_engine import IamEngine
 from typing import List, Any, Optional
 from django.core.files import File
 import os
+from typing import Union
 
 # Import the settings
 from django.conf import settings
@@ -91,15 +92,20 @@ class S3Engine:
         """
         self.s3_client_session = IamEngine(environment=self.environment).get_sts_session().client('s3', region_name=os.environ.get("AWS_S3_REGION_NAME"))
     
-    def upload_file_to_s3(self, file : File, template_name: str, placeholder_values:dict[str, Any]) -> str:
+    def upload_file_to_s3(self, file : Union[File,bytes], template_name: str, placeholder_values:dict[str, Any]) -> str:
         """
         Upload a list of files to the S3 bucket, for each file return the presigned
         """
         # First construct the path
         s3_path: str = self.build_s3_path(template_name, placeholder_values)
 
+        if isinstance(file, bytes):
+            file_name = placeholder_values.get('design_title')
+        else:
+            file_name = file.name
+
         # add the file name to the path
-        s3_path = s3_path + '/' + file.name
+        s3_path = s3_path + '/' + file_name
 
         try:
             # Upload the file
