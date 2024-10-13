@@ -1,11 +1,16 @@
 
 from security.secure_tokens import generate_random_token
 from emails.brevo_engine import brevo_engine
-from config import settings
 import os
 from datetime import datetime, timedelta, UTC
 from accounts.models import ActionToken, Account
 
+
+# Scenario:
+# The user wants to verify their email address.
+# The system must generate an email verification link.
+# The system must send the email verification link to the user.
+# The system must verify the email verification token.
 
 def verify_email_verification_token(token: str, type: str) -> bool:
     """

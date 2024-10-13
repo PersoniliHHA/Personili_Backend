@@ -155,16 +155,13 @@ class ActionToken(TimeStampedModel):
     Each token has a type, these are the allowed types :
     - EMAIL_VERIFICATION
     - PASSWORD_RESET
-    - ACCOUNT_ACTIVATION
-    - ACCOUNT_SUSPENSION
     """
     EMAIL_VERIFICATION = 'email_verification'
     PASSWORD_RESET = 'password_reset'
-    ACCOUNT_SUSPENSION = 'account_suspension'
+
     TOKEN_TYPES = [
         (EMAIL_VERIFICATION, 'EMAIL_VERIFICATION'),
         (PASSWORD_RESET, 'PASSWORD_RESET'),
-        (ACCOUNT_SUSPENSION, 'ACCOUNT_SUSPENSION'),
     ]
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     token = models.CharField(max_length=255, unique=True)

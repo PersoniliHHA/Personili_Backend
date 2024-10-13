@@ -6,10 +6,6 @@ from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.request import Request
-
-
 
 # Django imports
 from django.contrib.auth import get_user_model, authenticate
@@ -27,6 +23,7 @@ from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample
 # Services 
 from accounts.api.v1.services.email_activation_usecases import send_email_activation_link, verify_email_verification_token, verify_account_email
 from accounts.api.v1.services.main_account_profile_usecases import get_main_account_personal_information, get_main_account_delivery_addresses, create_new_delivery_address, update_existing_delivery_address, delete_existing_delivery_address
+from accounts.api.v1.services.password_rest_usecase import send_password_reset_email_link
 
 # Validators
 from utils.validators import validate_email
@@ -234,7 +231,8 @@ class AccountAuthViewSet(viewsets.ViewSet):
     @action(detail=False, methods=["POST"], url_path="v1/accounts/resend-activation-email", permission_classes=[permissions.AllowAny])
     def main_account_resend_activation_email(self, request, *args, **kwargs):
         """
-        This api will be used to resend the activation email to the user, it extracts the email from the request data
+        This api will be used to resend the activation email to the user, 
+        it extracts the email from the request data
         """
         email: str = request.data.get('email')
         
@@ -271,12 +269,31 @@ class AccountAuthViewSet(viewsets.ViewSet):
 
         return Response({"message": "ACTIVATION_EMAIL_RESENT"}, status=status.HTTP_200_OK)
     
+
+    ############################# Account recovery APIs ########################################
     # Main account forgot password api
-    @action(detail=False, methods=["POST"], url_path="v1/main-account-update-password", permission_classes=[permissions.IsAuthenticated])
+    @action(detail=False, methods=["POST"], url_path="v1/accounts/reset-account-password", permission_classes=[permissions.AllowAny])
     def main_account_update_password(self, request, *args, **kwargs):
         """This method is used to update the user password"""
 
-        return None
+        # First get the email from the request data
+        email: str = request.data.get('email')
+
+        # Try and send the password reset email
+        success, message = send_password_reset_email_link(email=email)
+        if not success:
+            if message == "INVALID_EMAIL":
+                return Response({"error": "BAD_REQUEST"}, status=status.HTTP_400_BAD_REQUEST)
+            elif message == "ACCOUNT_NOT_FOUND":
+                return Response({"error": "ACCOUNT_NOT_FOUND"}, status=status.HTTP_400_BAD_REQUEST)
+            elif message == "EMAIL_BLACKLISTED":
+                return Response({"error": "EMAIL_BLACKLISTED"}, status=status.HTTP_401_UNAUTHORIZED)
+            elif message == "EMAIL_NOT_VERIFIED":
+                return Response({"error": "EMAIL_NOT_VERIFIED"}, status=status.HTTP_401_UNAUTHORIZED)
+            else:
+                return Response({"error": "UNKNOWN_ERROR"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response({"message": "PASSWORD_RESET_EMAIL_SENT"}, status=status.HTTP_200_OK)
     
     # Main account update email api
     @action(detail=False, methods=["POST"], url_path="v1/main-account-update-email", permission_classes=[permissions.IsAuthenticated])
@@ -446,8 +463,6 @@ class AccountProfileViewSet(viewsets.ModelViewSet):
         
         return delete_existing_delivery_address(str(account_id), str(profile_id), str(delivery_address_id))
         
-
-
 
     # API to get the users orders GET
     # API to get the users order details GET

@@ -17,7 +17,7 @@ def generate_random_token(size: int, signed: bool = False) -> str:
     
     return token
 
-def verify_token(token: str) -> bool: 
+def verify_token_integrity(token: str) -> bool: 
     """
     Verify the token.
     :param token: The token to verify.
