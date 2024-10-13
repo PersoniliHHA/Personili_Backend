@@ -10,6 +10,11 @@ class AiDesignEngine:
     def __init__(self) -> None:
         self._stabilit_api_key = settings.STABILITY_API_KEY
 
+    
+    @property
+    def model_parameters(self ):
+        pass
+
 
     def _send_generation_request(self, host, params):
         """
