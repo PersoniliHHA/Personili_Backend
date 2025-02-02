@@ -243,6 +243,13 @@ class Role(TimeStampedModel):
     def __str__(self) -> str:
         return self.name
 
+
+class CustomRoles(TimeStampedModel):
+    """
+    These are custom roles created by the organization or workshop admin.
+    """
+
+
 #########################################
 #             Account Role model        #
 #########################################

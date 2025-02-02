@@ -57,57 +57,6 @@ class AccountAuthViewSet(viewsets.ViewSet):
     ######################################################################################
     # Main account sign up api
     @action(detail=False, methods=["POST"], url_path="v1/accounts/sign-up", permission_classes=[permissions.AllowAny])
-    @extend_schema(
-        summary="Sign up a new user",
-        description="This method is used to create a new account for a user, it creates a blank account profile in the process as well.",
-        request=MainAccountSignUpserializer,
-        responses={
-            201: OpenApiResponse(
-                response=OpenApiTypes.OBJECT,
-                description="Account created successfully",
-                examples=[
-                    OpenApiExample(
-                        "Account created successfully",
-                        value={
-                            "message": "ACCOUNT_CREATED",
-                            "details": {
-                                "email": "burger@nomail.com",
-                                "first_name": "Burger",
-                                "last_name": "Nomail",
-                                "phone_number": "1234567890",
-                                "age": 20,
-                                "gender": "Male",
-                                "date_of_birth": "2000-01-01",
-                                "access_token": "eyJhbGciOiAiSFM1MTIiLCAidHlwIjogIkpXVCJ9",
-                                "refresh_token": "eyJNsYWltcyI6IHsiaXNzIjogInBlc",
-
-                                       }
-                            }
-                       )
-                    ]
-                ),
-            400: OpenApiResponse(
-                response=OpenApiTypes.OBJECT,
-                description="Bad request",
-                examples=[
-                    OpenApiExample(
-                        "Bad request",
-                        value={
-                            "ERROR": "INIVALID_REQUEST_DATA",
-                            "DETAILS": {
-                                "email": [
-                                    "This field is required."
-                                ],
-                                "password": [
-                                    "This field is required."
-                                ]
-                            }
-                        }
-                    )
-                ]
-            ),
-        }
-    )
     def main_account_sign_up(self, request, *args, **kwargs):
         """
         This method is used to register a new user
@@ -269,7 +218,6 @@ class AccountAuthViewSet(viewsets.ViewSet):
 
         return Response({"message": "ACTIVATION_EMAIL_RESENT"}, status=status.HTTP_200_OK)
     
-
     ############################# Account recovery APIs ########################################
     # Main account forgot password api
     @action(detail=False, methods=["POST"], url_path="v1/accounts/reset-account-password", permission_classes=[permissions.AllowAny])

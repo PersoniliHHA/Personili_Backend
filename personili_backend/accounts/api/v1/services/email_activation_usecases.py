@@ -16,6 +16,9 @@ def verify_email_verification_token(token: str, type: str) -> bool:
     """
     Verify that the token is valid
     """
+    # First verify the token signature
+    if not ActionToken.verify_token_signature(token):
+        return False, None
     return ActionToken.verify_token(token, type)
 
 
