@@ -1,5 +1,5 @@
 from datetime import UTC, datetime, timedelta
-from typing import Set, Tuple, List
+from typing import Tuple, List, Optional
 from django.db import models
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from uuid import uuid4
@@ -74,6 +74,8 @@ class Account(AbstractBaseUser, TimeStampedModel):
     
     email_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+    
+    # These are roles specific to the website
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
@@ -168,6 +170,7 @@ class ActionToken(TimeStampedModel):
     token_type = models.CharField(max_length=255, choices=TOKEN_TYPES, default=EMAIL_VERIFICATION)
     expiry_date = models.DateTimeField()
     account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='action_tokens')
+    extras = models.JSONField(null=True)
 
     class Meta:
         db_table = 'action_tokens'
@@ -191,7 +194,7 @@ class ActionToken(TimeStampedModel):
         return self.token + ' - ' + self.token_type  + ' - ' + self.account.email
     
     @classmethod
-    def create_new_token(cls, token:str, account_id :str, token_type: str, expiry_date: datetime) -> str:
+    def create_new_token(cls, token:str, account_id :str, token_type: str, expiry_date: datetime, extras: dict,) -> str:
         """
         This method creates a new token for the account and returns the token
         """
@@ -235,7 +238,6 @@ class Role(TimeStampedModel):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     name = models.CharField(max_length=255, null=True)
     description = models.TextField(null=True)
-    permissions = models.ManyToManyField(Permission, related_name='roles')
 
     class Meta:
         db_table = 'roles'
@@ -248,6 +250,7 @@ class CustomRoles(TimeStampedModel):
     """
     These are custom roles created by the organization or workshop admin.
     """
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
 
 
 #########################################

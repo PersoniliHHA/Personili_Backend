@@ -1,6 +1,7 @@
 # Standard Library Imports
 import base64
 from datetime import UTC, datetime, timedelta
+from typing import Optional
 
 # settings
 from django.conf import settings
@@ -33,6 +34,7 @@ def base64url_decode(input: str) -> str:
     return decoded_string
     
 
+#################### JWT Token Generation and Verification ####################
 def generate_jwt_token(registred_claims: dict, 
                        private_claims: dict = {},
                        public_claims: dict = {}):
@@ -92,7 +94,8 @@ def verify_jwt_token(token: str, type: str):
             "payload": base64url_decode(payload)
         }
 
-def create_access_token(account_id: str):
+# Access token creation and verification
+def create_access_token(account_id: Optional[str] = None, role_id: Optional[str] = None):
     """This method creates an access token"""
     nb_days = settings.JWT_ACCESS_TOKEN_EXPIRATION 
     future_exp_time = datetime.now(UTC) + timedelta(days=nb_days)
@@ -103,11 +106,18 @@ def create_access_token(account_id: str):
     }
     private_claims = {
         "aid": account_id,
+        "rid": role_id,
         "tk": "acc"
     }
     access_token: str = generate_jwt_token(registred_claims, private_claims)
     return access_token
 
+def verify_access_token(token: str):
+    """This method verifies an access token"""
+    return verify_jwt_token(token, "acc")
+
+
+# Refresh token creation and verification
 def create_refresh_token(account_id: str):
     """This method creates a refresh token"""
     nb_days = settings.JWT_REFRESH_TOKEN_EXPIRATION
@@ -119,76 +129,64 @@ def create_refresh_token(account_id: str):
     }
     private_claims = {
         "aid": account_id,
+        "rid": None,
         "tk": "ref"
     }
     refresh_token: str = generate_jwt_token(registred_claims, private_claims)
     return refresh_token
 
-def verify_access_token(token: str):
-    """This method verifies an access token"""
-    return verify_jwt_token(token, "acc")
-
 def verify_refresh_token(token :str):
     """This method verifies a refresh token"""
     return verify_jwt_token(token, "ref")
 
+
+# Verify the token components
 def verify_token_components(token_components: dict, token_type: str):
     """
     Verify the payload and header components of a token
     """
      # Check the signature 
     if not token_components.get('is_valid_token'):
-        print("not a valid token")
         return None
     
     # Check the header
     header = token_components.get('header')
     header = json.loads(header)
     if not header or header.get('alg') != settings.JWT_SIGNING_ALGORITHM or header.get('typ') != 'JWT':
-        print("not a valid header")
         return None
     
     # Check the payload
     payload = token_components.get('payload')
     payload = json.loads(payload)
     if not payload:
-        print("not valid payload")
         return None
     
     # Check the registered claims
     registered_claims = payload.get('registered_claims')
     if not registered_claims:
-        print("not a vlid reg claims")
         return None
     if registered_claims.get("iss") != "personili":
-        print("not a valid iss")
         return None
     if registered_claims.get("sub") != "personili_api":
-        print("not a valid sub")
         return None
     
     # Check that the token is not expired
     if not 'exp' in registered_claims or datetime.now(UTC).timestamp() > registered_claims.get('exp'):
-        print("not a valid exp")
         return None
     
     # check the private claims
     private_claims = payload.get('private_claims')
     if not private_claims:
-        print("not valid private claims")
         return None
     
     if not private_claims.get('tk'):
-        print("not a valid tk")
         return None
     if private_claims.get('tk') != token_type:
-        print("not a valid tk")
         return None
     
     # get the account profile
     account_id = private_claims.get('aid')
     if not account_id:
-        print("not a valid")
         return None
     
     # check if the account profile exists
