@@ -69,6 +69,8 @@ target/
 venv/
 ENV/
 
+
+
 # Rope project settings
 .ropeproject
 
@@ -336,3 +338,6 @@ personili_platform/static/webpack_bundles/
 backend/personili_platform/webpack-stats.json
 .env
 .envs/*
+.envs
+personili_backend/.envs
+personili_backend/.envs/*
